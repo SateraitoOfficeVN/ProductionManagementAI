@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="../../tests/backend/ProductionManagementAI.Application.Tests/ProductionManagementAI.Application.Tests.csproj" />
+  <Project Path="../../tests/integration/ProductionManagementAI.Integration.Tests/ProductionManagementAI.Integration.Tests.csproj" />
+  <Project Path="ProductionManagementAI.Api/ProductionManagementAI.Api.csproj" />
+  <Project Path="ProductionManagementAI.Application/ProductionManagementAI.Application.csproj" />
+  <Project Path="ProductionManagementAI.Domain/ProductionManagementAI.Domain.csproj" />
+  <Project Path="ProductionManagementAI.Infrastructure/ProductionManagementAI.Infrastructure.csproj" />
+</Solution>
