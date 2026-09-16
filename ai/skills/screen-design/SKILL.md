@@ -20,14 +20,15 @@ Specify a single screen's layout/navigation (BD-level) or its fields, interactio
 1. For BD-level work, describe layout and navigation; for DD-level work, specify fields and interactions.
 2. Specify validation, loading/empty/error/success states, and WCAG 2.2 AA behavior (keyboard operability, focus order, contrast) — per [frontend rules](../../rules/frontend.md).
 3. Map detailed interactions to the agreed API; do not select an unapproved UI framework, per [frontend rules](../../rules/frontend.md) ("UI framework is not selected yet").
+4. At DD-level (full interaction spec), produce a rendered mockup with the `design` skill: one artboard per key state (create/empty, populated/edit, any locked-or-restricted variant, validation-error, success), matching the frontend's existing visual vocabulary (tokens/components already in `src/frontend`, once any exist) rather than inventing a new look. Default to a static mockup; build a clickable prototype only if asked. Publish it as an Artifact and link the URL from the DD's "Screen layout and mockup" section.
 
 ## 4. Required tools/scripts and environmental conditions
 
-None required. An optional mockup tool may be used; it does not imply a UI framework choice.
+The `design` skill for the rendered mockup (step 3.4); it does not imply a UI framework choice — it's a visual preview, not implementation code. Layout-only BD-level work needs no mockup tool.
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-Screen sections written directly into the relevant BD (`docs/en/010_basic-design/`) or DD (`docs/en/020_detailed-design/`), plus linked visual artifacts when needed. Uses the screen's existing `SCR-###` ID from basic-design.md; do not assign a new ID for the same screen.
+Screen sections written directly into the relevant BD (`docs/en/010_basic-design/`) or DD (`docs/en/020_detailed-design/`), plus the rendered mockup's Artifact URL linked from the DD's "Mockup artifact" line (step 3.4). Uses the screen's existing `SCR-###` ID from basic-design.md; do not assign a new ID for the same screen.
 
 ## 6. Checklist and repeatable verification method
 

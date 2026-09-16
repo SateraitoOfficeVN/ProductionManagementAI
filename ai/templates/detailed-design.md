@@ -12,7 +12,7 @@
 
 ## Screen layout and mockup
 
-{Visual layout for this screen, at implementation fidelity: an ASCII sketch below, and/or a link to an external artifact (image file under the work item's `assets/` folder, or a design-tool URL such as Figma). If this refines a BD-level wireframe, note what changed and why. "None" is not acceptable once fields are defined — a reader must be able to see where each field/control sits.}
+{Visual layout for this screen, at implementation fidelity: an ASCII sketch below (authoritative for the field/region mapping, since it's plain text and version-controlled), plus a rendered mockup covering the screen's key states — at minimum create/empty, populated/edit, a locked-or-restricted variant if any field is conditionally read-only, a validation-error state, and success. Produce the rendered mockup with the `design` skill (Claude Design canvas, published as an Artifact) per `ai/skills/screen-design/SKILL.md`, matching the frontend's existing visual vocabulary (styles/tokens already in `src/frontend`) rather than inventing a new look; a static mockup is the default, a clickable prototype only if asked. If this refines a BD-level wireframe, note what changed and why. "None" is not acceptable once fields are defined — a reader must be able to see where each field/control sits and, for anything the ASCII sketch can't convey (state, color, disabled styling), what it actually looks like.}
 
 ```
 {ASCII layout sketch, e.g.:
@@ -27,7 +27,7 @@
 }
 ```
 
-{Mockup artifact: link, or "none — ASCII layout above is authoritative".}
+{Mockup artifact: link to the published rendered mockup (default), or "none — {reason}" only for a DD with no visual screen (e.g. a backend-only endpoint).}
 
 | Region | Contains (field/control) | Notes |
 | --- | --- | --- |

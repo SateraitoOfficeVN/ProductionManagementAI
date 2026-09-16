@@ -17,13 +17,13 @@ Turn a BD into an implementation-ready specification: fields, validation, proces
 
 ## 3. Execution steps and applicable rules
 
-1. Specify the screen layout/mockup (ASCII sketch and/or linked artifact, with a region-to-field mapping), then fields, validation, processing sequence and state transitions. Use [screen-design](../screen-design/SKILL.md) for full-fidelity mockup work on a given screen.
+1. Specify the screen layout/mockup: an ASCII sketch with a region-to-field mapping, plus a rendered mockup covering the screen's key states (create/empty, populated/edit, any locked-or-restricted variant, validation-error, success) — see [screen-design](../screen-design/SKILL.md) for how to produce and link it. Then specify fields, validation, processing sequence and state transitions.
 2. Define API request/response/error behavior (RFC 9457 Problem Details for backend errors, no leaked implementation detail), persistence mapping, and what gets traced/logged (OpenTelemetry spans, metrics) for the endpoint — per [backend rules](../../rules/backend.md).
 3. Resolve inconsistencies with DB/API before dependent implementation begins.
 
 ## 4. Required tools/scripts and environmental conditions
 
-None required for the document itself. No live backend runtime is needed to produce the DD; API/DB drafts are read, not executed.
+The `design` skill for the rendered mockup (step 1); no live backend runtime is needed to produce the rest of the DD, since API/DB drafts are read, not executed. A DD with no visual screen (e.g. a backend-only endpoint) needs no mockup tool.
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
