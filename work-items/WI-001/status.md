@@ -35,10 +35,11 @@ Plan approved this session; no implementation steps executed yet.
 | 2026-09-16 | Step 13: `ProductionManagementAI.Application.Tests` (xUnit) added to `src/backend/ProductionManagementAI.slnx`; 4 tests covering `LoginRequest`/`MeResponse`, all pass. `Domain.Tests` deliberately not created — Domain has no entities yet (Screen A/WI-002 introduces the first, per DEC-008); will be added then | `tests/backend/ProductionManagementAI.Application.Tests/*`, `tests/backend/README.md` |
 | 2026-09-16 | Step 14: `IdentitySeeder` (Development only) — seeds `Admin`/`Operator` roles + one `admin` user from `SEED_ADMIN_PASSWORD`; fails startup before any DB access if the env var is unset; manually verified both the unset-var failure and the pass-through-to-DB-step behavior | `src/backend/ProductionManagementAI.Infrastructure/Identity/IdentitySeeder.cs`, `src/backend/README.md` |
 | 2026-09-16 | Step 15: `deploy/docker/{backend,frontend}.Dockerfile` (multi-stage), `frontend.nginx.conf` (same-origin reverse proxy per ADR-0002), `deploy/compose.yaml` (postgres:17 + backend + frontend), `deploy/.env.example`; `docker compose config` resolves cleanly | `deploy/*` |
+| 2026-09-16 | Step 16: `docker compose up -d db` (postgres:17, published on host port 5433 — 5432 collides with an unrelated pre-existing local container, see decisions.md); `dotnet ef database update` applied `InitialIdentitySchema`; all 7 DB-001 tables + exact index/constraint names verified live via `psql` | `deploy/compose.yaml`, `evidence.md` |
 
 ## Planned for next period
 
-Step 16: bring up Postgres, apply migration.
+Step 17: full stack `docker compose up -d`.
 
 ## Risks and issues
 
@@ -48,4 +49,4 @@ Step 16: bring up Postgres, apply migration.
 
 ## Next action
 
-Start step 16 (bring up Postgres, apply migration) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
+Start step 17 (full stack `docker compose up -d`) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
