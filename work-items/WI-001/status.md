@@ -37,10 +37,11 @@ Plan approved this session; no implementation steps executed yet.
 | 2026-09-16 | Step 15: `deploy/docker/{backend,frontend}.Dockerfile` (multi-stage), `frontend.nginx.conf` (same-origin reverse proxy per ADR-0002), `deploy/compose.yaml` (postgres:17 + backend + frontend), `deploy/.env.example`; `docker compose config` resolves cleanly | `deploy/*` |
 | 2026-09-16 | Step 16: `docker compose up -d db` (postgres:17, published on host port 5433 — 5432 collides with an unrelated pre-existing local container, see decisions.md); `dotnet ef database update` applied `InitialIdentitySchema`; all 7 DB-001 tables + exact index/constraint names verified live via `psql` | `deploy/compose.yaml`, `evidence.md` |
 | 2026-09-16 | Step 17: full stack up (`docker compose up -d --build`) — all 3 containers running; added minimal `GET /health` endpoint (`[AllowAnonymous]`) to satisfy this step's own verification method; `FRONTEND_PORT` default moved 8080→3000 (8080 is in Windows' reserved/excluded TCP port range on this machine, see decisions.md); backend `/health` → 200, frontend root → 200, frontend's `/api/auth/me` proxy → 401 (unauthenticated); full login→me→logout→me session cycle verified against the real containers (200/200/200/401), matching ADR-0002's own confirmation criteria | `src/backend/ProductionManagementAI.Api/Program.cs`, `deploy/compose.yaml`, `evidence.md` |
+| 2026-09-16 | Step 18: frontend auth UI — `AuthProvider`/`useAuth` (calls `/api/auth/me` on mount, exposes `login`/`logout`), `ProtectedRoute` (client-side UX redirect only, server remains sole authority per ADR-0002), `LoginPage` (generic error message on failure), placeholder authenticated `HomePage` with sign-out; `npm run build`/`npm run lint` both clean; manually exercised the full flow in a real browser against the live stack (unauthenticated → redirected to `/login`; login as seeded admin → home shows "Signed in as Seed Admin (Admin)"; session persists across reload; sign out → back to `/login`; wrong password → visible generic error) | `src/frontend/src/features/auth/*`, `src/frontend/src/App.tsx`, `src/frontend/src/main.tsx`, `evidence.md` |
 
 ## Planned for next period
 
-Step 18: frontend auth UI (`LoginPage`, `AuthContext`, `ProtectedRoute`, placeholder home page).
+Step 19: Vitest unit tests (login form, `ProtectedRoute` redirect).
 
 ## Risks and issues
 
@@ -50,4 +51,4 @@ Step 18: frontend auth UI (`LoginPage`, `AuthContext`, `ProtectedRoute`, placeho
 
 ## Next action
 
-Start step 18 (frontend auth UI) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
+Start step 19 (Vitest unit tests) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
