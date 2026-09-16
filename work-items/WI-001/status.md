@@ -31,10 +31,11 @@ Plan approved this session; no implementation steps executed yet.
 | 2026-09-16 | Step 9: Vite dev proxy `/api` → `http://localhost:5033` (backend `http` launch profile) | `src/frontend/vite.config.ts` |
 | 2026-09-16 | Step 10: `AppUser`/`AppRole` (Infrastructure, not Domain — see decisions.md addendum), `AppDbContext` with DB-001 table/index names, config-based connection string via `AddInfrastructure(IConfiguration)` | `src/backend/ProductionManagementAI.Infrastructure/*` |
 | 2026-09-16 | Step 11: initial migration `InitialIdentitySchema` generated; table/index names verified against DB-001; `dotnet ef migrations script` generates cleanly | `src/backend/ProductionManagementAI.Infrastructure/Migrations/*` |
+| 2026-09-16 | Step 12: `AuthController` (login/me/logout) on `SignInManager`/`UserManager` directly; global fallback policy (authenticated user required) + `AdminOnly` policy; cookie-auth redirect rewired to 401/403 for a JSON API; manually verified unauthenticated `/api/auth/me` → 401, `/api/auth/login` reachable anonymously | `src/backend/ProductionManagementAI.Api/*`, `evidence.md` |
 
 ## Planned for next period
 
-Step 12: `AuthController` (login/me/logout) + global auth policy + `AdminOnly` policy.
+Step 13: xUnit unit tests (Domain, Application).
 
 ## Risks and issues
 
@@ -44,4 +45,4 @@ Step 12: `AuthController` (login/me/logout) + global auth policy + `AdminOnly` p
 
 ## Next action
 
-Start step 12 (`AuthController` + auth policies) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
+Start step 13 (xUnit unit tests) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
