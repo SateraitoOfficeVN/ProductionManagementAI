@@ -42,3 +42,6 @@ app.MapControllers();
 app.MapGet("/health", () => Results.Ok()).AllowAnonymous();
 
 app.Run();
+
+// Exposed for WebApplicationFactory<Program> in the integration test project.
+public partial class Program;

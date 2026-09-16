@@ -12,11 +12,16 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
-
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
+        // Resolved lazily from the DI-provided IConfiguration (not the outer `configuration` parameter):
+        // that outer reference is read at registration time, before host-building customizations like
+        // WebApplicationFactory's ConfigureAppConfiguration overrides (used by integration tests) are
+        // guaranteed to have been merged in.
+        services.AddDbContext<AppDbContext>((sp, options) =>
+        {
+            var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
+        });
 
         // Lockout thresholds mitigate credential-stuffing (ADR-0002 STRIDE: Spoofing);
         // RequireUniqueEmail stays off per DB-001 (no email-based login in scope).
