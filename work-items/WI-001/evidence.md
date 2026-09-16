@@ -45,8 +45,11 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 | 2026-09-16 | Step 12: pending-model-changes check | `dotnet ef migrations has-pending-model-changes --project ProductionManagementAI.Infrastructure --startup-project ProductionManagementAI.Api` | local, `src/backend` | pass — "No changes have been made to the model since the last migration" (AddIdentity/cookie config don't alter the EF model) | this row |
 | 2026-09-16 | Step 12: unauthenticated protected endpoint | `dotnet run` (API only, no DB) then `curl http://localhost:5033/api/auth/me` | local | pass — `401` (confirms `OnRedirectToLogin` rewire works; without it Identity's cookie middleware would return a 302 redirect, breaking a JSON API) | this row |
 | 2026-09-16 | Step 12: anonymous login endpoint reachable | `curl -X POST http://localhost:5033/api/auth/login -d '{"userName":"admin","password":"wrong"}'` | local | pass — reached the controller action (failed downstream at Npgsql connection, expected since Postgres isn't running until step 15/16); confirms `[AllowAnonymous]` bypasses the fallback policy correctly | this row |
+| 2026-09-16 | Step 13: `dotnet test src/backend/ProductionManagementAI.slnx` | `dotnet test` | local, `src/backend` | pass — 4/4 tests passed (`LoginRequestTests`, `MeResponseTests`) | this row |
+| 2026-09-16 | Step 13: full solution build with test project added | `dotnet build src/backend/ProductionManagementAI.slnx` | local, `src/backend` | pass — 0 warnings, 0 errors | this row |
+| 2026-09-16 | Step 13: scope note | — | — | `Domain.Tests` not created — `ProductionManagementAI.Domain` has zero entities as of this work item; an empty test project would assert nothing. Will be added in WI-002 (Screen A) when Domain gains its first entity | `tests/backend/README.md` |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (13 onward) have not been executed yet — step 13 (xUnit unit tests) is next.
+Remaining steps from `plan.md`'s Deliverables and milestones table (14 onward) have not been executed yet — step 14 (seed roles/admin user) is next.
 
 ## Defects, failures and blockers
 
