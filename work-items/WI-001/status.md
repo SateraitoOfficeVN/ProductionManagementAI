@@ -36,17 +36,18 @@ Plan approved this session; no implementation steps executed yet.
 | 2026-09-16 | Step 14: `IdentitySeeder` (Development only) — seeds `Admin`/`Operator` roles + one `admin` user from `SEED_ADMIN_PASSWORD`; fails startup before any DB access if the env var is unset; manually verified both the unset-var failure and the pass-through-to-DB-step behavior | `src/backend/ProductionManagementAI.Infrastructure/Identity/IdentitySeeder.cs`, `src/backend/README.md` |
 | 2026-09-16 | Step 15: `deploy/docker/{backend,frontend}.Dockerfile` (multi-stage), `frontend.nginx.conf` (same-origin reverse proxy per ADR-0002), `deploy/compose.yaml` (postgres:17 + backend + frontend), `deploy/.env.example`; `docker compose config` resolves cleanly | `deploy/*` |
 | 2026-09-16 | Step 16: `docker compose up -d db` (postgres:17, published on host port 5433 — 5432 collides with an unrelated pre-existing local container, see decisions.md); `dotnet ef database update` applied `InitialIdentitySchema`; all 7 DB-001 tables + exact index/constraint names verified live via `psql` | `deploy/compose.yaml`, `evidence.md` |
+| 2026-09-16 | Step 17: full stack up (`docker compose up -d --build`) — all 3 containers running; added minimal `GET /health` endpoint (`[AllowAnonymous]`) to satisfy this step's own verification method; `FRONTEND_PORT` default moved 8080→3000 (8080 is in Windows' reserved/excluded TCP port range on this machine, see decisions.md); backend `/health` → 200, frontend root → 200, frontend's `/api/auth/me` proxy → 401 (unauthenticated); full login→me→logout→me session cycle verified against the real containers (200/200/200/401), matching ADR-0002's own confirmation criteria | `src/backend/ProductionManagementAI.Api/Program.cs`, `deploy/compose.yaml`, `evidence.md` |
 
 ## Planned for next period
 
-Step 17: full stack `docker compose up -d`.
+Step 18: frontend auth UI (`LoginPage`, `AuthContext`, `ProtectedRoute`, placeholder home page).
 
 ## Risks and issues
 
 | Issue / blocker | Owner | Since | Impact |
 | --- | --- | --- | --- |
-| None currently — plan approved, no step blocked | — | — | — |
+| Data Protection: "No XML encryptor configured" warning at backend startup in the container | Claude (noted, not fixed) | 2026-09-16 (step 17) | Keys persist to `/keys` (the `dp-keys` volume) unencrypted at rest. Accepted as a known MVP-scope gap for local dev, consistent with ADR-0002's "Denial of service via the auth mechanism itself" row treating some risks as accepted-not-mitigated; revisit if this stack is ever exposed beyond local dev |
 
 ## Next action
 
-Start step 17 (full stack `docker compose up -d`) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
+Start step 18 (frontend auth UI) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.

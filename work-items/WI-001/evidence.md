@@ -59,7 +59,15 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 | 2026-09-16 | Step 16: verify schema via psql | `docker exec deploy-db-1 psql -U postgres -d production_management_ai -c "\dt"` | local | pass — all 7 DB-001 tables present (`users`,`roles`,`user_roles`,`user_claims`,`role_claims`,`user_logins`,`user_tokens`) plus `__EFMigrationsHistory` | this row |
 | 2026-09-16 | Step 16: verify index/constraint names via psql | `SELECT tablename, indexname FROM pg_indexes WHERE tablename IN ('users','roles')` | local | pass — `pk_users`, `pk_roles`, `ix_users_normalized_user_name`, `ix_users_normalized_email`, `ix_roles_normalized_name` all present, matching DB-001 exactly | this row |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (17 onward) have not been executed yet — step 17 (full stack `docker compose up -d`) is next. `db` container left running for step 17 rather than torn down (plan step 23 tears everything down after the full verification pass).
+| 2026-09-16 | Step 17: port conflict found and avoided | `docker compose up -d --build` (first attempt) | local | `frontend` container stuck in `Created` (never `Running`): `ports are not available: exposing port TCP 0.0.0.0:8080` — `netsh interface ipv4 show excludedportrange protocol=tcp` confirmed 8080 is in Windows' reserved/excluded range on this machine; moved `FRONTEND_PORT` default to 3000 (not excluded), recreated the container (see decisions.md) | this row |
+| 2026-09-16 | Step 17: full stack up | `docker compose up -d --build` (retry, from `deploy/`) | local | pass — all 3 containers (`db`, `backend`, `frontend`) `Up`; `db` healthy | `docker compose ps` |
+| 2026-09-16 | Step 17: backend /health | `curl http://localhost:8081/health` | local | pass — `200` (added minimal `GET /health` `[AllowAnonymous]` endpoint to `Program.cs` to satisfy this step's verification method — not previously required by any earlier step) | this row |
+| 2026-09-16 | Step 17: frontend root | `curl http://localhost:3000/` | local | pass — `200` | this row |
+| 2026-09-16 | Step 17: same-origin proxy end-to-end | `curl http://localhost:3000/api/auth/me` (unauthenticated) | local | pass — `401`, proxied correctly through `frontend`'s nginx to `backend` (confirms the ADR-0002 same-origin design works through the real containers, not just in isolation) | this row |
+| 2026-09-16 | Step 17: full session lifecycle (ADR-0002 confirmation criteria) | `curl` login → `/me` → logout → `/me`, with cookie jar, through `http://localhost:3000` | local | pass — `200` (login, returns correct `MeResponse` shape) → `200` (`/me`, authenticated) → `200` (logout) → `401` (`/me`, post-logout) | this row |
+| 2026-09-16 | Step 17: seeding confirmed live | `docker compose logs backend` | local | pass — log shows `INSERT INTO user_roles` / `UPDATE users` during startup, confirming `IdentitySeeder` ran successfully against the real container | this row |
+
+Remaining steps from `plan.md`'s Deliverables and milestones table (18 onward) have not been executed yet — step 18 (frontend auth UI) is next. `db`/`backend`/`frontend` containers left running (plan step 23 tears everything down after the full verification pass).
 
 ## Defects, failures and blockers
 
