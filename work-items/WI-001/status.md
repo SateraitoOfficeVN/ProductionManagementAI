@@ -29,10 +29,12 @@ Plan approved this session; no implementation steps executed yet.
 | 2026-09-16 | Step 7: frontend scaffolded — Vite+React+TS+Tailwind v4+react-router-dom, `npm run build` passes | `src/frontend/*`, `evidence.md` |
 | 2026-09-16 | Step 8: `strict: true` added to `tsconfig.app.json`/`tsconfig.node.json`; `npm run lint` (oxlint) passes | `src/frontend/tsconfig.*.json` |
 | 2026-09-16 | Step 9: Vite dev proxy `/api` → `http://localhost:5033` (backend `http` launch profile) | `src/frontend/vite.config.ts` |
+| 2026-09-16 | Step 10: `AppUser`/`AppRole` (Infrastructure, not Domain — see decisions.md addendum), `AppDbContext` with DB-001 table/index names, config-based connection string via `AddInfrastructure(IConfiguration)` | `src/backend/ProductionManagementAI.Infrastructure/*` |
+| 2026-09-16 | Step 11: initial migration `InitialIdentitySchema` generated; table/index names verified against DB-001; `dotnet ef migrations script` generates cleanly | `src/backend/ProductionManagementAI.Infrastructure/Migrations/*` |
 
 ## Planned for next period
 
-Step 10: EF Core Identity model + `AppDbContext` + config-based connection string, in `src/backend/ProductionManagementAI.Infrastructure`.
+Step 12: `AuthController` (login/me/logout) + global auth policy + `AdminOnly` policy.
 
 ## Risks and issues
 
@@ -42,4 +44,4 @@ Step 10: EF Core Identity model + `AppDbContext` + config-based connection strin
 
 ## Next action
 
-Start step 10 (EF Core Identity model + `AppDbContext`) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is now running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
+Start step 12 (`AuthController` + auth policies) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.

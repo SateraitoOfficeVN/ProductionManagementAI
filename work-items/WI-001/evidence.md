@@ -37,8 +37,12 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 | 2026-09-16 | Step 8: frontend lint | `npm run lint` (oxlint) | local, `src/frontend` | pass — no findings | this row |
 | 2026-09-16 | Step 8: strict TS build re-check after `strict: true` | `npm run build` | local, `src/frontend` | pass — no new type errors | this row |
 | 2026-09-16 | Step 9: Vite proxy config review | manual review of `vite.config.ts` | local (doc review) | pass — `/api` → `http://localhost:5033`, matches backend `http` launch profile in `Properties/launchSettings.json` | `src/frontend/vite.config.ts` |
+| 2026-09-16 | Step 10: backend build after EF Core Identity model + `AppDbContext` | `dotnet build ProductionManagementAI.slnx` | local, `src/backend` | pass — 0 warnings, 0 errors | this row |
+| 2026-09-16 | Step 11: migration generation | `dotnet ef migrations add InitialIdentitySchema --project ProductionManagementAI.Infrastructure --startup-project ProductionManagementAI.Api` | local, `src/backend` | pass — first attempt used Identity's default index names (`RoleNameIndex`/`EmailIndex`/`UserNameIndex`); fixed via explicit `HasDatabaseName` calls in `AppDbContext`, migration regenerated (`dotnet ef migrations remove --force`, then re-add) | `src/backend/ProductionManagementAI.Infrastructure/Migrations/20260916040510_InitialIdentitySchema.cs` |
+| 2026-09-16 | Step 11: migration script review against DB-001 | `grep` for table/index/default-value lines in the migration | local (doc review) | pass — table names (`users`,`roles`,`user_roles`,`user_claims`,`role_claims`,`user_logins`,`user_tokens`) and index names (`ix_users_normalized_user_name`, `ix_users_normalized_email`, `ix_roles_normalized_name`, plus Identity defaults for claims/logins) match DB-001 exactly; `id` columns have `gen_random_uuid()` default, `created_at_utc` has `now()` default | this row |
+| 2026-09-16 | Step 11: migration script generates cleanly | `dotnet ef migrations script --project ProductionManagementAI.Infrastructure --startup-project ProductionManagementAI.Api` | local, `src/backend` | pass — 100-line SQL script generated with no errors | this row |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (10 onward) have not been executed yet — step 10 (EF Core Identity model + `AppDbContext`) is next.
+Remaining steps from `plan.md`'s Deliverables and milestones table (12 onward) have not been executed yet — step 12 (`AuthController` + auth policies) is next.
 
 ## Defects, failures and blockers
 

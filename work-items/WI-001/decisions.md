@@ -341,3 +341,7 @@ After the plan was drafted, the user clarified they want to personally run the i
 | `work-items/WI-001/status.md` | Next-action owner reflects command execution belongs to the user |
 
 **Update, 2026-09-16 (same session):** for step 5 specifically, the user asked Claude to "continue next steps" after exiting plan mode; Claude ran the `git commit`/`git worktree add` commands directly rather than handing them to the user. This supersedes DEC-011's default for step 5 onward — treated as ongoing authorization for Claude to run local git/scaffold commands directly for the remainder of this work item, unless the user says otherwise.
+
+## Implementation note: `AppUser`/`AppRole` project placement (step 10)
+
+Neither ADR-0002 nor DB-001 states which project `AppUser`/`AppRole` live in. ADR-0001 requires Domain to have "no external dependencies," but `AppUser : IdentityUser<Guid>` and `AppRole : IdentityRole<Guid>` depend on the ASP.NET Core Identity package — an external dependency. Claude placed both classes in `ProductionManagementAI.Infrastructure/Identity/` (alongside `AppDbContext`) rather than Domain, to keep ADR-0001's dependency rule intact. Not logged as a numbered DEC — it is a direct application of an already-decided ADR, not a new choice — but recorded here for traceability.
