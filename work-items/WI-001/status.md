@@ -2,12 +2,12 @@
 
 # Project Bootstrap (skeleton + auth foundation) — Status Report
 
-As of 2026-09-16. Work item state: in-progress (steps 1–24 of 26 done; steps 25–26 are this doc pass and the ongoing commit history).
+As of 2026-09-16. Work item state: complete (steps 1–26 of 26; step 26, commits at logical checkpoints, was ongoing throughout).
 
 ## Overall status
 
-**Green — on track**
-Skeleton and auth foundation fully implemented and verified locally (backend, frontend, Docker Compose, CI workflow reviewed). Not yet merged to `master` — no push/PR/merge authorized for this work item.
+**Green — done**
+Skeleton and auth foundation fully implemented and verified locally (backend, frontend, Docker Compose, CI workflow reviewed, delivery checklist passed). Not yet merged to `master` — no push/PR/merge authorized for this work item.
 
 ## Approved plan reference
 
@@ -45,10 +45,11 @@ Skeleton and auth foundation fully implemented and verified locally (backend, fr
 | 2026-09-16 | Step 23: full local verification re-run (Release config, matching CI exactly) — backend build/test 8/8 pass, frontend lint/build/test all pass; final live-stack smoke check found the seeded admin account locked out (`lockout_end` ~5.5 min in the future) from accumulated wrong-password attempts made across this session's own testing — confirms the lockout mitigation (ADR-0002 STRIDE: Spoofing) genuinely works, not a regression; login/session-cycle already proven working in steps 17/18/20, so did not wait out the 15-minute window. `docker compose down` — all 3 containers stopped/removed cleanly, `db-data`/`dp-keys` volumes preserved | `evidence.md` |
 
 | 2026-09-16 | Step 24: `ai/project.md` updated — Open decisions moved to Confirmed (frontend/backend/DB/test stack, auth scope, branch policy), verified commands recorded (backend/frontend/Docker/CI), Screen A→B→C roadmap locked (product-catalog candidate dropped) | `ai/project.md` |
+| 2026-09-16 | Step 25: `ai/checklists/delivery.md` pass — found and fixed two real findings: (1) the local dev seed password appeared in plaintext in `evidence.md` (step 18 row), redacted; still present in this branch's local, unpushed git history — see decisions.md; (2) `ci.yml`'s three GitHub Actions were tag-pinned (`@v4`, mutable) rather than commit-SHA-pinned as the checklist requires — fixed, tag kept as a trailing comment. All other checklist items pass (see evidence.md for the line-by-line pass) | `work-items/WI-001/evidence.md`, `.github/workflows/ci.yml`, `decisions.md` |
 
 ## Planned for next period
 
-Step 25: update WI-001 `status.md`/`evidence.md`/`decisions.md` against `ai/checklists/delivery.md`, and step 26 (commits — ongoing throughout, this being the final one for the plan's 26 steps).
+None — plan complete (steps 1–26). Awaiting user direction: review, request changes, or authorize push/PR for `feature/WI-001-bootstrap-skeleton` → `master` (not authorized by this scaffold on its own).
 
 ## Risks and issues
 
@@ -58,4 +59,4 @@ Step 25: update WI-001 `status.md`/`evidence.md`/`decisions.md` against `ai/chec
 
 ## Next action
 
-Start step 25 (final work-item doc pass against `ai/checklists/delivery.md`) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
+WI-001 is functionally complete on `feature/WI-001-bootstrap-skeleton`. Next action belongs to the user: review the branch, and decide on push/PR/merge to `master` (none of which this scaffold authorizes on its own — see `ai/policies.md`).

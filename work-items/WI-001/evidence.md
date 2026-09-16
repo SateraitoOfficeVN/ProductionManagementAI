@@ -2,7 +2,7 @@
 
 # Project Bootstrap (skeleton + auth foundation) — Requirements Traceability & Evidence
 
-As of source revision/commit: branch `feature/WI-001-bootstrap-skeleton`, HEAD `8c58b65` (steps 5–22 committed; step 23's verification/teardown not yet committed at time of writing), 2026-09-16.
+As of source revision/commit: branch `feature/WI-001-bootstrap-skeleton`, steps 1–26 (of `plan.md`'s 26) complete, 2026-09-16.
 
 ## Traceability matrix
 
@@ -11,7 +11,7 @@ As of source revision/commit: branch `feature/WI-001-bootstrap-skeleton`, HEAD `
 | INFRA-001 | Frontend/backend skeletons build and run locally | ADR-0001 | `src/backend/*`, `src/frontend/*` | `dotnet build`/`npm run build` (steps 6,7,23); `docker compose up -d --build` (step 17) | done |
 | INFRA-002 | Login → session → logout flow with user/role model | ADR-0002, DB-001 | `src/backend/ProductionManagementAI.{Infrastructure,Api}/*`, `src/frontend/src/features/auth/*` | `AuthEndpointsTests` (step 20, 4 tests), `LoginPage`/`ProtectedRoute` Vitest tests (step 19, 5 tests), manual browser walkthrough (step 18) | done |
 | INFRA-003 | CI skeleton (build+lint+test) | this evidence log (step 22) | `.github/workflows/ci.yml` | not applicable — reviewed manually, not run (push/CI execution unauthorized) | done (reviewed, not executed) |
-| INFRA-004 | `ai/project.md` reflects verified stack/commands | this evidence log | pending — step 24 | not applicable | not started |
+| INFRA-004 | `ai/project.md` reflects verified stack/commands | this evidence log | `ai/project.md` | not applicable | done |
 
 ## Test execution log
 
@@ -88,14 +88,17 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 | 2026-09-16 | Step 23: final live-stack smoke check | `curl` against the still-running `db`/`backend`/`frontend` containers (started in step 17) | local | `/health` → 200, frontend root → 200, but login (correct password) → 401. Diagnosed via `docker exec deploy-db-1 psql ... SELECT access_failed_count, lockout_end FROM users WHERE user_name='admin'` — account was locked out (`lockout_end` ~5.5 min in the future, `now()` compared directly), from accumulated wrong-password attempts across this session's own testing against the same shared database (this container and the local `dotnet run` used in step 18 both connect to the same Postgres). This is the lockout mitigation (ADR-0002 STRIDE: Spoofing) working as designed, not a regression — login/session-cycle were already proven working with a fresh lockout state in steps 17/18/20; did not wait out the window just to re-demonstrate that | this row |
 | 2026-09-16 | Step 23: teardown | `docker compose down` (from `deploy/`) | local | pass — all 3 containers stopped and removed cleanly; `deploy_db-data`/`deploy_dp-keys` volumes preserved (`docker volume ls`) | this row |
 | 2026-09-16 | Step 24: `ai/project.md` diff review | manual review against this session's `decisions.md` | local (doc review) | pass — every resolved DEC (001–010) reflected in Confirmed; every still-open DEC (012–015) reflected in Open decisions; verified commands match what was actually run in steps 6–23; Screen A→B→C roadmap matches DEC-008/DEC-010 exactly | `ai/project.md` |
+| 2026-09-16 | Step 25: `ai/checklists/delivery.md` pass — secret/credential scan | `git grep` across tracked files for password-shaped literals and the specific local dev password string | local | **found**: the local dev seed password (a placeholder value from this session's `deploy/.env`, never a real production credential; value not reproduced here) appeared in plaintext in `evidence.md`'s step-18 row — redacted in this pass (see decisions.md). Also found: `IntegrationTestFixture.SeedAdminPassword` is a hardcoded string in committed test code — reviewed and accepted as-is: it's a throwaway credential for an ephemeral, per-test-run Testcontainers Postgres instance destroyed immediately after, not a reusable real-world secret | `work-items/WI-001/evidence.md`, `decisions.md` |
+| 2026-09-16 | Step 25: `ai/checklists/delivery.md` pass — CI action pinning | manual review of `.github/workflows/ci.yml` | local | **found and fixed**: `actions/checkout@v4`, `actions/setup-dotnet@v4`, `actions/setup-node@v4` were tag-pinned (mutable) rather than commit-SHA-pinned. Fetched each tag's commit SHA via the public GitHub API (`api.github.com/repos/.../git/refs/tags/v4`, confirmed `"type": "commit"` in each response) and re-pinned to the SHA with the version kept as a trailing comment. npm dependencies were already effectively pinned via the committed `package-lock.json` + `npm ci` in CI; NuGet `PackageReference`s already use exact versions (no wildcards) | `.github/workflows/ci.yml` |
+| 2026-09-16 | Step 25: `ai/checklists/delivery.md` pass — remaining items | manual read-through of the checklist against this work item's history | local (doc review) | pass — scope/plan revision identifiable (`plan.md` approval section); design/code/tests agree (traceability matrix above); all required checks have recorded pass/fail and not-run checks have reasons (Playwright deferral, CI-not-triggered); review findings explicit (this row and the two above); no external push/PR/merge/deploy occurred; status/decisions/evidence kept current at every step for handoff; no prompt-injection-relevant external content was consumed this session; no flaky checks encountered (all failures were real bugs, diagnosed and fixed, not silently retried) | this row |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (24 onward) have not been executed yet — step 24 (update `ai/project.md`) is next.
+Remaining steps from `plan.md`'s Deliverables and milestones table: none — all 26 steps complete.
 
 ## Defects, failures and blockers
 
 | Item | Reason | Blocker | Follow-up |
 | --- | --- | --- | --- |
-| None currently — the step-20 connection-string bug and step-23 lockout finding were both diagnosed and resolved/explained within this session | — | — | — |
+| None currently — the step-20 connection-string bug, step-23 lockout finding, and step-25 checklist findings (password in evidence.md, unpinned CI actions) were all diagnosed and fixed/explained within this session | — | — | — |
 
 ## External references
 
@@ -105,4 +108,4 @@ Remaining steps from `plan.md`'s Deliverables and milestones table (24 onward) h
 
 ## Remaining limitations and next action
 
-Steps 1–23 complete, full local verification pass (Release config) green across backend and frontend, Docker stack torn down cleanly. Remaining: step 24 (update `ai/project.md` with resolved decisions and verified commands), step 25 (final work-item doc pass against `ai/checklists/delivery.md`), step 26 (already ongoing — commits made throughout at logical checkpoints). No push/PR/merge/CI-execution/deploy has occurred or is authorized for this work item.
+All 26 plan steps complete. One known limitation carried forward deliberately (not a defect): the local dev seed password used earlier in this session appears in plaintext in this branch's git history (an already-committed, not-yet-fixed occurrence in an earlier commit, since redacted from the current file) — the branch has never been pushed, so this is contained to this local worktree; not rewritten via history-editing since that's a more invasive git operation than this session is authorized to take unprompted. If this branch is ever pushed, consider whether that history should be squashed/rewritten first, and rotate the local dev password out of caution (it protects nothing beyond a throwaway local Postgres container). No push/PR/merge/CI-execution/deploy has occurred or is authorized for this work item; next action belongs to the user.
