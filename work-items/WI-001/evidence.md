@@ -51,8 +51,10 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 | 2026-09-16 | Step 14: backend build after `IdentitySeeder` | `dotnet build ProductionManagementAI.slnx` | local, `src/backend` | pass — 0 warnings, 0 errors | this row |
 | 2026-09-16 | Step 14: startup fails when `SEED_ADMIN_PASSWORD` unset | `ASPNETCORE_ENVIRONMENT=Development dotnet run --no-build` (no `SEED_ADMIN_PASSWORD` set) | local | pass — `InvalidOperationException: SEED_ADMIN_PASSWORD must be set...`, thrown before any DB call (the check is ordered first in `IdentitySeeder.SeedAsync`, ahead of role/user creation, so a DB error can never mask it); no password value in output since none was ever set | this row |
 | 2026-09-16 | Step 14: seeding proceeds when env var is set | `ASPNETCORE_ENVIRONMENT=Development SEED_ADMIN_PASSWORD='<test value>' dotnet run --no-build` | local | pass — guard passed, failed only at the (expected, not-yet-running) `RoleManager.RoleExistsAsync` DB call; test password value did not appear in any output or in this log | this row |
+| 2026-09-16 | Step 15: compose config validation | `docker compose -f deploy/compose.yaml config` | local (with a throwaway, gitignored `deploy/.env` copied from `.env.example`, deleted immediately after) | pass — resolved cleanly: `db`/`backend`/`frontend` services, `db-data`/`dp-keys` volumes, port mappings, `depends_on: db (condition: service_healthy)` all as authored | this row |
+| 2026-09-16 | Step 15: repo hygiene | manual review | local | pass — added `.dockerignore` (repo root) excluding `bin/`,`obj/`,`node_modules/`,`dist/`,`.git/` from the build context; confirmed `deploy/.env` is git-ignored (`.gitignore`'s existing `.env`/`.env.*`/`!.env.example` rules) | this row |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (15 onward) have not been executed yet — step 15 (Dockerfiles + `compose.yaml` + `.env.example`) is next.
+Remaining steps from `plan.md`'s Deliverables and milestones table (16 onward) have not been executed yet — step 16 (bring up Postgres, apply migration) is next.
 
 ## Defects, failures and blockers
 
