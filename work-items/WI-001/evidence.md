@@ -2,7 +2,7 @@
 
 # Project Bootstrap (skeleton + auth foundation) — Requirements Traceability & Evidence
 
-As of source revision/commit: not yet committed (worktree not created), 2026-09-16.
+As of source revision/commit: branch `feature/WI-001-bootstrap-skeleton`, based on `6cfbb6c`; steps 6–9 not yet committed, 2026-09-16.
 
 ## Traceability matrix
 
@@ -30,7 +30,15 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 
 | 2026-09-16 | Step 4: DB-001 review | manual review against `ai/checklists/design-consistency.md` | local (doc review) | pass — entities/relationships/constraints support INFRA-002; migration impact stated (additive, first migration, no recovery-limit concern); one open decision (CSRF strategy) explicitly deferred to Screen A's detailed-design rather than left silent | `docs/en/database/0001-identity-schema.md` |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (5 onward) have not been executed yet — step 5 (worktree/branch creation) is the next action, owned by the user per Execution mode.
+| 2026-09-16 | Step 5: docs commit to `master` | `git commit` (9 files) | local | pass — commit `6cfbb6c` | `git log` |
+| 2026-09-16 | Step 5: worktree + branch creation | `git worktree add ../WMS-WI-001-bootstrap -b feature/WI-001-bootstrap-skeleton` | local | pass — worktree at `D:/Work/AI/WMS-WI-001-bootstrap`, branch `feature/WI-001-bootstrap-skeleton` | `git worktree list` |
+| 2026-09-16 | Step 6: backend solution build | `dotnet build ProductionManagementAI.slnx` | local, `src/backend` | pass — 4 projects (Domain/Application/Infrastructure/Api), 0 warnings, 0 errors | this row |
+| 2026-09-16 | Step 7: frontend build | `npm run build` | local, `src/frontend` | pass — Tailwind CSS output present (`index-*.css`, 6.61 kB), Vite build succeeded | this row |
+| 2026-09-16 | Step 8: frontend lint | `npm run lint` (oxlint) | local, `src/frontend` | pass — no findings | this row |
+| 2026-09-16 | Step 8: strict TS build re-check after `strict: true` | `npm run build` | local, `src/frontend` | pass — no new type errors | this row |
+| 2026-09-16 | Step 9: Vite proxy config review | manual review of `vite.config.ts` | local (doc review) | pass — `/api` → `http://localhost:5033`, matches backend `http` launch profile in `Properties/launchSettings.json` | `src/frontend/vite.config.ts` |
+
+Remaining steps from `plan.md`'s Deliverables and milestones table (10 onward) have not been executed yet — step 10 (EF Core Identity model + `AppDbContext`) is next.
 
 ## Defects, failures and blockers
 

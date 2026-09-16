@@ -23,10 +23,16 @@ Plan approved this session; no implementation steps executed yet.
 | 2026-09-16 | Step 1 (preflight) run: .NET 10.0.303, Node v24.21.0, npm 11.19.0, Docker 29.7.2, Compose v5.4.0, Linux containers — no blockers | `work-items/WI-001/evidence.md` |
 | 2026-09-16 | Step 3: ADR-0001 (backend layered structure) and ADR-0002 (auth/RBAC foundation, incl. STRIDE review) drafted | `docs/en/architecture/0001-backend-layered-structure.md`, `docs/en/architecture/0002-auth-rbac-foundation.md` |
 | 2026-09-16 | Step 4: DB-001 (Identity schema) drafted | `docs/en/database/0001-identity-schema.md` |
+| 2026-09-16 | Docs committed to `master` (commit `6cfbb6c`): ADR-0001, ADR-0002, DB-001, BD-001, and `work-items/WI-001/*` | `git log` |
+| 2026-09-16 | Step 5: worktree `D:/Work/AI/WMS-WI-001-bootstrap` created on branch `feature/WI-001-bootstrap-skeleton` | `git worktree list` |
+| 2026-09-16 | Step 6: backend solution scaffolded — `ProductionManagementAI.{Domain,Application,Infrastructure,Api}`, layered per ADR-0001, `dotnet build` passes | `src/backend/*`, `evidence.md` |
+| 2026-09-16 | Step 7: frontend scaffolded — Vite+React+TS+Tailwind v4+react-router-dom, `npm run build` passes | `src/frontend/*`, `evidence.md` |
+| 2026-09-16 | Step 8: `strict: true` added to `tsconfig.app.json`/`tsconfig.node.json`; `npm run lint` (oxlint) passes | `src/frontend/tsconfig.*.json` |
+| 2026-09-16 | Step 9: Vite dev proxy `/api` → `http://localhost:5033` (backend `http` launch profile) | `src/frontend/vite.config.ts` |
 
 ## Planned for next period
 
-Step 5: create the dedicated worktree/branch (`feature/WI-001-bootstrap-skeleton`), run by the user per the plan's Execution mode. Steps 6+ (actual scaffolding) follow once that exists.
+Step 10: EF Core Identity model + `AppDbContext` + config-based connection string, in `src/backend/ProductionManagementAI.Infrastructure`.
 
 ## Risks and issues
 
@@ -36,4 +42,4 @@ Step 5: create the dedicated worktree/branch (`feature/WI-001-bootstrap-skeleton
 
 ## Next action
 
-Create the worktree and branch `feature/WI-001-bootstrap-skeleton` (step 5), then start backend/frontend scaffolding (steps 6+). Owner: trannhatthanh31@gmail.com (commands, per Execution mode) — Claude ready to author source content once the worktree exists, or sooner on request.
+Start step 10 (EF Core Identity model + `AppDbContext`) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is now running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.

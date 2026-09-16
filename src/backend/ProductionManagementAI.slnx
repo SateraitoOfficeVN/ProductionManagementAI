@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ProductionManagementAI.Api/ProductionManagementAI.Api.csproj" />
+  <Project Path="ProductionManagementAI.Application/ProductionManagementAI.Application.csproj" />
+  <Project Path="ProductionManagementAI.Domain/ProductionManagementAI.Domain.csproj" />
+  <Project Path="ProductionManagementAI.Infrastructure/ProductionManagementAI.Infrastructure.csproj" />
+</Solution>
