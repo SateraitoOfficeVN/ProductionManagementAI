@@ -10,6 +10,29 @@
 | --- | --- | --- | --- | --- |
 | {module/function name} | {inputs} | {what must be true before it runs} | {what it does} | {return value or side effect} |
 
+## Screen layout and mockup
+
+{Visual layout for this screen, at implementation fidelity: an ASCII sketch below, and/or a link to an external artifact (image file under the work item's `assets/` folder, or a design-tool URL such as Figma). If this refines a BD-level wireframe, note what changed and why. "None" is not acceptable once fields are defined — a reader must be able to see where each field/control sits.}
+
+```
+{ASCII layout sketch, e.g.:
++----------------------------------------------------+
+| {Header: title / breadcrumbs}                       |
++----------------------------------------------------+
+| {Region A: fields/controls}    | {Region B: ...}    |
+|                                 |                    |
++----------------------------------------------------+
+| {Primary actions: e.g. Save / Cancel}                |
++----------------------------------------------------+
+}
+```
+
+{Mockup artifact: link, or "none — ASCII layout above is authoritative".}
+
+| Region | Contains (field/control) | Notes |
+| --- | --- | --- |
+| {region name from sketch above} | {field/control, cross-referenced to Screen item definition} | {responsive behavior, conditional visibility, or "none"} |
+
 ## Screen item definition
 
 | Field | Type | Required | Validation rule | Source (BD ref) |

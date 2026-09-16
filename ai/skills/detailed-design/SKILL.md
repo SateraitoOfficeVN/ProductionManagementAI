@@ -17,7 +17,7 @@ Turn a BD into an implementation-ready specification: fields, validation, proces
 
 ## 3. Execution steps and applicable rules
 
-1. Specify fields, validation, processing sequence and state transitions.
+1. Specify the screen layout/mockup (ASCII sketch and/or linked artifact, with a region-to-field mapping), then fields, validation, processing sequence and state transitions. Use [screen-design](../screen-design/SKILL.md) for full-fidelity mockup work on a given screen.
 2. Define API request/response/error behavior (RFC 9457 Problem Details for backend errors, no leaked implementation detail), persistence mapping, and what gets traced/logged (OpenTelemetry spans, metrics) for the endpoint — per [backend rules](../../rules/backend.md).
 3. Resolve inconsistencies with DB/API before dependent implementation begins.
 
