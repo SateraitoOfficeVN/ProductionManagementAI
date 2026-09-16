@@ -1,5 +1,7 @@
 # git-review rules
 
+- Create a dedicated branch, in its own git worktree isolated from the main working directory, for implementation work before making any change; never implement directly on the main/default branch or in the main worktree.
+- Keep that worktree and branch through implementation, review and merge; remove the worktree once the branch is merged or abandoned so stale worktrees don't accumulate.
 - Inspect the diff and repository state before editing or preparing review.
 - Keep the PR focused; explain behavior, verification and remaining limitations.
 - Check consistency between requirements, design, code, migration and tests.
