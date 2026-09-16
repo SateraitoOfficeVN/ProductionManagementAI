@@ -48,8 +48,11 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 | 2026-09-16 | Step 13: `dotnet test src/backend/ProductionManagementAI.slnx` | `dotnet test` | local, `src/backend` | pass — 4/4 tests passed (`LoginRequestTests`, `MeResponseTests`) | this row |
 | 2026-09-16 | Step 13: full solution build with test project added | `dotnet build src/backend/ProductionManagementAI.slnx` | local, `src/backend` | pass — 0 warnings, 0 errors | this row |
 | 2026-09-16 | Step 13: scope note | — | — | `Domain.Tests` not created — `ProductionManagementAI.Domain` has zero entities as of this work item; an empty test project would assert nothing. Will be added in WI-002 (Screen A) when Domain gains its first entity | `tests/backend/README.md` |
+| 2026-09-16 | Step 14: backend build after `IdentitySeeder` | `dotnet build ProductionManagementAI.slnx` | local, `src/backend` | pass — 0 warnings, 0 errors | this row |
+| 2026-09-16 | Step 14: startup fails when `SEED_ADMIN_PASSWORD` unset | `ASPNETCORE_ENVIRONMENT=Development dotnet run --no-build` (no `SEED_ADMIN_PASSWORD` set) | local | pass — `InvalidOperationException: SEED_ADMIN_PASSWORD must be set...`, thrown before any DB call (the check is ordered first in `IdentitySeeder.SeedAsync`, ahead of role/user creation, so a DB error can never mask it); no password value in output since none was ever set | this row |
+| 2026-09-16 | Step 14: seeding proceeds when env var is set | `ASPNETCORE_ENVIRONMENT=Development SEED_ADMIN_PASSWORD='<test value>' dotnet run --no-build` | local | pass — guard passed, failed only at the (expected, not-yet-running) `RoleManager.RoleExistsAsync` DB call; test password value did not appear in any output or in this log | this row |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (14 onward) have not been executed yet — step 14 (seed roles/admin user) is next.
+Remaining steps from `plan.md`'s Deliverables and milestones table (15 onward) have not been executed yet — step 15 (Dockerfiles + `compose.yaml` + `.env.example`) is next.
 
 ## Defects, failures and blockers
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using ProductionManagementAI.Infrastructure;
+using ProductionManagementAI.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    // Development-only seed data (ADR-0002): placeholder Admin/Operator roles + one seed admin user.
+    using var seedScope = app.Services.CreateScope();
+    await IdentitySeeder.SeedAsync(seedScope.ServiceProvider, app.Configuration);
 }
 
 app.UseHttpsRedirection();
