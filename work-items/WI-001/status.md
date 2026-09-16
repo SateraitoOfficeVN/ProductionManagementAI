@@ -42,10 +42,11 @@ Plan approved this session; no implementation steps executed yet.
 | 2026-09-16 | Step 20: `ProductionManagementAI.Integration.Tests` (xUnit + `WebApplicationFactory<Program>` + Testcontainers.PostgreSql — spins up a real, throwaway Postgres 17 per run, self-contained/CI-ready) — 4 tests: unauthenticated `/me` → 401, login as seeded admin → 200 with correct `MeResponse`, login→logout→`/me` → 401, wrong password → 401. **Found and fixed a real bug along the way**: `AddInfrastructure` read the DB connection string eagerly at service-registration time, before host-building config overrides (e.g. from `WebApplicationFactory`) were guaranteed merged in — fixed by resolving it lazily via the injected `IServiceProvider` inside `AddDbContext`. All 8 backend tests (4 unit + 4 integration) pass | `tests/integration/ProductionManagementAI.Integration.Tests/*`, `src/backend/ProductionManagementAI.Infrastructure/DependencyInjection.cs`, `src/backend/ProductionManagementAI.Api/Program.cs`, `evidence.md` |
 | 2026-09-16 | Step 21: Playwright E2E smoke spec **deferred** (plan explicitly allows this) — already have equivalent coverage: frontend unit tests, backend unit+integration tests, and a real-browser walkthrough (step 18) against the live Docker stack exercising the exact login→me→logout flow a Playwright spec would cover. Reason recorded here rather than left silent, per plan.md's risk-table allowance | `evidence.md` |
 | 2026-09-16 | Step 22: `.github/workflows/ci.yml` — backend job (`dotnet build`/`dotnet test`, includes Testcontainers-backed integration tests) + frontend job (`npm run lint`/`npm run build`/`npm test`); build+lint+test only, no deploy/publish; reviewed manually (not run — push/CI-execution unauthorized). PR template already existed at repo scaffold level, reviewed and left as-is (already generic/adequate) | `.github/workflows/ci.yml`, `.github/workflows/README.md` |
+| 2026-09-16 | Step 23: full local verification re-run (Release config, matching CI exactly) — backend build/test 8/8 pass, frontend lint/build/test all pass; final live-stack smoke check found the seeded admin account locked out (`lockout_end` ~5.5 min in the future) from accumulated wrong-password attempts made across this session's own testing — confirms the lockout mitigation (ADR-0002 STRIDE: Spoofing) genuinely works, not a regression; login/session-cycle already proven working in steps 17/18/20, so did not wait out the 15-minute window. `docker compose down` — all 3 containers stopped/removed cleanly, `db-data`/`dp-keys` volumes preserved | `evidence.md` |
 
 ## Planned for next period
 
-Step 23: full local verification pass, results recorded (re-run everything in sequence, `docker compose down` after).
+Step 24: update `ai/project.md` with resolved decisions, verified commands, and the locked Screen A→B→C roadmap.
 
 ## Risks and issues
 
@@ -55,4 +56,4 @@ Step 23: full local verification pass, results recorded (re-run everything in se
 
 ## Next action
 
-Start step 23 (full local verification pass) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.
+Start step 24 (update `ai/project.md`) in `D:/Work/AI/WMS-WI-001-bootstrap`. Execution mode note (see decisions.md): Claude is running local git/scaffold commands directly for this work item, per the user's "continue next steps" direction after exiting plan mode.

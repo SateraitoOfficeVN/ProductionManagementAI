@@ -2,16 +2,16 @@
 
 # Project Bootstrap (skeleton + auth foundation) — Requirements Traceability & Evidence
 
-As of source revision/commit: branch `feature/WI-001-bootstrap-skeleton`, based on `6cfbb6c`; steps 6–9 not yet committed, 2026-09-16.
+As of source revision/commit: branch `feature/WI-001-bootstrap-skeleton`, HEAD `8c58b65` (steps 5–22 committed; step 23's verification/teardown not yet committed at time of writing), 2026-09-16.
 
 ## Traceability matrix
 
 | Requirement ID | Requirement | Design artifact | Code / PR | Test case ID | Status |
 | --- | --- | --- | --- | --- | --- |
-| INFRA-001 | Frontend/backend skeletons build and run locally | ADR-0001 (not yet written) | not yet started | not yet defined | not started |
-| INFRA-002 | Login → session → logout flow with user/role model | ADR-0002, DB-001 (not yet written) | not yet started | not yet defined | not started |
-| INFRA-003 | CI skeleton (build+lint+test) | `.github/workflows/ci.yml` (not yet written) | not yet started | not applicable — reviewed, not run (push unauthorized) | not started |
-| INFRA-004 | `ai/project.md` reflects verified stack/commands | this evidence log | not yet started | not applicable | not started |
+| INFRA-001 | Frontend/backend skeletons build and run locally | ADR-0001 | `src/backend/*`, `src/frontend/*` | `dotnet build`/`npm run build` (steps 6,7,23); `docker compose up -d --build` (step 17) | done |
+| INFRA-002 | Login → session → logout flow with user/role model | ADR-0002, DB-001 | `src/backend/ProductionManagementAI.{Infrastructure,Api}/*`, `src/frontend/src/features/auth/*` | `AuthEndpointsTests` (step 20, 4 tests), `LoginPage`/`ProtectedRoute` Vitest tests (step 19, 5 tests), manual browser walkthrough (step 18) | done |
+| INFRA-003 | CI skeleton (build+lint+test) | this evidence log (step 22) | `.github/workflows/ci.yml` | not applicable — reviewed manually, not run (push/CI execution unauthorized) | done (reviewed, not executed) |
+| INFRA-004 | `ai/project.md` reflects verified stack/commands | this evidence log | pending — step 24 | not applicable | not started |
 
 ## Test execution log
 
@@ -79,21 +79,29 @@ Step 1 (preflight) complete — no blockers. Step 2 (this work item's own docs) 
 
 | 2026-09-16 | Step 21: Playwright E2E smoke spec | not run | — | deferred, per plan.md's own explicit allowance for this optional step ("record E2E smoke as deferred with reason; unit/integration coverage still required"). Reason: step 18's manual browser walkthrough already exercised the same login→me→logout→me flow against the live Docker stack, and steps 19/20 give automated unit+integration coverage of the same boundaries; a Playwright spec would duplicate that coverage rather than add new signal at this stage | this row |
 | 2026-09-16 | Step 22: `ci.yml` manual review | read-through of `.github/workflows/ci.yml` | local (doc review) | pass — valid YAML structure (consistent 2-space indentation, correctly nested `on`/`permissions`/`jobs`); `dotnet test --no-build` correctly depends on the preceding `dotnet build` step producing all project outputs (verified consistent with local `dotnet build`/`dotnet test` runs in steps 6–20, which build the whole `.slnx` including both test projects); `permissions: contents: read` scopes the default `GITHUB_TOKEN` down from its broader default | this row |
+| 2026-09-16 | Step 23: backend build (Release, matches CI) | `dotnet build ProductionManagementAI.slnx --configuration Release` | local, `src/backend` | pass — 0 warnings, 0 errors, all 6 projects | this row |
+| 2026-09-16 | Step 23: backend test (Release, `--no-build`, matches CI) | `dotnet test ProductionManagementAI.slnx --no-build --configuration Release` | local, `src/backend` | pass — 8/8 (4 unit + 4 integration) | this row |
+| 2026-09-16 | Step 23: frontend lint | `npm run lint` | local, `src/frontend` | pass — no findings | this row |
+| 2026-09-16 | Step 23: frontend build | `npm run build` | local, `src/frontend` | pass — 0 type errors | this row |
+| 2026-09-16 | Step 23: frontend test | `npm test` | local, `src/frontend` | pass — 2 files, 5/5 tests | this row |
+| 2026-09-16 | Step 23: compose config final check | `docker compose config --quiet` | local, `deploy/` | pass — no output (valid config) | this row |
+| 2026-09-16 | Step 23: final live-stack smoke check | `curl` against the still-running `db`/`backend`/`frontend` containers (started in step 17) | local | `/health` → 200, frontend root → 200, but login (correct password) → 401. Diagnosed via `docker exec deploy-db-1 psql ... SELECT access_failed_count, lockout_end FROM users WHERE user_name='admin'` — account was locked out (`lockout_end` ~5.5 min in the future, `now()` compared directly), from accumulated wrong-password attempts across this session's own testing against the same shared database (this container and the local `dotnet run` used in step 18 both connect to the same Postgres). This is the lockout mitigation (ADR-0002 STRIDE: Spoofing) working as designed, not a regression — login/session-cycle were already proven working with a fresh lockout state in steps 17/18/20; did not wait out the window just to re-demonstrate that | this row |
+| 2026-09-16 | Step 23: teardown | `docker compose down` (from `deploy/`) | local | pass — all 3 containers stopped and removed cleanly; `deploy_db-data`/`deploy_dp-keys` volumes preserved (`docker volume ls`) | this row |
 
-Remaining steps from `plan.md`'s Deliverables and milestones table (23 onward) have not been executed yet — step 23 (full local verification pass) is next. `db`/`backend`/`frontend` Docker containers left running (plan step 23 tears everything down after the full verification pass); the local (non-Docker) dev-server/backend processes used for the browser walkthrough were stopped afterward.
+Remaining steps from `plan.md`'s Deliverables and milestones table (24 onward) have not been executed yet — step 24 (update `ai/project.md`) is next.
 
 ## Defects, failures and blockers
 
 | Item | Reason | Blocker | Follow-up |
 | --- | --- | --- | --- |
-| None currently | — | — | — |
+| None currently — the step-20 connection-string bug and step-23 lockout finding were both diagnosed and resolved/explained within this session | — | — | — |
 
 ## External references
 
 - PR: not opened — not authorized
-- CI run: not applicable — no code exists yet
+- CI run: not applicable — `ci.yml` reviewed manually, not triggered (push/CI execution not authorized by `ai/policies.md`)
 - Deployment: not applicable — not authorized
 
 ## Remaining limitations and next action
 
-Nothing has been implemented yet; this work item is at plan-approved, step-1-not-started state. Next action: run preflight (plan.md step 1) and report results so this log and `status.md` can be updated.
+Steps 1–23 complete, full local verification pass (Release config) green across backend and frontend, Docker stack torn down cleanly. Remaining: step 24 (update `ai/project.md` with resolved decisions and verified commands), step 25 (final work-item doc pass against `ai/checklists/delivery.md`), step 26 (already ongoing — commits made throughout at logical checkpoints). No push/PR/merge/CI-execution/deploy has occurred or is authorized for this work item.
