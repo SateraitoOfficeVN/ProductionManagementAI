@@ -214,4 +214,4 @@ This shape is deliberate: (1)-(2) bound what the skill needs before it starts; (
 
 ## Where this is heading
 
-This harness is fully built out at the process level, but the application it governs is not: there is still no `src/` implementation, no CI pipeline, and several technology decisions in `ai/project.md` remain open. The next real test of the harness is exactly what `docs/vi/000-mo-ta-harness-va-quy-trinh-phat-trien-ai.md` proposed — running one feature end-to-end (requirements → plan → design → code → test → review → evidence) and seeing which parts of this document hold up unchanged and which need another harness-improvement pass.
+This harness is fully built out at the process level, but the application it governs is not: there is still no `src/` implementation, no CI pipeline, and several technology decisions in `ai/project.md` remain open. The next real test of the harness is running one feature end-to-end (requirements → plan → design → code → test → review → evidence) and seeing which parts of this document hold up unchanged and which need another harness-improvement pass.

@@ -6,7 +6,7 @@ AI-assisted development harness and production-management demo.
 
 ## Start here
 
-1. Read [how the ai/ harness works](ai/harness-overview.md) (the original proposal it was built from is the [Vietnamese overview](docs/vi/000-mo-ta-harness-va-quy-trinh-phat-trien-ai.md)).
+1. Read [how the ai/ harness works](ai/harness-overview.md)
 2. Read [project decisions](ai/project.md) and [execution policies](ai/policies.md).
 3. Choose a [workflow](ai/workflows/README.md).
 4. Create a work item from the [templates](ai/templates/README.md).
