@@ -113,5 +113,5 @@ Kept at ASP.NET Core Identity's standard EF Core column mapping (near-zero cost 
 
 | Decision | Options | Recommendation | Status |
 | --- | --- | --- | --- |
-| Whether an additional CSRF token (beyond `SameSite` cookie attribute) is needed for state-changing endpoints | `SameSite=Lax` only vs. `SameSite=Lax` + anti-forgery token | Deferred to Screen A's detailed-design (`work-items/WI-002/brief.md` scope), since it affects the order-mutation endpoints more concretely than the login endpoint itself | open — see ADR-0002 Confirmation section |
+| Whether an additional CSRF token (beyond `SameSite` cookie attribute) is needed for state-changing endpoints | `SameSite=Lax` only vs. `SameSite=Lax` + anti-forgery token | `SameSite=Lax` only — no additional token | decided during WI-002's first design pass; its `decisions.md`/detailed-design.md were reset when WI-002 restarted against the updated templates — reaffirm or revisit when WI-002's detailed-design is redone for SCR-001 |
 | Whether `email_confirmed`/`two_factor_enabled`/`phone_number*` columns are ever exercised by a future requirement | keep unused vs. trim from the model | Keep (near-zero cost, avoids a later breaking migration) — already decided, see `users` table Notes | decided — see `work-items/WI-001/decisions.md` (auth foundation design) |

@@ -24,7 +24,7 @@
 
 ## Current implementation
 
-WI-001 (`work-items/WI-001/`) stood up the application skeleton and auth foundation on branch `feature/WI-001-bootstrap-skeleton` (not yet merged to `master`). Verified commands, run from the repo root unless noted:
+WI-001 (`work-items/WI-001/`) stood up the application skeleton and auth foundation on branch `feature/WI-001-bootstrap-skeleton`, merged to `master` via PR #1. Verified commands, run from the repo root unless noted:
 
 **Backend** (`src/backend/ProductionManagementAI.slnx`):
 - Build: `dotnet build src/backend/ProductionManagementAI.slnx`

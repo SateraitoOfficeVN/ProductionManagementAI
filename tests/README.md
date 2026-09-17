@@ -1,3 +1,3 @@
 # tests
 
-Future automated verification. Frontend/backend contain unit-level tests; integration/system/e2e contain wider checks. Adapt physical placement to selected frameworks without duplication.
+Automated verification. Backend unit tests: `tests/backend/ProductionManagementAI.Application.Tests` (xUnit). Backend integration tests: `tests/integration/ProductionManagementAI.Integration.Tests` (xUnit + Testcontainers.PostgreSql). Frontend unit tests live with the frontend app at `src/frontend/tests/unit/` (Vitest + React Testing Library) rather than under `tests/frontend/` — cross-package Vite/Node module resolution needs npm workspaces, out of scope so far (`work-items/WI-001/decisions.md`). `tests/e2e`/`tests/system` are reserved; a Playwright E2E smoke spec was deliberately deferred in WI-001 (equivalent coverage already exists — see `ai/project.md`). Adapt physical placement to selected frameworks without duplication.
