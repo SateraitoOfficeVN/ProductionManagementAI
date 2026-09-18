@@ -1,3 +1,3 @@
 # 010_basic-design
 
-BD, business flow and screen layouts; equivalent to 010_基本設計. No system artifacts have been produced yet. Use the templates in ai/templates from the repository root.
+BD, business flow and screen layouts; equivalent to 010_基本設計. Documents: [BD-001](BD-001-production-order-create-edit.md) (Screen A, WI-002). Use the templates in ai/templates from the repository root.
