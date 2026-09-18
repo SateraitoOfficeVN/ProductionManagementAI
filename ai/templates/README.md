@@ -10,7 +10,7 @@ Copy the relevant template to a work item or docs area. Templates are unfilled f
 - [decisions.md](decisions.md)
 - [evidence.md](evidence.md)
 - [basic-design.md](basic-design.md)
-- [detailed-design.md](detailed-design.md) — main per-screen/module DD; companion documents below are optional, for when a screen's API, shared backend module, or processing flow needs its own document
+- [detailed-design.md](detailed-design.md) — main per-screen/module DD; the three companion documents below are always produced with it, one Markdown file each, for every DD (API catalog, backend service methods, step-by-step screen processing)
   - [DD/api-design.md](DD/api-design.md)
   - [DD/function-design.md](DD/function-design.md)
   - [DD/screen-processing-design.md](DD/screen-processing-design.md)

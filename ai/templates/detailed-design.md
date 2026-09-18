@@ -1,9 +1,10 @@
 <!-- Detailed Design Document (詳細設計書) template — the main per-screen/module DD, matching ai/templates/example/DD/00-04-01.詳細設計_会員登録_入力画面.xlsx (module/container/rule design, include-file/component organization, validation, task index). It is one of a 4-file family mirroring the example set's own layout:
 - detailed-design.md (this file) — the main screen/module DD, matching the example's top-level 00-04-01.詳細設計_....xlsx.
-- DD/api-design.md — per-endpoint request/response field catalogs, matching example/DD/API/70-00-02.API仕様設計_....xlsx. Use it when an API is substantial or reused enough to warrant its own document; otherwise list it in "APIs used" below.
-- DD/function-design.md — per-method design for a shared/reusable backend module, matching example/DD/Functions/90-11-02.機能設計_....xlsx. Use it for logic reused across more than one screen; logic owned only by this screen stays in this file's "Module design" instead.
-- DD/screen-processing-design.md — step-by-step processing flow (branching, redirects, per-component breakdown), matching example/DD/画面処理設計/00-04-01.画面処理設計_....xlsx. Use it when this file's own "Processing and state transitions" table isn't enough detail; otherwise that table alone is sufficient.
-List which companion documents exist for this screen in "Companion design documents" below. This file's own "Module design" keeps the reference workbook's Rule-type/Rule-references/Condition-references/Check-parameters sub-block (from its Container/Rule sheets) for a module that is itself a business rule or validator owned by this screen. Where a legacy ASPX-specific concept (e.g. an XML rule engine, .aspx include paths) has no direct equivalent in this project's .NET 10 + EF Core / React stack, fill that field with "not applicable — {reason}" rather than deleting it.
+- DD/api-design.md — per-endpoint request/response field catalogs, matching example/DD/API/70-00-02.API仕様設計_....xlsx. Always produced: every endpoint this DD's screen calls is catalogued there, including small screen-owned ones; this file's "APIs used" only lists the endpoints and links to their sections.
+- DD/function-design.md — per-method design of the backend service/Application-layer methods behind this DD's endpoints (shared across screens or not), matching example/DD/Functions/90-11-02.機能設計_....xlsx. Always produced: this file's "Module design" keeps the screen-owned domain entities/rules, UI components and controllers, and points to the companion for the service methods.
+- DD/screen-processing-design.md — step-by-step processing flow (branching, redirects, per-component breakdown), matching example/DD/画面処理設計/00-04-01.画面処理設計_....xlsx. Always produced: the step-by-step flows live there, one block per component; this file's "Processing and state transitions" keeps only the state-transition table and a flow → section pointer table.
+All four documents are always produced for every DD, as separate Markdown files side by side in docs/en/020_detailed-design/: `{DD-###}-{slug}.md` (this file), `{DD-###}-API-{slug}.md`, `{DD-###}-FN-{slug}.md` and `{DD-###}-SPD-{slug}.md`, with document IDs `{DD-###}`, `{DD-###}-API`, `{DD-###}-FN` and `{DD-###}-SPD`. Each piece of content has exactly one home among the four; the others point to it rather than repeating it. When a companion's subject genuinely doesn't exist for a DD (e.g. a backend-only DD with no screen), the companion is still produced, with each of its sections marked "Not applicable — {reason}" rather than the file being skipped.
+List all three companion documents in "Companion design documents" below. This file's own "Module design" keeps the reference workbook's Rule-type/Rule-references/Condition-references/Check-parameters sub-block (from its Container/Rule sheets) for a module that is itself a business rule or validator owned by this screen. Where a legacy ASPX-specific concept (e.g. an XML rule engine, .aspx include paths) has no direct equivalent in this project's .NET 10 + EF Core / React stack, fill that field with "not applicable — {reason}" rather than deleting it.
 Copy into the relevant work item or docs/en/020_detailed-design area; replace {bracketed} prompts with task-specific facts, or "Not applicable" with a reason. Do not fabricate results or approval. -->
 
 # {Screen / Module Name} — Detailed Design Document (詳細設計書)
@@ -92,13 +93,13 @@ Copy into the relevant work item or docs/en/020_detailed-design area; replace {b
 
 ### Companion design documents
 
-{Which of the 3 companion templates (see header) exist for this screen, generalizing the reference workbooks' task index. Detailed review/task status stays in this work item's status.md — this table is only "what exists and what it covers," not a tracking sheet.}
+{All three companion documents are always produced (see header); list each one with what it covers, generalizing the reference workbooks' task index. Detailed review/task status stays in this work item's status.md — this table is only "what exists and what it covers," not a tracking sheet. A companion whose subject doesn't exist for this DD still gets a row, with "Not applicable — {reason}" in Covers.}
 
 | No | Document | Type | Covers |
 | --- | --- | --- | --- |
-| {} | {} | {api-design \| function-design \| screen-processing-design} | {} |
-
-{"None — this screen's design fits entirely in this file" if no companion document is needed.}
+| 1 | {DD-###}-API-{slug}.md | api-design | {endpoints} |
+| 2 | {DD-###}-FN-{slug}.md | function-design | {service methods} |
+| 3 | {DD-###}-SPD-{slug}.md | screen-processing-design | {per-component processing blocks} |
 
 ### Task / design index
 
@@ -110,7 +111,7 @@ Copy into the relevant work item or docs/en/020_detailed-design area; replace {b
 
 ## Module design
 
-{Repeat this block once per module, method, handler, or function owned by this screen (not shared with others — a shared/reusable backend module belongs in its own function-design.md instead, referenced from "Dependencies" below).}
+{Repeat this block once per screen-owned domain entity/rule, UI component or controller. Backend service/Application-layer methods are designed in the function-design companion (always produced) — list them here only as a one-line pointer block, and reference them from "Dependencies" below.}
 
 ### {Module / method name}
 
@@ -218,7 +219,7 @@ Processing overview: {prose summary of the algorithm/flow}.
 
 ## Processing and state transitions
 
-{The resulting state transitions for each action from basic-design.md's "Actions and business rules." Step-by-step processing (phases, branching, dependencies) lives in DD/screen-processing-design.md when it needs that level of detail — link it in "Companion design documents" above; for a screen simple enough not to need a companion document, add the phase/step detail directly here instead, using screen-processing-design.md's own section shapes.}
+{The resulting state transitions for each action from basic-design.md's "Actions and business rules." Step-by-step processing (phases, branching, dependencies) always lives in the screen-processing-design companion; here, keep only the state-transition table below and a "Processing flows" table mapping each flow to its section in that companion.}
 
 ### State transitions
 
@@ -226,13 +227,19 @@ Processing overview: {prose summary of the algorithm/flow}.
 | --- | --- | --- | --- |
 | {state} | {event} | {state} | {e.g. record created, notification sent} |
 
+### Processing flows
+
+| Flow | Where (screen-processing-design / function-design section) | Events |
+| --- | --- | --- |
+| {flow name} | {{DD-###}-SPD §… / {DD-###}-FN §…} | {BD event IDs} |
+
 ## APIs used
 
-{Endpoints this screen calls. Full request/response field catalogs live in DD/api-design.md when an endpoint is substantial or reused enough to warrant its own document — link it here; for a small screen-owned endpoint, add the request/response fields directly here instead, using api-design.md's own section shapes.}
+{Endpoints this screen calls. Full request/response field catalogs always live in the api-design companion — list each endpoint here and link its section there; don't repeat the field tables.}
 
 | Endpoint | Method | Purpose | Design doc |
 | --- | --- | --- | --- |
-| {/path} | {GET/POST/PUT/DELETE} | {} | {DD/api-design.md §…, or "defined below" for a small inline endpoint} |
+| {/path} | {GET/POST/PUT/DELETE} | {} | {{DD-###}-API §…} |
 
 ## Database and transaction mapping
 

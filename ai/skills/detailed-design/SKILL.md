@@ -19,7 +19,8 @@ Turn a BD into an implementation-ready specification: fields, validation, proces
 
 1. Specify the screen layout/mockup: an ASCII sketch with a region-to-field mapping, plus a rendered mockup covering the screen's key states (create/empty, populated/edit, any locked-or-restricted variant, validation-error, success) — see [screen-design](../screen-design/SKILL.md) for how to produce and link it. Then specify fields, validation, processing sequence and state transitions.
 2. Define API request/response/error behavior (RFC 9457 Problem Details for backend errors, no leaked implementation detail), persistence mapping, and what gets traced/logged (OpenTelemetry spans, metrics) for the endpoint — per [backend rules](../../rules/backend.md).
-3. Resolve inconsistencies with DB/API before dependent implementation begins.
+3. Produce all four documents of the DD template family every time, each as its own Markdown file: the main DD plus the [api-design](../../templates/DD/api-design.md), [function-design](../../templates/DD/function-design.md) and [screen-processing-design](../../templates/DD/screen-processing-design.md) companions. Endpoint catalogs go in the API companion, backend service/Application-layer methods in the function-design companion, and step-by-step processing flows in the screen-processing companion. The main DD keeps screen items, states, screen-owned modules and the state-transition table, and points to the companions instead of repeating them. Never skip a companion because the main DD "could hold it"; if its subject doesn't exist for this DD, produce it with "Not applicable — {reason}" sections.
+4. Resolve inconsistencies with DB/API before dependent implementation begins.
 
 ## 4. Required tools/scripts and environmental conditions
 
@@ -27,15 +28,24 @@ The `design` skill for the rendered mockup (step 1); no live backend runtime is 
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-DD under `docs/en/020_detailed-design/`, starting from the [template](../../templates/detailed-design.md). Document ID `DD-###`, referencing the `BD-###`/`SCR-###`/`REQ-###` IDs it implements rather than restating them.
+Four files under `docs/en/020_detailed-design/`, always all four, starting from the [main template](../../templates/detailed-design.md) and its companions in [`ai/templates/DD/`](../../templates/DD/):
+
+| Document | File name | Document ID |
+| --- | --- | --- |
+| Main DD | `DD-###-{slug}.md` | `DD-###` |
+| API specification | `DD-###-API-{slug}.md` | `DD-###-API` |
+| Function design | `DD-###-FN-{slug}.md` | `DD-###-FN` |
+| Screen processing design | `DD-###-SPD-{slug}.md` | `DD-###-SPD` |
+
+Each references the `BD-###`/`SCR-###`/`REQ-###` IDs it implements rather than restating them. The rendered mockup's source (if any) sits in `docs/en/020_detailed-design/mockups/`.
 
 ## 6. Checklist and repeatable verification method
 
-Work through the [design-consistency checklist](../../checklists/design-consistency.md); repeat it whenever the API contract or DB mapping changes after the DD was first written.
+Work through the [design-consistency checklist](../../checklists/design-consistency.md); repeat it whenever the API contract or DB mapping changes after the DD was first written. Also confirm that all four DD files exist, that the main DD's "Companion design documents" table lists all three companions, and that no content is duplicated across them (each piece has one home; the others point to it).
 
 ## 7. Termination criteria and failure handling
 
-Done when the design is traceable to BD, precise enough for code and tests, and the design-consistency checklist passes. If the DD can't be reconciled with the current DB/API without a new decision, apply the pause conditions in [policies](../../policies.md) instead of implementing an inconsistency.
+Done when all four DD documents exist, the design is traceable to BD, precise enough for code and tests, and the design-consistency checklist passes. A DD with a missing companion is not done. If the DD can't be reconciled with the current DB/API without a new decision, apply the pause conditions in [policies](../../policies.md) instead of implementing an inconsistency.
 
 ## 8. Work item update procedure and handover for the next step
 
