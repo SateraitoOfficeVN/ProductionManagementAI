@@ -1,34 +1,53 @@
 # ProductionManagementAI
 
-AI-assisted development harness and production-management demo.
+An AI-assisted development harness, and the production-management demo app built with it. Claude and Codex work from the same Markdown process in [`ai/`](ai/README.md), and every piece of work is traceable from requirement to design, code, tests and evidence in [`work-items/`](work-items/README.md).
 
-**Status:** WI-001's application skeleton and auth foundation are implemented and merged to `master` (backend, frontend, DB migration, local Docker Compose, CI workflow defined but not yet executed). WI-002 (Screen A) is restarting its design from scratch against the updated basic-design/detailed-design templates. See `ai/project.md` for verified commands and what's still open.
+**Status:**
+- **WI-001 (bootstrap):** application skeleton and auth foundation, merged.
+- **WI-002 (Screen A, production-order create/edit):** designed, implemented, tested and merged.
+- **CI:** runs on every PR to `master` (backend, frontend and end-to-end jobs) and passes.
+- **Next:** Screen B, the production-order list.
+
+[`ai/project.md`](ai/project.md) has the verified commands and what's still open.
 
 ## Start here
 
-1. Read [how the ai/ harness works](ai/harness-overview.md)
+1. Read [how the ai/ harness works](ai/harness-overview.md).
 2. Read [project decisions](ai/project.md) and [execution policies](ai/policies.md).
 3. Choose a [workflow](ai/workflows/README.md).
 4. Create a work item from the [templates](ai/templates/README.md).
 5. Ask Claude or Codex to draft a plan; review it before implementation.
 
-Pass the applicable gate in [checklists](ai/checklists/README.md) — design-consistency, security-review, delivery, release-readiness — before calling a stage done.
+Pass the applicable gate in [checklists](ai/checklists/README.md) before calling a stage done: design-consistency, security-review, delivery or release-readiness.
 
-Claude starts at [CLAUDE.md](CLAUDE.md). Codex and compatible agents start at [AGENTS.md](AGENTS.md). Both read shared Markdown in `ai/`; native skill auto-discovery is not configured.
+Claude starts at [CLAUDE.md](CLAUDE.md). Codex and compatible agents start at [AGENTS.md](AGENTS.md). Both read the shared Markdown in `ai/`; native skill auto-discovery is not configured.
 
 ## Confirmed stack
 
-Vite + React + TypeScript + Tailwind CSS v4 (no component kit), .NET 10 + EF Core (layered Domain/Application/Infrastructure/Api), PostgreSQL 17, ASP.NET Core Identity (cookie auth), Vitest + React Testing Library / xUnit tests, GitHub Actions, Docker Compose (local).
-Still open: UI component kit, registry/deployment host beyond local Compose, exact role/permission matrix. Full detail in `ai/project.md`.
+- **Frontend:** Vite + React + TypeScript, Tailwind CSS v4 (no component kit), `react-router-dom`.
+- **Backend:** .NET 10 + EF Core, layered Domain/Application/Infrastructure/Api; ASP.NET Core Identity with cookie auth; RFC 9457 errors; OpenTelemetry.
+- **Database:** PostgreSQL 17. Migrations run as the owner; the app runs as a restricted login.
+- **Tests:** xUnit (unit + Testcontainers integration), Vitest + React Testing Library, Playwright E2E, axe accessibility checks.
+- **Delivery:** GitHub Actions CI, Docker Compose for local environments.
+
+Still open: registry/deployment host beyond local Compose, merge/deploy permissions, the Japanese-translation sync policy, how the demo videos are produced, and the full role/permission matrix. Full detail is in [`ai/project.md`](ai/project.md).
+
+## Run it locally
+
+1. Copy `deploy/.env.example` to `deploy/.env` and fill it in. `PMAI_APP_DB_PASSWORD` is required and has no default.
+2. `docker compose -f deploy/compose.yaml up -d --build db`
+3. Apply migrations as the database owner (the exact command is in [`deploy/README.md`](deploy/README.md)).
+4. `docker compose -f deploy/compose.yaml up -d --build`, then open http://localhost:3000 and sign in as `admin` with your `SEED_ADMIN_PASSWORD`.
 
 ## Layout
 
-- [ai](ai/README.md): shared workflows, skills, rules and templates.
-- [docs](docs/README.md): system documentation and initial Vietnamese specification.
-- [work-items](work-items/README.md): plans, decisions, status and evidence.
-- [src](src/README.md): backend (.NET 10) and frontend (Vite + React + TypeScript) application source — WI-001's skeleton and auth foundation are implemented; verified commands in `ai/project.md`.
-- [tests](tests/README.md): automated checks — backend unit/integration tests and frontend unit tests are implemented; see `ai/project.md` for commands.
-- [deploy](deploy/README.md), [.github](.github/README.md): deployment and GitHub conventions.
-- [demos](demos/README.md): four planned walkthroughs.
+- [ai](ai/README.md): shared workflows, skills, rules, templates, checklists and harness-improvement records.
+- [docs](docs/README.md): requirements, basic/detailed/database designs, ADRs and test documentation (English), plus the initial Vietnamese specification.
+- [work-items](work-items/README.md): each work item's brief, plan (every revision), decisions, status and evidence.
+- [src](src/README.md): backend (.NET 10) and frontend (Vite + React + TypeScript) application source.
+- [tests](tests/README.md): backend unit and integration tests, and Playwright E2E journeys. Frontend unit tests live in `src/frontend/tests/`.
+- [deploy](deploy/README.md): local Docker Compose environment and database logins.
+- `.github/`: the [CI workflow](.github/workflows/ci.yml) (backend, frontend and e2e jobs on every push/PR to `master`) and the [pull request template](.github/pull_request_template.md).
+- [demos](demos/README.md): the four Screen A lifecycle walkthroughs (basic design, database design, detailed design, implementation).
 
-English is the default for new project artifacts. Japanese versions are optional;
+English is the default for new project artifacts. Japanese versions are optional; how translations stay in sync with their English source is still an open decision (WI-001 DEC-013).
