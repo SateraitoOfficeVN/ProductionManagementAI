@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { createOrder, expectNoAxeViolations, futureDate, signIn } from './helpers'
+import { createOrder, expectNoAxeViolations, futureDate, openCreateForm, productField, signIn } from './helpers'
 
 // Screen A (SCR-001) user journeys — DD-001 E-level test viewpoints.
 
@@ -23,10 +23,10 @@ test('create → edit → In progress (locked) → Completed (terminal), accessi
   await page.getByRole('button', { name: 'Save' }).click()
   await expect(page.getByRole('status')).toHaveText(`Production order ${orderNumber} saved.`)
   await expect(page.getByLabel('Quantity')).toHaveAttribute('readonly', '')
-  await expect(page.getByLabel('Product')).toHaveValue('P-1004 — Drive shaft')
+  await expect(productField(page)).toHaveValue('P-1004 — Drive shaft')
   await expect(page.getByText('Locked after the order leaves Draft.')).toBeVisible()
-  await page.getByLabel('Product').focus()
-  await expect(page.getByLabel('Product')).toBeFocused()
+  await productField(page).focus()
+  await expect(productField(page)).toBeFocused()
   await expect(page.getByLabel('Status').locator('option')).toHaveText(['In progress', 'Completed', 'Cancelled'])
   await expectNoAxeViolations(page)
 
@@ -43,13 +43,13 @@ test('create → edit → In progress (locked) → Completed (terminal), accessi
 })
 
 test('empty Save shows inline errors, focuses Product, and is accessible', async ({ page }) => {
-  await page.goto('/production-orders/new')
+  await openCreateForm(page)
   await page.getByRole('button', { name: 'Save' }).click()
 
   await expect(page.getByText('Select a product.')).toBeVisible()
   await expect(page.getByText('Enter a whole number of 1 or more.')).toBeVisible()
   await expect(page.getByText('Enter a due date.')).toBeVisible()
-  await expect(page.getByLabel('Product')).toBeFocused()
+  await expect(productField(page)).toBeFocused()
   await expectNoAxeViolations(page)
 
   await page.getByLabel('Due date').fill('2000-01-01')
@@ -58,7 +58,7 @@ test('empty Save shows inline errors, focuses Product, and is accessible', async
 })
 
 test('Cancel asks before discarding changes; Escape keeps editing; Discard leaves without saving', async ({ page }) => {
-  await page.goto('/production-orders/new')
+  await openCreateForm(page)
   await page.getByLabel('Quantity').fill('12')
   await page.getByRole('button', { name: 'Cancel' }).click()
 
@@ -78,7 +78,7 @@ test('Cancel asks before discarding changes; Escape keeps editing; Discard leave
 })
 
 test('Cancel with no changes leaves straight away', async ({ page }) => {
-  await page.goto('/production-orders/new')
+  await openCreateForm(page)
   await page.getByRole('button', { name: 'Cancel' }).click()
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('dialog')).toHaveCount(0)
@@ -115,9 +115,9 @@ test('unknown order shows the not-found panel', async ({ page }) => {
 })
 
 test('the product list shows all 30 seeded products', async ({ page }) => {
-  await page.goto('/production-orders/new')
+  await openCreateForm(page)
   // 30 products + the "Select a product" placeholder.
-  await expect(page.getByLabel('Product').locator('option')).toHaveCount(31)
+  await expect(productField(page).locator('option')).toHaveCount(31)
   await expect(page.getByLabel('Due date')).toBeEditable()
   expect(futureDate()).toMatch(/^\d{4}-\d{2}-\d{2}$/)
 })

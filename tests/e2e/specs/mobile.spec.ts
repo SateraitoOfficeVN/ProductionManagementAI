@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test'
-import { expectNoAxeViolations, signIn } from './helpers'
+import { expectNoAxeViolations, openCreateForm, signIn } from './helpers'
 
 // BD-001 §1 SP layout (< 640px): single column, full-width buttons with Save above Cancel, back link breadcrumb.
 
 test('SP layout stacks fields and puts Save above Cancel', async ({ page }) => {
   await signIn(page)
-  await page.goto('/production-orders/new')
+  await openCreateForm(page)
 
   await expect(page.getByRole('link', { name: '‹ Home' })).toBeVisible()
 

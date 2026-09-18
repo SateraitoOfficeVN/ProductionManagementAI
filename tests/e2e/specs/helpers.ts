@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright'
-import { expect, type Page } from '@playwright/test'
+import { expect, type Locator, type Page } from '@playwright/test'
 
 export function adminPassword(): string {
   const password = process.env.E2E_ADMIN_PASSWORD
@@ -17,6 +17,21 @@ export async function signIn(page: Page) {
   await expect(page.getByRole('link', { name: 'New production order' })).toBeVisible()
 }
 
+/**
+ * The Product field by its stable id: a <select> while Draft, a read-only input once locked. Not getByLabel('Product'):
+ * label matching is case-insensitive and partial, so while the page is loading it also matches the skeleton's
+ * "Loading production order" label (a flaky failure seen in CI).
+ */
+export function productField(page: Page): Locator {
+  return page.locator('#productId')
+}
+
+/** Opens the create screen and waits until the form has finished loading (the Save button only exists then). */
+export async function openCreateForm(page: Page) {
+  await page.goto('/production-orders/new')
+  await expect(page.getByRole('button', { name: 'Save' })).toBeVisible()
+}
+
 /** A due date safely in the future regardless of the browser's or the plant's timezone. */
 export function futureDate(daysAhead = 30): string {
   const d = new Date(Date.now() + daysAhead * 86_400_000)
@@ -24,8 +39,8 @@ export function futureDate(daysAhead = 30): string {
 }
 
 export async function createOrder(page: Page, opts: { product?: string; quantity?: string; notes?: string } = {}) {
-  await page.goto('/production-orders/new')
-  await page.getByLabel('Product').selectOption({ label: opts.product ?? 'P-1004 — Drive shaft' })
+  await openCreateForm(page)
+  await productField(page).selectOption({ label: opts.product ?? 'P-1004 — Drive shaft' })
   await page.getByLabel('Quantity').fill(opts.quantity ?? '250')
   await page.getByLabel('Due date').fill(futureDate())
   if (opts.notes) {
