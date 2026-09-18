@@ -4,8 +4,8 @@ As of 2026-09-18. Work item state: in-progress.
 
 ## Overall status
 
-**RAG:** Green — on track
-The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-002, the DD-001 set and the mockup. Plan revision 2 (implementation, tests, push/PR) is approved and in progress.
+**RAG:** Amber — at risk
+The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-002, the DD-001 set and the mockup. Plan revision 2 is approved; steps 1–13 are done: implemented, and all 133 tests pass locally. Step 14 (push + PR) is in progress. CI is blocked by a GitHub account billing lock.
 
 ## Approved plan reference
 
@@ -16,6 +16,7 @@ The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-0
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
 | 2026-09-18 | WI-002 restarted; brief revision 1 (REQ-010–REQ-018) and decision log (DEC-001–DEC-009) | [brief.md](brief.md), [decisions.md](decisions.md) |
+| 2026-09-18 | Plan revision 2 steps 1–13: harness PR #2; WI-002 backend, DB login split, frontend, tests (49 unit, 38 integration, 38 frontend, 8 E2E, all pass); test-plan TP-002; checklists | [evidence.md](evidence.md), [test-plan.md](test-plan.md) |
 | 2026-09-18 | Plan revision 2 approved; harness RFC 0002 (keep every plan revision, oldest first) applied at the user's request | [plan.md](plan.md), `ai/improvements/0002-plan-revision-history.md` |
 | 2026-09-18 | DD set approved by the user; plan revision 1 step 6 closed (design phase complete); DEC-025–DEC-028 answered; plan revision 2 drafted | [plan.md](plan.md), [decisions.md](decisions.md) |
 | 2026-09-18 | Added the DD-001-FN and DD-001-SPD companions at the user's request | [DD-001-FN](../../docs/en/020_detailed-design/DD-001-FN-production-order-service.md), [DD-001-SPD](../../docs/en/020_detailed-design/DD-001-SPD-production-order-create-edit.md) |
@@ -27,14 +28,14 @@ The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-0
 
 ## Planned for next period
 
-Plan revision 2 steps 1–14: branches/worktrees, then backend, DB login split, frontend, tests, verification, push and PRs.
+User review of the Screen A PR and harness PR #2; merge only on the user's go-ahead.
 
 ## Risks and issues
 
 | Issue / blocker | Owner | Since | Impact |
 | --- | --- | --- | --- |
-| None open | — | — | — |
+| GitHub Actions won't start jobs: account locked for billing | ThanhTN | 2026-09-18 | CI evidence for both PRs |
 
 ## Next action
 
-Execute plan revision 2 step 1 (harness branch). Owner: Claude.
+Push the WI-002 branch and open its PR (plan revision 2, step 14). Then: ThanhTN reviews both PRs and clears the GitHub billing lock.

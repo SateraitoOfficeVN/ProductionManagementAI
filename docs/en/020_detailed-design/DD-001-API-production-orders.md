@@ -76,7 +76,7 @@ No project-level API registry exists yet; these IDs start it.
 | 4 | Quantity | `quantity` | integer | — | yes | no | — | `250` | | |
 | 5 | Due date | `dueDate` | string (date) | 10 | yes | no | — | `2026-10-01` | | |
 | 6 | Status | `status` | string | — | yes | no | Enum name | `InProgress` | | |
-| 7 | Allowed next statuses | `allowedNextStatuses` | string[] | — | yes | yes | From `ProductionOrderStatus.AllowedNext` | `["Completed","Cancelled"]` | Empty for terminal statuses | Drives M-02 |
+| 7 | Allowed next statuses | `allowedNextStatuses` | string[] | — | yes | yes | From `status.AllowedNext()` | `["Completed","Cancelled"]` | Empty for terminal statuses | Drives M-02 |
 | 8 | Product/quantity editable | `isProductQuantityEditable` | boolean | — | yes | no | `status == Draft` | `false` | | Drives the lock UI (REQ-018) |
 | 9 | Notes | `notes` | string \| null | 500 | yes | no | — | `null` | | |
 | 10 | Created at | `createdAt` | string (date-time) | — | yes | no | UTC | `2026-09-18T01:02:03Z` | | |

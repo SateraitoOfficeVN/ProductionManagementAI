@@ -20,6 +20,7 @@ DD-001-FN — used by DD-001 and DD-001-API (and later by Screen B's list DD), r
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-18 | Claude (for ThanhTN) | Initial creation. Moves DD-001 revision 1's modules 3–5 (service, plant clock, order-number issuer) into this document |
+| 2 | 2026-09-18 | Claude (for ThanhTN) | Aligned with implementation (plan revision 2): generated values come back via RETURNING instead of a re-read; the loaded `xmin` is the concurrency original; `AllowedNext()` is an extension method |
 
 ## Overview and method index
 
@@ -68,12 +69,12 @@ Parameters this module sends to the database (through the repository and issuer)
 | No | Name | Variable name | Type | Length | Required | Value mapping | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | ID | `Id` | `Guid` | — | yes | `entity.Id` | |
-| 2 | Order number | `OrderNumber` | `string` | 13 | yes | `entity.OrderNumber` (DB-generated; re-read after insert) | |
+| 2 | Order number | `OrderNumber` | `string` | 13 | yes | `entity.OrderNumber` (DB-generated; EF reads it back via `RETURNING` on insert) | |
 | 3 | Product ID | `ProductId` | `Guid` | — | yes | as stored | |
 | 4 | Quantity | `Quantity` | `int` | — | yes | as stored | |
 | 5 | Due date | `DueDate` | `DateOnly` | — | yes | as stored | Serialized `YYYY-MM-DD` |
 | 6 | Status | `Status` | `string` | — | yes | `entity.Status.ToString()` | |
-| 7 | Allowed next statuses | `AllowedNextStatuses` | `string[]` | — | yes | `ProductionOrderStatus.AllowedNext(entity.Status)`, in enum order | M-02 |
+| 7 | Allowed next statuses | `AllowedNextStatuses` | `string[]` | — | yes | `entity.Status.AllowedNext()` (`ProductionOrderStatusExtensions`), in enum order | M-02 |
 | 8 | Product/quantity editable | `IsProductQuantityEditable` | `bool` | — | yes | `entity.Status == Draft` | REQ-018 |
 | 9 | Notes | `Notes` | `string?` | 500 | yes | as stored (`null` when empty) | |
 | 10 | Created at | `CreatedAt` | `DateTimeOffset` | — | yes | `created_at_utc` | UTC |
@@ -183,7 +184,7 @@ Processing overview: collect every field error before touching the database. The
 | 7 | `seq = NextAsync(IPlantClock.CurrentYear)` | `IOrderNumberIssuer.NextAsync` |
 | 8 | `order = ProductionOrder.Create(productId, quantity, dueDate, notes, year, seq, utcNow)` | Domain |
 | 9 | `Add(order)`, `SaveChangesAsync`, commit | repository |
-| 10 | Re-read the generated `order_number` and `xmin` (`FindAsync(id, tracked: false)`) | repository |
+| 10 | The generated `order_number` and the new `xmin` are already on the entity: EF Core reads them back via `RETURNING` during `SaveChangesAsync` (no extra query) | EF Core |
 | 11 | Counter `created{outcome=success}`; span attributes `production_order.id`, `production_order.number`; `Ok(ToResponse(order))` | telemetry; mapper |
 
 Failure in steps 7–9 (e.g. counter CHECK violation at the 100,000th order of a year) → roll back, counter `created{outcome=error}`, log Error, rethrow → 500 MSG-E013 (DEC-013).
@@ -225,10 +226,10 @@ Processing overview: the check order is fixed, so each failure has exactly one o
 | 6 | Remember `fromStatus`, `dueDateChanged = request.DueDate != order.DueDate`, `productChanged = request.ProductId != order.ProductId` | — |
 | 7 | `order.Update(productId, quantity, dueDate, notes, status, utcNow)`; catch `DomainRuleViolation(code)` → `RuleViolation(code)` (`updated{outcome=rule_violation}`, log `ProductionOrderRuleViolated`). The entity is unchanged when it throws | Domain (DD-001 module 1) |
 | 8 | If `productChanged`: `ProductExistsAsync` (MSG-E002). If `dueDateChanged`: `DueDate < IPlantClock.Today` → MSG-E005 (DEC-009). Errors → `Invalid`; the tracked changes are discarded (the context is request-scoped and not saved) | repository; `IPlantClock` |
-| 9 | Set the original `RowVersion` to `request.Version`; `SaveChangesAsync` | repository |
+| 9 | `SaveChangesAsync`. EF adds `WHERE xmin = @original`, where the original is the `xmin` loaded in step 4 (already checked equal to `request.Version` in step 5), so a write between steps 4 and 9 is still caught | repository |
 | 10 | `DbUpdateConcurrencyException` → `Conflict` | — |
 | 11 | If `status != fromStatus`: counter `status_transitions{from,to}`; span `status.from`/`status.to` | telemetry |
-| 12 | Re-read (new `xmin`) → `Ok(ToResponse(order))`; `updated{outcome=success}` | repository; mapper |
+| 12 | The new `xmin` comes back via `RETURNING` → `Ok(ToResponse(order))`; `updated{outcome=success}` | mapper |
 
 ### 5. ProductionOrderMapper.ToResponse
 
@@ -258,7 +259,7 @@ Processing overview: field-by-field copy plus the two computed fields. No I/O.
 | Step | Description | Calls |
 | --- | --- | --- |
 | 1 | Copy stored fields | — |
-| 2 | Compute `AllowedNextStatuses` and `IsProductQuantityEditable` | `ProductionOrderStatus.AllowedNext` |
+| 2 | Compute `AllowedNextStatuses` and `IsProductQuantityEditable` | `ProductionOrderStatusExtensions.AllowedNext` |
 
 ### 6. IPlantClock.Today / CurrentYear
 

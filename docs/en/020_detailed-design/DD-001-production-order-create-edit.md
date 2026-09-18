@@ -23,6 +23,7 @@ DD-001 — implements BD-001 (SCR-001), requirements REQ-010–REQ-019.
 | --- | --- | --- | --- |
 | 1 | 2026-09-18 | Claude (for ThanhTN) | Initial creation |
 | 2 | 2026-09-18 | Claude (for ThanhTN) | Added the function-design (DD-001-FN) and screen-processing-design (DD-001-SPD) companions; modules 3–5 and flows P-01–P-05 moved there, with pointers left here |
+| 3 | 2026-09-18 | Claude (for ThanhTN) | Aligned with implementation (plan revision 2): `AllowedNext()` extension method; OpenTelemetry instrumentation set; test-plan IDs filled in |
 
 ## Overview and reference documents (概要・目次)
 
@@ -142,7 +143,7 @@ Rule type: business invariant.
 
 | No | Rule / validator | Location | Notes |
 | --- | --- | --- | --- |
-| 1 | `ProductionOrderStatus.AllowedNext` | Domain | V-06 |
+| 1 | `ProductionOrderStatusExtensions.AllowedNext` | Domain | V-06 |
 
 **Condition / data references**
 
@@ -179,7 +180,7 @@ Processing overview: `ProductionOrder.Create(...)` returns a new `Draft` order. 
 | Step | Description | Calls |
 | --- | --- | --- |
 | 1 | If `Status != Draft` and (`productId != ProductId` or `quantity != Quantity`) → throw `DomainRuleViolation("MSG-E008")`; nothing changed (DEC-007) | — |
-| 2 | If `status != Status` and `status ∉ AllowedNext(Status)` → throw `DomainRuleViolation("MSG-E007")` | `ProductionOrderStatus.AllowedNext` |
+| 2 | If `status != Status` and `status ∉ AllowedNext(Status)` → throw `DomainRuleViolation("MSG-E007")` | `ProductionOrderStatusExtensions.AllowedNext` |
 | 3 | Assign `ProductId`, `Quantity` (only possible while `Draft`), `DueDate`, `Notes`, `Status` | — |
 | 4 | Set `UpdatedAtUtc` = the given UTC time | — |
 
@@ -189,7 +190,7 @@ Processing overview: `ProductionOrder.Create(...)` returns a new `Draft` order. 
 
 | Field | Value |
 | --- | --- |
-| Description | `Draft`, `InProgress`, `Completed`, `Cancelled`, plus a static `AllowedNext(status)` table: Draft → {InProgress, Cancelled}; InProgress → {Completed, Cancelled}; Completed, Cancelled → {} |
+| Description | `Draft`, `InProgress`, `Completed`, `Cancelled`, plus the `AllowedNext()` extension method in `ProductionOrderStatusExtensions` (C# enums can't hold methods), whose table is: Draft → {InProgress, Cancelled}; InProgress → {Completed, Cancelled}; Completed, Cancelled → {} |
 | Return type | `IReadOnlySet<ProductionOrderStatus>` |
 
 Not applicable — a plain lookup table, not a rule/validator with its own fields. Persisted as a string via EF value conversion (DEC-015). The API returns `allowedNextStatuses` so the frontend never duplicates the table (M-02).
@@ -415,7 +416,7 @@ Never logged: notes text, full request/response bodies, cookies.
 
 ## Observability (OpenTelemetry)
 
-Per `ai/rules/backend.md` and the design-consistency checklist. The backend has no OpenTelemetry setup yet, so plan revision 2 adds `OpenTelemetry.Extensions.Hosting` with ASP.NET Core, HttpClient, EF Core/Npgsql instrumentation and the OTLP exporter. The exporter is enabled only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set; otherwise telemetry is collected but not exported.
+Per `ai/rules/backend.md` and the design-consistency checklist. The backend has no OpenTelemetry setup yet, so plan revision 2 adds `OpenTelemetry.Extensions.Hosting` with ASP.NET Core and Npgsql instrumentation and the OTLP exporter. Npgsql spans cover the database statements; EF Core's own instrumentation package is still prerelease and the backend makes no outgoing HttpClient calls, so neither is added. The exporter is enabled only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set; otherwise telemetry is collected but not exported.
 
 | Signal | Name | Attributes / tags | Emitted by |
 | --- | --- | --- | --- |
@@ -450,35 +451,35 @@ The user id is not a span attribute (it's personal data). Logs correlate with sp
 
 ## Test viewpoints and unresolved decisions
 
-Level: U = unit (xUnit Domain/Application, or Vitest+RTL for the frontend), I = integration (`WebApplicationFactory` + Testcontainers Postgres), E = E2E (tool chosen in plan revision 2). Test-plan IDs are assigned when `test-plan.md` is written.
+Level: U = unit (xUnit Domain/Application, or Vitest+RTL for the frontend), I = integration (`WebApplicationFactory` + Testcontainers Postgres), E = E2E (Playwright, DEC-025). Test-plan IDs refer to `work-items/WI-002/test-plan.md` (TP-002).
 
 | Scenario | Precondition | Expected result | Test-plan ID |
 | --- | --- | --- | --- |
-| Create valid order (REQ-010) — I, E | Admin signed in, products seeded | 201, `status=Draft`, `orderNumber` matches `^PO-\d{4}-\d{5}$`, redirect to edit + MSG-I001 | TBD |
-| First order of a year gets `00001`; next gets `00002` (DEC-012/013) — I | Empty counter; plant clock faked to 2026 then 2027 | `PO-2026-00001`, `PO-2026-00002`, `PO-2027-00001` | TBD |
-| Concurrent creates get distinct numbers — I | 20 parallel POSTs | 20 distinct sequential numbers, no gaps | TBD |
-| Year boundary uses the plant timezone (DEC-017) — U | `TimeProvider` at 2026-12-31T15:30Z (= 2027-01-01 00:30 JST) | Year 2027; "today" 2027-01-01 | TBD |
-| Edit Draft order fields (REQ-011) — I | Draft order | 200, values saved, `updatedAt` changed | TBD |
-| Unknown id (REQ-011) — I, U(fe) | — | 404 MSG-E011; not-found panel | TBD |
-| Stale save (DEC-010) — I | Two clients load version v; A saves | B's PUT → 409 MSG-E009; row keeps A's values | TBD |
-| Unauthenticated (REQ-012) — I, U(fe) | No cookie | 401 on all 4 endpoints; UI redirects to `/login` | TBD |
-| No role (REQ-012) — I, U(fe) | User without Admin/Operator | 403 on all 4 endpoints; forbidden panel without API call | TBD |
-| Operator allowed (DEC-001) — I | Operator signed in | 200/201 | TBD |
-| Quantity rules (REQ-013) — U, I | — | `1`, `250`, `999999999` pass; empty, `0`, `-5`, `2.5`, `abc`, `1000000000` → MSG-E003/E010 | TBD |
-| Due date rules (REQ-014, DEC-009) — U, I | Plant today = D | D and D+1 pass; D-1 → MSG-E005 on create; overdue order saved without changing the due date → 200; changing it to D-1 → MSG-E005 | TBD |
-| Product rules (REQ-015) — I | — | Missing → MSG-E001; random GUID → MSG-E002 | TBD |
-| Notes rules (REQ-016) — U, I | — | Empty → `null`; 500 chars (incl. emoji counted as 1) pass; 501 → MSG-E006 | TBD |
-| Each allowed transition (REQ-017) — U, I | Order in the source state | 200, new status; `allowedNextStatuses` updated | TBD |
-| Disallowed transitions (REQ-017) — U, I | e.g. Draft→Completed, Completed→InProgress, Cancelled→Draft | 422 MSG-E007, status unchanged | TBD |
-| Status options per state (M-02) — U(fe) | Each status | Select options match; disabled for terminal states | TBD |
-| Locked-field change rejected whole (REQ-018, DEC-007) — U, I | InProgress order; PUT changes quantity + notes | 422 MSG-E008; notes not saved | TBD |
-| Locked fields read-only in UI (REQ-018) — U(fe) | InProgress order | Product/quantity read-only, focusable, lock hint | TBD |
-| Cancel without changes (REQ-019) — U(fe), E | Pristine form | Navigates home, no dialog | TBD |
-| Cancel with changes → Discard / Keep editing / Escape (REQ-019) — U(fe), E | Edited form | Dialog; Discard → home; Keep editing/Escape → values kept, focus on Cancel | TBD |
-| Non-JSON body (DEC-020) — I | POST `text/plain` / form-encoded | 415, nothing created | TBD |
-| Problem Details shape — I | Any 4xx/5xx | `application/problem+json`, `type`, `title`, `status`, `code`; no stack trace | TBD |
-| Runtime login privileges (DEC-016) — I | App connected as `pmai_app` | All flows work; `DELETE FROM production_orders` → permission denied | TBD |
-| Telemetry emitted — I | In-memory exporter | Create/Update spans + counters with the expected tags | TBD |
-| Accessibility — U(fe) + manual | — | Labels, `aria-invalid`/`describedby`, focus on first error, dialog focus; automated axe check (tool added in plan revision 2) has no violations | TBD |
+| Create valid order (REQ-010) — I, E | Admin signed in, products seeded | 201, `status=Draft`, `orderNumber` matches `^PO-\d{4}-\d{5}$`, redirect to edit + MSG-I001 | TC-001 |
+| First order of a year gets `00001`; next gets `00002` (DEC-012/013) — I | Empty counter; plant clock faked to 2026 then 2027 | `PO-2026-00001`, `PO-2026-00002`, `PO-2027-00001` | TC-002 |
+| Concurrent creates get distinct numbers — I | 20 parallel POSTs | 20 distinct sequential numbers, no gaps | TC-002 |
+| Year boundary uses the plant timezone (DEC-017) — U | `TimeProvider` at 2026-12-31T15:30Z (= 2027-01-01 00:30 JST) | Year 2027; "today" 2027-01-01 | TC-003 |
+| Edit Draft order fields (REQ-011) — I | Draft order | 200, values saved, `updatedAt` changed | TC-004 |
+| Unknown id (REQ-011) — I, U(fe) | — | 404 MSG-E011; not-found panel | TC-005 |
+| Stale save (DEC-010) — I | Two clients load version v; A saves | B's PUT → 409 MSG-E009; row keeps A's values | TC-006 |
+| Unauthenticated (REQ-012) — I, U(fe) | No cookie | 401 on all 4 endpoints; UI redirects to `/login` | TC-007 |
+| No role (REQ-012) — I, U(fe) | User without Admin/Operator | 403 on all 4 endpoints; forbidden panel without API call | TC-008 |
+| Operator allowed (DEC-001) — I | Operator signed in | 200/201 | TC-009 |
+| Quantity rules (REQ-013) — U, I | — | `1`, `250`, `999999999` pass; empty, `0`, `-5`, `2.5`, `abc`, `1000000000` → MSG-E003/E010 | TC-010 |
+| Due date rules (REQ-014, DEC-009) — U, I | Plant today = D | D and D+1 pass; D-1 → MSG-E005 on create; overdue order saved without changing the due date → 200; changing it to D-1 → MSG-E005 | TC-011 |
+| Product rules (REQ-015) — I | — | Missing → MSG-E001; random GUID → MSG-E002 | TC-012 |
+| Notes rules (REQ-016) — U, I | — | Empty → `null`; 500 chars (incl. emoji counted as 1) pass; 501 → MSG-E006 | TC-013 |
+| Each allowed transition (REQ-017) — U, I | Order in the source state | 200, new status; `allowedNextStatuses` updated | TC-014 |
+| Disallowed transitions (REQ-017) — U, I | e.g. Draft→Completed, Completed→InProgress, Cancelled→Draft | 422 MSG-E007, status unchanged | TC-015 |
+| Status options per state (M-02) — U(fe) | Each status | Select options match; disabled for terminal states | TC-016 |
+| Locked-field change rejected whole (REQ-018, DEC-007) — U, I | InProgress order; PUT changes quantity + notes | 422 MSG-E008; notes not saved | TC-017 |
+| Locked fields read-only in UI (REQ-018) — U(fe) | InProgress order | Product/quantity read-only, focusable, lock hint | TC-018 |
+| Cancel without changes (REQ-019) — U(fe), E | Pristine form | Navigates home, no dialog | TC-019 |
+| Cancel with changes → Discard / Keep editing / Escape (REQ-019) — U(fe), E | Edited form | Dialog; Discard → home; Keep editing/Escape → values kept, focus on Cancel | TC-020 |
+| Non-JSON body (DEC-020) — I | POST `text/plain` / form-encoded | 415, nothing created | TC-021 |
+| Problem Details shape — I | Any 4xx/5xx | `application/problem+json`, `type`, `title`, `status`, `code`; no stack trace | TC-022 |
+| Runtime login privileges (DEC-016) — I | App connected as `pmai_app` | All flows work; `DELETE FROM production_orders` → permission denied | TC-023 |
+| Telemetry emitted — I | In-memory exporter | Create/Update spans + counters with the expected tags | TC-024 |
+| Accessibility — U(fe) + manual | — | Labels, `aria-invalid`/`describedby`, focus on first error, dialog focus; automated axe check (vitest-axe + @axe-core/playwright, DEC-026) has no violations | TC-025 |
 
 Unresolved decisions: none. DD-level technical decisions DEC-021–DEC-024 are recorded in `work-items/WI-002/decisions.md`.

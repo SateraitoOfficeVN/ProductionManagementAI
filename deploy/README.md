@@ -11,11 +11,11 @@ Setup: copy `.env.example` to `.env` and fill in real local values (never commit
 | `POSTGRES_USER` (owner) | Migrations only (`dotnet ef database update`) | Owns the schema, runs DDL |
 | `pmai_app` | The backend at runtime | Only the table grants listed in `docs/en/database/0002-production-order-schema.md`; no DDL, no DELETE on orders |
 
-`db/init/10-app-login.sh` creates `pmai_app` with `PMAI_APP_DB_PASSWORD` the first time the `db-data` volume is created. The `AddProductionOrders` migration grants its table rights. If the volume already existed before this change, or you change either password, wipe the volume rather than syncing the password by hand: `docker compose -f compose.yaml down -v`.
+`db/init/10-app-login.sh` (copied into the database image by `docker/db.Dockerfile`, so no host file sharing is needed) creates `pmai_app` with `PMAI_APP_DB_PASSWORD` the first time the `db-data` volume is created. The `AddProductionOrders` migration grants its table rights. If the volume already existed before this change, or you change either password, wipe the volume rather than syncing the password by hand: `docker compose -f compose.yaml down -v`.
 
 ## Run
 
-1. `docker compose -f compose.yaml up -d db`
+1. `docker compose -f compose.yaml up -d --build db`
 2. Apply migrations as the owner, from the repo root (replace the password with your `POSTGRES_PASSWORD`):
    `dotnet ef database update --project src/backend/ProductionManagementAI.Infrastructure --startup-project src/backend/ProductionManagementAI.Api --connection "Host=localhost;Port=5433;Database=production_management_ai;Username=postgres;Password=<POSTGRES_PASSWORD>"`
 3. `docker compose -f compose.yaml up -d --build`
