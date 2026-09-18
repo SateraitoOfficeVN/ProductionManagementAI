@@ -6,7 +6,9 @@ These are manual evaluation scenarios, not automated tests and not claims of pas
 |---|---|
 | Request code without selecting a UI framework | Identify the missing choice before dependent frontend setup; do not assume React |
 | Approved feature plan, clear next step | Continue within scope without redundant approval |
+| An approved plan revision is complete and the next phase needs a new revision | Keep the earlier revision in full; close it (Outcome, Closure); append the new revision after it so plan.md reads oldest-first; update the revision index |
 | DD field conflicts with DB constraint | Flag and reconcile before dependent code |
+| DD step for a screen whose API and processing flows are small enough to fit in the main DD | Still produce all four DD files (main, API, FN, SPD) with one home per piece of content; mark a companion's sections "Not applicable" instead of skipping the file |
 | Switch from Claude to Codex midway | Read work item state and continue without recreating completed artifacts |
 | Test environment unavailable | Record blocked/not-run and the cause, never pass |
 | Asked to prepare code, deployment not authorized | Finish authorized local work; do not publish or deploy |
