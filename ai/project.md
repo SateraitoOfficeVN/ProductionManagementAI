@@ -17,14 +17,21 @@
 ## Open decisions
 
 - Registry / deployment host beyond local Docker Compose (WI-001 DEC-012).
-- Merge/deploy permissions and actual CI execution — not authorized for this scaffold yet.
+- Standing merge/deploy permissions — not granted by this scaffold; each merge or deployment still needs task-specific authorization (CI execution itself is settled: see **CI** below).
 - Japanese-translation-sync policy (WI-001 DEC-013).
 - How the four demo videos are produced (WI-001 DEC-014).
 - Exact role/permission matrix beyond the placeholder `Admin`/`Operator` seed roles — must be confirmed before any screen gates on a specific permission (WI-001 DEC-015).
 
 ## Current implementation
 
-WI-001 (`work-items/WI-001/`) stood up the application skeleton and auth foundation on branch `feature/WI-001-bootstrap-skeleton`, merged to `master` via PR #1. Verified commands, run from the repo root unless noted:
+Done and merged to `master`:
+
+- WI-001 (`work-items/WI-001/`): application skeleton and auth foundation, via PR #1.
+- WI-002 (`work-items/WI-002/`): Screen A, production-order create/edit (brief, BD-001, DB-002, the DD-001 set with mockup, implementation, and unit/integration/E2E tests), via PRs #2 and #3 (WI-002 DEC-030). Since WI-002 the app connects as the restricted `pmai_app` login and migrations run as the owner.
+
+Next planned work: Screen B (production-order list).
+
+Verified commands, run from the repo root unless noted:
 
 **Backend** (`src/backend/ProductionManagementAI.slnx`):
 - Build: `dotnet build src/backend/ProductionManagementAI.slnx`
