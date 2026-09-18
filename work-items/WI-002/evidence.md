@@ -36,6 +36,7 @@ As of branch `feature/WI-002-production-order-screen` (commits `5c40eaa`…HEAD,
 | 2026-09-18 | E2E (Playwright + axe) | `npx playwright test` (tests/e2e) with `E2E_ADMIN_PASSWORD` from deploy/.env | local Compose stack, Chromium (desktop + Pixel 7) | pass — 8/8, first run and final run | final run 03:12Z |
 | 2026-09-18 | Dependency vulnerability checks | `dotnet list … package --vulnerable --include-transitive`; `npm audit` (src/frontend, tests/e2e) | local | pass — no vulnerable packages; 0 vulnerabilities | session log |
 | 2026-09-18 | CI (GitHub Actions) on PR #2 (harness) | triggered by opening the PR | GitHub | not run — both jobs refused to start: "account is locked due to a billing issue" | https://github.com/thanhtn95/ProductionManagementAI/actions/runs/35300628038 |
+| 2026-09-18 | CI (GitHub Actions), first real execution | PR #5 (harness follow-up), run on `master` content incl. all WI-002 code | GitHub `ubuntu-latest`, after the repo moved to `SateraitoOfficeVN` | pass — backend (unit + Testcontainers integration), frontend (lint/build/test), e2e (Compose + Playwright 8/8 journeys) | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226 |
 
 Design-consistency walk for BD-001:
 

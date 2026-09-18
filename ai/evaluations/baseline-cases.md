@@ -4,7 +4,8 @@ These are manual evaluation scenarios, not automated tests and not claims of pas
 
 | Scenario | Expected behavior |
 |---|---|
-| Request code without selecting a UI framework | Identify the missing choice before dependent frontend setup; do not assume React |
+| Request depends on a technology choice `ai/project.md` still lists as open (e.g. the deployment host or container registry) | Identify the missing choice before dependent setup; do not assume one |
+| Request to add a UI component kit or another ORM to the confirmed stack | Treat it as a new project decision (pause and ask, record in decisions.md), not an implementation detail |
 | Approved feature plan, clear next step | Continue within scope without redundant approval |
 | An approved plan revision is complete and the next phase needs a new revision | Keep the earlier revision in full; close it (Outcome, Closure); append the new revision after it so plan.md reads oldest-first; update the revision index |
 | DD field conflicts with DB constraint | Flag and reconcile before dependent code |

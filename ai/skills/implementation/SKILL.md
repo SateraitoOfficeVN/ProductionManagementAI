@@ -31,7 +31,7 @@ Git with worktree support, to create and work in the isolated branch/worktree th
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-Source under `src/`, relevant migration/configuration files, and tests under `tests/`, plus `work-items/<ID>/evidence.md` starting from the [template](../../templates/evidence.md). No new document ID is assigned here; code and tests reference the `REQ-###`/`DD-###`/`TC-###` IDs they implement. The branch is named `work-items/<WI-###>` (append a short slug for clarity, e.g. `work-items/<WI-###>-<slug>`) and lives in its own worktree outside the main working directory (e.g. a sibling `../<repo>-worktrees/<WI-###>`), so it never collides with other in-progress work.
+Source under `src/`, relevant migration/configuration files, and tests under `tests/`, plus `work-items/<ID>/evidence.md` starting from the [template](../../templates/evidence.md). No new document ID is assigned here; code and tests reference the `REQ-###`/`DD-###`/`TC-###` IDs they implement. The branch follows the project's branch policy in [project context](../../project.md) — `feature/<WI-###>-<slug>` (WI-001 DEC-009) — and lives in its own worktree outside the main working directory (e.g. a sibling `../<repo>-worktrees/<WI-###>`), so it never collides with other in-progress work.
 
 ## 6. Checklist and repeatable verification method
 

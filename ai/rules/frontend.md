@@ -1,6 +1,6 @@
 # frontend rules
 
-- Use Vite and TypeScript; UI framework is not selected yet.
+- Use the confirmed stack in [project context](../project.md): Vite + React + TypeScript with Tailwind CSS v4 and `react-router-dom`, no component kit. Adding a component kit or another UI framework is a new project decision, not an implementation detail.
 - Implement agreed layout, field behavior, validation and loading/empty/error states.
 - Keep frontend validation consistent with API rules; backend remains authoritative.
 - Document meaningful accessibility and interaction requirements in the screen design.

@@ -11,4 +11,4 @@ npx playwright install chromium
 E2E_ADMIN_PASSWORD=<SEED_ADMIN_PASSWORD from deploy/.env> E2E_BASE_URL=http://localhost:3000 npx playwright test
 ```
 
-Projects: `desktop` (Desktop Chrome) and `mobile` (Pixel 7, SP layout). Journeys create their own data; they need only the seeded admin user and products. Not wired into CI yet (it needs the Compose stack in CI).
+Projects: `desktop` (Desktop Chrome) and `mobile` (Pixel 7, SP layout). Journeys create their own data; they need only the seeded admin user and products. CI runs the same suite in the `e2e` job of `.github/workflows/ci.yml` (RFC 0003): throwaway credentials, the Compose stack built on the runner, owner migrations, then these journeys.
