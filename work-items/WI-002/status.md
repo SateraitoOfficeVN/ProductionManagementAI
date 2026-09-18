@@ -1,11 +1,11 @@
 # Production Order Create/Edit (Screen A) — Status Report
 
-As of 2026-09-18. Work item state: in-review.
+As of 2026-09-18. Work item state: done.
 
 ## Overall status
 
 **RAG:** Amber — at risk
-The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-002, the DD-001 set and the mockup. Plan revision 2 is approved; steps 1–13 are done: implemented, and all 133 tests pass locally. Step 14 is done: PR #3 (Screen A) and PR #2 (harness) are open and awaiting review. CI is blocked by a GitHub account billing lock.
+The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-002, the DD-001 set and the mockup. Plan revision 2 is approved; steps 1–13 are done: implemented, and all 133 tests pass locally. Step 14 is done, and the user squash-merged PR #2 (harness) and PR #3 (Screen A) into `master` (DEC-030). CI still hasn't run: the GitHub account is locked for billing.
 
 ## Approved plan reference
 
@@ -16,6 +16,7 @@ The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-0
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
 | 2026-09-18 | WI-002 restarted; brief revision 1 (REQ-010–REQ-018) and decision log (DEC-001–DEC-009) | [brief.md](brief.md), [decisions.md](decisions.md) |
+| 2026-09-18 | PR #2 (`cadc67c`) and PR #3 (`1eccf9c`) squash-merged into `master` by the user (DEC-030) | [decisions.md](decisions.md) |
 | 2026-09-18 | Plan revision 2 step 14: PR #3 https://github.com/thanhtn95/ProductionManagementAI/pull/3 opened (CI blocked by the billing lock; GitGuardian pass) | [evidence.md](evidence.md) |
 | 2026-09-18 | Plan revision 2 steps 1–13: harness PR #2; WI-002 backend, DB login split, frontend, tests (49 unit, 38 integration, 38 frontend, 8 E2E, all pass); test-plan TP-002; checklists | [evidence.md](evidence.md), [test-plan.md](test-plan.md) |
 | 2026-09-18 | Plan revision 2 approved; harness RFC 0002 (keep every plan revision, oldest first) applied at the user's request | [plan.md](plan.md), `ai/improvements/0002-plan-revision-history.md` |
@@ -29,7 +30,7 @@ The design phase (plan revision 1) is complete and approved: brief, BD-001, DB-0
 
 ## Planned for next period
 
-User review of the Screen A PR and harness PR #2; merge only on the user's go-ahead.
+Run CI on `master` once the GitHub billing lock is cleared. Remove the two worktrees when the user agrees. Next work item: Screen B.
 
 ## Risks and issues
 
@@ -39,4 +40,4 @@ User review of the Screen A PR and harness PR #2; merge only on the user's go-ah
 
 ## Next action
 
-ThanhTN reviews PR #3 and PR #2 and clears the GitHub billing lock so CI can run; merge only on the user's go-ahead.
+ThanhTN clears the GitHub billing lock so CI can run on `master`.

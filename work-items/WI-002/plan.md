@@ -5,7 +5,7 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 | Revision | Date | Phase | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-18 | Design (brief → BD → DB → DD + mockup) | approved; complete; superseded by revision 2 | user message 2026-09-18: "approved the plan, let move on to DB design" |
-| 2 | 2026-09-18 | Implementation, tests, push/PR | **current** — approved, in progress | user message 2026-09-18: "ok revision 2 plan seem solid so approved" |
+| 2 | 2026-09-18 | Implementation, tests, push/PR | **current** — approved; complete; PRs squash-merged by the user (DEC-030) | user message 2026-09-18: "ok revision 2 plan seem solid so approved" |
 
 Note: revision 1 was reconstructed on 2026-09-18 from the session record. It was briefly overwritten when revision 2 was drafted, and it had never been committed, so git couldn't restore it. The content is as last approved and edited. The "Outcome" column was added at closure.
 
@@ -182,4 +182,5 @@ Implement SCR-001 exactly as designed in BD-001 (revision 4), DB-002 and the DD-
 - **Approval source:** user message 2026-09-18: "ok revision 2 plan seem solid so approved"
 - **Approved revision:** revision 2, 2026-09-18
 - **Amendment (2026-09-18, same message):** the user also asked for a second harness improvement (RFC 0002, keep every plan revision oldest-first). Both harness RFCs go on one harness branch, renamed from `feature/harness-dd-companions` to `feature/harness-wi002-feedback`, as two separate commits, with one harness PR. Step 1 and the step 14 PR count are unchanged (still two PRs). No other scope change.
-- **Closure:** —
+- **Merge (2026-09-18):** the user squash-merged PR #2 and PR #3 into `master` from their own account (DEC-030); Claude didn't perform the merge. Deploy and image publication remain unauthorized.
+- **Closure:** 2026-09-18 — all 14 steps done; PR #2 and PR #3 squash-merged into `master` by the user (DEC-030). CI still hasn't run (GitHub billing lock).
