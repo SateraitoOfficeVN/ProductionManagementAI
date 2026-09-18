@@ -56,4 +56,4 @@ A small screen or a backend-only change produces more files, some of them mostly
 ## Adoption
 
 - **Reviewer:** ThanhTN (explicit request, 2026-09-18: "update the templates and skill so all DD companions are always produced")
-- **Adopted revision:** working tree on `master` after `e7e0d36`, not yet committed
+- **Adopted revision:** commit `dc228ab` on `feature/harness-wi002-feedback` (effective for shared use once that branch's PR is merged)
