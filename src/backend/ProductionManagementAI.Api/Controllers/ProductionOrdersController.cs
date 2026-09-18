@@ -1,0 +1,47 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProductionManagementAI.Api.ProductionOrders;
+using ProductionManagementAI.Application.ProductionOrders;
+
+namespace ProductionManagementAI.Api.Controllers;
+
+/// <summary>DD-001-API §2–§4. Business checks live in <see cref="ProductionOrderService"/> (DD-001-FN).</summary>
+[ApiController]
+[Route("api/production-orders")]
+[Authorize(Policy = AuthorizationPolicies.ProductionOrderEditor)]
+public class ProductionOrdersController(ProductionOrderService service) : ControllerBase
+{
+    [HttpPost]
+    [Consumes("application/json")] // DEC-020: JSON-only bodies; anything else is 415
+    public async Task<ActionResult<ProductionOrderResponse>> Create(
+        CreateProductionOrderRequest request, CancellationToken cancellationToken) =>
+        ProductionOrderProblems.ToActionResult(this, await service.CreateAsync(request, cancellationToken),
+            order => CreatedAtAction(nameof(Get), new { id = order.Id }, order));
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<ProductionOrderResponse>> Get(Guid id, CancellationToken cancellationToken) =>
+        ProductionOrderProblems.ToActionResult(this, await service.GetAsync(id, cancellationToken), Ok);
+
+    [HttpPut("{id:guid}")]
+    [Consumes("application/json")]
+    public async Task<ActionResult<ProductionOrderResponse>> Update(
+        Guid id, UpdateProductionOrderRequest request, CancellationToken cancellationToken) =>
+        ProductionOrderProblems.ToActionResult(this, await service.UpdateAsync(id, request, cancellationToken), Ok);
+}
+
+/// <summary>DD-001-API §1.</summary>
+[ApiController]
+[Route("api/products")]
+[Authorize(Policy = AuthorizationPolicies.ProductionOrderEditor)]
+public class ProductsController(ProductionOrderService service) : ControllerBase
+{
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<ProductResponse>>> List(CancellationToken cancellationToken) =>
+        Ok(await service.ListProductsAsync(cancellationToken));
+}
+
+public static class AuthorizationPolicies
+{
+    /// <summary>Admin or Operator may create and edit production orders (DEC-001).</summary>
+    public const string ProductionOrderEditor = "ProductionOrderEditor";
+}

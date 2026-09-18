@@ -152,6 +152,343 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                     b.ToTable("user_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProductionManagementAI.Domain.ProductionOrders.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Sku")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("sku");
+
+                    b.HasKey("Id")
+                        .HasName("pk_products");
+
+                    b.HasIndex("Sku")
+                        .IsUnique()
+                        .HasDatabaseName("ix_products_sku");
+
+                    b.ToTable("products", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001001"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Steel bracket",
+                            Sku = "P-1001"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001002"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Aluminium housing",
+                            Sku = "P-1002"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001003"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Control panel assembly",
+                            Sku = "P-1003"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001004"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Drive shaft",
+                            Sku = "P-1004"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001005"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Hydraulic valve",
+                            Sku = "P-1005"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001006"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Gearbox assembly",
+                            Sku = "P-1006"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001007"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Bearing housing",
+                            Sku = "P-1007"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001008"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Pump impeller",
+                            Sku = "P-1008"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001009"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Motor mount plate",
+                            Sku = "P-1009"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001010"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Conveyor roller",
+                            Sku = "P-1010"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001011"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Spur gear 40T",
+                            Sku = "P-1011"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001012"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Coupling flange",
+                            Sku = "P-1012"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001013"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Pneumatic cylinder",
+                            Sku = "P-1013"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001014"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Sensor bracket",
+                            Sku = "P-1014"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001015"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Cable harness A",
+                            Sku = "P-1015"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001016"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Cable harness B",
+                            Sku = "P-1016"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001017"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Terminal block unit",
+                            Sku = "P-1017"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001018"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Relay module",
+                            Sku = "P-1018"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001019"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Power supply unit",
+                            Sku = "P-1019"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001020"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "PLC enclosure",
+                            Sku = "P-1020"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001021"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Heat sink",
+                            Sku = "P-1021"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001022"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Cooling fan assembly",
+                            Sku = "P-1022"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001023"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Filter housing",
+                            Sku = "P-1023"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001024"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Valve body",
+                            Sku = "P-1024"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001025"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Piston rod",
+                            Sku = "P-1025"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001026"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Spring assembly",
+                            Sku = "P-1026"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001027"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Welded frame",
+                            Sku = "P-1027"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001028"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Guard panel",
+                            Sku = "P-1028"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001029"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Hinge set",
+                            Sku = "P-1029"
+                        },
+                        new
+                        {
+                            Id = new Guid("0197e4a0-0000-7000-8000-000000001030"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Name = "Fastener kit",
+                            Sku = "P-1030"
+                        });
+                });
+
+            modelBuilder.Entity("ProductionManagementAI.Domain.ProductionOrders.ProductionOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("due_date");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("notes");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)")
+                        .HasColumnName("order_number")
+                        .HasComputedColumnSql("'PO-' || order_year::text || '-' || lpad(order_seq::text, 5, '0')", true);
+
+                    b.Property<int>("OrderSeq")
+                        .HasColumnType("integer")
+                        .HasColumnName("order_seq");
+
+                    b.Property<short>("OrderYear")
+                        .HasColumnType("smallint")
+                        .HasColumnName("order_year");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Draft")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("Id")
+                        .HasName("pk_production_orders");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_production_orders_product_id");
+
+                    b.HasIndex("OrderYear", "OrderSeq")
+                        .IsUnique()
+                        .HasDatabaseName("ix_production_orders_order_year_order_seq");
+
+                    b.ToTable("production_orders", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_production_orders_order_seq_range", "order_seq BETWEEN 1 AND 99999");
+
+                            t.HasCheckConstraint("ck_production_orders_order_year_range", "order_year BETWEEN 2000 AND 9999");
+
+                            t.HasCheckConstraint("ck_production_orders_quantity_positive", "quantity > 0");
+
+                            t.HasCheckConstraint("ck_production_orders_status", "status IN ('Draft', 'InProgress', 'Completed', 'Cancelled')");
+                        });
+                });
+
             modelBuilder.Entity("ProductionManagementAI.Infrastructure.Identity.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -283,6 +620,25 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                     b.ToTable("users", (string)null);
                 });
 
+            modelBuilder.Entity("ProductionManagementAI.Infrastructure.ProductionOrders.ProductionOrderNumberCounter", b =>
+                {
+                    b.Property<short>("OrderYear")
+                        .HasColumnType("smallint")
+                        .HasColumnName("order_year");
+
+                    b.Property<int>("LastSeq")
+                        .HasColumnType("integer")
+                        .HasColumnName("last_seq");
+
+                    b.HasKey("OrderYear")
+                        .HasName("pk_production_order_number_counters");
+
+                    b.ToTable("production_order_number_counters", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_production_order_number_counters_last_seq_range", "last_seq BETWEEN 1 AND 99999");
+                        });
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("ProductionManagementAI.Infrastructure.Identity.AppRole", null)
@@ -338,6 +694,16 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_tokens_users_user_id");
+                });
+
+            modelBuilder.Entity("ProductionManagementAI.Domain.ProductionOrders.ProductionOrder", b =>
+                {
+                    b.HasOne("ProductionManagementAI.Domain.ProductionOrders.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_production_orders_products_product_id");
                 });
 #pragma warning restore 612, 618
         }

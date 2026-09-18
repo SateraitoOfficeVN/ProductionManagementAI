@@ -1,0 +1,42 @@
+using ProductionManagementAI.Domain.ProductionOrders;
+
+namespace ProductionManagementAI.Application.ProductionOrders;
+
+/// <summary>Plant-local date and year in the configured timezone (DEC-011, DEC-017).</summary>
+public interface IPlantClock
+{
+    DateOnly Today { get; }
+
+    short CurrentYear { get; }
+}
+
+/// <summary>Issues the next per-year order sequence inside the caller's transaction (DB-002, DEC-013).</summary>
+public interface IOrderNumberIssuer
+{
+    Task<int> NextAsync(short year, CancellationToken cancellationToken);
+}
+
+public interface IProductionOrderTransaction : IAsyncDisposable
+{
+    Task CommitAsync(CancellationToken cancellationToken);
+}
+
+public interface IProductionOrderRepository
+{
+    Task<IReadOnlyList<ProductResponse>> ListProductsAsync(CancellationToken cancellationToken);
+
+    Task<bool> ProductExistsAsync(Guid productId, CancellationToken cancellationToken);
+
+    Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken);
+
+    void Add(ProductionOrder order);
+
+    Task<IProductionOrderTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
+
+    /// <exception cref="ConcurrencyConflictException">The row changed since it was loaded (DEC-010, DEC-014).</exception>
+    Task SaveChangesAsync(CancellationToken cancellationToken);
+}
+
+/// <summary>Raised by the repository when an optimistic-concurrency check fails.</summary>
+public sealed class ConcurrencyConflictException(Exception? inner = null)
+    : Exception("The production order was changed by someone else.", inner);

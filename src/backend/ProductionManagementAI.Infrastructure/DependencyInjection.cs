@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProductionManagementAI.Application.ProductionOrders;
 using ProductionManagementAI.Infrastructure.Identity;
+using ProductionManagementAI.Infrastructure.ProductionOrders;
 
 namespace ProductionManagementAI.Infrastructure;
 
@@ -60,6 +62,16 @@ public static class DependencyInjection
         {
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath));
         }
+
+        // Production orders (DD-001-FN). The plant timezone is validated at startup so a bad ID fails fast.
+        services.AddOptions<PlantOptions>()
+            .BindConfiguration(PlantOptions.SectionName)
+            .Validate(o => PlantOptions.IsValidTimeZone(o.TimeZone), "Plant:TimeZone must be a valid IANA timezone ID.")
+            .ValidateOnStart();
+        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<IPlantClock, PlantClock>();
+        services.AddScoped<IProductionOrderRepository, ProductionOrderRepository>();
+        services.AddScoped<IOrderNumberIssuer, OrderNumberIssuer>();
 
         return services;
     }

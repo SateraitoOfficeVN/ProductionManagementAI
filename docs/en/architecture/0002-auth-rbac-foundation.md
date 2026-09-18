@@ -49,7 +49,7 @@ Concrete shape:
 ### Confirmation
 
 * Integration test: unauthenticated request to a protected endpoint returns 401; authenticated request to `/api/auth/me` returns 200 with the session's user info; seeded admin can log in and log out successfully.
-* CSRF: since the cookie is same-origin and state-changing requests go through the frontend's own fetch wrapper, the cookie is issued with `SameSite=Lax` (or stricter) as the baseline mitigation; whether an additional anti-forgery token is needed for the login/order-mutation endpoints was deferred to `detailed-design` for SCR-001 — resolved there: no additional token, `SameSite=Lax` + no CORS policy is sufficient. (Decided during WI-002's first design pass, in a `decisions.md`/detailed-design.md that were reset when WI-002 restarted against the updated templates; reaffirm or revisit this conclusion when WI-002's detailed-design is redone for SCR-001.)
+* CSRF: since the cookie is same-origin and state-changing requests go through the frontend's own fetch wrapper, the cookie is issued with `SameSite=Lax` (or stricter) as the baseline mitigation; whether an additional anti-forgery token is needed for the login/order-mutation endpoints was deferred to `detailed-design` for SCR-001 — resolved: no additional token; `SameSite=Lax` + no CORS policy + JSON-only request bodies on mutating endpoints is sufficient for a single-origin deployment (`work-items/WI-002/decisions.md` DEC-020, 2026-09-18; revisit if a CORS policy is added or the app shares a site with other origins).
 * Seed admin password: code review confirms startup fails in Development if `SEED_ADMIN_PASSWORD` is unset, and that the password is never written to logs or `evidence.md`.
 
 ### STRIDE review of the login/session boundary
