@@ -236,9 +236,10 @@ The chain held up. Two gaps surfaced along the way and were fixed through `harne
 
 A follow-up pass (RFC 0003) closed the gaps the refreshed overview listed. The frontend/backend rules and two skills now match `project.md`, and CI gained an E2E job running the Playwright journeys against the Compose stack. The job's steps were rehearsed locally before adoption, and the rehearsal caught a missing `dotnet restore` that would have failed it on the first run.
 
+CI has now executed for the first time, on this change's own PR (#5). After the repository moved to the `SateraitoOfficeVN` organization, the earlier account billing lock no longer applied, and all three jobs passed: backend including the Testcontainers integration tests, frontend, and the new e2e job running the Playwright journeys against the Compose stack ([run](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226)).
+
 ### Known gaps
 
-- **CI has never executed.** `.github/workflows/ci.yml` (backend, frontend and now e2e jobs) runs on every PR, but GitHub refuses to start jobs while the account is locked for billing. This is outside the repository; clearing the lock is the owner's action.
 - **Open project decisions remain** (deployment host, merge/deploy permissions, translation sync, demo videos, the full role matrix). They are listed in `ai/project.md` and are the owner's to make.
 
 The next test is Screen B (production-order list), the first screen built on top of an existing one. It's the first time the harness has to evolve a live schema and reuse shared modules (`GET /api/products`, `DD-001-FN`) rather than create them.

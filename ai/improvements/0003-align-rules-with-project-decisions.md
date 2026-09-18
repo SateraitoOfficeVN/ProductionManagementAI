@@ -64,17 +64,17 @@ Three gaps listed in `ai/harness-overview.md` ("Known gaps") are closed:
 | Old: "Request code without selecting a UI framework → do not assume React" | Encoded a stale fact | Replaced (below) | n/a (retired) |
 | New: "Request depends on a technology `project.md` lists as open" | Not covered | Identify the missing choice before dependent setup | pass (manual check: `project.md` lists the deployment host as open; no rule or skill assumes one) |
 | New: "Request to add a UI component kit or another ORM" | The rules would have treated the choice as still open | Pause and ask; record in decisions.md | pass (manual check against the updated `frontend.md` / `backend.md`) |
-| E2E job | Not in CI | `actionlint` 1.7.12 + shellcheck: pass. Local rehearsal of the job's steps, on a clean worktree with generated credentials: the first run failed (8/8) because `dotnet ef` needs a restore on a fresh checkout — fixed by adding `dotnet restore`; the second run passed 8/8 | pass locally; **not run in GitHub Actions** (account billing lock) |
+| E2E job | Not in CI | `actionlint` 1.7.12 + shellcheck: pass. Local rehearsal of the job's steps, on a clean worktree with generated credentials: the first run failed (8/8) because `dotnet ef` needs a restore on a fresh checkout — fixed by adding `dotnet restore`; the second run passed 8/8 | pass locally; **pass in GitHub Actions** on PR #5 — backend, frontend and e2e all green, e2e in about 2 min (https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226) |
 | "Approved feature plan, clear next step"; "DD field conflicts with DB constraint" | Unchanged | Unchanged | pass (no gate relaxed) |
 
 ## Risk and rollback
 
-- **Risk:** the E2E job could behave differently on GitHub's Ubuntu runners than in the Windows rehearsal (ports, Docker Compose version, Playwright system dependencies via `--with-deps`). Its first real run needs watching once CI is unblocked.
+- **Risk:** the E2E job could behave differently on GitHub's Ubuntu runners than in the Windows rehearsal (ports, Docker Compose version, Playwright system dependencies via `--with-deps`). Its first real run, on PR #5, passed.
 - **Rollback plan:** revert this commit. The rule/skill wording and the E2E job are independent, so either part can be reverted alone. No gate was relaxed.
 
 ## Unresolved questions
 
-- None. The remaining CI gap (jobs not starting) is an account issue outside the repository.
+- None.
 
 ## Adoption
 
