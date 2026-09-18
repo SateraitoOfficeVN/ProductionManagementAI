@@ -89,8 +89,8 @@ Delivery checklist (`ai/checklists/delivery.md`):
 
 ## External references
 
-- PR: see `status.md` (opened per DEC-027); harness PR: https://github.com/thanhtn95/ProductionManagementAI/pull/2
-- CI run: blocked by the GitHub billing lock (see above)
+- PR: https://github.com/thanhtn95/ProductionManagementAI/pull/3 (Screen A); harness PR: https://github.com/thanhtn95/ProductionManagementAI/pull/2
+- CI run: https://github.com/thanhtn95/ProductionManagementAI/actions/runs/35302566782 — jobs not started (billing lock). GitGuardian security check: pass on PR #3 and PR #2
 - Deployment: not applicable (not authorized)
 
 ## Remaining limitations and next action
