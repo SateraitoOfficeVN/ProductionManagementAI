@@ -33,6 +33,7 @@ WI-002 restarted on 2026-09-18 against the rewritten BD/DD templates. DEC-001–
 | DEC-026 | 2026-09-18 | Automated accessibility checks | user | decided | `vitest-axe` in component tests + `@axe-core/playwright` in E2E |
 | DEC-027 | 2026-09-18 | Git operations authorized for implementation | user | decided | Branch, worktree, local commits, push, open PR; merge not authorized |
 | DEC-028 | 2026-09-18 | Where the harness changes go | user | decided | Their own branch/PR, `feature/harness-wi002-feedback` (RFC 0001 + RFC 0002, one commit each) |
+| DEC-030 | 2026-09-18 | Merge PR #2 and PR #3 | user | decided | The user squash-merged both into `master` although CI couldn't run (GitHub billing lock) |
 | DEC-029 | 2026-09-18 | Index on `production_orders.product_id` | Claude (technical, during implementation) | decided | Keep it: EF Core's FK convention always creates it; DB-002 updated |
 | DEC-020 | 2026-09-18 | CSRF protection for order endpoints | Claude (technical security) | decided | No extra anti-forgery token: `SameSite=Lax` cookie + no CORS policy + JSON-only request bodies |
 
@@ -836,3 +837,30 @@ DB-002 (approved) deliberately omitted an index on `production_orders.product_id
 | Artifact | Change required |
 | --- | --- |
 | DB-002 index definitions | Row added; "deliberately not added" note struck through |
+
+## DEC-030: Merge PR #2 and PR #3
+
+**Status:** decided
+
+### Context
+
+Plan revision 2 didn't authorize merging (DEC-027). Both PRs were reviewed by the user. CI couldn't run on either: GitHub refused to start the jobs because the account is locked for billing. All checks had passed locally (`evidence.md`), and GitGuardian passed on both PRs. `master` has no branch protection.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Merge now | Local evidence complete | No CI run on Linux runners before merge |
+| Wait for CI | CI evidence first | Blocked on an account issue outside the repo |
+
+### Decision and rationale
+
+- **Decision:** merge both PRs into `master` with "Squash and merge". The user did this from their own GitHub account: PR #2 at 02:47Z (`cadc67c`) and PR #3 at 03:18Z (`1eccf9c`, head `16ed4f3`). The user then asked Claude to "merge both PRs"; Claude's `gh pr merge` calls found both already merged and changed nothing.
+- **Decided by:** user, 2026-09-18 ("merge both PRs"; "i used squad and merge").
+- **Rationale:** user review complete. Squash merge is the user's convention for this project (one commit per PR on `master`).
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| plan.md revision 2, status.md, evidence.md | Merge outcome recorded via a follow-up PR: this record was written after PR #3 was squash-merged, so it wasn't in it. CI still to run once the lock is cleared |

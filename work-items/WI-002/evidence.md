@@ -95,4 +95,4 @@ Delivery checklist (`ai/checklists/delivery.md`):
 
 ## Remaining limitations and next action
 
-Implemented and verified locally at all four test levels. Limitations: CI hasn't run (billing lock); E2E runs locally only and on Chromium only; no manual screen-reader pass. Next action: user review of the PR; clear the GitHub billing lock so CI can run; merge only on the user's go-ahead.
+Implemented and verified locally at all four test levels. Limitations: CI hasn't run (billing lock); E2E runs locally only and on Chromium only; no manual screen-reader pass. PR #2 and PR #3 squash-merged into `master` by the user (DEC-030) without a CI run. Next action: clear the GitHub billing lock so CI can run on `master`.
