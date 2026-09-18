@@ -46,7 +46,7 @@ WI-001 (`work-items/WI-001/`) stood up the application skeleton and auth foundat
 
 **E2E** (`tests/e2e/`, against the running Compose stack): `npm ci`, `npx playwright install chromium`, then `E2E_ADMIN_PASSWORD=<SEED_ADMIN_PASSWORD> E2E_BASE_URL=http://localhost:3000 npx playwright test`. Verified in WI-002.
 
-**CI**: `.github/workflows/ci.yml` exists (build+lint+test only, both backend and frontend jobs; no E2E). WI-002 was authorized to open PRs, which trigger it, but on 2026-09-18 GitHub refused to start the jobs ("account is locked due to a billing issue"), so it still hasn't actually executed.
+**CI**: `.github/workflows/ci.yml` has three jobs on push/PR to `master`: backend (build + unit/integration tests), frontend (lint + build + tests), and e2e (Compose stack + Playwright, after the other two; throwaway credentials generated per run; added by RFC 0003). The e2e job's steps were rehearsed locally and pass. On 2026-09-18 GitHub refused to start any job ("account is locked due to a billing issue"), so CI still hasn't actually executed.
 
 ## Candidate demo
 
