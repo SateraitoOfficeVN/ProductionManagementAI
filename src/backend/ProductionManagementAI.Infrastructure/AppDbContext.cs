@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ProductionManagementAI.Domain.ProductionOrders;
 using ProductionManagementAI.Infrastructure.Identity;
 
 namespace ProductionManagementAI.Infrastructure;
@@ -9,6 +10,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     : IdentityDbContext<AppUser, AppRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>,
         IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options)
 {
+    public DbSet<Product> Products => Set<Product>();
+
+    public DbSet<ProductionOrder> ProductionOrders => Set<ProductionOrder>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -36,5 +41,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         builder.Entity<IdentityRoleClaim<Guid>>(b => b.ToTable("role_claims"));
         builder.Entity<IdentityUserLogin<Guid>>(b => b.ToTable("user_logins"));
         builder.Entity<IdentityUserToken<Guid>>(b => b.ToTable("user_tokens"));
+
+        // Production-order schema (DB-002): ProductionOrders/ProductionOrderConfigurations.cs.
+        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

@@ -139,11 +139,12 @@ The upsert takes a row lock on that year's counter, so concurrent creates in the
 | `ix_products_sku` | `products` | `sku` | unique btree | Enforces unique SKU; the product dropdown is ordered by SKU (FN-004) |
 | `pk_production_orders` | `production_orders` | `id` | unique btree (PK) | Load/update by ID (FN-002, FN-003) |
 | `ix_production_orders_order_year_order_seq` | `production_orders` | `order_year, order_seq` | unique btree | Guarantees order-number uniqueness (DEC-006); `order_number` is derived from these two columns, so it is unique too |
+| `ix_production_orders_product_id` | `production_orders` | `product_id` | btree | Added during implementation (DEC-029): EF Core's foreign-key convention always creates it. Serves the `ON DELETE RESTRICT` check and Screen B's expected product filter |
 | `pk_production_order_number_counters` | `production_order_number_counters` | `order_year` | unique btree (PK) | Counter upsert by year |
 
 Deliberately not added:
 
-- **`production_orders.product_id`:** Screen A never queries orders by product, and products are never deleted (so there are no FK-check scans on delete). Screen B's filters will decide whether this index is needed.
+- ~~**`production_orders.product_id`**~~: originally left out, but added during implementation (DEC-029). See the index table.
 - **`production_orders.order_number`:** uniqueness is already covered by the `(order_year, order_seq)` index, and Screen A never looks orders up by number. Screen B's search design will decide whether to add it.
 
 ## Constraints

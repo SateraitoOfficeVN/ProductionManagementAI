@@ -33,6 +33,7 @@ WI-002 restarted on 2026-09-18 against the rewritten BD/DD templates. DEC-001–
 | DEC-026 | 2026-09-18 | Automated accessibility checks | user | decided | `vitest-axe` in component tests + `@axe-core/playwright` in E2E |
 | DEC-027 | 2026-09-18 | Git operations authorized for implementation | user | decided | Branch, worktree, local commits, push, open PR; merge not authorized |
 | DEC-028 | 2026-09-18 | Where the harness changes go | user | decided | Their own branch/PR, `feature/harness-wi002-feedback` (RFC 0001 + RFC 0002, one commit each) |
+| DEC-029 | 2026-09-18 | Index on `production_orders.product_id` | Claude (technical, during implementation) | decided | Keep it: EF Core's FK convention always creates it; DB-002 updated |
 | DEC-020 | 2026-09-18 | CSRF protection for order endpoints | Claude (technical security) | decided | No extra anti-forgery token: `SameSite=Lax` cookie + no CORS policy + JSON-only request bodies |
 
 ## DEC-001: Who may create/edit a production order
@@ -807,3 +808,31 @@ RFC 0001 (always produce all four DD documents) changed shared `ai/` files. It i
 | Artifact | Change required |
 | --- | --- |
 | plan.md revision 2 steps 1, 14 | Separate branch and PR |
+
+## DEC-029: Index on `production_orders.product_id`
+
+**Status:** decided
+
+### Context
+
+DB-002 (approved) deliberately omitted an index on `production_orders.product_id`. During implementation (plan revision 2, step 6), EF Core's foreign-key index convention generated one anyway. Removing it in entity configuration, and then in a model-finalizing convention, didn't work: the convention re-creates a foreign-key index whenever one is removed. Disabling the convention globally would drop the existing Identity-table foreign-key indexes in the next migration.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Keep the index, update DB-002 | No framework fighting; supports the RESTRICT check and Screen B's likely product filter | Small write cost on insert/update |
+| Hand-edit the migration to drop the `CreateIndex` | Matches DB-002 | The model snapshot still contains the index, so every future migration diverges |
+| Disable the FK-index convention globally | Full control | Drops the existing Identity FK indexes |
+
+### Decision and rationale
+
+- **Decision:** keep `ix_production_orders_product_id`, declared explicitly, and update DB-002's index table.
+- **Decided by:** Claude (technical; it doesn't change business behavior). The user can revisit it.
+- **Rationale:** negligible cost at this data size, and it avoids a model/migration drift.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| DB-002 index definitions | Row added; "deliberately not added" note struck through |

@@ -5,8 +5,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-production_management_ai}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      # Restricted runtime login for the backend (DEC-016); created by db/init/10-app-login.sh on a fresh volume.
+      PMAI_APP_DB_PASSWORD: ${PMAI_APP_DB_PASSWORD:?PMAI_APP_DB_PASSWORD must be set}
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
     ports:
       - "${POSTGRES_PORT:-5433}:5432"
     healthcheck:
@@ -21,7 +24,9 @@ services:
       dockerfile: deploy/docker/backend.Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
-      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=${POSTGRES_DB:-production_management_ai};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      # Runtime login only (least privilege, DEC-016). Migrations run separately as the owner — see deploy/README.md.
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=${POSTGRES_DB:-production_management_ai};Username=pmai_app;Password=${PMAI_APP_DB_PASSWORD:?PMAI_APP_DB_PASSWORD must be set}
+      Plant__TimeZone: ${PLANT_TIMEZONE:-Asia/Tokyo}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD must be set}
       DATA_PROTECTION_KEYS_PATH: /keys
     volumes:
