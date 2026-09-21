@@ -1,0 +1,1 @@
+   is needed (same-origin cookie with SameSite=Lax and no CORS). I'll confirm or revisit that while writing DD-001.

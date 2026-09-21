@@ -1,0 +1,1 @@
+- Detailed design (DD-001): whether the new save endpoints need protection against cross-site request forgery (CSRF). I'll settle that while writing DD-001.

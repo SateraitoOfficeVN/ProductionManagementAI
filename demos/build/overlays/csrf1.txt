@@ -1,0 +1,1 @@
+2. CSRF protection (BD-001, open questions). This is a technical point that the detailed design (DD-001) is meant to settle. No extra token
