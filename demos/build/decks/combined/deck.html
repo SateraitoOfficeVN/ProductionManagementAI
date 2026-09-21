@@ -433,7 +433,7 @@
       <span class="chip">Database design — 3:59 video</span>
       <span class="chip">Detailed design — 4:00 video</span>
       <span class="chip">Implementation — 5:59 video</span>
-      <span class="chip" style="background:none;color:#78BEB9;padding-left:0">17:48 of video · 65 slides</span>
+      <span class="chip" style="background:none;color:#78BEB9;padding-left:0">17:48 of video · 64 slides</span>
     </div>
   </div>
 </section>
@@ -447,13 +447,13 @@
     <table style="margin-bottom:18px">
       <tr><th>Part</th><th>Step</th><th>Video</th><th>Pages</th></tr>
         <tr><td class="id">Part 1</td><td><b>Basic design</b><br><span style="font-size:9px">Requirements brief, decision log and a 339-line basic design</span></td>
-            <td>3:49</td><td class="id">3–18</td></tr>
+            <td>3:49</td><td class="id">4–18</td></tr>
         <tr><td class="id">Part 2</td><td><b>Database design</b><br><span style="font-size:9px">The schema, eight decisions and a new requirement</span></td>
-            <td>3:59</td><td class="id">19–34</td></tr>
+            <td>3:59</td><td class="id">19–33</td></tr>
         <tr><td class="id">Part 3</td><td><b>Detailed design</b><br><span style="font-size:9px">Four design documents and a published mockup</span></td>
-            <td>4:00</td><td class="id">35–50</td></tr>
+            <td>4:00</td><td class="id">34–48</td></tr>
         <tr><td class="id">Part 4</td><td><b>Implementation</b><br><span style="font-size:9px">The screen itself: 133 tests, two pull requests</span></td>
-            <td>5:59</td><td class="id">51–65</td></tr>
+            <td>5:59</td><td class="id">49–63</td></tr>
     </table>
     <div class="grid g2">
       <div class="bar"><div class="lbl">How to read a part</div>
@@ -465,7 +465,37 @@
         edited video.</p></div>
     </div>
   </div>
-  <div class="foot"><span>Screen A, end to end · WI-002 · ProductionManagementAI</span><span>2 / 65</span></div>
+  <div class="foot"><span>Screen A, end to end · WI-002 · ProductionManagementAI</span><span>2 / 64</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">The series at a glance</div>
+  <h2>Eighty-seven minutes of recording, about an hour of agent work</h2>
+  <p class="intro">Thirteen typed prompts and four question forms across the four steps. Everything else was the agent
+  working through the harness in <code>ai/</code>.</p>
+  <div class="body">
+    <table style="margin-bottom:16px">
+      <tr><th>Part</th><th>Recording</th><th>Prompts</th><th>Agent time</th><th>What it produced</th></tr>
+      <tr><td class="id">1 Basic design</td><td>9:59</td><td>2</td><td>6 m 16 s</td>
+          <td>Requirements brief, decision log, BD-001 (339 lines), plan, status, evidence</td></tr>
+      <tr><td class="id">2 Database design</td><td>10:44</td><td>3</td><td>4 m 19 s</td>
+          <td>DB-002 (216 lines), DEC-013–DEC-020, REQ-019, BD-001 revision 3</td></tr>
+      <tr><td class="id">3 Detailed design</td><td>15:37</td><td>2</td><td>10 m 23 s</td>
+          <td>Four DD documents (1,314 lines) and a mockup published as a private artifact</td></tr>
+      <tr><td class="id">4 Implementation</td><td>50:44</td><td>6</td><td>~40 m</td>
+          <td>The screen: backend, database, frontend, 133 tests, two pull requests</td></tr>
+    </table>
+    <div class="grid g2">
+      <div class="bar"><div class="lbl">What stayed constant</div>
+        <p>Every step read the harness before writing, recorded each decision with its options and rationale, and
+        stopped at a gate it had been given in writing — plan approval, publishing the mockup, merging.</p></div>
+      <div class="bar h"><div class="lbl h">What the human did</div>
+        <p>Chose between options, and twice asked a question that changed the session: <i>"are there any open questions
+        left?"</i> and <i>"there are still 2 templates not output"</i>. Both surfaced things the agent had quietly
+        settled on its own.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A, end to end · WI-002 · ProductionManagementAI</span><span>3 / 64</span></div>
 </section>
 
 <section class="slide title">
@@ -521,7 +551,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>4 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>5 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -552,7 +582,7 @@
     <p style="margin-top:16px;font-size:8.5px">Times are positions in <code>ScreenA_BD_edited.mp4</code>.
     Long stretches of agent work are jump-cut to their result; nothing is sped up.</p>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>5 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>6 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -574,7 +604,7 @@
         <figcaption>Video 00:07. The prompt being typed into Claude Code.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>6 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>7 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -597,7 +627,7 @@
       <p>"Inputs gathered. Writing the WI-002 work item (brief, decisions, plan, status, evidence) and BD-001 against
       the template now." <b>About 80 seconds of read-only commands before a single file is written.</b></p></div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>7 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>8 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -633,7 +663,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>8 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>9 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -657,7 +687,7 @@
         <figcaption>Video 01:16. BD-001 streams to the terminal.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>9 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>10 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -679,7 +709,7 @@
         <figcaption>Video 01:33. Traceability matrix and README updates.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>10 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>11 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -703,7 +733,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>11 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>12 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -728,7 +758,7 @@
         <figcaption>Video 02:09. The prompt is sent and Claude starts preparing the form.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>12 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>13 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -757,7 +787,7 @@
         <figcaption>Video 02:42. Tab 4: the one where the user overrode the recommendation.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>13 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>14 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -782,7 +812,7 @@
         from there, <b>with no help from the user</b>.</p></div>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>14 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>15 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -805,7 +835,7 @@
         <figcaption>Video 03:25. The turn 2 summary — 1 m 37 s of agent work.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>15 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>16 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -831,35 +861,7 @@
         <figcaption>Video 03:43. BD-001's item events, E-01 to E-07 — the screen, specified event by event.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>16 / 65</span></div>
-</section>
-
-<section class="slide">
-  <div class="eyebrow">What this demo shows</div>
-  <h2>Six things to notice</h2>
-  <div class="body">
-    <div class="grid g3" style="row-gap:24px">
-      <div class="pt"><span class="num">01</span><h4>Short prompts, structured harness</h4>
-        <p>Two one-line prompts were enough. <code>AGENTS.md</code> → workflows → skills → templates → checklists told
-        the agent what to read and produce.</p></div>
-      <div class="pt"><span class="num">02</span><h4>Read before write</h4>
-        <p>Instructions, workflow, skills, the template, the example Excel BD, existing IDs and backend roles were all
-        read before the first file was written.</p></div>
-      <div class="pt"><span class="num">03</span><h4>Humans decide business behaviour</h4>
-        <p>The agent recommends options; the user chooses. One recommendation was overridden — the order-number
-        format — and recorded as chosen.</p></div>
-      <div class="pt"><span class="num">04</span><h4>Human in the loop catches gaps</h4>
-        <p>The user noticed unasked questions and pulled them forward. Claude batched four decisions into one
-        form.</p></div>
-      <div class="pt"><span class="num">05</span><h4>Right decision, right place</h4>
-        <p>Business questions were answered now; technical ones — sequences, concurrency detection, CSRF — were parked
-        at DB-002 and DD-001.</p></div>
-      <div class="pt"><span class="num">06</span><h4>Everything written down, then a gate</h4>
-        <p>Each answer lands in decisions, brief, BD-001, status and evidence. The session stops at plan
-        approval.</p></div>
-    </div>
-  </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>17 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>17 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -893,7 +895,7 @@
     <p style="margin-top:18px;font-size:8.5px">Sources: the session recording (<code>ScreenA_BD.mp4</code>), its
     transcript, and the committed files in <code>work-items/WI-002/</code>.</p>
   </div>
-  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>18 / 65</span></div>
+  <div class="foot"><span>Part 1 of 4 <span class="sep">·</span> Screen A basic design · WI-002 · ProductionManagementAI</span><span>18 / 64</span></div>
 </section>
 
 <section class="slide title">
@@ -951,7 +953,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>20 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>20 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -982,7 +984,7 @@
     <p style="margin-top:16px;font-size:8.5px">Times are positions in <code>ScreenA_DB_edited.mp4</code>.
     Long stretches of agent work are jump-cut to their result; nothing is sped up.</p>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>21 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>21 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1004,7 +1006,7 @@
         <figcaption>Video 00:06. The prompt replacing Claude Code's suggestion.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>22 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>22 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1026,7 +1028,7 @@
       <p>"Plan approved, so I'm recording that and starting DB-002. I've checked the existing persistence setup
       (snake_case naming convention, uuid keys, EF migrations) so DB-002 can follow it."</p></div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>23 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>23 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1057,7 +1059,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>24 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>24 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1078,7 +1080,7 @@
         <figcaption>Video 01:07. Approval and traceability written into the work item.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>25 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>25 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1103,7 +1105,7 @@
         <figcaption>Video 01:24. The end of the turn 1 summary — 2 m 15 s of agent work.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>26 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>26 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1125,7 +1127,7 @@
         <figcaption>Video 01:38. The prompt is sent and Claude greps its own artifacts.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>27 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>27 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1148,7 +1150,7 @@
       <p>Items 3 to 5 were gaps the agent had closed on its own without recording them as questions. Being asked to
       re-check surfaced them <b>before</b> the detailed design was built on top of them.</p></div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>28 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>28 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1180,7 +1182,7 @@
         <figcaption>Video 02:35. A free-text answer: "Let's do 30 samples so we can get a sense of the screen's workload".</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>29 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>29 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1204,7 +1206,7 @@
         <figcaption>Video 02:56. The four answers, as Claude Code recorded them.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>30 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>30 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1234,7 +1236,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>31 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>31 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1261,35 +1263,7 @@
         <figcaption>Video 03:52. DB-002's open decisions, every row now carrying a decision ID.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>32 / 65</span></div>
-</section>
-
-<section class="slide">
-  <div class="eyebrow">What this demo shows</div>
-  <h2>Six things to notice</h2>
-  <div class="body">
-    <div class="grid g3" style="row-gap:24px">
-      <div class="pt"><span class="num">01</span><h4>The gate is a file, not a memory</h4>
-        <p>The previous session stopped at plan approval. This one opens by writing that approval into
-        <code>plan.md</code> before any design work starts.</p></div>
-      <div class="pt"><span class="num">02</span><h4>Read the code, not just the docs</h4>
-        <p>Naming convention, key types and migrations were read from <code>AppDbContext</code> before the schema was
-        written, so DB-002 describes what exists.</p></div>
-      <div class="pt"><span class="num">03</span><h4>Asking again finds more</h4>
-        <p>"Are there any open questions left?" made the agent search its own artifacts and surface three gaps it had
-        silently closed.</p></div>
-      <div class="pt"><span class="num">04</span><h4>The human can overrule</h4>
-        <p>On the database-login split Claude recommended waiting. The user said split now — and the agent recorded the
-        choice and the work it creates.</p></div>
-      <div class="pt"><span class="num">05</span><h4>Free text is a first-class answer</h4>
-        <p>"Let's do 30 samples so we can get a sense of the screen's workload" became DEC-019 and a concrete
-        <code>P-1001</code>–<code>P-1030</code> seed.</p></div>
-      <div class="pt"><span class="num">06</span><h4>One answer can grow the spec</h4>
-        <p>The Cancel decision did not just edit a document: it added REQ-019 to the brief and a dialog with focus and
-        Escape behaviour to BD-001.</p></div>
-    </div>
-  </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>33 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>32 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1323,7 +1297,7 @@
     <p style="margin-top:18px;font-size:8.5px">Sources: the session recording (<code>ScreenA_DB.mp4</code>), its
     transcript, and the committed files in <code>work-items/WI-002/</code> and <code>docs/en/database/</code>.</p>
   </div>
-  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>34 / 65</span></div>
+  <div class="foot"><span>Part 2 of 4 <span class="sep">·</span> Screen A database design · WI-002 · ProductionManagementAI</span><span>33 / 64</span></div>
 </section>
 
 <section class="slide title">
@@ -1380,7 +1354,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>36 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>35 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1411,7 +1385,7 @@
     <p style="margin-top:16px;font-size:8.5px">Times are positions in <code>ScreenA_DD_edited.mp4</code>.
     Long stretches of agent work are jump-cut to their result; nothing is sped up.</p>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>37 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>36 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1433,7 +1407,7 @@
         <figcaption>Video 00:06. plan.md above, the prompt below.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>38 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>37 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1456,7 +1430,7 @@
       "Before writing: plan step 5 says publishing the rendered mockup as a private artifact needs your OK at that
       point, so I'm asking now so it doesn't hold things up later."</p></div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>39 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>38 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1476,7 +1450,7 @@
         <b>before</b> starting the work that depended on it, not halfway through.</p></div>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>40 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>39 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1506,7 +1480,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>41 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>40 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1533,7 +1507,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>42 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>41 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1558,7 +1532,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>43 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>42 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1580,7 +1554,7 @@
         <figcaption>Video 02:43. The template folder open, and the correction being typed.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>44 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>43 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1610,7 +1584,7 @@
         <figcaption>Video 03:22. The second companion, then DD-001 rewired to both.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>45 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>44 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1634,7 +1608,7 @@
         <figcaption>Video 03:38. The turn 2 summary, ending on the offer to change the shared templates.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>46 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>45 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1656,7 +1630,7 @@
         <figcaption>Video 03:53. 020_detailed-design, complete.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>47 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>46 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1692,35 +1666,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>48 / 65</span></div>
-</section>
-
-<section class="slide">
-  <div class="eyebrow">What this demo shows</div>
-  <h2>Six things to notice</h2>
-  <div class="body">
-    <div class="grid g3" style="row-gap:24px">
-      <div class="pt"><span class="num">01</span><h4>A written gate is honoured unprompted</h4>
-        <p><code>plan.md</code> said publishing needs an OK "at execution". Claude asked before starting, not halfway
-        through — nobody restated the rule.</p></div>
-      <div class="pt"><span class="num">02</span><h4>It reads the app before designing for it</h4>
-        <p><code>LoginPage.tsx</code> and <code>index.css</code> were read in step 2 and used in step 6, so the
-        mockup looks like the product.</p></div>
-      <div class="pt"><span class="num">03</span><h4>Design feeds back upstream</h4>
-        <p>A missing quantity bound found while writing the API contract became DEC-024 and BD-001 revision 4, not a
-        silent choice in code.</p></div>
-      <div class="pt"><span class="num">04</span><h4>The human catches what the rule allowed</h4>
-        <p>Two of four templates produced nothing. The user spotted it from the template folder and said so in one
-        line.</p></div>
-      <div class="pt"><span class="num">05</span><h4>Fix yourself before fixing the output</h4>
-        <p>The preference went to memory <i>first</i>, then the missing documents were written. The habit is fixed
-        before the symptom.</p></div>
-      <div class="pt"><span class="num">06</span><h4>Shared rules stay with the human</h4>
-        <p>Changing everyone's templates was offered as a proposal and became RFC 0001 after review — not applied
-        unilaterally.</p></div>
-    </div>
-  </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>49 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>47 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1757,7 +1703,7 @@
     transcript, and the committed files in <code>docs/en/020_detailed-design/</code>,
     <code>work-items/WI-002/</code> and <code>ai/improvements/</code>.</p>
   </div>
-  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>50 / 65</span></div>
+  <div class="foot"><span>Part 3 of 4 <span class="sep">·</span> Screen A detailed design · WI-002 · ProductionManagementAI</span><span>48 / 64</span></div>
 </section>
 
 <section class="slide title">
@@ -1817,7 +1763,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>52 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>50 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1848,7 +1794,7 @@
     <p style="margin-top:16px;font-size:8.5px">Times are positions in <code>ScreenA_Implementaion_edited.mp4</code>.
     50 min 44 s of source, jump-cut to 5 min 59 s; nothing is sped up. The cut begins at the implementation planning — the session’s opening minutes, which applied the previous step’s RFC 0001, are left to that step’s deck.</p>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>53 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>51 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1872,7 +1818,7 @@
     <figure><div class="frame"><img src="img/im_form.jpg" alt="The four-question decision form"></div>
       <figcaption>Video 00:06. "No E2E tool has been chosen yet; WI-001 deferred it." — the question carries its own history.</figcaption></figure>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>54 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>52 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1893,7 +1839,7 @@
         <figcaption>Video 01:09. Who owns what, written down before the work starts.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>55 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>53 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1920,7 +1866,7 @@
     <figure style="margin-top:16px"><div class="frame"><img src="img/im_chrono.jpg" alt="The reordered plan file"></div>
       <figcaption>Video 02:01. "Every revision is kept in full, oldest first, and a new revision goes after the last one."</figcaption></figure>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>56 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>54 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1945,7 +1891,7 @@
         <figcaption>Video 02:26. RFC 0002 — while the editor shows the plan’s authorization table.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>57 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>55 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1969,7 +1915,7 @@
         keep <code>*.sh</code> files as LF alongside the script."</p></div>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>58 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>56 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -1991,7 +1937,7 @@
         <figcaption>Video 03:49. Found, explained and fixed — then 38 frontend tests pass.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>59 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>57 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -2014,7 +1960,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>60 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>58 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -2044,7 +1990,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>61 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>59 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -2067,7 +2013,7 @@
       </div>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>62 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>60 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -2091,7 +2037,7 @@
         <figcaption>Video 05:47. Cleanup listed too, including which <code>.env</code> disappears with the worktree.</figcaption></figure>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>63 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>61 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -2121,7 +2067,7 @@
         policy, and the Playwright suite ran only locally. Both were closed later.</p></div>
     </div>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>64 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>62 / 64</span></div>
 </section>
 
 <section class="slide">
@@ -2157,7 +2103,45 @@
     (<code>ScreenA_Implementaion.mp4</code>), its transcript, and the committed files in
     <code>work-items/WI-002/</code> and <code>ai/improvements/</code>.</p>
   </div>
-  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>65 / 65</span></div>
+  <div class="foot"><span>Part 4 of 4 <span class="sep">·</span> Screen A implementation · WI-002 · ProductionManagementAI</span><span>63 / 64</span></div>
+</section>
+
+<section class="slide">
+  <div class="eyebrow">What the series shows</div>
+  <h2>Nine things to notice</h2>
+  <p class="intro">Drawn from all four steps; the part each comes from is named.</p>
+  <div class="body">
+    <div class="grid g3" style="row-gap:20px">
+      <div class="pt"><span class="num">01</span><h4>Short prompts, structured harness</h4>
+        <p>Thirteen prompts, most of them one line. <code>AGENTS.md</code> → workflows → skills → templates →
+        checklists told the agent what to read and produce. <i>Part 1</i></p></div>
+      <div class="pt"><span class="num">02</span><h4>Read before write</h4>
+        <p>Instructions, templates and the existing code — including the running app's own CSS, so the mockup looked
+        like the product. <i>Parts 1 and 3</i></p></div>
+      <div class="pt"><span class="num">03</span><h4>Humans decide business behaviour</h4>
+        <p>The agent recommends; the user chooses. Recommendations were overridden twice, and both overrides were
+        recorded as decisions. <i>Parts 1 and 2</i></p></div>
+      <div class="pt"><span class="num">04</span><h4>Asking again finds more</h4>
+        <p>Twice a re-check by the user surfaced things the agent had silently settled — three timezone/cancel/seed
+        gaps, and two missing design documents. <i>Parts 2 and 3</i></p></div>
+      <div class="pt"><span class="num">05</span><h4>Design feeds back upstream</h4>
+        <p>A missing quantity bound found while writing the API contract became a decision and a revision of the basic
+        design, not a silent choice in code. <i>Part 3</i></p></div>
+      <div class="pt"><span class="num">06</span><h4>Fix the rule before the artifact</h4>
+        <p>Corrected twice, the agent wrote the preference to memory <i>first</i>, then produced the missing output.
+        <i>Parts 3 and 4</i></p></div>
+      <div class="pt"><span class="num">07</span><h4>Gates are written, not remembered</h4>
+        <p>Publishing the mockup, approving the plan, merging the PRs — each was a row in a file, honoured without
+        being restated in the prompt. <i>Parts 3 and 4</i></p></div>
+      <div class="pt"><span class="num">08</span><h4>Proved, not asserted</h4>
+        <p>The restricted database login was closed by attempting the forbidden delete and recording the refusal; a
+        real focus bug was caught by a test written from the requirement. <i>Part 4</i></p></div>
+      <div class="pt"><span class="num">09</span><h4>The harness improves itself</h4>
+        <p>Two runs exposed ambiguities in <code>ai/</code> and produced RFCs against it — with the change to shared
+        files offered, not applied. <i>Parts 3 and 4</i></p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A, end to end · WI-002 · ProductionManagementAI</span><span>64 / 64</span></div>
 </section>
 
 </body>

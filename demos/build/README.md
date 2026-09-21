@@ -102,7 +102,9 @@ It also does the work that makes 65 pages readable in one sitting, which a plain
 - a **cover** and a **contents** slide, the latter listing each part's page range, computed rather than typed;
 - the recurring section counters — `01 The session at a glance`, `02 The walkthrough`, and so on — are
   **stripped**, because they restart in every deck and tell a reader on page 20 that they are at the start;
-- every footer is rewritten to `Part N of 4 · <step> — <page> / 65`, so orientation survives the seams.
+- every footer is rewritten to `Part N of 4 · <step> — <page> / 64`, so orientation survives the seams;
+- a **series comparison** (page 3) and a **series takeaways** slide (last page) are generated here, and each part's
+  own "what this demo shows" slide is dropped — four of them in a row is 24 takeaways that overlap heavily.
 
 The five dark title slides carry no footer and act as dividers.
 
