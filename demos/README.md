@@ -15,10 +15,13 @@ All four steps were recorded on 2026-09-18 in one continuous sitting, in the ord
 
 Videos (`*.mp4`) are gitignored and kept locally by the project owner. Transcripts and presentation PDFs are committed.
 
-**[`ScreenA_all-four-steps.pdf`](ScreenA_all-four-steps.pdf)** is all four decks in one 64-page file, for presenting the
-whole series without switching documents. The steps appear in the order the work ran — basic design, database design,
-detailed design, implementation — so the demo numbers on the title slides read 01, 03, 02, 04. Page numbers run
-continuously; each step's own title slide acts as the section divider.
+**[`ScreenA_all-four-steps.pdf`](ScreenA_all-four-steps.pdf)** is all four decks in one 65-page file, for presenting
+the whole series without switching documents. The steps appear in the order the work ran — basic design, database
+design, detailed design, implementation — which is the order each deck's "next in the series" slide points to.
+
+It is not a plain merge: a contents slide gives each part's page range, the section counters that restart at "01" in a
+stand-alone deck are dropped, every footer carries "Part N of 4" alongside a continuous page number, and each part's own
+title slide serves as the divider.
 
 The four decks share one design (960 × 540 pt, 16 slides each, the same palette and type) so they can be shown back to back, and each edited cut is paced for its source: about four minutes for each design step and six for the 50-minute implementation, with the densest frames held longer so they can actually be read. The implementation cut starts at the implementation planning: the session's opening minutes applied the *previous* step's RFC 0001, which that step's own deck covers.
 

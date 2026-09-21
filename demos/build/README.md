@@ -94,10 +94,17 @@ chrome --headless=new --disable-gpu --no-pdf-header-footer \n  --print-to-pdf=..
 ```
 
 The generator concatenates the four decks' `<style>` blocks and slide sections in narrative order
-(basic → database → detailed → implementation), copies each deck's images into one folder under a
-`bd_`/`db_`/`dd_`/`im_` prefix so the filenames cannot collide, prepends a series cover, and rewrites
-every footer to a continuous `N / 64`. The five dark title slides carry no footer and act as section
-dividers.
+(basic → database → detailed → implementation) and copies each deck's images into one folder under a
+`bd_`/`db_`/`dd_`/`im_` prefix so the filenames cannot collide.
+
+It also does the work that makes 65 pages readable in one sitting, which a plain PDF merge cannot:
+
+- a **cover** and a **contents** slide, the latter listing each part's page range, computed rather than typed;
+- the recurring section counters — `01 The session at a glance`, `02 The walkthrough`, and so on — are
+  **stripped**, because they restart in every deck and tell a reader on page 20 that they are at the start;
+- every footer is rewritten to `Part N of 4 · <step> — <page> / 65`, so orientation survives the seams.
+
+The five dark title slides carry no footer and act as dividers.
 
 **Rebuild it whenever a step deck changes**, otherwise the combined file silently keeps the old
 slides.
