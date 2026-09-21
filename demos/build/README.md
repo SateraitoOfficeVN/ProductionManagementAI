@@ -81,6 +81,27 @@ to a cut's durations invalidates its deck's timings**. `ai/` has no automated ch
 re-cutting, recompute each step's start time from the script's `SEGS` and update the deck's step
 cards, badges and figure captions.
 
+## The combined deck
+
+`decks/combined/deck.html` is all four decks in one file, rendered to
+`demos/ScreenA_all-four-steps.pdf` (64 pages). It is **generated**, not edited by hand:
+
+```sh
+cd demos/build
+python build-combined.py                 # run from demos/build/
+cd decks/combined
+chrome --headless=new --disable-gpu --no-pdf-header-footer \n  --print-to-pdf=../../../ScreenA_all-four-steps.pdf deck.html
+```
+
+The generator concatenates the four decks' `<style>` blocks and slide sections in narrative order
+(basic → database → detailed → implementation), copies each deck's images into one folder under a
+`bd_`/`db_`/`dd_`/`im_` prefix so the filenames cannot collide, prepends a series cover, and rewrites
+every footer to a continuous `N / 64`. The five dark title slides carry no footer and act as section
+dividers.
+
+**Rebuild it whenever a step deck changes**, otherwise the combined file silently keeps the old
+slides.
+
 ## Hidden material
 
 WI-002's design phase was restarted after the templates were rewritten, and the presentation
