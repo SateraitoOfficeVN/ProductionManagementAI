@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screen A basic design — WI-002</title>
+<style>
+  /* Shared demo-deck theme: 960x540pt, Segoe UI + Consolas, light #F3F5F7
+     content slides with a 6pt teal top bar, dark #111B24 title slide. */
+  @page { size: 1280px 720px; margin: 0; }  /* 960x540pt at 96dpi */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --page:#F3F5F7; --dark:#111B24; --ink:#16212C; --muted:#606C78;
+    --teal:#0C6B68; --amber:#B7770A; --line:#D6DCE2;
+    --chip:#DEEEEC; --amberbg:#FAF0DC; --card:#FFFFFF;
+  }
+  html,body{ background:var(--page); color:var(--ink);
+    font-family:"Segoe UI",Arial,sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .slide{ position:relative; display:flex; flex-direction:column;
+    width:960px; height:540px; zoom:1.3333333; padding:30px 48px 48px; background:var(--page);
+    page-break-after:always; overflow:hidden; }
+  .slide:last-child{ page-break-after:auto; }
+  .slide:before{ content:""; position:absolute; top:0; left:0; right:0; height:6px; background:var(--teal); }
+  .slide.title{ background:var(--dark); color:#fff; padding:48px 56px; }
+  .slide.title:before{ top:0; bottom:0; right:auto; width:10px; height:auto; }
+
+  .eyebrow{ font-family:Consolas,monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .slide.title .eyebrow{ color:#78BEB9; }
+  .eyebrow .sep{ padding:0 5px; }
+  h1{ font-size:46px; line-height:1.1; font-weight:700; letter-spacing:-.01em; color:#fff; }
+  h2{ font-size:25px; line-height:1.2; font-weight:700; color:var(--ink); margin-top:16px; }
+  .intro{ font-size:11.5px; line-height:1.5; color:var(--muted); margin-top:10px; }
+  .lead{ font-size:15px; line-height:1.55; color:#BEC8D0; }
+  p{ font-size:10.5px; line-height:1.5; color:var(--muted); }
+  b,strong{ color:var(--ink); font-weight:700; }
+  .slide.title b{ color:#fff; }
+  code{ font-family:Consolas,monospace; font-size:.95em; color:var(--teal); background:var(--chip); border-radius:3px; padding:1px 4px; }
+  .slide.title code{ color:#A0CDC8; background:#1E2C38; }
+
+  .foot{ position:absolute; left:48px; right:48px; bottom:12px; display:flex; justify-content:space-between;
+    font-size:7.5px; color:var(--muted); border-top:.8px solid var(--line); padding-top:7px; }
+  .hdr{ display:flex; justify-content:space-between; align-items:center; }
+  .vtime{ font-size:8.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#fff;
+    background:var(--teal); border-radius:9px; padding:3px 10px; white-space:nowrap; }
+  .vtime.h{ background:var(--amber); }
+
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; padding-top:14px; }
+  .grid{ display:grid; gap:18px; }
+  .g2{ grid-template-columns:1fr 1fr; } .g2w{ grid-template-columns:.92fr 1.22fr; }
+  .g2n{ grid-template-columns:1.22fr .92fr; }
+  .g3{ grid-template-columns:repeat(3,1fr); } .g4{ grid-template-columns:repeat(4,1fr); }
+
+  .card{ background:var(--card); border:.8px solid var(--line); border-top:4px solid var(--teal); border-radius:3px; padding:13px 15px; }
+  .card.h{ border-top-color:var(--amber); }
+  .stat .n{ font-size:34px; font-weight:700; line-height:1; color:var(--ink); }
+  .stat .k{ font-size:11px; font-weight:700; color:var(--ink); margin-top:8px; }
+  .stat .s{ font-size:9px; color:var(--muted); margin-top:3px; }
+
+  .lbl{ font-size:8px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+  .lbl.h{ color:var(--amber); }
+  h3{ font-size:8px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin-bottom:9px; }
+  .colh{ font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:8px; }
+
+  ul{ list-style:none; }
+  li{ font-size:10.5px; line-height:1.45; color:var(--ink); padding-left:14px; position:relative; margin-bottom:7px; }
+  li:before{ content:""; position:absolute; left:0; top:4.5px; width:6px; height:6px; background:var(--teal); }
+  ul.h li:before{ background:var(--amber); }
+
+  table{ width:100%; border-collapse:collapse; font-size:9.5px; }
+  th{ text-align:left; font-size:7.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);
+      border-bottom:.8px solid var(--line); padding:0 9px 6px 0; font-weight:700; }
+  td{ padding:6px 9px 6px 0; border-bottom:.8px solid #E6EAEE; color:var(--muted); vertical-align:top; line-height:1.4; }
+  td.id{ color:var(--ink); font-weight:700; white-space:nowrap; font-family:Consolas,monospace; font-size:8.8px; }
+  td b{ color:var(--ink); }
+
+  figure{ align-self:start; }
+  .frame{ background:var(--dark); border-radius:4px; padding:5px; }
+  figure img{ width:100%; display:block; border-radius:2px; }
+  figcaption{ font-style:italic; font-size:8px; color:var(--muted); margin-top:6px; }
+
+  .bar{ border-left:4px solid var(--teal); padding:2px 0 2px 14px; }
+  .bar.h{ border-left-color:var(--amber); }
+  .bar p{ margin-top:6px; font-size:8.8px; color:var(--ink); }
+  .quote .txt{ font-family:Consolas,monospace; font-size:16px; color:var(--ink); line-height:1.4; margin-top:8px; }
+  .note{ background:var(--amberbg); border-radius:3px; padding:11px 13px; }
+  .note p{ color:#6B5310; font-size:9.5px; }
+  .note p b, .note p code{ color:#4A3A0B; }
+
+  .steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .st{ background:var(--card); border:.8px solid var(--line); border-top:4px solid var(--teal); border-radius:3px; padding:9px 11px; }
+  .st.h{ border-top-color:var(--amber); }
+  .st .n{ font-family:Consolas,monospace; font-size:7.5px; letter-spacing:.08em; color:var(--muted); display:flex; justify-content:space-between; }
+  .st .t{ font-size:11px; font-weight:700; color:var(--ink); margin-top:6px; line-height:1.25; }
+  .st .o{ font-size:8.5px; color:var(--muted); margin-top:5px; line-height:1.35; }
+  .num{ font-family:Consolas,monospace; font-size:9px; font-weight:700; color:var(--teal); letter-spacing:.08em; }
+  .pt h4{ font-size:12.5px; font-weight:700; color:var(--ink); margin:5px 0; line-height:1.25; }
+  .pt p{ font-size:9.5px; line-height:1.45; }
+  .chosen{ color:var(--amber); font-weight:700; }
+  .chip{ display:inline-block; background:var(--chip); color:var(--teal); font-family:Consolas,monospace;
+    font-size:8.2px; border-radius:3px; padding:3px 6px; margin:0 5px 5px 0; }
+  .slide.title .chip{ background:#1E2C38; color:#A0CDC8; display:block; margin-bottom:5px; }
+</style>
+</head>
+<body>
+
+<!-- 1 — title -->
+<section class="slide title">
+  <div class="eyebrow">ProductionManagementAI <span class="sep">·</span> WI-002 <span class="sep">·</span> Demo 01 of 04</div>
+  <div style="display:grid;grid-template-columns:1fr 250px;gap:46px;margin-top:72px">
+    <div>
+      <h1>Screen A: basic design</h1>
+      <p class="lead" style="margin-top:22px">Two one-line prompts and four answers, and Claude Code produced the
+      requirements brief, the decision log, the plan, and a 339-line basic design for the production-order
+      create/edit screen.</p>
+      <p style="margin-top:26px;color:#8C98A4;font-size:9.5px">Presented alongside <code>ScreenA_BD_edited.mp4</code>
+      (3 min 49 s). Step numbers on the slides match the captions in the video.<br>
+      Recorded 2026-09-18 · Claude Code (Opus 5) in the JetBrains Rider terminal, auto mode on.</p>
+    </div>
+    <div style="padding-top:6px">
+      <span class="chip">brief.md</span>
+      <span class="chip">decisions.md</span>
+      <span class="chip">BD-001-...-create-edit.md</span>
+      <span class="chip">plan.md</span>
+      <span class="chip">status.md</span>
+      <span class="chip">evidence.md</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 — at a glance -->
+<section class="slide">
+  <div class="eyebrow">01 <span class="sep">·</span> The session at a glance</div>
+  <h2>Ten minutes of recording, six of agent work</h2>
+  <p class="intro">The human wrote two prompts and answered one form. Everything else was the agent working through the harness.</p>
+  <div class="body">
+    <div class="grid g4" style="margin-bottom:22px">
+      <div class="card stat"><div class="n">2</div><div class="k">prompts typed</div><div class="s">both one line long</div></div>
+      <div class="card stat"><div class="n">4</div><div class="k">decisions answered</div><div class="s">in a single form</div></div>
+      <div class="card stat"><div class="n">6 m 16 s</div><div class="k">agent working time</div><div class="s">4 m 39 s + 1 m 37 s</div></div>
+      <div class="card stat"><div class="n">6</div><div class="k">files created</div><div class="s">plus 3 index/docs updates</div></div>
+    </div>
+    <div class="grid g2">
+      <div>
+        <div class="colh">The human</div>
+        <ul class="h">
+          <li>Asked for Screen A "as per what we planned".</li>
+          <li>Noticed open questions were still sitting in BD-001 and asked for them.</li>
+          <li>Chose an answer for each of the four questions. For the order-number format they <b>overrode the recommendation</b>.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="colh">The agent, guided by the harness</div>
+        <ul>
+          <li>Picked the workflow, skills, template and checklist without being told.</li>
+          <li>Reused the business answers already agreed (DEC-001 to DEC-008) rather than asking again.</li>
+          <li>Wrote every artifact, recorded every answer, and stopped at the plan-approval gate.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>2 / 16</span></div>
+</section>
+
+<!-- 3 — walkthrough -->
+<section class="slide">
+  <div class="eyebrow">02 <span class="sep">·</span> The walkthrough</div>
+  <h2>12 steps, one video</h2>
+  <p class="intro">Each step is one or more clips in the edited video.
+    <span style="color:var(--amber);font-weight:700">Amber: the human acts.</span>
+    <span style="color:var(--teal);font-weight:700">Teal: the agent works and produces output.</span></p>
+  <div class="body">
+    <div class="steps" style="margin-bottom:10px">
+      <div class="st h"><div class="n"><span>STEP 01</span><span>00:00</span></div><div class="t">Prompt 1</div><div class="o">Start Screen A as planned</div></div>
+      <div class="st"><div class="n"><span>STEP 02</span><span>00:14</span></div><div class="t">Reads the harness</div><div class="o">Workflow, skills, template, checklist</div></div>
+      <div class="st"><div class="n"><span>STEP 03</span><span>00:37</span></div><div class="t">brief.md</div><div class="o">70 lines, REQ-010 to REQ-018</div></div>
+      <div class="st"><div class="n"><span>STEP 04</span><span>00:51</span></div><div class="t">decisions.md</div><div class="o">261 lines, DEC-001 to DEC-009</div></div>
+    </div>
+    <div class="steps" style="margin-bottom:10px">
+      <div class="st"><div class="n"><span>STEP 05</span><span>01:07</span></div><div class="t">BD-001</div><div class="o">339 lines of basic design</div></div>
+      <div class="st"><div class="n"><span>STEP 06</span><span>01:25</span></div><div class="t">plan · status · evidence</div><div class="o">And the docs indexes</div></div>
+      <div class="st"><div class="n"><span>STEP 07</span><span>01:41</span></div><div class="t">Turn 1 summary</div><div class="o">One new question: DEC-009</div></div>
+      <div class="st h"><div class="n"><span>STEP 08</span><span>02:03</span></div><div class="t">Prompt 2</div><div class="o">"Still open decisions, right?"</div></div>
+    </div>
+    <div class="steps">
+      <div class="st h"><div class="n"><span>STEP 09</span><span>02:15</span></div><div class="t">Decision form</div><div class="o">Four questions, one form</div></div>
+      <div class="st"><div class="n"><span>STEP 10</span><span>02:48</span></div><div class="t">Recording the answers</div><div class="o">DEC-009 to DEC-012</div></div>
+      <div class="st"><div class="n"><span>STEP 11</span><span>03:16</span></div><div class="t">Turn 2 summary</div><div class="o">What is left for DB and DD</div></div>
+      <div class="st h"><div class="n"><span>STEP 12</span><span>03:38</span></div><div class="t">Review</div><div class="o">BD-001, item by item</div></div>
+    </div>
+    <p style="margin-top:16px;font-size:8.5px">Times are positions in <code>ScreenA_BD_edited.mp4</code>.
+    Long stretches of agent work are jump-cut to their result; nothing is sped up.</p>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>3 / 16</span></div>
+</section>
+
+<!-- 4 — step 1 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 01 of 12 <span class="sep">·</span> Prompt 1</div><div class="vtime h">Video 00:00</div></div>
+  <h2>One line starts the whole flow</h2>
+  <div class="body">
+    <div class="grid g2w">
+      <div>
+        <div class="bar h quote"><div class="lbl h">The prompt</div>
+          <div class="txt">OK, now let's work on Screen A as per what we planned</div></div>
+        <p style="margin-top:16px">No files, templates or steps are named. Claude works them out from the repository
+        harness:</p>
+        <p style="margin-top:8px"><code>AGENTS.md</code> → <code>ai/project.md</code> → <code>ai/workflows</code> →
+        <code>ai/skills</code> → <code>ai/templates</code> → <code>ai/checklists</code></p>
+        <div class="bar" style="margin-top:16px"><div class="lbl">Output</div>
+          <p>No output yet. The prompt only sets the goal; the harness decides the route (step 2).</p></div>
+      </div>
+      <figure><div class="frame"><img src="img/prompt1.jpg" alt="Prompt 1 being typed into Claude Code"></div>
+        <figcaption>Video 00:07. The prompt being typed into Claude Code.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>4 / 16</span></div>
+</section>
+
+<!-- 5 — step 2 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 02 of 12 <span class="sep">·</span> Reads the harness</div><div class="vtime">Video 00:14</div></div>
+  <h2>Read first, write later</h2>
+  <div class="body">
+    <div class="grid g2w" style="margin-bottom:14px">
+      <table>
+        <tr><th>What Claude read</th><th>What it got from it</th></tr>
+        <tr><td class="id">AGENTS.md, ai/project.md,<br>work-items/</td><td>Project state; Screen A is WI-002 (production-order create/edit)</td></tr>
+        <tr><td class="id">feature-delivery workflow,<br>requirements + basic-design skills</td><td>The route: brief first, then basic design</td></tr>
+        <tr><td class="id">BD template, documentation +<br>frontend rules, design checklist</td><td>The structure BD-001 must follow and the bar it must meet</td></tr>
+        <tr><td class="id">Existing REQ / FN / SCR IDs,<br>WI-001 roles, backend auth</td><td>Numbering starts at REQ-010; roles are <code>Admin</code> and <code>Operator</code></td></tr>
+        <tr><td class="id">Example Excel BD workbook</td><td>Table conventions for items, validation and events</td></tr>
+      </table>
+      <figure><div class="frame"><img src="img/read.jpg" alt="Read-only commands collapsed by Claude Code"></div>
+        <figcaption>Video 00:31. Read-only commands, collapsed by Claude Code.</figcaption></figure>
+    </div>
+    <div class="bar"><div class="lbl">Output</div>
+      <p>"Inputs gathered. Writing the WI-002 work item (brief, decisions, plan, status, evidence) and BD-001 against
+      the template now." <b>About 80 seconds of read-only commands before a single file is written.</b></p></div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>5 / 16</span></div>
+</section>
+
+<!-- 6 — steps 3 + 4 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Steps 03 and 04 of 12 <span class="sep">·</span> Brief and decision log</div>
+    <div class="vtime">Step 3 — 00:37 &nbsp;·&nbsp; Step 4 — 00:51</div></div>
+  <h2>The work item comes first</h2>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <h3>Step 3 — work-items/WI-002/brief.md · 70 lines</h3>
+        <ul style="margin-top:2px">
+          <li><b>Objective:</b> show the full lifecycle (requirements → BD → DB → DD → code → test → PR) on one small but realistic screen.</li>
+          <li><b>Success metrics:</b> full traceability, business rules proven by automated tests, a working demo in local Docker Compose.</li>
+          <li>Requirements <b>REQ-010 to REQ-018</b>, each with success and failure criteria.</li>
+          <li><b>Out of scope:</b> the list screen and dashboard, a product-catalog UI, deleting orders, audit history.</li>
+        </ul>
+        <figure style="margin-top:10px"><div class="frame"><img src="img/brief.jpg" alt="brief.md written to the work item"></div>
+          <figcaption>Video 00:44. The brief lands in the work item.</figcaption></figure>
+      </div>
+      <div>
+        <h3>Step 4 — decisions.md · 261 lines</h3>
+        <table>
+          <tr><th>ID</th><th>Decision</th><th>Outcome</th></tr>
+          <tr><td class="id">DEC-001</td><td>Who may create/edit</td><td>Admin and Operator</td></tr>
+          <tr><td class="id">DEC-003</td><td>Status workflow</td><td>Draft → InProgress → Completed; Cancelled from either</td></tr>
+          <tr><td class="id">DEC-004</td><td>Edit once not Draft</td><td>Product and quantity locked</td></tr>
+          <tr><td class="id">DEC-006</td><td>Validation</td><td>Qty &gt; 0, due date ≥ today, notes ≤ 500</td></tr>
+          <tr><td class="id">DEC-007</td><td>Locked field sent anyway</td><td>Reject the whole request</td></tr>
+          <tr><td class="id">DEC-009</td><td>Overdue orders</td><td><b>Proposed — waiting for the user</b></td></tr>
+        </table>
+        <p style="margin-top:10px">Eight answers the user had <b>already agreed</b> go straight in. Only one new
+        question is raised.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>6 / 16</span></div>
+</section>
+
+<!-- 7 — step 5 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 05 of 12 <span class="sep">·</span> Basic design</div><div class="vtime">Video 01:07</div></div>
+  <h2>BD-001: the screen, specified</h2>
+  <p class="intro"><code>docs/en/010_basic-design/BD-001-production-order-create-edit.md</code> · 339 lines · built from <code>ai/templates/basic-design.md</code></p>
+  <div class="body">
+    <div class="grid g2n">
+      <table>
+        <tr><th>Section</th><th>What it pins down</th></tr>
+        <tr><td class="id">System overview</td><td>Every requirement mapped to the sections that cover it</td></tr>
+        <tr><td class="id">Architecture</td><td>React + .NET 10 API + PostgreSQL 17, WI-001 auth; no new boundary</td></tr>
+        <tr><td class="id">Function list</td><td>FN-001 Create … FN-008 Enforce authentication/authorization</td></tr>
+        <tr><td class="id">Status diagram</td><td>Draft → InProgress → Completed, Cancelled; two terminal states</td></tr>
+        <tr><td class="id">SCR-001 detail</td><td>Routes, API paths, roles, page titles, PC and SP layouts</td></tr>
+        <tr><td class="id">Mockups</td><td>ASCII PC and SP layouts with numbered items (1)–(16)</td></tr>
+        <tr><td class="id">Validation + events</td><td>V-01 … and E-01 to E-06: load, blur, input, save, results</td></tr>
+        <tr><td class="id">Non-functional</td><td>WCAG 2.2 AA details, observability, performance</td></tr>
+      </table>
+      <figure><div class="frame"><img src="img/bd001.jpg" alt="BD-001 being written"></div>
+        <figcaption>Video 01:16. BD-001 streams to the terminal.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>7 / 16</span></div>
+</section>
+
+<!-- 8 — step 6 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 06 of 12 <span class="sep">·</span> Plan, status, evidence</div><div class="vtime">Video 01:25</div></div>
+  <h2>Durable state lives in the work item, not the chat</h2>
+  <div class="body">
+    <div class="grid g2w">
+      <div>
+        <div class="bar"><div class="lbl">Created</div>
+          <p><code>plan.md</code> — revision 1, six milestones, marked <b>awaiting review</b>.<br>
+          <code>status.md</code> — what is done, what is next, what is at risk.<br>
+          <code>evidence.md</code> — a traceability matrix from each REQ to design, code, test and status.</p></div>
+        <div class="bar h" style="margin-top:16px"><div class="lbl h">Updated so people can find it</div>
+          <p style="color:var(--ink)"><code>docs/en/000_requirements/README.md</code> points to the brief.<br>
+          <code>docs/en/010_basic-design/README.md</code> lists BD-001.<br>
+          <code>CLAUDE.md</code> "Current state" describes WI-002's progress.</p></div>
+      </div>
+      <figure><div class="frame"><img src="img/plan.jpg" alt="Traceability matrix and README updates"></div>
+        <figcaption>Video 01:33. Traceability matrix and README updates.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>8 / 16</span></div>
+</section>
+
+<!-- 9 — step 7 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 07 of 12 <span class="sep">·</span> Turn 1 summary</div><div class="vtime">Video 01:41</div></div>
+  <h2>Claude reports back and asks one question</h2>
+  <div class="body">
+    <div class="grid g2n">
+      <figure><div class="frame"><img src="img/sum1.jpg" alt="The end of the turn 1 summary"></div>
+        <figcaption>Video 01:52. The end of the turn 1 summary — 4 m 39 s of agent work.</figcaption></figure>
+      <div>
+        <div class="note"><div class="lbl h">DEC-009 — asked in the summary</div>
+          <p style="margin-top:6px">If "due date must be today or later" is checked on every save, an overdue
+          In Progress order can't be saved, even just to mark it Completed.</p>
+          <p style="margin-top:6px">1. Check only on create or when the due date changes <i>(recommended)</i><br>
+          2. Check on every save<br>3. Check only on create</p></div>
+        <div class="bar" style="margin-top:14px"><div class="lbl">Output</div>
+          <p>Summary + DEC-009 + "plan revision 1 needs your review". Next: database design (DB-002), then detailed
+          design (DD-001) with a rendered mockup.</p></div>
+        <p style="margin-top:12px;font-size:9px">Claude Code pre-filled a suggested reply ("Go with option 1…").
+        <b>The user did not take it.</b></p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>9 / 16</span></div>
+</section>
+
+<!-- 10 — step 8 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 08 of 12 <span class="sep">·</span> Prompt 2</div><div class="vtime h">Video 02:03</div></div>
+  <h2>The human spots a gap</h2>
+  <div class="body">
+    <div class="grid g2w">
+      <div>
+        <div class="bar h quote"><div class="lbl h">The prompt</div>
+          <div class="txt">There are still open decisions to be made, right?</div></div>
+        <p style="margin-top:16px">Claude had asked about only one open item. BD-001's own <i>Open questions</i>
+        table listed five:</p>
+        <ul class="h" style="margin-top:8px">
+          <li>Due-date rule for overdue orders (DEC-009)</li>
+          <li>Two users editing the same order at once</li>
+          <li>Which timezone defines "today"</li>
+          <li>Order-number format</li>
+          <li>CSRF protection for the new endpoints</li>
+        </ul>
+      </div>
+      <figure><div class="frame"><img src="img/prompt2.jpg" alt="Prompt 2 sent"></div>
+        <figcaption>Video 02:09. The prompt is sent and Claude starts preparing the form.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>10 / 16</span></div>
+</section>
+
+<!-- 11 — step 9 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 09 of 12 <span class="sep">·</span> Decision form</div><div class="vtime h">Video 02:15</div></div>
+  <h2>Four questions, one form</h2>
+  <p class="intro">Claude batched the open business questions into a tabbed multiple-choice form; each offered a recommended option.</p>
+  <div class="body">
+    <div class="steps" style="margin-bottom:14px">
+      <div class="st h"><div class="n"><span>DUE DATE</span><span>DEC-009</span></div>
+        <div class="t" style="font-size:10px">When is "due date ≥ today" checked?</div>
+        <div class="o"><span class="chosen">On create or when changed</span> · every save · create only</div></div>
+      <div class="st h"><div class="n"><span>CONCURRENCY</span><span>DEC-010</span></div>
+        <div class="t" style="font-size:10px">Two users save the same order. Then what?</div>
+        <div class="o"><span class="chosen">Reject the stale save</span> · last write wins</div></div>
+      <div class="st h"><div class="n"><span>TODAY</span><span>DEC-011</span></div>
+        <div class="t" style="font-size:10px">Which timezone defines "today"?</div>
+        <div class="o"><span class="chosen">Server's plant timezone</span> · the browser's</div></div>
+      <div class="st h"><div class="n"><span>ORDER NO.</span><span>DEC-012</span></div>
+        <div class="t" style="font-size:10px">Order number format?</div>
+        <div class="o">PO-000001 · <span class="chosen">PO-YYYY-00001</span> · plain number</div></div>
+    </div>
+    <div class="grid g2">
+      <figure><div class="frame"><img src="img/form1.jpg" alt="The due-date question in the decision form"></div>
+        <figcaption>Video 02:20. Tab 1: the due-date rule, with its consequence spelled out.</figcaption></figure>
+      <figure><div class="frame"><img src="img/form3.jpg" alt="The order-number question"></div>
+        <figcaption>Video 02:42. Tab 4: the one where the user overrode the recommendation.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>11 / 16</span></div>
+</section>
+
+<!-- 12 — step 10 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 10 of 12 <span class="sep">·</span> Recording the answers</div><div class="vtime">Video 02:48</div></div>
+  <h2>Every answer lands in the files, not just the chat</h2>
+  <div class="body">
+    <table style="margin-bottom:14px">
+      <tr><th>ID</th><th>Decision</th><th>Recorded outcome</th></tr>
+      <tr><td class="id">DEC-009</td><td>Overdue orders</td><td>Check only on create or when the due date changes</td></tr>
+      <tr><td class="id">DEC-010</td><td>Concurrent edits</td><td>Reject a save based on stale data; the user reloads</td></tr>
+      <tr><td class="id">DEC-011</td><td>"Today"</td><td>One configured plant timezone, applied server-side</td></tr>
+      <tr><td class="id">DEC-012</td><td>Order number</td><td><code>PO-YYYY-NNNNN</code>, sequence restarts each year</td></tr>
+    </table>
+    <div class="grid g2n">
+      <div class="bar"><div class="lbl">Output</div>
+        <p><code>decisions.md</code>: DEC-009 to DEC-012 now decided. <code>brief.md</code>: REQ-010, REQ-011 and
+        REQ-014 updated. <b>BD-001 v2</b>: new rule V-08 (stale-save check) and the new order-number format in the
+        mockups. <code>status.md</code>: status <b>Green</b>; <code>plan.md</code> and <code>evidence.md</code>
+        updated to match.</p></div>
+      <div class="note"><div class="lbl h">Self-recovery</div>
+        <p style="margin-top:6px">A shell heredoc broke on apostrophes. Claude saved the script to a file and ran it
+        from there, <b>with no help from the user</b>.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>12 / 16</span></div>
+</section>
+
+<!-- 13 — step 11 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 11 of 12 <span class="sep">·</span> Turn 2 summary</div><div class="vtime">Video 03:16</div></div>
+  <h2>Business decisions now; technical ones where they belong</h2>
+  <div class="body">
+    <div class="grid g2w">
+      <div>
+        <p style="margin-bottom:12px">Claude closes the turn by separating out the technical choices — the ones that
+        don't change how the screen behaves — and parks each at the design step that owns it:</p>
+        <div class="bar"><div class="lbl">Database design — DB-002</div>
+          <p>How to generate a number sequence that restarts each year · what happens if a year passes 99,999 orders ·
+          how the system detects that someone else changed the order</p></div>
+        <div class="bar" style="margin-top:12px"><div class="lbl">Detailed design — DD-001</div>
+          <p>Whether the new save endpoints need cross-site request forgery (CSRF) protection</p></div>
+        <p style="margin-top:14px"><b>"Plan revision 1 still needs your review. Once you approve it, I'll start
+        DB-002."</b></p>
+      </div>
+      <figure><div class="frame"><img src="img/sum2.jpg" alt="The turn 2 summary"></div>
+        <figcaption>Video 03:25. The turn 2 summary — 1 m 37 s of agent work.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>13 / 16</span></div>
+</section>
+
+<!-- 14 — step 12 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 12 of 12 <span class="sep">·</span> Review</div><div class="vtime h">Video 03:38</div></div>
+  <h2>The plan waits for a human</h2>
+  <div class="body">
+    <div class="grid g2n">
+      <div>
+        <table>
+          <tr><th>#</th><th>Milestone</th><th>Skill</th><th>Deliverable</th></tr>
+          <tr><td class="id">1</td><td>Brief + decision log</td><td>requirements</td><td>brief.md, decisions.md</td></tr>
+          <tr><td class="id">2</td><td>Basic design</td><td>basic-design, screen-design</td><td>BD-001</td></tr>
+          <tr><td class="id">3</td><td>Resolve DEC-009</td><td>—</td><td>decisions.md, BD-001 V-04</td></tr>
+          <tr><td class="id">4</td><td>Database design</td><td>database-design</td><td>DB-002 schema doc</td></tr>
+          <tr><td class="id">5</td><td>Detailed design + mockup</td><td>detailed-design, screen-design</td><td>DD-001 + rendered mockup</td></tr>
+          <tr><td class="id">6</td><td>Reconcile and close</td><td>—</td><td>status.md, evidence.md</td></tr>
+        </table>
+        <div class="bar h" style="margin-top:12px"><div class="lbl h">Where the session ends</div>
+          <p style="color:var(--ink)">Milestones 1–3 are done. Milestones 4–6 wait on the plan-approval gate in
+          <code>ai/policies.md</code>: plans are reviewed before implementation continues.</p></div>
+      </div>
+      <figure><div class="frame"><img src="img/review.jpg" alt="BD-001's item events table in the editor"></div>
+        <figcaption>Video 03:43. BD-001's item events, E-01 to E-07 — the screen, specified event by event.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>14 / 16</span></div>
+</section>
+
+<!-- 15 — what this shows -->
+<section class="slide">
+  <div class="eyebrow">03 <span class="sep">·</span> What this demo shows</div>
+  <h2>Six things to notice</h2>
+  <div class="body">
+    <div class="grid g3" style="row-gap:24px">
+      <div class="pt"><span class="num">01</span><h4>Short prompts, structured harness</h4>
+        <p>Two one-line prompts were enough. <code>AGENTS.md</code> → workflows → skills → templates → checklists told
+        the agent what to read and produce.</p></div>
+      <div class="pt"><span class="num">02</span><h4>Read before write</h4>
+        <p>Instructions, workflow, skills, the template, the example Excel BD, existing IDs and backend roles were all
+        read before the first file was written.</p></div>
+      <div class="pt"><span class="num">03</span><h4>Humans decide business behaviour</h4>
+        <p>The agent recommends options; the user chooses. One recommendation was overridden — the order-number
+        format — and recorded as chosen.</p></div>
+      <div class="pt"><span class="num">04</span><h4>Human in the loop catches gaps</h4>
+        <p>The user noticed unasked questions and pulled them forward. Claude batched four decisions into one
+        form.</p></div>
+      <div class="pt"><span class="num">05</span><h4>Right decision, right place</h4>
+        <p>Business questions were answered now; technical ones — sequences, concurrency detection, CSRF — were parked
+        at DB-002 and DD-001.</p></div>
+      <div class="pt"><span class="num">06</span><h4>Everything written down, then a gate</h4>
+        <p>Each answer lands in decisions, brief, BD-001, status and evidence. The session stops at plan
+        approval.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>15 / 16</span></div>
+</section>
+
+<!-- 16 — where this stands -->
+<section class="slide">
+  <div class="eyebrow">04 <span class="sep">·</span> Where this stands</div>
+  <h2>Design phase, first half done</h2>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <table>
+          <tr><th>File</th><th>State after the session</th></tr>
+          <tr><td class="id">work-items/WI-002/brief.md</td><td>Revision 1, REQ-010 to REQ-018, updated with the answers</td></tr>
+          <tr><td class="id">work-items/WI-002/decisions.md</td><td>DEC-001 to DEC-012 decided</td></tr>
+          <tr><td class="id">BD-001-...-create-edit.md</td><td>Version 2: rule V-08 and the new order-number format</td></tr>
+          <tr><td class="id">work-items/WI-002/plan.md</td><td>Revision 1, awaiting review</td></tr>
+          <tr><td class="id">work-items/WI-002/status.md</td><td>Green; next action is the plan review</td></tr>
+          <tr><td class="id">work-items/WI-002/evidence.md</td><td>Traceability matrix started</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Next in the series</h3>
+        <ul>
+          <li><b>Database design (DB-002)</b> — sequence generation, the yearly reset and concurrency detection become schema decisions.</li>
+          <li><b>Detailed design (DD-001)</b> — API, functions, screen processing and a rendered mockup.</li>
+          <li><b>Implementation</b> — code and tests at every level.</li>
+        </ul>
+        <div class="note" style="margin-top:16px"><div class="lbl h">Harness improvements</div>
+          <p style="margin-top:6px">None from this step. The <b>detailed design</b> and <b>implementation</b> steps
+          each produced one (RFC 0001 and RFC 0002).</p></div>
+      </div>
+    </div>
+    <p style="margin-top:18px;font-size:8.5px">Sources: the session recording (<code>ScreenA_BD.mp4</code>), its
+    transcript, and the committed files in <code>work-items/WI-002/</code>.</p>
+  </div>
+  <div class="foot"><span>Screen A basic design · WI-002 · ProductionManagementAI</span><span>16 / 16</span></div>
+</section>
+
+</body>
+</html>

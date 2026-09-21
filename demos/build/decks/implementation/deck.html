@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Screen A implementation — WI-002</title>
+<style>
+  /* Theme matched to ScreenA_BD_presentation.pdf: 960x540pt, Segoe UI + Consolas,
+     light #F3F5F7 content slides with a 6pt teal top bar, dark #111B24 title slide. */
+  @page { size: 1280px 720px; margin: 0; }  /* 960x540pt at 96dpi */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --page:#F3F5F7; --dark:#111B24; --ink:#16212C; --muted:#606C78;
+    --teal:#0C6B68; --amber:#B7770A; --line:#D6DCE2;
+    --chip:#DEEEEC; --amberbg:#FAF0DC; --card:#FFFFFF;
+  }
+  html,body{ background:var(--page); color:var(--ink);
+    font-family:"Segoe UI",Arial,sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .slide{ position:relative; display:flex; flex-direction:column;
+    width:960px; height:540px; zoom:1.3333333; padding:30px 48px 48px; background:var(--page);
+    page-break-after:always; overflow:hidden; }
+  .slide:last-child{ page-break-after:auto; }
+  .slide:before{ content:""; position:absolute; top:0; left:0; right:0; height:6px; background:var(--teal); }
+  .slide.title{ background:var(--dark); color:#fff; padding:48px 56px; }
+  .slide.title:before{ top:0; bottom:0; right:auto; width:10px; height:auto; }
+
+  .eyebrow{ font-family:Consolas,monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .slide.title .eyebrow{ color:#78BEB9; }
+  .eyebrow .sep{ padding:0 5px; }
+  h1{ font-size:46px; line-height:1.1; font-weight:700; letter-spacing:-.01em; color:#fff; }
+  h2{ font-size:25px; line-height:1.2; font-weight:700; color:var(--ink); margin-top:16px; }
+  .intro{ font-size:11.5px; line-height:1.5; color:var(--muted); margin-top:10px; }
+  .lead{ font-size:15px; line-height:1.55; color:#BEC8D0; }
+  p{ font-size:10.5px; line-height:1.5; color:var(--muted); }
+  b,strong{ color:var(--ink); font-weight:700; }
+  .slide.title b{ color:#fff; }
+  code{ font-family:Consolas,monospace; font-size:.95em; color:var(--teal); background:var(--chip); border-radius:3px; padding:1px 4px; }
+  .slide.title code{ color:#A0CDC8; background:#1E2C38; }
+
+  .foot{ position:absolute; left:48px; right:48px; bottom:12px; display:flex; justify-content:space-between;
+    font-size:7.5px; color:var(--muted); border-top:.8px solid var(--line); padding-top:7px; }
+  .hdr{ display:flex; justify-content:space-between; align-items:center; }
+  .vtime{ font-size:8.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#fff;
+    background:var(--teal); border-radius:9px; padding:3px 10px; white-space:nowrap; }
+  .vtime.h{ background:var(--amber); }
+
+  .body{ flex:1; display:flex; flex-direction:column; justify-content:center; padding-top:14px; }
+  .grid{ display:grid; gap:18px; }
+  .g2{ grid-template-columns:1fr 1fr; } .g2w{ grid-template-columns:.92fr 1.22fr; }
+  .g2n{ grid-template-columns:1.22fr .92fr; }
+  .g3{ grid-template-columns:repeat(3,1fr); } .g4{ grid-template-columns:repeat(4,1fr); }
+
+  .card{ background:var(--card); border:.8px solid var(--line); border-top:4px solid var(--teal); border-radius:3px; padding:13px 15px; }
+  .card.h{ border-top-color:var(--amber); }
+  .stat .n{ font-size:34px; font-weight:700; line-height:1; color:var(--ink); }
+  .stat .k{ font-size:11px; font-weight:700; color:var(--ink); margin-top:8px; }
+  .stat .s{ font-size:9px; color:var(--muted); margin-top:3px; }
+
+  .lbl{ font-size:8px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+  .lbl.h{ color:var(--amber); }
+  h3{ font-size:8px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin-bottom:9px; }
+  .colh{ font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:8px; }
+
+  ul{ list-style:none; }
+  li{ font-size:10.5px; line-height:1.45; color:var(--ink); padding-left:14px; position:relative; margin-bottom:7px; }
+  li:before{ content:""; position:absolute; left:0; top:4.5px; width:6px; height:6px; background:var(--teal); }
+  ul.h li:before{ background:var(--amber); }
+
+  table{ width:100%; border-collapse:collapse; font-size:9.5px; }
+  th{ text-align:left; font-size:7.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);
+      border-bottom:.8px solid var(--line); padding:0 9px 6px 0; font-weight:700; }
+  td{ padding:6px 9px 6px 0; border-bottom:.8px solid #E6EAEE; color:var(--muted); vertical-align:top; line-height:1.4; }
+  td.id{ color:var(--ink); font-weight:700; white-space:nowrap; font-family:Consolas,monospace; font-size:8.8px; }
+  td b{ color:var(--ink); }
+
+  figure{ align-self:start; }
+  .frame{ background:var(--dark); border-radius:4px; padding:5px; }
+  figure img{ width:100%; display:block; border-radius:2px; }
+  figcaption{ font-style:italic; font-size:8px; color:var(--muted); margin-top:6px; }
+
+  .bar{ border-left:4px solid var(--teal); padding:2px 0 2px 14px; }
+  .bar.h{ border-left-color:var(--amber); }
+  .bar p{ margin-top:6px; font-size:8.8px; color:var(--ink); }
+  .quote .txt{ font-family:Consolas,monospace; font-size:14px; color:var(--ink); line-height:1.4; margin-top:8px; }
+  .note{ background:var(--amberbg); border-radius:3px; padding:11px 13px; }
+  .note p{ color:#6B5310; font-size:9.5px; }
+  .note p b, .note p code{ color:#4A3A0B; }
+
+  .steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .st{ background:var(--card); border:.8px solid var(--line); border-top:4px solid var(--teal); border-radius:3px; padding:9px 11px; }
+  .st.h{ border-top-color:var(--amber); }
+  .st .n{ font-family:Consolas,monospace; font-size:7.5px; letter-spacing:.08em; color:var(--muted); display:flex; justify-content:space-between; }
+  .st .t{ font-size:11px; font-weight:700; color:var(--ink); margin-top:6px; line-height:1.25; }
+  .st .o{ font-size:8.5px; color:var(--muted); margin-top:5px; line-height:1.35; }
+  .num{ font-family:Consolas,monospace; font-size:9px; font-weight:700; color:var(--teal); letter-spacing:.08em; }
+  .pt h4{ font-size:12.5px; font-weight:700; color:var(--ink); margin:5px 0; line-height:1.25; }
+  .pt p{ font-size:9.5px; line-height:1.45; }
+  .chip{ display:inline-block; background:var(--chip); color:var(--teal); font-family:Consolas,monospace;
+    font-size:8.2px; border-radius:3px; padding:3px 6px; margin:0 5px 5px 0; }
+  .slide.title .chip{ background:#1E2C38; color:#A0CDC8; display:block; margin-bottom:5px; }
+  .scope{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .scope .sc{ background:var(--card); border:.8px solid var(--line); border-radius:3px; padding:13px 15px; }
+  .scope .sc .n{ font-family:Consolas,monospace; font-size:8px; letter-spacing:.1em; color:var(--muted); }
+  .scope .sc h4{ font-size:13px; font-weight:700; color:var(--ink); margin:6px 0 7px; line-height:1.2; }
+  .scope .sc p{ font-size:9.5px; line-height:1.45; }
+  .scope .sc.a{ border-top:4px solid var(--teal); }
+  .scope .sc.o{ border-top:4px solid var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- 1 — title -->
+<section class="slide title">
+  <div class="eyebrow">ProductionManagementAI <span class="sep">·</span> WI-002 <span class="sep">·</span> Demo 04 of 04</div>
+  <div style="display:grid;grid-template-columns:1fr 250px;gap:46px;margin-top:72px">
+    <div>
+      <h1>Screen A: implementation</h1>
+      <p class="lead" style="margin-top:22px">Six prompts and one form turned four design documents into a working
+      screen: backend, database, frontend, 133 tests, two pull requests — and the harness improvements the earlier
+      steps had only proposed.</p>
+      <p style="margin-top:26px;color:#8C98A4;font-size:9.5px">Presented alongside
+      <code>ScreenA_Implementaion_edited.mp4</code> (5 min 59 s, cut from 50 min 44 s). Step numbers on the slides
+      match the captions in the video.<br>
+      Recorded 2026-09-18 · Claude Code (Opus 5) in the JetBrains Rider terminal, auto mode on.</p>
+    </div>
+    <div style="padding-top:6px">
+      <span class="chip">Domain · Application</span>
+      <span class="chip">Infrastructure · Migrations</span>
+      <span class="chip">Api · OpenTelemetry</span>
+      <span class="chip">frontend/production-orders</span>
+      <span class="chip">tests/e2e (Playwright)</span>
+      <span class="chip">plan.md · test-plan.md · evidence.md</span>
+      <span class="chip">ai/improvements/0001 · 0002</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 — at a glance -->
+<section class="slide">
+  <div class="eyebrow">01 <span class="sep">·</span> The session at a glance</div>
+  <h2>Fifty minutes of recording — and one 34-minute turn</h2>
+  <p class="intro">The shape is unlike the other three steps. Three quarters of the agent's working time is a single
+  unattended turn, so the human's work sits at both ends: the plan before it, the merge after it.</p>
+  <div class="body">
+    <div class="grid g4" style="margin-bottom:22px">
+      <div class="card stat"><div class="n">5</div><div class="k">prompts in the cut</div><div class="s">two of them corrections</div></div>
+      <div class="card stat"><div class="n">34 m</div><div class="k">longest single turn</div><div class="s">domain → E2E, unattended</div></div>
+      <div class="card stat"><div class="n">133</div><div class="k">tests written</div><div class="s">49 + 38 + 38 + 8</div></div>
+      <div class="card stat"><div class="n">2</div><div class="k">pull requests</div><div class="s">Screen A and the harness</div></div>
+    </div>
+    <div class="grid g2">
+      <div>
+        <div class="colh">The human</div>
+        <ul class="h">
+          <li>Chose the E2E tool, the accessibility approach, the git scope and where harness changes go.</li>
+          <li>Made Claude restore the superseded plan — twice, until it was in chronological order.</li>
+          <li>Approved revision 2, then squash-merged both PRs personally. <b>Merge was never authorized for the agent.</b></li>
+        </ul>
+      </div>
+      <div>
+        <div class="colh">The agent, guided by the harness</div>
+        <ul>
+          <li>Wrote RFC 0002 with its own evaluation case, and had already applied RFC 0001 before the cut begins.</li>
+          <li>Named its own deviations: the index, the Docker workaround, an extension method that departed from the DD.</li>
+          <li>Proved the restricted login instead of asserting it, and prevented a CRLF failure before it happened.</li>
+          <li>Stopped at the merge gate and reconciled <code>master</code> afterwards.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>2 / 15</span></div>
+</section>
+
+<!-- 3 — walkthrough -->
+<section class="slide">
+  <div class="eyebrow">02 <span class="sep">·</span> The walkthrough</div>
+  <h2>11 steps, one video</h2>
+  <p class="intro">Each step is one or more clips in the edited video.
+    <span style="color:var(--amber);font-weight:700">Amber: the human acts.</span>
+    <span style="color:var(--teal);font-weight:700">Teal: the agent works and produces output.</span></p>
+  <div class="body">
+    <div class="steps" style="margin-bottom:10px">
+      <div class="st h"><div class="n"><span>STEP 01</span><span>00:00</span></div><div class="t">Four questions</div><div class="o">E2E · a11y · git scope · harness PR</div></div>
+      <div class="st"><div class="n"><span>STEP 02</span><span>00:32</span></div><div class="t">Plan revision 2</div><div class="o">14 steps, and its own caveats</div></div>
+      <div class="st h"><div class="n"><span>STEP 03</span><span>01:16</span></div><div class="t">Keep the old plan</div><div class="o">Restored — in the wrong place</div></div>
+      <div class="st h"><div class="n"><span>STEP 04</span><span>01:42</span></div><div class="t">Chronological order</div><div class="o">The rule fixed, then the file</div></div>
+    </div>
+    <div class="steps" style="margin-bottom:10px">
+      <div class="st h"><div class="n"><span>STEP 05</span><span>02:08</span></div><div class="t">Approved + RFC 0002</div><div class="o">Keep every plan revision</div></div>
+      <div class="st"><div class="n"><span>STEP 06</span><span>02:32</span></div><div class="t">Branches, worktrees</div><div class="o">Two branches, PRs to come</div></div>
+      <div class="st"><div class="n"><span>STEP 07</span><span>02:44</span></div><div class="t">Backend + database</div><div class="o">Tests, CI verdict, CRLF caught</div></div>
+      <div class="st"><div class="n"><span>STEP 08</span><span>03:29</span></div><div class="t">API and frontend</div><div class="o">A real bug found and fixed</div></div>
+    </div>
+    <div class="steps">
+      <div class="st"><div class="n"><span>STEP 09</span><span>03:58</span></div><div class="t">E2E and the proof</div><div class="o">8 journeys; PR opened; 34m turn ends</div></div>
+      <div class="st h"><div class="n"><span>STEP 10</span><span>05:17</span></div><div class="t">The screen exists</div><div class="o">Both PRs squash-merged</div></div>
+      <div class="st"><div class="n"><span>STEP 11</span><span>05:35</span></div><div class="t">Reconciling master</div><div class="o">Two things need your call</div></div>
+      <div class="st" style="border-top-color:#D6DCE2;background:none;border-style:dashed"><div class="n"><span>NOT IN THE CUT</span></div><div class="t" style="font-size:9.5px;color:var(--muted)">The session also opened by applying RFC 0001 from the previous step — see slide 13</div></div>
+    </div>
+    <p style="margin-top:16px;font-size:8.5px">Times are positions in <code>ScreenA_Implementaion_edited.mp4</code>.
+    50 min 44 s of source, jump-cut to 5 min 59 s; nothing is sped up. The cut begins at the implementation planning — the session’s opening minutes, which applied the previous step’s RFC 0001, are left to that step’s deck.</p>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>3 / 15</span></div>
+</section>
+
+<!-- 5 — step 2 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 01 of 11 <span class="sep">·</span> Four questions</div><div class="vtime h">Video 00:00</div></div>
+  <h2>The choices the agent would not make alone</h2>
+  <div class="body">
+    <div class="steps" style="margin-bottom:16px">
+      <div class="st h"><div class="n"><span>E2E TOOL</span><span>DEC-025</span></div>
+        <div class="t" style="font-size:10px">Which end-to-end test tool?</div>
+        <div class="o"><b style="color:var(--amber)">Playwright</b> · Cypress · none for now</div></div>
+      <div class="st h"><div class="n"><span>A11Y CHECK</span><span>DEC-026</span></div>
+        <div class="t" style="font-size:10px">How should accessibility checks run?</div>
+        <div class="o"><b style="color:var(--amber)">axe in Vitest + E2E</b> · manual only</div></div>
+      <div class="st h"><div class="n"><span>GIT SCOPE</span><span>DEC-027</span></div>
+        <div class="t" style="font-size:10px">Which git operations are authorized?</div>
+        <div class="o">branch, commit, push, open PR — <b style="color:var(--amber)">merge: no</b></div></div>
+      <div class="st h"><div class="n"><span>HARNESS PR</span><span>DEC-028</span></div>
+        <div class="t" style="font-size:10px">Where does the harness change go?</div>
+        <div class="o"><b style="color:var(--amber)">Its own branch/PR</b> · same as Screen A</div></div>
+    </div>
+    <figure><div class="frame"><img src="img/form.jpg" alt="The four-question decision form"></div>
+      <figcaption>Video 00:06. "No E2E tool has been chosen yet; WI-001 deferred it." — the question carries its own history.</figcaption></figure>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>4 / 15</span></div>
+</section>
+
+<!-- 6 — step 3 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 02 of 11 <span class="sep">·</span> Plan revision 2</div><div class="vtime">Video 00:32</div></div>
+  <h2>A plan is a document, not a promise</h2>
+  <p class="intro">14 numbered steps, each with what it depends on, which skill it uses, what it must deliver and
+  <b>how that will be checked</b>. This is the artifact the rest of the session is measured against.</p>
+  <div class="body">
+    <figure style="margin-bottom:12px"><div class="frame"><img src="img/plandoc.jpg" alt="Plan revision 2, deliverables and milestones"></div>
+      <figcaption>Video 00:55. Steps 1 and 2: the two branches — created before a line of Screen A is written.</figcaption></figure>
+    <div class="grid g2n">
+      <div class="note"><div class="lbl h">Things to know before approving</div>
+        <p style="margin-top:6px"><b>CI</b> — opening the PRs starts GitHub Actions; the project's first real run.
+        <b>E2E stays out of CI</b> — it needs the whole Compose stack. <b>Five new dependencies</b>, pinned and
+        vulnerability-checked. <b>Branch name</b> — the skill suggests one, but the project's own DEC-009 wins;
+        that contradiction was later fixed in RFC 0003.</p></div>
+      <figure><div class="frame"><img src="img/planroles.jpg" alt="Roles and responsibilities in the plan"></div>
+        <figcaption>Video 01:09. Who owns what, written down before the work starts.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>5 / 15</span></div>
+</section>
+
+<!-- 7 — steps 4 + 5 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Steps 03 and 04 of 11 <span class="sep">·</span> Protecting the audit trail</div>
+    <div class="vtime h">Step 3 — 01:16 &nbsp;·&nbsp; Step 4 — 01:42</div></div>
+  <h2>Two corrections, one minute of typing</h2>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <div class="bar h quote"><div class="lbl h">Prompt 1</div>
+          <div class="txt">Keep the design plan in there so we can back-track it</div></div>
+        <div class="bar" style="margin-top:12px"><div class="lbl">Result</div>
+          <p>Revision 1 <b>rebuilt from the session's own edits</b> — git could not help, it had never been committed —
+          and restored in full, with a note saying so. But placed <b>below</b> revision 2.</p></div>
+      </div>
+      <div>
+        <div class="bar h quote"><div class="lbl h">Prompt 2</div>
+          <div class="txt">No — put it in chronological order</div></div>
+        <div class="bar" style="margin-top:12px"><div class="lbl">Result</div>
+          <p>"Got it: oldest first, so the file reads in the order things happened. <b>I'll update the saved rule
+          first, then reorder the file.</b>"</p></div>
+      </div>
+    </div>
+    <figure style="margin-top:16px"><div class="frame"><img src="img/chrono.jpg" alt="The reordered plan file"></div>
+      <figcaption>Video 02:01. "Every revision is kept in full, oldest first, and a new revision goes after the last one."</figcaption></figure>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>6 / 15</span></div>
+</section>
+
+<!-- 8 — steps 6 + 7 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Steps 05 and 06 of 11 <span class="sep">·</span> RFC 0002, then the branches</div>
+    <div class="vtime">Step 5 — 02:08 &nbsp;·&nbsp; Step 6 — 02:32</div></div>
+  <h2>Approval and a rule change, in one prompt</h2>
+  <div class="body">
+    <div class="grid g2w">
+      <div>
+        <div class="bar h quote"><div class="lbl h">Prompt 3</div>
+          <div class="txt">OK, the revision 2 plan seems solid, so approved. Also update the harness</div></div>
+        <p style="margin-top:14px"><b>RFC 0002</b> is written the same way as RFC 0001 — status, affected files,
+        summary, and a motivation section citing this session as evidence.</p>
+        <table style="margin-top:10px">
+          <tr><th>Then</th><th>What was created</th></tr>
+          <tr><td class="id">Worktree 1</td><td><code>feature/harness-wi002-feedback</code> — RFC 0001 and RFC 0002, one commit each</td></tr>
+          <tr><td class="id">Worktree 2</td><td><code>feature/WI-002-production-order-screen</code> — the design-phase commit</td></tr>
+          <tr><td class="id">Main worktree</td><td>Cleaned; each copied file verified with <code>git diff --no-index</code> before reverting</td></tr>
+        </table>
+      </div>
+      <figure><div class="frame"><img src="img/rfc2.jpg" alt="RFC 0002 being written"></div>
+        <figcaption>Video 02:26. RFC 0002 — while the editor shows the plan’s authorization table.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>7 / 15</span></div>
+</section>
+
+<!-- 9 — step 8 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 07 of 11 <span class="sep">·</span> Backend and database</div><div class="vtime">Video 02:44</div></div>
+  <h2>Diagnosing CI, and preventing a failure</h2>
+  <div class="body">
+    <div class="grid g2">
+      <figure><div class="frame"><img src="img/tests.jpg" alt="35 of 35 unit tests pass, and the CI verdict"></div>
+        <figcaption>Video 02:52. "That points to setup, not code: the harness PR only changes Markdown."</figcaption></figure>
+      <figure><div class="frame"><img src="img/crlf.jpg" alt="The CRLF problem caught before it happened"></div>
+        <figcaption>Video 03:20. A Windows-to-Linux failure caught before it could happen.</figcaption></figure>
+    </div>
+    <div class="grid g2" style="margin-top:14px">
+      <div class="bar"><div class="lbl">Diagnosed, not retried</div>
+        <p>Both CI jobs failed in one second. Claude reasoned from the content — a Markdown-only PR cannot fail on
+        code — read the logs, and found a <b>GitHub billing lock</b>. Recorded as blocked in <code>evidence.md</code>
+        rather than treated as a defect.</p></div>
+      <div class="bar"><div class="lbl">Prevented, not debugged</div>
+        <p>"There's no <code>.gitattributes</code> file, and with <code>core.autocrlf</code> set to true, the new init
+        script would get CRLF line endings and <b>fail on Linux</b>. I'll add a <code>.gitattributes</code> rule to
+        keep <code>*.sh</code> files as LF alongside the script."</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>8 / 15</span></div>
+</section>
+
+<!-- 10 — step 9 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 08 of 11 <span class="sep">·</span> API and frontend</div><div class="vtime">Video 03:29</div></div>
+  <h2>The requirement wrote the test; the test found the bug</h2>
+  <div class="body">
+    <div class="grid g2n">
+      <div>
+        <div class="bar"><div class="lbl">The component cites its requirement</div>
+          <p style="font-family:Consolas,monospace;font-size:8.3px">// BD-001 items 17-19 (REQ-019, DEC-018). The native &lt;dialog&gt; + showModal() gives the focus trap, Escape and backdrop for free; Escape fires "cancel", which is treated as Keep editing.</p></div>
+        <div class="note" style="margin-top:14px"><div class="lbl h">A real bug</div>
+          <p style="margin-top:6px">"React only calls <code>.focus()</code> on mount, <b>not when the always-mounted
+          dialog opens</b>, so <code>autofocus</code> never fires as expected. I'll add an explicit focus call on
+          <b>Keep editing</b> right after <code>showModal()</code>."</p></div>
+        <p style="margin-top:12px">REQ-019 said focus must start on <i>Keep editing</i>. The component looked correct
+        and was wrong. The only reason it was caught is that a test was written from the requirement.</p>
+      </div>
+      <figure><div class="frame"><img src="img/bug.jpg" alt="The focus bug found in the terminal"></div>
+        <figcaption>Video 03:49. Found, explained and fixed — then 38 frontend tests pass.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>9 / 15</span></div>
+</section>
+
+<!-- 11 — step 10 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 09 of 11 <span class="sep">·</span> E2E and the proof</div><div class="vtime">Video 03:58</div></div>
+  <h2>The least-privilege decision, proved</h2>
+  <div class="body">
+    <div class="grid g2n">
+      <figure><div class="frame"><img src="img/perm.jpg" alt="The permission denied confirmation"></div>
+        <figcaption>Video 04:29. DEC-016, closed by attempting the forbidden operation.</figcaption></figure>
+      <div>
+        <p style="margin-bottom:12px">"All <b>8 end-to-end journeys</b>, including the axe WCAG 2.2 AA scans and the
+        two-user stale-save case, <b>pass on the first run</b> against the real stack."</p>
+        <p style="margin-bottom:12px">"<b>Confirmed the <code>permission denied</code> error for <code>pmai_app</code>
+        on <code>production_orders</code></b>, with the expected orders <code>PO-2026-00001</code> and
+        <code>-00002</code> present on the fresh database."</p>
+        <div class="bar"><div class="lbl">Careful with someone else's machine</div>
+          <p>The database volume was wiped <b>only because step 7 authorized it</b>. A fresh
+          <code>PMAI_APP_DB_PASSWORD</code> was generated into the worktree's own <code>.env</code>, never printed,
+          and checked as gitignored — the user's own <code>.env</code> was left untouched.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>10 / 15</span></div>
+</section>
+
+<!-- 12 — the 34-minute summary -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 09 of 11 <span class="sep">·</span> Cooked for 34m 0s</div><div class="vtime">Video 05:03</div></div>
+  <h2>What an unattended half-hour reports back</h2>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <table>
+          <tr><th>Kind</th><th>What the summary said</th></tr>
+          <tr><td class="id">Deviation</td><td>EF Core always adds an index on <code>product_id</code>; removing it would make migrations drift, so DB-002 was updated instead (DEC-029)</td></tr>
+          <tr><td class="id">Workaround</td><td>Docker Desktop won't mount files from the worktree, so the login script is baked into a small Postgres image — "also more portable"</td></tr>
+          <tr><td class="id">Defect</td><td>The discard dialog wasn't focusing "Keep editing". Fixed and covered by tests</td></tr>
+          <tr><td class="id">Noise</td><td>A Kerberos-library warning from the database driver; harmless, recorded in <code>evidence.md</code></td></tr>
+          <tr><td class="id">Limits</td><td>E2E isn't in CI yet and runs on Chromium only. No manual screen-reader pass</td></tr>
+        </table>
+      </div>
+      <div>
+        <figure><div class="frame"><img src="img/planout.jpg" alt="The plan with its Outcome column filled in"></div>
+          <figcaption>Video 05:03. The same plan, hours later: every step now carries its Outcome.</figcaption></figure>
+        <figure style="margin-top:12px"><div class="frame"><img src="img/sum.jpg" alt="The closing summary of the long turn"></div>
+          <figcaption>Video 05:03. Built, caught, and still missing — separated.</figcaption></figure>
+        <div class="bar h" style="margin-top:14px"><div class="lbl h">And what the human must do</div>
+          <p style="color:var(--ink)">"Add <code>PMAI_APP_DB_PASSWORD</code> to your <code>deploy/.env</code> — my
+          copy is only in the worktree's <code>.env</code>, and I didn't change yours." Then: "Merging, and removing
+          the two worktrees afterwards, needs your go-ahead."</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>11 / 15</span></div>
+</section>
+
+<!-- 13 — step 11 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 10 of 11 <span class="sep">·</span> The screen exists</div><div class="vtime h">Video 05:17</div></div>
+  <h2>The mockup, now running</h2>
+  <div class="body">
+    <div class="grid g2n">
+      <figure><div class="frame"><img src="img/app.jpg" alt="Screen A running at localhost:3000"></div>
+        <figcaption>Video 05:26. <code>localhost:3000/production-orders/new</code>, signed in as Seed Admin.</figcaption></figure>
+      <div>
+        <p style="margin-bottom:12px">The user squash-merges both pull requests from their own account
+        (<b>DEC-030</b>) and opens the running application.</p>
+        <p style="margin-bottom:12px">It is the same layout published as a private artifact in the detailed-design
+        step — order number "Assigned on save", status Draft, the 30-product <code>&lt;select&gt;</code>, the notes
+        counter, Cancel and Save — now backed by the API, the migration, the seeded database and the restricted
+        <code>pmai_app</code> login.</p>
+        <div class="bar h"><div class="lbl h">The gate held</div>
+          <p style="color:var(--ink)">DEC-027 authorized branch, commit, push and open-PR. <b>Merge was never
+          authorized for the agent</b>, and it never merged.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>12 / 15</span></div>
+</section>
+
+<!-- 14 — step 12 -->
+<section class="slide">
+  <div class="hdr"><div class="eyebrow">Step 11 of 11 <span class="sep">·</span> Reconciling</div><div class="vtime">Video 05:35</div></div>
+  <h2>"The merge record is missing, and it's wrong"</h2>
+  <div class="body">
+    <div class="grid g2w">
+      <div>
+        <p style="margin-bottom:12px">After the squash merges, Claude checks what actually landed: "Your local
+        <code>master</code> is now at <code>1eccf9c</code>, with your <code>demos/</code> files untouched. The only
+        difference from PR #3's head is the 12 harness files that came in with #2, <b>so nothing was lost in the
+        squash</b>."</p>
+        <p style="margin-bottom:12px">Then it reports a problem <b>with its own earlier work</b>: the commit that
+        closes plan revision 2 exists only on the deleted branch, and its text says the merge used merge commits —
+        which is not what happened.</p>
+        <div class="bar"><div class="lbl">Two options offered, not one</div>
+          <p>Correct the record and open a small follow-up PR — or leave it, and accept that <code>status.md</code>
+          still says "in-review" and revision 2 has no closure line.</p></div>
+      </div>
+      <figure><div class="frame"><img src="img/recon.jpg" alt="The reconciliation summary"></div>
+        <figcaption>Video 05:47. Cleanup listed too, including which <code>.env</code> disappears with the worktree.</figcaption></figure>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>13 / 15</span></div>
+</section>
+
+<!-- 15 — harness -->
+<section class="slide">
+  <div class="eyebrow">03 <span class="sep">·</span> The harness improving itself</div>
+  <h2>RFC 0002 — keep every plan revision, oldest first</h2>
+  <p class="intro">The second of the two improvements the Screen A series produced — and the step that also applied the first.</p>
+  <div class="body">
+    <div class="scope">
+      <div class="sc a"><div class="n">SCOPE 1 — THIS WORK ITEM</div><h4>Revision 1 rebuilt</h4>
+        <p>It had never been committed, so git could not restore it. Claude reconstructed it from the session's own
+        edits, exactly as approved, and added a note saying so.</p></div>
+      <div class="sc a"><div class="n">SCOPE 2 — THIS AGENT</div><h4>The rule, then the file</h4>
+        <p>"I'll update the saved rule first, then reorder the file." Every revision kept in full, oldest first, new
+        revisions appended — the same ordering the detailed-design step used.</p></div>
+      <div class="sc o"><div class="n">SCOPE 3 — EVERYONE</div><h4>RFC 0002, after review</h4>
+        <p>The user asked for the harness itself to be updated. <code>ai/templates/plan.md</code>,
+        <code>ai/skills/planning/SKILL.md</code> and a new evaluation case.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="bar"><div class="lbl">Root cause, again in the wording</div>
+        <p>The plan template said only "If this supersedes a prior revision, state which and why". <b>Nothing said to
+        keep the old one.</b> The agent's reading was permitted; the rule was incomplete.</p></div>
+      <div class="note"><div class="lbl h">Also in this session</div>
+        <p style="margin-top:6px"><b>RFC 0001 was applied here</b> — four templates, the templates README, the detailed-design skill and a new evaluation case — and committed on its own branch, because harness changes stay out of Screen A’s pull request (DEC-028). Those opening minutes are covered by the detailed-design deck, not the cut.</p></div>
+      <div class="note" style="margin-top:12px"><div class="lbl h">Also observed here, fixed in RFC 0003</div>
+        <p style="margin-top:6px">The implementation skill's branch-name example contradicted the project's branch
+        policy, and the Playwright suite ran only locally. Both were closed later.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>14 / 15</span></div>
+</section>
+
+<!-- 16 — where this stands -->
+<section class="slide">
+  <div class="eyebrow">04 <span class="sep">·</span> Where the series ends</div>
+  <h2>One screen, four steps, a full paper trail</h2>
+  <div class="body">
+    <div class="grid g2">
+      <div>
+        <table>
+          <tr><th>Step</th><th>Agent time</th><th>Produced</th></tr>
+          <tr><td class="id">01 Basic design</td><td>6 m 16 s</td><td>Brief, decision log, BD-001</td></tr>
+          <tr><td class="id">03 Database design</td><td>4 m 19 s</td><td>DB-002, DEC-013–DEC-020</td></tr>
+          <tr><td class="id">02 Detailed design</td><td>10 m 23 s</td><td>4 DD documents + mockup</td></tr>
+          <tr><td class="id">04 Implementation</td><td>~40 m</td><td>The screen, 133 tests, 2 PRs</td></tr>
+        </table>
+        <p style="margin-top:12px">Every requirement from REQ-010 to REQ-019 traces through a BD section, a DB
+        constraint, a DD module, code and at least one test case — and `evidence.md` records each one as
+        <b>verified</b>.</p>
+      </div>
+      <div>
+        <h3>What the harness gained</h3>
+        <ul>
+          <li><b>RFC 0001</b> — always produce all four DD documents.</li>
+          <li><b>RFC 0002</b> — keep every plan revision, oldest first.</li>
+          <li>Two evaluation cases, so neither regression returns unnoticed.</li>
+        </ul>
+        <div class="note" style="margin-top:16px"><div class="lbl h">Still open at the end of the recording</div>
+          <p style="margin-top:6px">CI had not run — a GitHub billing lock. It first executed later, on PR #5, and
+          now runs backend, frontend and E2E on every pull request.</p></div>
+      </div>
+    </div>
+    <p style="margin-top:18px;font-size:8.5px">Sources: the session recording
+    (<code>ScreenA_Implementaion.mp4</code>), its transcript, and the committed files in
+    <code>work-items/WI-002/</code> and <code>ai/improvements/</code>.</p>
+  </div>
+  <div class="foot"><span>Screen A implementation · WI-002 · ProductionManagementAI</span><span>15 / 15</span></div>
+</section>
+
+</body>
+</html>

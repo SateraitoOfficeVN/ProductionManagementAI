@@ -21,3 +21,8 @@ test-results/
 .DS_Store
 Thumbs.db
 *.mp4
+
+# Demo build working files (fonts are system fonts; clips are intermediates)
+demos/build/fonts/
+demos/build/clips_*/
+demos/build/txt_*/
