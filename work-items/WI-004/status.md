@@ -1,14 +1,21 @@
 # Production Dashboard (Screen C) — Status Report
 
-As of 2026-09-22. Work item state: in-review.
+As of 2026-09-22. Work item state: done — PR #15 squash-merged into `master`.
 
 ## Overall status
 
-**RAG:** Green — on track
-Screen C is implemented under plan revision 3 (steps 1–13 done). DB-004's migrations are applied to the local Compose
-database, and every check passes locally: 148 backend unit, 85 integration, 87 frontend unit and 22 E2E tests, lint
-and both builds, plus a clean dependency audit and secret scan. The branch is pushed and PR #15 is open with all
-three CI jobs green; merging is the user's decision.
+**RAG:** Green — done
+WI-004 delivered Screen C, the production dashboard, through three plan revisions: the design phase, a design amendment
+after the user's mockup review (navbar, health indicator, chart maximize, icons), and implementation. Every check passed
+locally (148 backend unit, 85 integration, 87 frontend unit, 22 E2E) and in CI on PR #15, which the user squash-merged
+on 2026-09-22 as `cd3a3b9` (DEC-026). The close-out change updates this record, `ai/project.md`, `CLAUDE.md` and the
+root `README.md`.
+
+## Branch and worktree
+
+- `feature/WI-004-production-dashboard` was squash-merged as `cd3a3b9`; GitHub deleted the remote branch.
+- With the user's agreement ("sure"), the worktree `../WMS-worktrees/WI-004`, the local branch, and the local Compose
+  stack with its volumes were removed. Nothing from this work item is left running.
 
 ## Approved plan reference
 
@@ -18,6 +25,7 @@ three CI jobs green; merging is the user's decision.
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | PR #15 squash-merged by the user as `cd3a3b9`; close-out change prepared | [decisions.md](decisions.md) DEC-026 |
 | 2026-09-22 | Plan revision 3 step 14: branch pushed, PR #15 opened, CI green (Backend, Frontend, E2E) | https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/15 |
 | 2026-09-22 | Plan revision 3 steps 1–13: implementation, tests at every level, TP-004, full local verification, gates; DEC-024, DEC-025 | [evidence.md](evidence.md), [test-plan.md](test-plan.md) |
 | 2026-09-22 | Plan revision 3 approved | [plan.md](plan.md) |
@@ -36,8 +44,7 @@ three CI jobs green; merging is the user's decision.
 
 ## Planned for next period
 
-After the user merges PR #15: the close-out change (status, evidence, plan closure, `ai/project.md` with `lucide-react`,
-`CLAUDE.md`, root `README.md`).
+Nothing in WI-004. The locked roadmap (Screens A–C) is complete; the next work item is the user's to choose.
 
 ## Risks and issues
 
@@ -47,4 +54,4 @@ After the user merges PR #15: the close-out change (status, evidence, plan closu
 
 ## Next action
 
-User review and merge of PR #15.
+None for WI-004 beyond merging the close-out change.

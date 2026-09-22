@@ -6,7 +6,7 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | approved; steps 1–6 done, steps 7–8 superseded by revision 2 | user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008" |
 | 2 | 2026-09-22 | Design amendment after mockup review (navbar, health indicator, chart maximize) and design-phase close | approved; complete; superseded by revision 3 | user message 2026-09-22: "ok revision 2 is approved" |
-| 3 | 2026-09-22 | Implementation, tests, PR | **current** — approved; in progress | user message 2026-09-22: "plan approved, let move on to implementation" |
+| 3 | 2026-09-22 | Implementation, tests, PR | **current** — approved; complete; PR #15 squash-merged as `cd3a3b9` (DEC-026) | user message 2026-09-22: "plan approved, let move on to implementation" |
 
 ## Revision 1 — design phase
 
@@ -286,3 +286,4 @@ Implement REQ-028–REQ-042 and the REQ-019 extension end to end in the running 
 - **Review status:** approved
 - **Approval source:** user message 2026-09-22: "plan approved, let move on to implementation"
 - **Approved revision:** revision 3, 2026-09-22
+- **Closure:** all 14 steps done 2026-09-22. PR #15 passed CI and was squash-merged by the user as `cd3a3b9` (DEC-026). The close-out (this record, `ai/project.md`, `CLAUDE.md`, the root `README.md`) follows in its own change, per the feature-delivery workflow.
