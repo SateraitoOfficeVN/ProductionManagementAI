@@ -145,7 +145,7 @@ The upsert takes a row lock on that year's counter, so concurrent creates in the
 Deliberately not added:
 
 - ~~**`production_orders.product_id`**~~: originally left out, but added during implementation (DEC-029). See the index table.
-- **`production_orders.order_number`:** uniqueness is already covered by the `(order_year, order_seq)` index, and Screen A never looks orders up by number. Screen B's search design will decide whether to add it.
+- **`production_orders.order_number`:** uniqueness is already covered by the `(order_year, order_seq)` index, and Screen A never looks orders up by number. Screen B's search design decided this: DB-003 adds a `pg_trgm` GIN index for its case-insensitive fragment search (WI-003 DEC-010), not a btree.
 
 ## Constraints
 
