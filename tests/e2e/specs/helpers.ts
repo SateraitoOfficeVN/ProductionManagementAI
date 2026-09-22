@@ -14,7 +14,8 @@ export async function signIn(page: Page) {
   await page.getByLabel('Username').fill('admin')
   await page.getByLabel('Password').fill(adminPassword())
   await page.getByRole('button', { name: 'Sign in' }).click()
-  await expect(page.getByRole('link', { name: 'New production order' })).toBeVisible()
+  // Login lands on the dashboard (WI-004 DEC-005). Not a navbar link: on SP those sit behind the Menu button.
+  await expect(page.getByRole('heading', { level: 1, name: 'Dashboard' })).toBeVisible()
 }
 
 /**

@@ -28,7 +28,8 @@ export function TopProducts({ products }: { products: DashboardSnapshot['topProd
                 <span aria-hidden="true" className="absolute inset-y-0 right-0 rounded bg-gray-100"
                   style={{ width: `${max === 0 ? 0 : Math.round((100 * p.openQuantity) / max)}%` }} />
                 <span className="relative font-medium">{formatNumber(p.openQuantity)}</span>{' '}
-                <span className="relative text-gray-500">({formatOrders(p.activeOrderCount)})</span>
+                {/* gray-600, not 500: over the bar's gray-100, 500 is 4.39:1 and fails WCAG 1.4.3 (caught by axe in E2E). */}
+                <span className="relative text-gray-600">({formatOrders(p.activeOrderCount)})</span>
               </span>
             </li>
           ))}

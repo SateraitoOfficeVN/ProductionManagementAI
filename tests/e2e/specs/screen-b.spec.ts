@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { expectNoAxeViolations, signIn } from './helpers'
 
 // Screen B (SCR-002) user journeys — DD-002 E-level test viewpoints (TC-101, TC-109, TC-113, TC-114, TC-115, TC-116).
-// The stack carries the 80 seeded demo orders (DB-003); assertions use counts and relative dates, never absolute ones,
+// The stack carries the 124 seeded demo orders (DB-003, DB-004); assertions use counts and relative dates, never absolute ones,
 // because the seed's due dates follow the migration's run date (DEC-011).
 
 const summary = /^\d+–\d+ of \d+ orders$/
@@ -16,8 +16,8 @@ async function openList(page: import('@playwright/test').Page, query = '') {
   await expect(page.getByRole('heading', { level: 1, name: 'Production orders' })).toBeVisible()
 }
 
-test('opens from the home page with the default view, and is accessible (TC-101)', async ({ page }) => {
-  await page.getByRole('link', { name: 'Production orders' }).click();
+test('opens from the navbar with the default view, and is accessible (TC-101)', async ({ page }) => {
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Production orders' }).click()
 
   await expect(page).toHaveURL(/\/production-orders$/)
   await expect(page).toHaveTitle('Production orders — ProductionManagementAI')
@@ -103,8 +103,9 @@ test('filtering, paging and page size keep the view in the URL (TC-115, TC-116)'
 
   await page.getByRole('button', { name: 'Clear filters' }).click()
   await expect(page.getByRole('status').first()).toHaveText(summary)
-  // The unfiltered list contains statuses the Draft filter excluded, which is what says the clear took effect.
-  await expect(page.getByRole('table').getByText('In progress').first()).toBeVisible()
+  // The unfiltered list contains statuses the Draft filter excluded, which is what says the clear took effect. Since
+  // WI-004's seed, the oldest due dates (page 1 of the default sort) belong to historical completed orders.
+  await expect(page.getByRole('table').getByText('Completed').first()).toBeVisible()
   expect(await page.getByRole('status').first().textContent()).not.toEqual(draftTotal)
 })
 

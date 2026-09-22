@@ -129,6 +129,8 @@ Screen B takes no locks and writes nothing.
 
 ## Demo seed data
 
+> **Since WI-004 (DB-004):** the 16 seeded `Completed` orders are re-dated and 44 more demo orders are added, so the demo database holds 124 orders (35 `Draft`, 25 `InProgress`, 56 `Completed`, 8 `Cancelled`) and the counter continues after them. The table below describes DB-003's original 80 rows; DB-004 "Demo seed data" describes the rest.
+
 DEC-007 (user) requires seeded orders so paging, sorting, filtering and the overdue marker are demonstrable and E2E tests have fixtures. DB-002 already seeds 30 products; DB-003 seeds **80 production orders** across them.
 
 | Property | Value |
