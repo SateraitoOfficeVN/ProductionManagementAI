@@ -2,7 +2,7 @@
 
 # RFC: Refresh the root README when a work item closes
 
-**Status:** under-review
+**Status:** adopted
 **Affected:** `ai/workflows/feature-delivery.md`, `ai/checklists/delivery.md`, `ai/evaluations/baseline-cases.md`
 
 ## Summary
@@ -80,5 +80,4 @@ Close-out touches one more file. The README's status section is short, so this i
 
 - **Reviewer:** ThanhTN (request, 2026-09-22: "next time update the README.md after a work item is finished", then
   "add it as improvement")
-- **Adopted revision:** the commit on `feature/harness-plan-revision-approval` that adds this RFC (effective once its
-  pull request, #13, is merged)
+- **Adopted revision:** `bc7d947` on `master`, the squash-merge of PR #13 (2026-09-22)

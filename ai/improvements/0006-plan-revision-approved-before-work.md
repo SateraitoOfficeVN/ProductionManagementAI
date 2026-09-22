@@ -2,7 +2,7 @@
 
 # RFC: Every plan revision is shown and approved before its work starts
 
-**Status:** under-review
+**Status:** adopted
 **Affected:** `ai/policies.md`, `AGENTS.md`, `ai/workflows/feature-delivery.md`, `ai/templates/plan.md`,
 `ai/evaluations/baseline-cases.md`
 
@@ -90,5 +90,4 @@ None.
 
 - **Reviewer:** ThanhTN (request, 2026-09-22: "when we started the implementation you just started working on it with
   out showing me the newly created plan revisions first and have me approved it first. correct this")
-- **Adopted revision:** the commit on `feature/harness-plan-revision-approval` that adds this RFC (effective once its
-  pull request is merged)
+- **Adopted revision:** `bc7d947` on `master`, the squash-merge of PR #13 (2026-09-22)

@@ -2,7 +2,7 @@
 
 # RFC: CI skips changes that touch documentation only
 
-**Status:** under-review
+**Status:** adopted
 **Affected:** `.github/workflows/ci.yml`, `ai/project.md` (CI paragraph), `ai/evaluations/baseline-cases.md`
 
 ## Summary
@@ -123,5 +123,4 @@ the next documentation-only pull request; PR #10 (the WI-003 close-out) is the f
 - **Reviewer:** ThanhTN (request, 2026-09-22: "the CI ran everytime there a commit but sometimes those commit only
   commit to update docs or mds so it a waste of time to re ran CI"; chose the documentation-only-pull-request scope
   over the gate-job alternative)
-- **Adopted revision:** the commit on `feature/harness-ci-skip-docs` that adds this RFC (effective once its pull
-  request is merged)
+- **Adopted revision:** `4062122` on `master`, the squash-merge of PR #11 (2026-09-22)
