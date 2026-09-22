@@ -14,8 +14,8 @@ root `README.md`.
 ## Branch and worktree
 
 - `feature/WI-004-production-dashboard` was squash-merged as `cd3a3b9`; GitHub deleted the remote branch.
-- The worktree `../WMS-worktrees/WI-004` and the local Compose stack started from it are cleaned up only on the user's
-  word, since removing the stack's volume discards the local demo database.
+- With the user's agreement ("sure"), the worktree `../WMS-worktrees/WI-004`, the local branch, and the local Compose
+  stack with its volumes were removed. Nothing from this work item is left running.
 
 ## Approved plan reference
 
