@@ -5,9 +5,10 @@ An AI-assisted development harness, and the production-management demo app built
 **Status:**
 - **WI-001 (bootstrap):** application skeleton and auth foundation, merged.
 - **WI-002 (Screen A, production-order create/edit):** designed, implemented, tested and merged.
-- **WI-003 (Screen B, production-order list):** designed, implemented, tested and merged. It adds filtering, sorting and paging over production orders, plus 80 seeded demo orders.
+- **WI-003 (Screen B, production-order list):** designed, implemented, tested and merged. It adds filtering, sorting and paging over production orders, plus the first seeded demo orders.
+- **WI-004 (Screen C, production dashboard):** designed, implemented, tested and merged. The dashboard is the landing page at `/`: status and delivery figures, overdue and due-soon orders, top products, and workload and completion-trend charts that can be maximized, with a server/database health indicator. It also adds completion tracking on orders, a navbar with icons on every screen, and demo history (124 seeded orders).
 - **CI:** runs the backend, frontend and end-to-end jobs on every PR to `master` and passes. Changes that touch only documentation, work items, demos or `ai/` skip CI (RFC 0005).
-- **Next:** Screen C, the dashboard. Its widgets and metrics are settled in its own requirements step.
+- **Next:** Screens A, B and C — the whole locked demo roadmap — are done. No further work item is planned yet.
 
 [`ai/project.md`](ai/project.md) has the verified commands and what's still open.
 
@@ -25,7 +26,7 @@ Claude starts at [CLAUDE.md](CLAUDE.md). Codex and compatible agents start at [A
 
 ## Confirmed stack
 
-- **Frontend:** Vite + React + TypeScript, Tailwind CSS v4 (no component kit), `react-router-dom`.
+- **Frontend:** Vite + React + TypeScript, Tailwind CSS v4 (no component kit), `react-router-dom`, `lucide-react` icons.
 - **Backend:** .NET 10 + EF Core, layered Domain/Application/Infrastructure/Api; ASP.NET Core Identity with cookie auth; RFC 9457 errors; OpenTelemetry.
 - **Database:** PostgreSQL 17. Migrations run as the owner; the app runs as a restricted login.
 - **Tests:** xUnit (unit + Testcontainers integration), Vitest + React Testing Library, Playwright E2E, axe accessibility checks.
@@ -38,7 +39,7 @@ Still open: registry/deployment host beyond local Compose, merge/deploy permissi
 1. Copy `deploy/.env.example` to `deploy/.env` and fill it in. `PMAI_APP_DB_PASSWORD` is required and has no default.
 2. `docker compose -f deploy/compose.yaml up -d --build db`
 3. Apply migrations as the database owner (the exact command is in [`deploy/README.md`](deploy/README.md)).
-4. `docker compose -f deploy/compose.yaml up -d --build`, then open http://localhost:3000 and sign in as `admin` with your `SEED_ADMIN_PASSWORD`.
+4. `docker compose -f deploy/compose.yaml up -d --build`, then open http://localhost:3000 and sign in as `admin` with your `SEED_ADMIN_PASSWORD`. You land on the dashboard; the navbar leads to the order list and to a new order.
 
 ## Layout
 

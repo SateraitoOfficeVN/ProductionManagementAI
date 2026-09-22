@@ -31,6 +31,7 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-023 | 2026-09-22 | Icons in the UI | user (mockup review) | decided | Icons in the navbar and actions, tiles, widget headings and states, and the health indicator, from `lucide-react` (ISC) — a new runtime dependency |
 | DEC-024 | 2026-09-22 | How the dashboard reader runs its SQL; the health code's namespace | Claude (technical, during implementation) | decided | ADO.NET commands on the EF connection and transaction with bound parameters, instead of `SqlQuery<T>`; namespace `Health`, not `System` |
 | DEC-025 | 2026-09-22 | How the health path is kept from renewing the session | Claude (technical, during implementation) | decided | Suppress renewal both in sliding expiration and after Identity's security-stamp revalidation in `OnValidatePrincipal`; the stamp is still validated |
+| DEC-026 | 2026-09-22 | Merge PR #15 | user | decided | Squash-merged into `master` as `cd3a3b9` with all three CI jobs green |
 
 ## DEC-001: Which current-state widgets the dashboard shows
 
@@ -600,3 +601,9 @@ Found by TC-225 during plan revision 3, step 8. DD-003-FN §7 suppressed renewal
 - **Decided by:** Claude, 2026-09-22 (technical: the only way to implement the user's DEC-019 as stated; no behavior change beyond it).
 - **Verified:** TC-225 now passes. A health request 8 days after sign-in returns no `Set-Cookie`; a dashboard request at the same moment does.
 - **Documents:** DD-003-FN §7 updated in the same change.
+
+## DEC-026: Merge PR #15
+
+- **Decision:** PR #15 squash-merged into `master` as `cd3a3b9`, 2026-09-22.
+- **Decided by:** user (merged it themselves; "pr merged").
+- **Rationale:** all three CI jobs green on the PR (evidence.md); local verification complete.

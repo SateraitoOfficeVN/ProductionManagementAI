@@ -1,6 +1,6 @@
 # Production Dashboard (Screen C) — Requirements Traceability & Evidence
 
-As of branch `feature/WI-004-production-dashboard`, 2026-09-22 (plan revision 3: implementation and local verification complete; push/PR not yet authorized).
+As of `master` at `cd3a3b9`, the squash merge of PR #15, 2026-09-22.
 
 ## Traceability matrix
 
