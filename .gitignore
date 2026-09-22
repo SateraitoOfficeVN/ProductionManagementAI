@@ -16,6 +16,7 @@ test-results/
 *.suo
 .vs/
 .idea/
+.mcp.json
 
 # OS files
 .DS_Store
