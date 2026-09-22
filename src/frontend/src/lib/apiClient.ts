@@ -30,7 +30,7 @@ export function setUnauthorizedHandler(handler: (() => void) | null) {
   unauthorizedHandler = handler
 }
 
-async function request<T>(method: string, url: string, body?: unknown): Promise<T> {
+async function request<T>(method: string, url: string, body?: unknown, signal?: AbortSignal): Promise<T> {
   const headers: Record<string, string> = { Accept: 'application/json' }
   if (body !== undefined) {
     headers['Content-Type'] = 'application/json'
@@ -41,6 +41,7 @@ async function request<T>(method: string, url: string, body?: unknown): Promise<
     credentials: 'same-origin',
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
+    signal,
   })
 
   if (!response.ok) {
@@ -65,8 +66,8 @@ async function readProblem(response: Response): Promise<ProblemDetails | null> {
   }
 }
 
-export function getJson<T>(url: string): Promise<T> {
-  return request<T>('GET', url)
+export function getJson<T>(url: string, signal?: AbortSignal): Promise<T> {
+  return request<T>('GET', url, undefined, signal)
 }
 
 export function sendJson<T>(method: 'POST' | 'PUT', url: string, body: unknown): Promise<T> {

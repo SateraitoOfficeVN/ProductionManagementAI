@@ -22,6 +22,22 @@ public class ProductionOrdersController(ProductionOrderService service) : Contro
     public async Task<ActionResult<ProductionOrderResponse>> Get(Guid id, CancellationToken cancellationToken) =>
         ProductionOrderProblems.ToActionResult(this, await service.GetAsync(id, cancellationToken), Ok);
 
+    /// <summary>DD-002-API §1. No request body, so no [Consumes]; the query string is validated into a typed query.</summary>
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<ProductionOrderListItem>>> List(
+        [FromQuery] ProductionOrderListRequest request, CancellationToken cancellationToken)
+    {
+        var query = ProductionOrderListQuery.TryCreate(request);
+        if (query is not Result<ProductionOrderListQuery>.Ok valid)
+        {
+            // Only Invalid is reachable here; ToActionResult renders it as the 400 Problem Details body.
+            return ProductionOrderProblems.ToActionResult(this, query, _ => Ok());
+        }
+
+        return ProductionOrderProblems.ToActionResult(
+            this, await service.ListAsync(valid.Value, cancellationToken), Ok);
+    }
+
     [HttpPut("{id:guid}")]
     [Consumes("application/json")]
     public async Task<ActionResult<ProductionOrderResponse>> Update(

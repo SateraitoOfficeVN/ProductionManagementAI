@@ -74,13 +74,13 @@ test('Cancel asks before discarding changes; Escape keeps editing; Discard leave
 
   await page.getByRole('button', { name: 'Cancel' }).click()
   await dialog.getByRole('button', { name: 'Discard' }).click()
-  await expect(page).toHaveURL(/\/$/)
+  await expect(page).toHaveURL(/\/production-orders$/)
 })
 
 test('Cancel with no changes leaves straight away', async ({ page }) => {
   await openCreateForm(page)
   await page.getByRole('button', { name: 'Cancel' }).click()
-  await expect(page).toHaveURL(/\/$/)
+  await expect(page).toHaveURL(/\/production-orders$/)
   await expect(page.getByRole('dialog')).toHaveCount(0)
 })
 

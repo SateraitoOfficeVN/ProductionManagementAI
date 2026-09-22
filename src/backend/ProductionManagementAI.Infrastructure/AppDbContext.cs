@@ -18,6 +18,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     {
         base.OnModelCreating(builder);
 
+        // Trigram matching for the order-number fragment filter (DB-003, WI-003 DEC-010). pg_trgm is a trusted
+        // extension in PostgreSQL 17, so the migration's owner login creates it without superuser rights.
+        builder.HasPostgresExtension("pg_trgm");
+
         // Physical table names per docs/en/database/0001-identity-schema.md; EFCore.NamingConventions
         // handles column snake_casing, but table renames from Identity's AspNet* defaults need to be explicit.
         builder.Entity<AppUser>(b =>

@@ -28,6 +28,51 @@ public sealed partial class ProductionOrderService(
             : new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order));
     }
 
+    /// <summary>
+    /// One counted page of production orders for an already-validated query (DD-002-FN §1). The count runs first, so a
+    /// page past the last one costs one query instead of two and the total is always available for the summary.
+    /// </summary>
+    public async Task<Result<PagedResult<ProductionOrderListItem>>> ListAsync(
+        ProductionOrderListQuery query, CancellationToken cancellationToken)
+    {
+        using var activity = Source.StartActivity("ProductionOrder.List");
+        SetQueryTags(activity, query);
+        try
+        {
+            if (query.ProductId is { } productId && !await repository.ProductExistsAsync(productId, cancellationToken))
+            {
+                Complete(activity, Listed, Outcomes.ValidationFailed);
+                LogValidationFailed(logger, orderId: null, "productId");
+                return new Result<PagedResult<ProductionOrderListItem>>.Invalid(
+                    new Dictionary<string, string[]>(StringComparer.Ordinal) { ["productId"] = [Msg.ProductNotFound] });
+            }
+
+            var total = await repository.CountOrdersAsync(query, cancellationToken);
+            IReadOnlyList<ProductionOrderListRow> rows = total == 0
+                ? []
+                : await repository.ListOrdersAsync(query, cancellationToken);
+
+            var plantToday = plantClock.Today;
+            var items = new List<ProductionOrderListItem>(rows.Count);
+            foreach (var row in rows)
+            {
+                items.Add(ProductionOrderListMapper.ToListItem(row, plantToday));
+            }
+
+            activity?.SetTag("result.total", total);
+            ListResultSize.Record(items.Count);
+            Complete(activity, Listed, Outcomes.Success);
+            return new Result<PagedResult<ProductionOrderListItem>>.Ok(new PagedResult<ProductionOrderListItem>(
+                items, total, query.Page, query.PageSize, query.Sort.ToApiValue(), query.Direction.ToApiValue()));
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Complete(activity, Listed, Outcomes.Error);
+            LogUnexpectedFailure(logger, ex, "list");
+            throw;
+        }
+    }
+
     public async Task<Result<ProductionOrderResponse>> CreateAsync(
         CreateProductionOrderRequest request, CancellationToken cancellationToken)
     {
@@ -219,6 +264,24 @@ public sealed partial class ProductionOrderService(
         Complete(activity, Updated, Outcomes.Conflict);
         LogConcurrencyConflict(logger, id);
         return new Result<ProductionOrderResponse>.Conflict();
+    }
+
+    /// <summary>Filter shape only — never the order-number fragment, which is user-supplied text (DD-002-FN).</summary>
+    private static void SetQueryTags(Activity? activity, ProductionOrderListQuery query)
+    {
+        if (activity is null)
+        {
+            return;
+        }
+
+        activity.SetTag("filter.status_count", query.Statuses.Count);
+        activity.SetTag("filter.has_product", query.ProductId is not null);
+        activity.SetTag("filter.has_due_range", query.DueFrom is not null || query.DueTo is not null);
+        activity.SetTag("filter.has_order_number", query.OrderNumberPattern is not null);
+        activity.SetTag("sort", query.Sort.ToApiValue());
+        activity.SetTag("dir", query.Direction.ToApiValue());
+        activity.SetTag("page", query.Page);
+        activity.SetTag("page_size", query.PageSize);
     }
 
     private static void Complete(Activity? activity, System.Diagnostics.Metrics.Counter<long> counter, string outcome)

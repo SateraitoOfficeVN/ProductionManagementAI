@@ -79,6 +79,8 @@ function renderPage(path: string, roles = ['Operator']) {
       <AuthContext.Provider value={auth}>
         <Routes>
           <Route path="/" element={<div>Home page</div>} />
+          {/* Cancel returns to Screen B now that the list exists (BD-002 screen transition, WI-003). */}
+          <Route path="/production-orders" element={<div>Production order list</div>} />
           <Route path="/production-orders/new" element={<ProductionOrderPage />} />
           <Route path="/production-orders/:id" element={<ProductionOrderPage />} />
         </Routes>
@@ -299,7 +301,7 @@ describe('ProductionOrderPage — access and cancel', () => {
 
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
 
-    expect(screen.getByText('Home page')).toBeInTheDocument()
+    expect(screen.getByText('Production order list')).toBeInTheDocument()
   })
 
   it('asks before discarding changes; Keep editing keeps values and returns focus to Cancel (REQ-019)', async () => {
@@ -328,7 +330,7 @@ describe('ProductionOrderPage — access and cancel', () => {
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
     await user.click(screen.getByRole('button', { name: 'Discard' }))
 
-    expect(screen.getByText('Home page')).toBeInTheDocument()
+    expect(screen.getByText('Production order list')).toBeInTheDocument()
     expect(calls.some((c) => c.method === 'POST')).toBe(false)
   })
 })

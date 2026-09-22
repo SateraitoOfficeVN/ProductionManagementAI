@@ -164,7 +164,7 @@ Processing overview: Cancel checks `isDirty` (values compared with `initialValue
 | No | Name | Overview | Notes |
 | --- | --- | --- | --- |
 | 1 | Native `<dialog>` + `showModal()` | Focus trap, Escape, `::backdrop` | No library |
-| 2 | `useNavigate` | Leave to `/` | Screen B later |
+| 2 | `useNavigate` | Leave to `/production-orders` | SCR-002, since WI-003 |
 
 **Processing flow**
 
