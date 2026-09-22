@@ -248,7 +248,7 @@ Implement REQ-028–REQ-042 and the REQ-019 extension end to end in the running 
 | 11 | Test plan TP-004 | 7–10 | testing | `work-items/WI-004/test-plan.md` | Every TC-201–TC-228 maps to a named test with its recorded result | done 2026-09-22 — TP-004 written; every TC-201–TC-228 maps to named, passing tests |
 | 12 | Full local verification | 2–11 | — | `evidence.md` | `dotnet build`, `dotnet test`, `npm run lint`, `npm run build`, `npm test`, Compose + Playwright — each recorded as actually run, with counts | done 2026-09-22 — every command run and recorded with counts; CI not run (not pushed) |
 | 13 | Gates: design-consistency, security-review, delivery | 12 | security-review, pr-review | `evidence.md` walks | Every checklist item answered; security review covers the two new endpoints' authorization, the raw SQL's parameter binding, the read-only transaction, the health response's fields and logging, the no-renew rule, the navigation guard, and the new dependency's licence and pinning | done 2026-09-22 — all three walked; dependency audit clean; secret scan clean |
-| 14 | Push the branch and open a PR | 13 | pr-review, ci-cd | PR to `master` | CI (backend, frontend, e2e) green on the PR; diff reviewed against the design set | pending — needs authorization |
+| 14 | Push the branch and open a PR | 13 | pr-review, ci-cd | PR to `master` | CI (backend, frontend, e2e) green on the PR; diff reviewed against the design set | done 2026-09-22 — pushed on the user's authorization ("sure"); PR #15 opened; CI green on Backend, Frontend and E2E |
 
 ### Roles and responsibilities
 

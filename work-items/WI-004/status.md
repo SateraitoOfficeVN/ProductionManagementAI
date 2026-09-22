@@ -7,8 +7,8 @@ As of 2026-09-22. Work item state: in-review.
 **RAG:** Green — on track
 Screen C is implemented under plan revision 3 (steps 1–13 done). DB-004's migrations are applied to the local Compose
 database, and every check passes locally: 148 backend unit, 85 integration, 87 frontend unit and 22 E2E tests, lint
-and both builds, plus a clean dependency audit and secret scan. The branch is not pushed; step 14 (push and PR) waits
-for the user's authorization.
+and both builds, plus a clean dependency audit and secret scan. The branch is pushed and PR #15 is open with all
+three CI jobs green; merging is the user's decision.
 
 ## Approved plan reference
 
@@ -18,6 +18,7 @@ for the user's authorization.
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | Plan revision 3 step 14: branch pushed, PR #15 opened, CI green (Backend, Frontend, E2E) | https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/15 |
 | 2026-09-22 | Plan revision 3 steps 1–13: implementation, tests at every level, TP-004, full local verification, gates; DEC-024, DEC-025 | [evidence.md](evidence.md), [test-plan.md](test-plan.md) |
 | 2026-09-22 | Plan revision 3 approved | [plan.md](plan.md) |
 | 2026-09-22 | Design phase closed (amended design set approved); plan revision 3 drafted | [plan.md](plan.md) |
@@ -35,7 +36,8 @@ for the user's authorization.
 
 ## Planned for next period
 
-On authorization: push the branch and open the PR (step 14); after the merge, the close-out change.
+After the user merges PR #15: the close-out change (status, evidence, plan closure, `ai/project.md` with `lucide-react`,
+`CLAUDE.md`, root `README.md`).
 
 ## Risks and issues
 
@@ -45,4 +47,4 @@ On authorization: push the branch and open the PR (step 14); after the merge, th
 
 ## Next action
 
-User authorization to push `feature/WI-004-production-dashboard` and open the PR.
+User review and merge of PR #15.

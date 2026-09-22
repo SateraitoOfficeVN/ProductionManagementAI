@@ -57,7 +57,7 @@ Design columns were filled as each document was written; code and test columns w
 | 2026-09-22 | Dependency audit | `npm audit --omit=dev` after adding `lucide-react@1.47.0` (exact pin, ISC, only peer dependency React) | local | pass — 0 vulnerabilities | — |
 | 2026-09-22 | Secret scan of the branch diff | the three local `.env` secrets searched in `git diff master` without printing them | local | pass — no credential in the diff. The local owner password is a dictionary word that also occurs as ordinary text (for example inside "postgresql"); the two other secrets do not occur | — |
 | 2026-09-22 | design-consistency, security-review, delivery checklists (implementation) | manual review | local | pass — walks below | this file |
-| 2026-09-22 | CI | GitHub Actions | — | not run — the branch is not pushed; push and PR await the user's authorization (plan revision 3 step 14) | — |
+| 2026-09-22 | CI, run 1 (PR #15) | GitHub Actions | ubuntu-latest | pass — Backend 1m4s, Frontend 28s, E2E 2m33s | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35711772988 |
 
 ## Design-consistency walk — BD-003 scope
 
@@ -156,7 +156,7 @@ Design columns were filled as each document was written; code and test columns w
 | --- | --- |
 | Approved scope and plan revision identifiable | pass — plan revision 3, approved 2026-09-22 ("plan approved, let move on to implementation") |
 | Design, code and tests agree with requirements | pass — traceability above; divergences recorded as DEC-024/DEC-025 with documents updated |
-| Required checks recorded; not-run checks have reasons | pass — CI not run: the branch is not pushed yet, pending authorization |
+| Required checks recorded; not-run checks have reasons | pass — CI green on PR #15 (all three jobs) |
 | Review findings and limitations explicit | pass — limitations: WI-001 DEC-015 (a read-only role cannot be expressed); TP-004's "not to be tested" list; Screen B's default first page now shows old completed orders, a consequence of the seed noted for the user |
 | External operations within authorization | pass — local only: edits, commits, the local Compose stack, `npm install` of one pinned package, and republishing the private mockup (plan revision 2). No push, PR, merge or deploy |
 | Status, decisions and evidence support continuation | pass |
