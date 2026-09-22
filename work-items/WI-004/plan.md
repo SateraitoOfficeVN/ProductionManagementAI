@@ -265,7 +265,7 @@ Implement REQ-028–REQ-042 and the REQ-019 extension end to end in the running 
 | Local commits on `feature/WI-004-production-dashboard` | yes | revision 1 approval, still in force | local only |
 | `npm install lucide-react@<exact>` in `src/frontend` (changes `package.json`, `package-lock.json`) | yes | revision 3 approval, 2026-09-22; DEC-023 (user) | one package, exact version |
 | Run the local Compose stack and apply migrations to the local database | yes | revision 3 approval, 2026-09-22 | local only; fresh volume; the seeds are guarded |
-| Push the branch and open a PR | not yet — the approval message did not address it; asked again at step 14 | — | step 14 only |
+| Push the branch and open a PR | yes | asked at step 14 and granted, 2026-09-22 ("sure") | step 14 only |
 | Merge, deploy, publish an image | no | not authorized | — |
 
 ### Risks and mitigations
