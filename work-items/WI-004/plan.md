@@ -4,9 +4,10 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
-| 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | **current** — approved; in progress | user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008" |
+| 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | approved; steps 1–6 done, steps 7–8 superseded by revision 2 | user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008" |
+| 2 | 2026-09-22 | Design amendment after mockup review (navbar, health indicator, chart maximize) and design-phase close | **current** — awaiting review | none yet |
 
-## Revision 1 — design phase (current)
+## Revision 1 — design phase
 
 Revision 1, 2026-09-22. First plan for WI-004 (Screen C, production dashboard), started after WI-003 was merged to `master`. It covers the design phase only. Implementation, tests and the PR come in revision 2, which will be drafted once these designs are reconciled and approved, and shown for its own approval before any of its steps start (`ai/policies.md`).
 
@@ -54,8 +55,8 @@ Produce the reconciled design set for Screen C: the brief, BD-003, DB-004 for co
 | 4 | Database design DB-004 | 3 | database-design | `docs/en/database/0004-completion-tracking-and-dashboard-queries.md` | Column, constraint, backfill and seed specified with their migration order and recovery limits; each aggregate query written down with its plant-timezone bucketing and index or cost argument; seeded data gives every widget a non-empty, non-trivial figure and no negative lead time | drafted 2026-09-22 — DB-004 version 1: one column, two CHECKs, two partial indexes, seven queries in one snapshot, three migrations; seed figures checked by simulation; DEC-013 (user), DEC-014, DEC-015 recorded; approved by the user ("DB-004 is approved, move on to the DD") |
 | 5 | Screen A design amendments for REQ-033 | 4 | basic-design, detailed-design | BD-001, DD-001, DD-001-FN, DD-001-API (new versions) | The completion-time rule appears once, in the transition logic; no visible change to SCR-001; API stays backward-compatible | drafted 2026-09-22 — BD-001 v6, DD-001 v4, DD-001-FN v3, DD-001-API v2 (reviewed, no contract change), DB-002 pointer to DB-004; approved with DB-004 |
 | 6 | Detailed design DD-003, its companions and the mockup | 3, 4, 5 | detailed-design, screen-design | `DD-003-production-dashboard.md`, `DD-003-API-…`, `DD-003-FN-…`, `DD-003-SPD-…`, rendered mockup | DD agrees with BD-003 and DB-004; the API contract covers every figure and its empty value; test viewpoints cover every REQ, including window boundaries in `Asia/Tokyo` | drafted 2026-09-22 — DD-003, DD-003-API, DD-003-FN, DD-003-SPD (21 test viewpoints TC-201–TC-221) and the 8-artboard mockup source; mockup published privately; awaiting user review |
-| 7 | Reconcile and close the design phase | 6 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision remains; user review of the design set | pending |
-| 8 | Draft plan revision 2 (implementation, tests, PR) | 7 | planning | `plan.md` revision 2 | Shown to the user and stopped; no revision 2 step starts before it is explicitly approved | pending |
+| 7 | Reconcile and close the design phase | 6 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision remains; user review of the design set | superseded — the user's mockup review raised DEC-016–DEC-018; the close moves to revision 2 step 8 |
+| 8 | Draft plan revision 2 (implementation, tests, PR) | 7 | planning | `plan.md` revision 2 | Shown to the user and stopped; no revision 2 step starts before it is explicitly approved | superseded — the implementation plan becomes revision 3 (revision 2 step 9) |
 
 The user reviews each design document as it is finished (BD-003, then DB-004 together with the Screen A amendments, then the DD-003 set), as in WI-003. The next step starts only after that document is approved.
 
@@ -91,3 +92,93 @@ The user reviews each design document as it is finished (BD-003, then DB-004 tog
 - **Review status:** approved
 - **Approval source:** user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008"
 - **Approved revision:** revision 1, 2026-09-22
+- **Closure:** steps 1–6 done 2026-09-22 (BD-003 and DB-004 with the Screen A amendments approved; the DD-003 set drafted and its mockup published). At the mockup review the user asked for a navbar, a health indicator and chart maximize (DEC-016–DEC-018), which widen the scope to the shared header and a new endpoint, so steps 7–8 are superseded by revision 2.
+
+---
+
+## Revision 2 — design amendment after mockup review (current)
+
+Revision 2, 2026-09-22. Supersedes revision 1's steps 7–8; revision 1 stays above unchanged except for its Outcome column and Closure line. The user reviewed the DD-003 mockup and asked for three additions, settled in DEC-016–DEC-018. This revision amends the approved design to include them and then closes the design phase. Implementation, tests and the PR move to revision 3, which is drafted at the end of this revision and shown for its own approval.
+
+### Objective
+
+Bring the reconciled design set up to date with DEC-016 (navbar on every screen), DEC-017 (server/database health indicator, polled) and DEC-018 (chart maximize/restore), republish the mockup, and close the design phase with every requirement — REQ-028–REQ-042 — traced.
+
+### Scope
+
+#### In scope
+
+- Brief revision 2 (REQ-040–REQ-042, UC-012) and DEC-016–DEC-018 — already drafted with this revision, for review together with it.
+- **BD-003 version 2:** the navbar replaces items 5–6; the health indicator (item, states, polling, failure display); chart Expand/Restore with its overlay; new events and messages; screen transition.
+- **Shared header in BD-001 and BD-002:** a new version of each stating that the header now carries the navbar (layout and navigation only — no field, rule, validation or API of either screen changes); BD-002's "Home" breadcrumb is kept or dropped in favour of the navbar, decided in BD-003 v2 and applied to both.
+- **DD-003 set version 2:** navbar component (in the shared `components/` folder), health indicator component and polling, chart overlay (`dialog` semantics, focus trap, Escape), the new endpoint in DD-003-API and DD-003-FN (authorization, `SELECT 1` with a short timeout, response shape, `no-store`, observability), new test viewpoints.
+- **DD-001-SPD and DD-002-SPD:** new versions noting the shared header's navbar, and any breadcrumb change.
+- **DB-004:** reviewed; expected unchanged (the ping reads no table). Any change found is a stop condition.
+- **Mockup:** regenerated with the navbar, the indicator (OK and database-unavailable states) and a maximized chart, and republished to the same private URL.
+- Design-consistency reconciliation, then the design-phase close.
+
+#### Out of scope
+
+- Application code, migrations, tests and the PR — plan revision 3.
+- A detailed health panel, response-time figures, alerting, or a health indicator on screens other than the dashboard (DEC-017).
+- The browser Fullscreen API and collapsing charts to a title bar (DEC-018).
+- Any change to Screen A's or Screen B's fields, rules, validation or API — only their shared header changes.
+- Any push, PR, merge, image publication or deployment.
+
+### Inputs and assumptions
+
+| Input (brief / BD / DD / DB / ADR / decisions) | Revision | Assumption made if input is missing or incomplete |
+| --- | --- | --- |
+| `brief.md` | revision 2 (drafted with this plan revision) | REQ-040–REQ-042 as written; changes at review are applied before step 1 starts |
+| `decisions.md` DEC-016–DEC-018 | decided by the user 2026-09-22 | Details they leave to design — health states and timeout, endpoint path, breadcrumb, overlay layout — are settled in BD-003 v2 / DD-003 v2 and recorded as Claude decisions |
+| BD-003 v1, DB-004 v1, BD-001 v6, DD-001 set | approved | Amended only where DEC-016–DEC-018 require |
+| DD-003 set v1–v2, mockup v1 | drafted, not yet approved | Revised rather than rewritten |
+| ADR-0002 (auth) | current | The health endpoint uses the same cookie session and `ProductionOrderEditor` policy as the dashboard |
+
+### Deliverables and milestones
+
+| # | Milestone / step | Depends on | Skill used | Deliverable | Verification method | Outcome |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | Brief revision 2 and DEC-016–DEC-018 | none | requirements | `brief.md`, `decisions.md` | Each new REQ has success and failure criteria; each decision records the user's words | drafted 2026-09-22 with this revision; confirmed by this revision's approval |
+| 2 | BD-003 version 2 | 1 | basic-design, screen-design | BD-003 | REQ-040–REQ-042 each map to BD sections; the health states, poll interval, timeout and failure display are stated once; navbar on SP defined | pending |
+| 3 | Shared-header amendments to BD-001 and BD-002 | 2 | basic-design | BD-001 v7, BD-002 v4 | Only the header/navigation changes; screen transitions updated | pending |
+| 4 | DD-003 set version 2 | 2 | detailed-design, screen-design | DD-003, DD-003-API, DD-003-FN, DD-003-SPD | The health endpoint's contract, authorization, timeout, observability and security are specified; overlay focus management specified; new test viewpoints cover REQ-040–REQ-042 | pending |
+| 5 | DD-001-SPD and DD-002-SPD notes | 3, 4 | detailed-design | new versions | The navbar component is referenced, not restated | pending |
+| 6 | DB-004 check | 4 | database-design | DB-004 (unchanged, or a stop) | The ping reads no table and needs no grant | pending |
+| 7 | Mockup regenerated and republished | 4 | screen-design | `mockups/DD-003-screen-c-mockup.html`, same private URL | Navbar (PC and SP menu), indicator OK and database-unavailable, maximized chart artboards added | pending |
+| 8 | Reconcile and close the design phase | 2–7 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision; user review of the amended design set | pending |
+| 9 | Draft plan revision 3 (implementation, tests, PR) | 8 | planning | `plan.md` revision 3 | Shown to the user and stopped; no revision 3 step starts before it is explicitly approved | pending |
+
+As in revision 1, the user reviews the amended design set before the design phase is closed.
+
+### Roles and responsibilities
+
+| Role | Owner |
+| --- | --- |
+| Plan author, designer | this agent (Claude) |
+| Reviewer, approver, business decisions | ThanhTN |
+
+### Resources and external actions
+
+| Action (push / PR / merge / deploy / publish image / …) | Authorized? | Source of authorization | Scope limit |
+| --- | --- | --- | --- |
+| Local file edits under `work-items/WI-004/` and `docs/en/` | yes, once this revision is approved | the user's mockup-review request, 2026-09-22 | design documents only |
+| Local commits on `feature/WI-004-production-dashboard` | yes | revision 1 approval, still in force | local only |
+| Republish the mockup to its existing private URL | requested with this revision | — | step 7 only — https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
+| git push / PR / merge / deploy | no | not authorized | — |
+
+### Risks and mitigations
+
+| Risk / stop condition | Trigger | Mitigation / response |
+| --- | --- | --- |
+| The health endpoint leaks operational detail or becomes an unauthenticated probe | A design that returns error text, versions, latency, or allows anonymous access | Authenticated with the dashboard's policy; response is two fixed status values and a timestamp; failures logged server-side only; re-checked at `ai/checklists/security-review.md` in revision 3 |
+| Polling adds load or keeps a session alive indefinitely | A 30 s poll from every open dashboard | One `SELECT 1` per poll with a short timeout; polling pauses while the tab is hidden; the poll does not extend anything the session would not otherwise extend — to be confirmed against ADR-0002's cookie settings in DD-003 v2, and raised as a question if sliding expiration makes it an issue |
+| The navbar changes Screens A and B beyond their header | Tests or designs of A/B depend on the old header or breadcrumb | Header-only change; every A/B test that locates by header or breadcrumb is listed in revision 3; E2E helper `signIn` already waits on the "New production order" link, which the navbar keeps |
+| The maximized chart is an accessibility trap | Focus escapes, or Escape does nothing | Native `<dialog>` with `showModal()` (focus containment and Escape by the platform), explicit return of focus; covered by an axe and keyboard test viewpoint |
+| A new business ambiguity appears | e.g. what an Operator should see when only the database is down | Pause and ask; record a DEC |
+
+### Approval / sign-off
+
+- **Review status:** awaiting review
+- **Approval source:** —
+- **Approved revision:** —

@@ -17,10 +17,13 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-009 | 2026-09-22 | Where the workload chart counts active orders due after the 8-week look-ahead | user | decided | In a "later" bar, so every active order is counted exactly once |
 | DEC-010 | 2026-09-22 | How charts are drawn and made accessible | Claude (UI/accessibility, during BD-003) | decided | Inline SVG drawn by the page, no charting library; value labels on bars and a "View as table" disclosure |
 | DEC-011 | 2026-09-22 | One snapshot endpoint or one endpoint per widget | Claude (technical, during BD-003) | decided | One endpoint returning every widget from one consistent snapshot |
-| DEC-012 | 2026-09-22 | Where the placeholder home page's two links go | Claude (UI, during BD-003) | decided | Page actions on the dashboard itself; the shared header is not changed |
+| DEC-012 | 2026-09-22 | Where the placeholder home page's two links go | Claude (UI, during BD-003) | superseded by DEC-016 | Page actions on the dashboard itself; the shared header is not changed |
 | DEC-013 | 2026-09-22 | How the demo seed gives the delivery widgets data | user | decided | Both: re-date the 16 seeded completed orders and add 40 historical completed orders |
 | DEC-014 | 2026-09-22 | Whether the seed adds active orders due beyond WI-003's 40-day horizon | Claude (technical, during DB-004) | decided — DB-004 approved without objection | Add 4 (due +42, +49, +56, +63), so week bars 6–7 and Later are never empty |
 | DEC-015 | 2026-09-22 | How the dashboard reads one consistent snapshot | Claude (technical, during DB-004) | decided | One `REPEATABLE READ READ ONLY` transaction around the seven statements |
+| DEC-016 | 2026-09-22 | Application navigation | user (mockup review) | decided | A navbar in the shared header on every screen — Dashboard, Production orders, New production order — replacing the dashboard's page actions; supersedes DEC-012 |
+| DEC-017 | 2026-09-22 | Server and database health indicator on the dashboard | user (mockup review) | decided | A status pill checked on load and every 30 s through a new authenticated endpoint that pings the database; text states, no operational detail exposed |
+| DEC-018 | 2026-09-22 | Chart full screen | user (mockup review) | decided | Each chart can be maximized to a full-window overlay and restored (Escape or Restore); no browser Fullscreen API |
 
 ## DEC-001: Which current-state widgets the dashboard shows
 
@@ -370,3 +373,86 @@ DEC-011 requires every widget to come from one consistent read. BD-003 left the 
 - **Decision:** one `REPEATABLE READ READ ONLY` transaction (DB-004 "Transactions and concurrency").
 - **Decided by:** Claude, 2026-09-22, during DB-004 (technical).
 - **Rationale:** consistent figures with ordinary queries and no retry path.
+
+## DEC-016: Application navigation
+
+### Context
+
+Raised by the user on reviewing the DD-003 mockup: the list and New-order links sat as buttons on the dashboard (DEC-012), whereas the user wants a navbar that carries the application's functions and links. DEC-012 had kept navigation off the shared header only to stay inside plan revision 1's "no visible change to Screens A and B".
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Navbar in the shared header, every screen | Consistent navigation everywhere; the current page is marked | Visibly changes SCR-001 and SCR-002; their tests and designs are updated |
+| Navbar on the dashboard only | Screens A and B untouched | Navigation differs by screen |
+
+### Decision and rationale
+
+- **Decision:** the shared header (`AppHeader`) gains a navbar on every authenticated screen with Dashboard (`/`), Production orders (`/production-orders`) and New production order (`/production-orders/new`), the current one marked (`aria-current="page"`), collapsing behind a menu button below the `sm` breakpoint. The dashboard's two page-action buttons are removed. Supersedes DEC-012.
+- **Decided by:** user, 2026-09-22 (mockup review: "we should add a navbar so the function and link could be in it"; follow-up: "Every screen").
+- **Rationale:** navigation belongs to the application, not to one screen.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| brief.md | REQ-028 wording; new REQ-040 |
+| BD-003 | Items 5–6 removed, navbar described; screen transition |
+| BD-001, BD-002, their DD-SPDs | The shared header now carries navigation (layout only; no behavior of either screen changes) |
+| plan.md | Revision 2 widens the design scope to the shared header |
+
+## DEC-017: Server and database health indicator
+
+### Context
+
+Raised by the user on reviewing the mockup. The backend already exposes an anonymous `/health` that returns 200 without checking the database; it serves container liveness and says nothing about the database.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Status pill, polled every 30 s | Stays current while the dashboard is open; small | One light request per open dashboard every 30 s |
+| Status pill, on load only | Simplest | Goes stale while the page stays open |
+| Detailed health panel | Response times, per-component detail | More to design; shows operational detail to every Operator |
+
+### Decision and rationale
+
+- **Decision:** a small indicator on the dashboard showing the server's and the database's status as text ("OK", and a failure state), checked on load and every 30 seconds through a **new authenticated** endpoint that runs a trivial database round trip with a short timeout. No version, hostname, connection string, latency figure or error text is exposed. The existing anonymous `/health` is left unchanged for container liveness. Exact states, timeout and endpoint path are fixed in BD-003 v2 and DD-003-API v2.
+- **Decided by:** user, 2026-09-22 (mockup review: "add a heath check indicator on the dashboard to show the server and db status"; follow-up: "Status pill, polled").
+- **Rationale:** keeps the indicator honest while the page is open, at negligible cost, without widening what an Operator can learn about the infrastructure.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| brief.md | New REQ-041 |
+| BD-003, DD-003 set | Indicator item, states, polling; new endpoint contract, security and observability |
+| DB-004 | No schema change; the ping is `SELECT 1` |
+
+## DEC-018: Chart full screen
+
+### Context
+
+Raised by the user on reviewing the mockup: "the chart should be able to go full screen and minimized".
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Maximize / restore in a full-window overlay | Works the same on desktop and phone; no browser permission prompt; the table can sit beside the enlarged chart | Not true OS full screen |
+| Browser Fullscreen API plus a collapse control | True full screen | Browser-dependent (iOS Safari support is limited); focus handling and exit differ by browser |
+| Both maximize and collapse | Most flexible | Two controls per chart; collapsed state to remember |
+
+### Decision and rationale
+
+- **Decision:** each chart card has an **Expand** control that opens the chart in a full-window overlay (a modal dialog: focus moves in, Escape or **Restore** closes it, focus returns to Expand) with the chart enlarged and its table shown alongside. "Minimized" is the restored, normal card. No collapse-to-title-bar and no browser Fullscreen API.
+- **Decided by:** user, 2026-09-22 (mockup review; follow-up: "Maximize / restore").
+- **Rationale:** consistent across devices and accessible as a standard dialog.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| brief.md | New REQ-042 |
+| BD-003, DD-003, DD-003-SPD | Chart controls, overlay, focus management, a new event |

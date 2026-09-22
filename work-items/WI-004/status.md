@@ -1,6 +1,6 @@
 # Production Dashboard (Screen C) — Status Report
 
-As of 2026-09-22. Work item state: in-progress.
+As of 2026-09-22. Work item state: awaiting-plan-review.
 
 ## Overall status
 
@@ -10,16 +10,20 @@ WI-004 was opened on 2026-09-22 after WI-003 (Screen B) was merged to `master`. 
 replacing `/`, read-only, and a 7-day due-soon window. Plan revision 1 (design phase) was approved; the user then set
 the metric windows and sizes (DEC-008) and chose a "later" workload bar (DEC-009). BD-003 is approved. DB-004 and the Screen
 A design amendments for completion tracking are approved (the user chose to both re-date and extend the demo seed,
-DEC-013). The DD-003 set is drafted and awaiting review; its mockup is published privately.
+DEC-013). The DD-003 set was drafted and its mockup published privately; on reviewing the mockup the user asked for a navbar
+on every screen, a server/database health indicator and chart maximize (DEC-016–DEC-018). Plan revision 2 (design
+amendment) and brief revision 2 are drafted and awaiting review.
 
 ## Approved plan reference
 
-[plan.md](plan.md) — approved revision 1, approval source user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008".
+[plan.md](plan.md) — revision 2 drafted 2026-09-22, awaiting review; approved revision 1, approval source user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008".
 
 ## Accomplishments this period
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | Mockup review by the user: DEC-016 (navbar), DEC-017 (health indicator), DEC-018 (chart maximize); brief revision 2 and plan revision 2 drafted | [decisions.md](decisions.md), [plan.md](plan.md) |
+| 2026-09-22 | Mockup published privately | https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
 | 2026-09-22 | DD-003, DD-003-API, DD-003-FN, DD-003-SPD and the mockup source drafted; design-consistency walk at DD scope | [DD-003](../../docs/en/020_detailed-design/DD-003-production-dashboard.md), [evidence.md](evidence.md) |
 | 2026-09-22 | DB-004 and the Screen A amendments approved by the user | [evidence.md](evidence.md) |
 | 2026-09-22 | DB-004 version 1 and the Screen A amendments (BD-001 v6, DD-001 v4, DD-001-FN v3, DD-001-API v2) drafted; DEC-013–DEC-015 recorded | [DB-004](../../docs/en/database/0004-completion-tracking-and-dashboard-queries.md), [evidence.md](evidence.md) |
@@ -30,8 +34,8 @@ DEC-013). The DD-003 set is drafted and awaiting review; its mockup is published
 
 ## Planned for next period
 
-After the DD-003 set is approved: close the design phase (step 7), then draft plan revision 2 and show it for approval
-(step 8).
+After plan revision 2 is approved: BD-003 v2 and the shared-header amendments, the DD-003 set v2, the republished
+mockup, then the design-phase close and plan revision 3.
 
 ## Risks and issues
 
@@ -41,4 +45,4 @@ After the DD-003 set is approved: close the design phase (step 7), then draft pl
 
 ## Next action
 
-User review of the DD-003 set.
+User review of plan revision 2 (with brief revision 2 and DEC-016–DEC-018).
