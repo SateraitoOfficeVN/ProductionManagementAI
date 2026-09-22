@@ -1,7 +1,8 @@
 namespace ProductionManagementAI.Domain.ProductionOrders;
 
 /// <summary>
-/// Message IDs from DD-001's message catalog. The API returns IDs, never text; the frontend maps them to wording.
+/// Message IDs from the shared message catalog (DD-001, extended by DD-002). The API returns IDs, never text;
+/// the frontend maps them to wording.
 /// </summary>
 public static class ProductionOrderMessages
 {
@@ -17,4 +18,12 @@ public static class ProductionOrderMessages
     public const string QuantityTooLarge = "MSG-E010";
     public const string OrderNotFound = "MSG-E011";
     public const string Unexpected = "MSG-E013";
+
+    // DD-002 (Screen B). One catalog, so these continue DD-001's numbering instead of restarting it;
+    // ProductNotFound (MSG-E002) and Unexpected (MSG-E013) are reused for the list's equivalents.
+    public const string OrderNumberFilterTooLong = "MSG-E015";
+    public const string DateFilterInvalid = "MSG-E016";
+    public const string DueDateRangeInverted = "MSG-E017";
+    public const string StatusFilterUnknown = "MSG-E018";
+    public const string SortOrPagingUnsupported = "MSG-E019";
 }

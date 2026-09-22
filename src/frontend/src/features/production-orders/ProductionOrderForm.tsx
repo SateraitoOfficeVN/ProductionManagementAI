@@ -221,7 +221,7 @@ export function ProductionOrderForm({
     if (isDirty) {
       setConfirmingDiscard(true)
     } else {
-      navigate('/')
+      navigate('/production-orders')
     }
   }
 
@@ -395,7 +395,7 @@ export function ProductionOrderForm({
         open={confirmingDiscard}
         onDiscard={() => {
           setConfirmingDiscard(false)
-          navigate('/')
+          navigate('/production-orders')
         }}
         onKeepEditing={() => {
           setConfirmingDiscard(false)

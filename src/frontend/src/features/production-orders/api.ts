@@ -1,8 +1,12 @@
 import { getJson, sendJson } from '../../lib/apiClient'
+import { toSearchParams } from './listViewState'
 import type {
   CreateProductionOrderRequest,
+  ListViewState,
+  PagedResult,
   Product,
   ProductionOrder,
+  ProductionOrderListItem,
   UpdateProductionOrderRequest,
 } from './types'
 
@@ -15,3 +19,15 @@ export const createOrder = (body: CreateProductionOrderRequest) =>
 
 export const updateOrder = (id: string, body: UpdateProductionOrderRequest) =>
   sendJson<ProductionOrder>('PUT', `/api/production-orders/${encodeURIComponent(id)}`, body)
+
+/**
+ * DD-002-API §1. The query string is built by the same serializer the URL uses, so what the user sees and what is
+ * queried cannot diverge. The signal cancels a query the user has already superseded.
+ */
+export function listOrders(view: ListViewState, signal?: AbortSignal) {
+  const query = toSearchParams(view).toString()
+  return getJson<PagedResult<ProductionOrderListItem>>(
+    query === '' ? '/api/production-orders' : `/api/production-orders?${query}`,
+    signal,
+  )
+}

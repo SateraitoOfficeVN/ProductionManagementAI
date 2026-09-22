@@ -29,6 +29,13 @@ public interface IProductionOrderRepository
 
     Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken);
 
+    /// <summary>Exact number of orders matching the query's filters, ignoring sort and paging (DD-002-FN §2).</summary>
+    Task<int> CountOrdersAsync(ProductionOrderListQuery query, CancellationToken cancellationToken);
+
+    /// <summary>One ordered, projected page of orders (DD-002-FN §3).</summary>
+    Task<IReadOnlyList<ProductionOrderListRow>> ListOrdersAsync(
+        ProductionOrderListQuery query, CancellationToken cancellationToken);
+
     void Add(ProductionOrder order);
 
     Task<IProductionOrderTransaction> BeginTransactionAsync(CancellationToken cancellationToken);

@@ -23,6 +23,36 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
         return query.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
+    // DD-002-FN §2: filters only, and no join — every list filter is a predicate on production_orders (DB-003).
+    public Task<int> CountOrdersAsync(ProductionOrderListQuery query, CancellationToken cancellationToken) =>
+        db.ProductionOrders.AsNoTracking().ApplyFilters(query).CountAsync(cancellationToken);
+
+    // DD-002-FN §3: filter, join for the displayed product, project, order, then page. Notes, xmin, order_year,
+    // order_seq and created_at_utc are never selected (DB-003 read projection).
+    public async Task<IReadOnlyList<ProductionOrderListRow>> ListOrdersAsync(
+        ProductionOrderListQuery query, CancellationToken cancellationToken) =>
+        await db.ProductionOrders
+            .AsNoTracking()
+            .ApplyFilters(query)
+            .Join(
+                db.Products.AsNoTracking(),
+                order => order.ProductId,
+                product => product.Id,
+                (order, product) => new ProductionOrderListRow(
+                    order.Id,
+                    order.OrderNumber,
+                    product.Id,
+                    product.Sku,
+                    product.Name,
+                    order.Quantity,
+                    order.DueDate,
+                    order.Status,
+                    order.UpdatedAtUtc))
+            .ApplySort(query.Sort, query.Direction)
+            .Skip(query.Skip)
+            .Take(query.PageSize)
+            .ToListAsync(cancellationToken);
+
     public void Add(ProductionOrder order) => db.ProductionOrders.Add(order);
 
     public async Task<IProductionOrderTransaction> BeginTransactionAsync(CancellationToken cancellationToken) =>

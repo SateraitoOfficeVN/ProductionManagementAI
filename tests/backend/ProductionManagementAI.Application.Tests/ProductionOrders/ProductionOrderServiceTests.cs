@@ -231,6 +231,24 @@ public class ProductionOrderServiceTests
 
         public void Add(ProductionOrder order) => _orders[order.Id] = order;
 
+        // The list query itself is exercised against a real database in the integration tests (DD-002-FN §2–§3);
+        // here the rows are canned so the service's own logic — the product check, the count-first path and the
+        // overdue mapping — can be tested without one.
+        public List<ProductionOrderListRow> ListRows { get; } = [];
+
+        public int ListCallCount { get; private set; }
+
+        public Task<int> CountOrdersAsync(ProductionOrderListQuery query, CancellationToken cancellationToken) =>
+            Task.FromResult(ListRows.Count);
+
+        public Task<IReadOnlyList<ProductionOrderListRow>> ListOrdersAsync(
+            ProductionOrderListQuery query, CancellationToken cancellationToken)
+        {
+            ListCallCount++;
+            return Task.FromResult<IReadOnlyList<ProductionOrderListRow>>(
+                [.. ListRows.Skip(query.Skip).Take(query.PageSize)]);
+        }
+
         public void ForceDueDate(Guid id, DateOnly dueDate)
         {
             var o = _orders[id];

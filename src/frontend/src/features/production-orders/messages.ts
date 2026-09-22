@@ -1,6 +1,6 @@
 import type { ProductionOrderStatus } from './types'
 
-// DD-001 message catalog. The API returns IDs only; all wording lives here.
+// Shared message catalog (DD-001, extended by DD-002). The API returns IDs only; all wording lives here.
 const messages: Record<string, string> = {
   'MSG-E001': 'Select a product.',
   'MSG-E002': 'The selected product no longer exists.',
@@ -18,6 +18,16 @@ const messages: Record<string, string> = {
   'MSG-E014': 'No products available.',
   'MSG-I001': 'Production order {orderNumber} created.',
   'MSG-I002': 'Production order {orderNumber} saved.',
+  // DD-002 (Screen B). New IDs continue DD-001's numbering; MSG-E002 and MSG-E013 are reused for the list's
+  // "unknown product" and "something went wrong".
+  'MSG-E015': "Order number search can't exceed 20 characters.",
+  'MSG-E016': 'Enter a valid date.',
+  'MSG-E017': "'Due from' must be on or before 'Due to'.",
+  'MSG-E018': 'Unknown order status.',
+  'MSG-E019': 'Unsupported sort or paging option.',
+  'MSG-E020': "You don't have permission to view production orders.",
+  'MSG-I003': 'No production orders yet. Create the first one.',
+  'MSG-I004': 'No orders match your filters.',
 }
 
 export function message(id: string, values: Record<string, string> = {}): string {

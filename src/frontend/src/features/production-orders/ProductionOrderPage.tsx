@@ -97,12 +97,13 @@ export function ProductionOrderPage() {
       <AppHeader />
       <main className="mx-auto grid max-w-3xl gap-4 px-4 pt-5 pb-8 sm:px-6">
         <nav aria-label="Breadcrumb" className="text-sm text-gray-500">
-          <Link to="/" className="underline-offset-4 hover:underline">
-            <span className="sm:hidden">‹ Home</span>
-            <span className="hidden sm:inline">Home</span>
+          <Link to="/production-orders" className="underline-offset-4 hover:underline">
+            {/* Back goes to the list now that Screen B exists (BD-002 screen transition). */}
+            <span className="sm:hidden">‹ Production orders</span>
+            <span className="hidden sm:inline">Production orders</span>
           </Link>
           <span className="hidden sm:inline">
-            {' / Production orders / '}
+            {' / '}
             <span className="text-gray-700">{order ? order.orderNumber : mode === 'create' ? 'New' : ''}</span>
           </span>
         </nav>
@@ -163,8 +164,8 @@ function Panel({ text, onRetry }: { text: string; onRetry?: () => void }) {
           Try again
         </button>
       ) : (
-        <Link to="/" className="text-gray-900 underline underline-offset-4">
-          Back to home
+        <Link to="/production-orders" className="text-gray-900 underline underline-offset-4">
+          Back to production orders
         </Link>
       )}
     </div>

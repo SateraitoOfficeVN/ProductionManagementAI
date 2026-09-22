@@ -66,6 +66,17 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
         builder.HasIndex(o => new { o.OrderYear, o.OrderSeq })
             .IsUnique()
             .HasDatabaseName("ix_production_orders_order_year_order_seq");
+
+        // DB-003 (Screen B): the default sort and the due-date range in one scan, with the unique order number as
+        // the tie-breaker that keeps paging stable.
+        builder.HasIndex(o => new { o.DueDate, o.OrderNumber })
+            .HasDatabaseName("ix_production_orders_due_date_order_number");
+
+        // The order-number filter is a "contains" match, which no btree can serve (DEC-010).
+        builder.HasIndex(o => o.OrderNumber)
+            .HasDatabaseName("ix_production_orders_order_number_trgm")
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
     }
 }
 

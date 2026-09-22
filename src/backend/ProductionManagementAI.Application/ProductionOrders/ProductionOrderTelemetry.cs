@@ -21,6 +21,13 @@ public static class ProductionOrderTelemetry
     public static readonly Counter<long> StatusTransitions =
         Meter.CreateCounter<long>("pmai.production_orders.status_transitions", description: "Successful status changes.");
 
+    // DD-002-FN "Observability".
+    public static readonly Counter<long> Listed =
+        Meter.CreateCounter<long>("pmai.production_orders.listed", description: "Production order list queries by outcome.");
+
+    public static readonly Histogram<int> ListResultSize = Meter.CreateHistogram<int>(
+        "pmai.production_orders.list_result_size", description: "Rows returned on a production order list page.");
+
     public static class Outcomes
     {
         public const string Success = "success";
