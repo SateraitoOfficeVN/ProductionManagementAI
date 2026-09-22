@@ -21,13 +21,15 @@ builds locally, and all three GitHub Actions jobs green on PR #9. The user squas
 ## Approved plan reference
 
 [plan.md](plan.md) — revision 1 approved 2026-09-22 ("approved, let move on to BD-002") and complete; revision 2
-approved for local work 2026-09-22 ("the DD is approved, move on to the implementation") and for step 14 by "yes push
-it and open the PR". The user merged PR #9 themselves (DEC-013).
+was executed without being shown to the user for approval: work started on the DD approval ("the DD is approved, move
+on to the implementation"). Step 14 was authorized separately ("yes push it and open the PR"), and the user merged PR
+#9 themselves (DEC-013). The process gap is recorded in DEC-014 and fixed by RFC 0006.
 
 ## Accomplishments this period
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | Process correction after close-out: plan revision 2 had not been approved before execution; record corrected and harness rule added | [decisions.md](decisions.md) DEC-014, [RFC 0006](../../ai/improvements/0006-plan-revision-approved-before-work.md) |
 | 2026-09-22 | PR #9 squash-merged by the user as `8eab65f`; worktree and local stack removed | [decisions.md](decisions.md) DEC-013 |
 | 2026-09-22 | Plan revision 2 step 14: branch pushed, PR #9 opened, CI green on Backend, Frontend and E2E; one timing-dependent E2E assertion of mine failed in CI and was fixed at the cause | https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/9 |
 | 2026-09-22 | Plan revision 2 steps 11–13: TP-003 written, full local verification recorded, and the design-consistency, security-review and delivery checklists walked | [test-plan.md](test-plan.md), [evidence.md](evidence.md) |

@@ -5,7 +5,7 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | approved; complete; superseded by revision 2 | user message 2026-09-22: "approved, let move on to BD-002" |
-| 2 | 2026-09-22 | Implementation, tests, PR | **current** — approved; complete; PR #9 squash-merged (DEC-013) | user messages 2026-09-22: "the DD is approved, move on to the implementation"; "yes push it and open the PR" |
+| 2 | 2026-09-22 | Implementation, tests, PR | **current** — complete; PR #9 squash-merged (DEC-013). Never shown to the user for approval before execution (DEC-014) | none for the revision itself — work started on the DD approval, "the DD is approved, move on to the implementation"; step 14 on "yes push it and open the PR" (DEC-014) |
 
 ## Revision 1 — design phase
 
@@ -53,7 +53,7 @@ Produce the reconciled design set for Screen B — brief, BD-002, the DB-design 
 | 4 | Database design DB-003 | 3 | database-design | `docs/en/database/0003-production-order-list-queries.md` | Each filter and the default sort has a justified index; the query-plan argument is written down; migration impact and the demo-order seed (DEC-007) specified | done 2026-09-22 — DB-003: no schema change, two new indexes (+`pg_trgm`), sort-key mapping, 80-row seed, two migrations with recovery limits; DEC-010, DEC-011 recorded; BD-002 v2 reconciled |
 | 5 | Detailed design DD-002 + companions + mockup | 3, 4 | detailed-design, screen-design | `docs/en/020_detailed-design/DD-002-production-order-list.md`, `DD-002-API-…`, `DD-002-FN-…`, `DD-002-SPD-…`, rendered mockup | DD agrees with BD-002 and DB-003; the API contract covers every filter, sort field, paging parameter and its rejection case; test viewpoints cover every REQ | done 2026-09-22 — all four DD-002 documents written (19 test viewpoints TC-101–TC-119) plus the 7-state mockup, published privately with the user's authorization; message IDs renumbered after a collision with DD-001's catalog (BD-002 v3) |
 | 6 | Reconcile and close the design phase | 5 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision remains; user review of the design set | done 2026-09-22 — checklist passed at BD, DB and DD scope (one defect found and fixed: the message-ID collision); BD-002, DB-003 and the DD-002 set each approved by the user |
-| 7 | Draft plan revision 2 (implementation, tests, PR) | 6 | planning | `plan.md` revision 2 | Submitted for review; revision 1 closed in place per the plan-revision rule | done 2026-09-22 — revision 2 appended below |
+| 7 | Draft plan revision 2 (implementation, tests, PR) | 6 | planning | `plan.md` revision 2 | Submitted for review; revision 1 closed in place per the plan-revision rule | done 2026-09-22 — revision 2 appended below, but not submitted for review: implementation started straight away (DEC-014) |
 
 ### Roles and responsibilities
 
@@ -180,7 +180,7 @@ Implement SCR-002 end to end — database migrations, the list query endpoint, t
 
 ### Approval / sign-off
 
-- **Review status:** approved
-- **Approval source:** user messages 2026-09-22: "the DD is approved, move on to the implementation" (steps 1–13) and "yes push it and open the PR" (step 14)
+- **Review status:** not reviewed before execution (DEC-014). Corrected 2026-09-22; this line originally read "approved".
+- **Approval source:** none for this revision. Steps 1–13 were started on the design approval, "the DD is approved, move on to the implementation", which approved DD-002 and not this revision; the revision was not shown to the user first. Step 14 (push and PR) was authorized separately at execution: "yes push it and open the PR". The user accepted the result by merging PR #9 (DEC-013) and corrected the process afterwards (DEC-014, RFC 0006).
 - **Approved revision:** revision 2, 2026-09-22
 - **Closure:** steps 1–14 done 2026-09-22. PR #9 was squash-merged by the user as `8eab65f` (DEC-013) with all three CI jobs green, and the branch, worktree and local Compose stack were removed. Work item complete.

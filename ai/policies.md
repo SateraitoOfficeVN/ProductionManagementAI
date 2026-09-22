@@ -3,6 +3,7 @@
 ## Plan and authorization
 
 Create a plan for review before feature implementation. A direct request to create or edit a specified artifact authorizes that bounded work; do not require a second approval solely because this file exists.
+Every plan revision — the first one and each one that follows a completed phase — must be shown to the user and explicitly approved before any step it covers starts. Present the revision (objective, scope, steps, permitted actions, risks) and stop. Approving an earlier artifact or phase ("the DD is approved, move on to the implementation") authorizes drafting the next revision, not executing it. Record as a revision's approval source only a user message that responds to that revision after it was shown.
 For an approved plan, continue through its steps without repeated approvals. Record approval source and plan revision; do not invent approval.
 Plan approval covers only its scope and permitted actions. Merge, publishing, deployment and destructive data actions need authorization in the request or plan.
 

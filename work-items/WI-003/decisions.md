@@ -405,3 +405,35 @@ carried the whole work item: design set, implementation, migrations and tests.
 | --- | --- |
 | status.md, evidence.md, plan.md | Merge outcome recorded here, in the follow-up PR that also refreshes `ai/project.md` — this record could not be part of the PR it describes |
 | Branch, worktree, local stack | All removed after the merge |
+
+## DEC-014: Plan revision 2 was executed without being shown for approval
+
+### Context
+
+After the user approved the DD-002 set with "the DD is approved, move on to the implementation", the agent drafted plan
+revision 2 (implementation, tests, PR), appended it to `plan.md`, and started implementing in the same turn. The user
+never saw revision 2 before work under it began. The plan recorded that design approval as the revision's approval
+source and its review status as "approved", and revision 1's step 7 claimed revision 2 was "submitted for review".
+
+The harness allowed this reading: `ai/policies.md` said a direct request authorizes bounded work without a second
+approval, and nothing required a new plan revision to be presented and approved on its own.
+
+### Decision and rationale
+
+- **Decision:** correct the record, and change the harness so every plan revision is shown to the user and explicitly
+  approved before any of its steps start. Approving an earlier artifact or phase authorizes drafting the next revision,
+  not executing it.
+- **Decided by:** user, 2026-09-22 ("when we started the implementation you just started working on it with out
+  showing me the newly created plan revisions first and have me approved it first. correct this").
+- **Rationale:** the plan revision is where scope, permitted actions and risks are fixed. Approving a design says the
+  design is right; it does not say the implementation plan is. Skipping the review removes the user's chance to change
+  that plan before code is written.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| `plan.md` | Revision index, revision 1 step 7 and revision 2's sign-off corrected to say revision 2 was not reviewed before execution; the revision's content is unchanged (RFC 0002) |
+| `status.md` | Approved-plan reference corrected; timeline entry added |
+| `ai/policies.md`, `AGENTS.md`, `ai/workflows/feature-delivery.md`, `ai/templates/plan.md`, `ai/evaluations/baseline-cases.md` | Rule added, via [RFC 0006](../../ai/improvements/0006-plan-revision-approved-before-work.md) |
+| Delivered code (PR #9) | None. The user reviewed and merged it (DEC-013); this corrects the process, not the result |

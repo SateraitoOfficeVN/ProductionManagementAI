@@ -60,7 +60,7 @@ Revision {N}, {YYYY-MM-DD}. {If this supersedes a prior revision, state which an
 ### Approval / sign-off
 
 - **Review status:** {draft \| submitted for review \| approved \| rejected}
-- **Approval source:** {who/what approved it, e.g. user message, referenced request}
+- **Approval source:** {the user message that approved this revision after it was shown to them; approval of an earlier artifact or phase does not count (ai/policies.md)}
 - **Approved revision:** {revision number and date this authorization covers}
 - **Closure:** {filled in when this revision is completed or superseded: date, outcome, and which revision supersedes it}
 
