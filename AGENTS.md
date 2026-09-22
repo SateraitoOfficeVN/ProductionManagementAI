@@ -5,6 +5,6 @@ Select the workflow from [ai/workflows/README.md](ai/workflows/README.md), then 
 
 For an existing work item, read its brief, approved plan, status, decisions and evidence before editing. Inspect the repository state and preserve unrelated user changes.
 
-Create a reviewable plan before implementation. Existing explicit authorization remains valid; do not add redundant approvals for work already authorized. Continue within the approved scope and ask only at the defined stop conditions.
+Create a reviewable plan before implementation. Show every new plan revision to the user and wait for explicit approval of that revision before starting its steps; approval of a prior design or phase is not approval of the next revision. Existing explicit authorization remains valid; do not add redundant approvals for work already authorized. Continue within the approved scope and ask only at the defined stop conditions.
 
 Record actual verification results. Never report an unimplemented application, unrun test or unconfigured deployment as working. Native skill registration is not configured; read the referenced SKILL.md files directly.
