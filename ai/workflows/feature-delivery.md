@@ -9,5 +9,6 @@ Read [policies](../policies.md) and [project context](../project.md). Select app
 5. Implement and run unit/integration checks, then system/E2E verification.
 6. Review the diff, prepare the PR summary and execute only authorized external operations.
 7. Record evidence and remaining limitations; deploy/smoke only if included and authorized.
+8. After the PR merges, close out in one follow-up change: the work item's status, evidence and plan closure; `ai/project.md`; `CLAUDE.md`'s current-state section; and the root `README.md` (status list, "Next", and any CI, workflow or layout change the work item introduced).
 
 Use [templates](../templates/README.md) for durable state. Exit when the approved scope and its checks are complete; otherwise record the blocker and next action.
