@@ -151,6 +151,8 @@ Bring the reconciled design set up to date with DEC-016 (navbar on every screen)
 
 As in revision 1, the user reviews the amended design set before the design phase is closed.
 
+Addition 2026-09-22, within this revision: after mockup version 2 the user asked for icons ("please add icons so it more user friendly") and chose placement and source (DEC-023). It edits only this revision's in-scope artifacts — BD-003 (v3), DD-003 (v4) and the mockup (v3, republished to the same URL) — so it is handled as a direct request under this revision rather than a new one. The `lucide-react` dependency itself is added in plan revision 3.
+
 ### Roles and responsibilities
 
 | Role | Owner |

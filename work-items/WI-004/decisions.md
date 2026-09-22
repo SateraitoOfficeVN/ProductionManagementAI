@@ -28,6 +28,7 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-020 | 2026-09-22 | Health states, timeouts and endpoint | Claude (technical, during BD-003 v2) | decided | Server OK/Unreachable (5 s client timeout), Database OK/Unavailable/Unknown (`SELECT 1`, 2 s); `GET /api/system/health`, authenticated |
 | DEC-021 | 2026-09-22 | Whether SCR-001/SCR-002 keep their breadcrumbs next to the navbar | Claude (UI, during BD-003 v2) | decided | Kept — they show position, the navbar shows destinations; removing them would change both screens beyond their header |
 | DEC-022 | 2026-09-22 | Leaving an edited Screen A form through a navbar (or other in-app) link | user | decided | Ask first with the existing discard dialog, as Cancel does; implemented with a shared navigation guard, not a router migration |
+| DEC-023 | 2026-09-22 | Icons in the UI | user (mockup review) | decided | Icons in the navbar and actions, tiles, widget headings and states, and the health indicator, from `lucide-react` (ISC) — a new runtime dependency |
 
 ## DEC-001: Which current-state widgets the dashboard shows
 
@@ -540,3 +541,34 @@ Found while writing BD-001 v7: SCR-001's discard-changes confirmation (REQ-019, 
 | DD-001-SPD v2, DD-003 v3 | `NavigationGuard`, `GuardedLink` |
 | Plan revision 2 | Screen A gains this one behavior change beyond its header, by the user's decision |
 | Tests (revision 3) | Navbar and breadcrumb with a dirty form → dialog; Discard → destination |
+
+## DEC-023: Icons in the UI
+
+### Context
+
+Raised by the user after reviewing mockup version 2: "please add icons so it more user friendly". The frontend has no icon set; `ai/rules/frontend.md` forbids a component kit or another UI framework without a project decision, and plan revision 1 listed a new runtime dependency as a stop condition.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| `lucide-react` | Open source (ISC); one React component per icon, tree-shaken so only used icons ship; consistent 24-unit stroke style that suits the Tailwind gray look; has server and database glyphs | One new runtime dependency |
+| Hand-drawn inline SVG | No dependency | About 30 glyphs to draw and maintain; inconsistent |
+| `@heroicons/react` | MIT; from Tailwind Labs | No dedicated server/database glyphs |
+
+### Decision and rationale
+
+- **Decision:** icons in four places — the navbar and actions, the dashboard tiles, the widget headings and state messages, and the health indicator — using `lucide-react`, pinned at an exact version (1.47.0 at the time of design). The mapping is fixed in BD-003 M-21. Icons are decorative (`aria-hidden="true"`) next to visible text everywhere; icon-only controls (Expand, Restore, Menu) keep their accessible names. No state is carried by an icon alone.
+- **Decided by:** user, 2026-09-22 (placement: all four options; source: "lucide-react").
+- **Rationale:** faster recognition at a glance, without a component kit and without hand-maintained artwork. It is an icon library, not a component kit, so the stack rule's intent is kept; it is still a new dependency and is recorded as such.
+- **Scope:** handled inside plan revision 2 as a direct user request editing its in-scope artifacts (BD-003, DD-003, the mockup), not a new plan revision.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| BD-003 v3 | M-21 icon mapping; accessibility note |
+| DD-003 v4 | Dependency, `components/icons.ts` single import point |
+| Mockup v3 | Real Lucide glyphs inlined |
+| `ai/project.md` | Frontend stack gains `lucide-react` — updated when the dependency is actually added (plan revision 3) |
+| Screens A/B | Only through the shared header (navbar, Sign out, Menu); their own bodies are unchanged |

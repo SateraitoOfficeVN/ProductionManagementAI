@@ -41,7 +41,9 @@ Design columns are filled as each document is written; code and test columns sta
 | 2026-09-22 | Mockup v2 render check | one headless Edge full-page screenshot | local | pass — first capture blank (anchor jump before render, a capture issue), retaken without the anchor; one caption clarified | — |
 | 2026-09-22 | Mockup v2 published | Artifact republish, private, same URL | claude.ai | done — version 2, 11 artboards | DD-003 |
 | 2026-09-22 | design-consistency checklist (plan revision 2 amendments) | manual review | local | pass — walk below | this file |
-| 2026-09-22 | Amended design review | user review of BD-003 v2, BD-001 v7, BD-002 v4, the DD-003 set and mockup v2 | — | not run — awaiting user | — |
+| 2026-09-22 | Icons added (DEC-023) | BD-003 v3 M-21, DD-003 v4, mockup v3 with Lucide 1.47.0 glyphs inlined; one render check | local | pass | — |
+| 2026-09-22 | Mockup v3 published | Artifact republish, private, same URL | claude.ai | done — version 3 | DD-003 |
+| 2026-09-22 | Amended design review | user review of BD-003 v3, BD-001 v7, BD-002 v4, the DD-003 set and mockup v3 | — | not run — awaiting user | — |
 
 ## Design-consistency walk — BD-003 scope
 

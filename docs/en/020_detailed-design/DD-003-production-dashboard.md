@@ -13,7 +13,7 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-042.
 | System name | ProductionManagementAI |
 | Subsystem name | Production orders |
 | Work item | WI-004 |
-| Implements | BD-003 revision 2 |
+| Implements | BD-003 revision 3 |
 | Created by | Claude (for ThanhTN) |
 | Created date | 2026-09-22 |
 | Last updated by | Claude (for ThanhTN) |
@@ -24,6 +24,7 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-042.
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
 | 2 | 2026-09-22 | Claude (for ThanhTN) | Rendered mockup published and linked |
 | 3 | 2026-09-22 | Claude (for ThanhTN) | Plan revision 2 (mockup review): navbar in the shared header and the navigation guard (DEC-016, DEC-022), health indicator and its endpoint (DEC-017, DEC-019, DEC-020), chart maximize (DEC-018); page actions removed; test viewpoints TC-222–TC-227 added, TC-201/TC-202 updated |
+| 4 | 2026-09-22 | Claude (for ThanhTN) | Icons (DEC-023): `lucide-react` dependency and the `components/icons.ts` import point; mockup v3 |
 
 ## Overview and reference documents (概要・目次)
 
@@ -84,6 +85,8 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-042.
 | 2a | `src/frontend/src/components/` | `AppHeader.tsx` (extended), `AppNavbar.tsx`, `GuardedLink.tsx` | Shared by every screen (DEC-016) |
 | 2b | `src/frontend/src/lib/navigationGuard.tsx` | `NavigationGuardProvider`, `useNavigationGuard` | DEC-022 |
 | 2c | `src/frontend/src/features/dashboard/` | Also `HealthIndicator.tsx`, `useSystemHealth.ts`, `ChartDialog.tsx`, `systemApi.ts` | |
+| 2e | `src/frontend/src/components/icons.ts` | The only module importing `lucide-react`; re-exports the icons of BD-003 M-21 under role names (`NavDashboardIcon`, `StatusCompletedIcon`, …), so a glyph changes in one place | DEC-023 |
+| 2f | `src/frontend/package.json` | `lucide-react` pinned at an exact version (1.47.0 at design time; confirmed when installed) | DEC-023 |
 | 2d | `src/frontend/src/features/production-orders/ProductionOrderForm.tsx`, `ProductionOrderPage.tsx`, `ProductionOrderListPage.tsx` | The form registers with the guard; breadcrumb links become `GuardedLink` | DEC-022 |
 | 3 | `src/frontend/src/features/production-orders/messages.ts` | The single message catalog, extended with MSG-E021 and MSG-I005–MSG-I008 | Not a second catalog |
 | 4 | `src/backend/ProductionManagementAI.Api/Controllers/DashboardController.cs` | New controller | |
@@ -501,7 +504,7 @@ Implementation-fidelity layout. It refines BD-003 §1 in three ways. The two til
 +------------------------------------------------------------------------------------------+
 ```
 
-Mockup artifact: https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot — published privately on 2026-09-22 with the user's authorization ("public it privately"); version 2 republished to the same URL under plan revision 2 (step 7). Source: `docs/en/020_detailed-design/mockups/DD-003-screen-c-mockup.html`, which reuses DD-002's token system and app-look CSS verbatim, so the three mockups read as one set. Its figures are computed from DB-004's seed as it reads on a run day of 2026-09-22 (a Tuesday), not invented. Artboards (version 2 of the mockup, same URL): 1 ready (PC, with the navbar and a healthy indicator), 2 loading, 3 empty system, 4 no recent completions, 5 load error with the database unavailable, 6 forbidden, 7 SP layout with the menu closed, 8 SP menu open, 9 chart with its table, 10 maximized chart, 11 the navbar on SCR-002.
+Mockup artifact: https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot — published privately on 2026-09-22 with the user's authorization ("public it privately"); version 2 republished to the same URL under plan revision 2 (step 7), version 3 with the Lucide icons (DEC-023). Source: `docs/en/020_detailed-design/mockups/DD-003-screen-c-mockup.html`, which reuses DD-002's token system and app-look CSS verbatim, so the three mockups read as one set. Its figures are computed from DB-004's seed as it reads on a run day of 2026-09-22 (a Tuesday), not invented. Artboards (version 2 of the mockup, same URL): 1 ready (PC, with the navbar and a healthy indicator), 2 loading, 3 empty system, 4 no recent completions, 5 load error with the database unavailable, 6 forbidden, 7 SP layout with the menu closed, 8 SP menu open, 9 chart with its table, 10 maximized chart, 11 the navbar on SCR-002.
 
 | Region | Contains (field/control) | Notes |
 | --- | --- | --- |
@@ -627,6 +630,8 @@ Raw SQL is used for the snapshot's seven statements (DD-003-FN §3). That is a d
 
 ## Accessibility (WCAG 2.2 AA)
 
+Icons (DEC-023, BD-003 M-21) render through `components/icons.ts` with `aria-hidden="true"` and `focusable="false"`, 16 px, `currentColor`, always beside visible text or inside a control with its own accessible name.
+
 Stated in BD-003's non-functional requirements and made concrete in DD-003-SPD §3–§6. In summary: one `<h1>`, then `<h2>` per widget and `<h3>` per attention group; tiles are list items with label before value; the attention tables have captions and `scope="col"` headers; each chart is `role="img"` with a summarizing name, prints every value as text, and offers a real table; emphasis never relies on color alone; the SP chart scroller is keyboard-focusable and labelled; the navbar is a labelled `<nav>` with `aria-current` on the current entry and an SP Menu button with `aria-expanded` that closes on Escape; the health indicator is a polite `role="status"` region that announces changes only, with statuses in text and shape-coded dots; the maximized chart is a native modal `<dialog>` named by its title, with focus returned to Expand on close; loading is `aria-busy`, errors `role="alert"`, the finished load a polite status message. Automated checks: `vitest-axe` on the page in each state, and `@axe-core/playwright` on the running screen (TC-217).
 
 ## Test viewpoints and unresolved decisions
@@ -653,6 +658,7 @@ U = unit (xUnit Application/Domain, or Vitest + RTL), I = integration (`WebAppli
 | One snapshot (REQ-028, DEC-011, DEC-015) — I | Mixed data | Workload counts sum to draft + inProgress; overdue bucket = overdue `total`; the reader runs in a read-only `REPEATABLE READ` transaction — an EF Core transaction/command interceptor registered in the test host records a `RepeatableRead` isolation level and `SET TRANSACTION READ ONLY` before the first query, and all seven statements on that one transaction | TC-214 |
 | Empty system (REQ-028) — I, U(fe) | No orders | 200; all zeros; `averageDays` null; client shows MSG-I005–MSG-I008 and "—" per DD-003 states; no error | TC-215 |
 | Load failure and Retry (REQ-028) — U(fe), E | API returns 500 | Banner MSG-E013 with **Retry**, no figures; page actions usable; Retry re-requests and renders on success | TC-216 |
+| Icons decorative (DEC-023) — U | Each component with icons | Every Lucide `<svg>` has `aria-hidden="true"`; icon-only controls have an accessible name; no text is replaced by an icon | TC-228 |
 | Accessibility — U (axe), E (axe) | Each state | No axe violations; heading outline h1 → h2 → h3; each chart `role="img"` with a name listing every bar's value; **View as table** toggles `aria-expanded` and reveals a table with the same numbers; SP chart scroller focusable | TC-217 |
 | Demo seed figures (DB-004) — I | Fresh container, real clock, migrations only | 124 orders (35/25/56/8); every one of the 12 trend weeks ≥ 2; on time 23 of 30; lead time 13.7 over 30; every workload bucket non-zero; 10 top products; no negative lead time; next order number continues after the new seed | TC-218 |
 | Index usage (DB-004) — I | Seeded data, `ANALYZE` | `EXPLAIN` of Q3a uses `ix_production_orders_active_due_date`; Q5 uses `ix_production_orders_completed_at_utc` | TC-219 |

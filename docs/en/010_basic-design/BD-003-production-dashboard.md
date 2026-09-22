@@ -21,6 +21,7 @@
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation (Screen C, production dashboard; WI-004 DEC-001–DEC-012) |
 | 2 | 2026-09-22 | Claude (for ThanhTN) | Mockup review (brief revision 2): navbar in the shared header on every screen replaces page actions 5–6 (DEC-016); server/database health indicator, polled (DEC-017, DEC-019, DEC-020); chart maximize/restore (DEC-018); sketch figures updated to DB-004's seed; breadcrumbs kept (DEC-021) |
+| 3 | 2026-09-22 | Claude (for ThanhTN) | Icons (DEC-023): M-21 icon mapping from `lucide-react`; accessibility note; the shared header's links carry icons |
 
 ## System overview
 
@@ -164,7 +165,7 @@ The header (`AppHeader`) is shared by SCR-001, SCR-002 and SCR-003 and is not sh
 ```
 PC (≥ 640px)
 +----------------------------------------------------------------------------------------------+
-| (H-1) ProductionManagementAI   (H-2) Dashboard | Production orders | [+ New production order]   (H-3) Admin  Sign out |
+| (H-1) ProductionManagementAI   (H-2) ▦ Dashboard | ☰ Production orders | [+ New production order]   (H-3) Admin  ⇥ Sign out |
 +----------------------------------------------------------------------------------------------+
 
 SP (< 640px)
@@ -398,7 +399,22 @@ Message and mapping IDs continue the catalogs of BD-001/BD-002: M-11 onward, MSG
 | M-17 | (4) Snapshot time | Snapshot UTC timestamp | Plant-local date and time `YYYY-MM-DD HH:mm (Asia/Tokyo)` — the same zone the figures were computed in, so "today" on the screen and in the figures always agree | |
 | M-18 | (12)(13) completed tiles, (7–11)(20)(22) quantities | Count, quantity sum | "{count} orders" with "{quantity} units" beneath; numbers use thousands separators | REQ-034 |
 | M-19 | (17)(19) shown note | Group total | "Showing 10 of {total}" when total > 10; hidden otherwise | REQ-030 |
+| M-21 | Icons (DEC-023) | Element | Lucide icon, 16 px, `currentColor`, `aria-hidden` next to its visible text — see the table below | usability |
 | M-20 | (26) Health indicator | Server and database status (HS-01–HS-05), last-check time | "Server: OK" / "Server: Unreachable"; "Database: OK" / "Database: Unavailable" / "Database: Unknown"; "Checked {HH:mm:ss}" in plant time. Each status has a dot whose shape also differs (filled ● for OK, hollow ○ for Unknown, ✕ for a failure), so the state never rests on color alone | REQ-041 |
+
+Icon mapping (M-21). Each icon sits before its text; none replaces text, and none carries a state on its own:
+
+| Element | Lucide icon | Where |
+| --- | --- | --- |
+| Navbar: Dashboard / Production orders / New production order | `LayoutDashboard` / `ClipboardList` / `Plus` | BD-003 H-2, H-5 |
+| Sign out; Menu / Close (SP) | `LogOut`; `Menu` / `X` | H-3, H-4 |
+| Expand / Restore | `Maximize2` / `Minimize2` | items 27, 29 |
+| Retry; View as table / Hide table | `RotateCw`; `Table2` | item 6a; items 21, 24 |
+| Status tiles: Total, Draft, In progress, Completed, Cancelled | `Layers`, `FilePenLine`, `Clock`, `CircleCheck`, `CircleX` | items 7–11 |
+| Delivery tiles: this week, this month, on time, lead time | `CalendarCheck`, `CalendarDays`, `Target`, `Timer` | items 12–15 |
+| Widget headings: Needs attention, Overdue, Due soon, Top products, Workload, Trend | `TriangleAlert`, `AlarmClock`, `CalendarClock`, `Package`, `ChartColumn`, `TrendingUp` | items 16, 18, 20, 22, 23 |
+| States: empty / "none" messages, load error, forbidden | `Inbox`, `CircleAlert`, `ShieldX` | MSG-I005–I008, MSG-E013, MSG-E021 |
+| Health: server, database | `Server`, `Database` (beside the shape-coded status dots) | item 26 |
 
 #### 5. Validation rules
 
@@ -471,6 +487,7 @@ None — only this application's own backend API.
 - **Security:** the role check gates the dashboard endpoint and the health endpoint server-side (REQ-038, REQ-041). The health endpoint returns only fixed status values and a timestamp — no version, host name, connection string, latency figure or exception text — and its failures are logged server-side only. It never renews the sign-in session (DEC-019), so leaving a dashboard open does not keep a login alive. The existing anonymous `/health` (container liveness) is unchanged and still checks no database. The endpoint takes no parameters, so there is no input to validate or bind; every window is a server constant. It returns aggregates plus at most 20 order rows, never an unbounded set. No figure is PII or a secret. The completion time is written only by the server during SCR-001's save and is never accepted from a request (REQ-033). CSRF is not a concern for this read-only `GET`; the WI-002 posture is unchanged (WI-002 DEC-020).
 - **Consistency:** all figures come from one snapshot (DEC-011), so a reviewer can cross-check them — the tiles sum to the total; the workload bars sum to Draft + In progress; the Completed tile is at least the completed-this-month count.
 - **Accessibility (WCAG 2.2 AA, `ai/rules/frontend.md`):** each widget is a titled region (`section` with a heading) so the page can be navigated by headings; tile values are text, not images; each chart is an SVG with `role="img"` and an accessible name summarizing it (e.g. "Open workload by due week: 15 overdue, 9 this week, … 5 later"), every bar carries its value as visible text, and a **View as table** disclosure exposes a real `<table>` with the same figures (DEC-010); bars never rely on color alone; the attention lists are real tables with captions on PC; the loading state and the error banner are announced; the navbar is a labelled `<nav>` whose current entry carries `aria-current="page"`, and its SP menu button reports `aria-expanded` and closes on Escape; the health indicator is a polite live region that announces changes, not repeats, and states status in text with a shape-coded dot; the maximized chart is a modal dialog (focus contained, Escape closes, focus returns to Expand, title as its accessible name); contrast meets AA for text and for bars against their background (non-text contrast 3:1).
+- **Icons (DEC-023):** Lucide glyphs are decorative (`aria-hidden="true"`) beside visible text; icon-only controls keep their accessible names; icon color follows the text and meets 3:1 non-text contrast; no status is shown by an icon alone.
 - **Performance:** one snapshot request per load, plus one health request every 30 seconds while the tab is visible, each running one `SELECT 1` with a 2-second timeout; a bounded number of aggregate queries on the server, each index-backed or cheap at the expected volume (DB-004). Demo target: the dashboard rendered well within a second on the seeded data.
 - **Observability:** the endpoint is traced and logged per project defaults, as BD-001's and BD-002's are; exact spans and metrics in DD-003-FN.
 - **Time:** every date boundary uses the plant clock (`Asia/Tokyo`), never the server's or the browser's zone; tests pin the clock to exercise week, month and 30-day boundaries.

@@ -22,6 +22,7 @@ amendment) was approved; its steps 1–7 are done and the amended design set awa
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | Icons (DEC-023, user): BD-003 v3, DD-003 v4, mockup v3 republished | https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
 | 2026-09-22 | Plan revision 2 steps 1–7: BD-003 v2, BD-001 v7, BD-002 v4, DD-003 set v2/v3, DD-001-SPD v2, DD-002-SPD v2, mockup v2 republished; DEC-019 and DEC-022 decided by the user, DEC-020 and DEC-021 recorded | [evidence.md](evidence.md), https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
 | 2026-09-22 | Mockup review by the user: DEC-016 (navbar), DEC-017 (health indicator), DEC-018 (chart maximize); brief revision 2 and plan revision 2 drafted | [decisions.md](decisions.md), [plan.md](plan.md) |
 | 2026-09-22 | Mockup published privately | https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
@@ -46,4 +47,4 @@ PR) for its own approval.
 
 ## Next action
 
-User review of the amended design set (BD-003 v2, BD-001 v7, BD-002 v4, DD-003 set, mockup v2).
+User review of the amended design set (BD-003 v3, BD-001 v7, BD-002 v4, DD-003 set, mockup v3).
