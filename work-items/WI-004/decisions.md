@@ -30,6 +30,7 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-022 | 2026-09-22 | Leaving an edited Screen A form through a navbar (or other in-app) link | user | decided | Ask first with the existing discard dialog, as Cancel does; implemented with a shared navigation guard, not a router migration |
 | DEC-023 | 2026-09-22 | Icons in the UI | user (mockup review) | decided | Icons in the navbar and actions, tiles, widget headings and states, and the health indicator, from `lucide-react` (ISC) — a new runtime dependency |
 | DEC-024 | 2026-09-22 | How the dashboard reader runs its SQL; the health code's namespace | Claude (technical, during implementation) | decided | ADO.NET commands on the EF connection and transaction with bound parameters, instead of `SqlQuery<T>`; namespace `Health`, not `System` |
+| DEC-025 | 2026-09-22 | How the health path is kept from renewing the session | Claude (technical, during implementation) | decided | Suppress renewal both in sliding expiration and after Identity's security-stamp revalidation in `OnValidatePrincipal`; the stamp is still validated |
 
 ## DEC-001: Which current-state widgets the dashboard shows
 
@@ -586,3 +587,16 @@ Found while implementing plan revision 3, steps 3–4.
 - **Namespace:** DD-003 X-1 row 6a named `Application/System` and `Infrastructure/System`. A namespace `ProductionManagementAI.Application.System` would shadow .NET's `System` namespace inside it, so the folders and namespace are `Health`. DD-003 X-1 was updated.
 - **Decided by:** Claude, 2026-09-22 (technical; no behavior change).
 - **Verified:** a local smoke run against the migrated Compose database returned exactly DB-004's predicted figures; the integration tests (TC-203–TC-214) cover the reader.
+
+## DEC-025: Keeping the health poll from renewing the session
+
+### Context
+
+Found by TC-225 during plan revision 3, step 8. DD-003-FN §7 suppressed renewal only in `OnCheckSlidingExpiration`. The test showed the cookie was still reissued on a health request made 8 days after sign-in. The cause is ASP.NET Core Identity's security-stamp validator: it runs in `OnValidatePrincipal` once its 30-minute interval has passed, and on success it replaces the principal and sets `ShouldRenew = true`. That happens before the sliding-expiration check, so the hook alone could not honour DEC-019.
+
+### Decision and rationale
+
+- **Decision:** keep the sliding-expiration hook, and also wrap Identity's `OnValidatePrincipal`: run the security-stamp validation unchanged, then set `ShouldRenew = false` when the path is the health path. A revoked or changed stamp still rejects the request; only the reissue of the cookie is suppressed. Every other path is unchanged.
+- **Decided by:** Claude, 2026-09-22 (technical: the only way to implement the user's DEC-019 as stated; no behavior change beyond it).
+- **Verified:** TC-225 now passes. A health request 8 days after sign-in returns no `Set-Cookie`; a dashboard request at the same moment does.
+- **Documents:** DD-003-FN §7 updated in the same change.

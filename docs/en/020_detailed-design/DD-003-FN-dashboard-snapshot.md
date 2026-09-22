@@ -22,6 +22,7 @@ DD-003-FN — used by DD-003 and DD-003-API, requirements REQ-028–REQ-042.
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
 | 2 | 2026-09-22 | Claude (for ThanhTN) | §6 `SystemHealthService.CheckAsync` and `IDatabasePing` (DEC-017, DEC-020); §7 the no-renew rule for the health path (DEC-019); observability extended |
 | 3 | 2026-09-22 | Claude (for ThanhTN) | Implementation alignment (WI-004 DEC-024): §3 runs its statements through ADO.NET commands on the EF connection/transaction instead of `SqlQuery<T>`; health code in the `Health` namespace |
+| 4 | 2026-09-22 | Claude (for ThanhTN) | §7: renewal also suppressed after security-stamp revalidation (WI-004 DEC-025, found by TC-225) |
 
 ## Overview and method index
 
@@ -294,7 +295,7 @@ Processing overview: the port `IDatabasePing.PingAsync(ct)` is implemented by `D
 | Created by / date | Claude / 2026-09-22 |
 | Last modified by / date | — |
 
-Processing overview: in `ConfigureApplicationCookie`, alongside the existing `OnRedirectToLogin`/`OnRedirectToAccessDenied` handlers, add `Events.OnCheckSlidingExpiration = ctx => { if (ctx.HttpContext.Request.Path.StartsWithSegments("/api/system/health")) ctx.ShouldRenew = false; return Task.CompletedTask; }`. Nothing else in the cookie configuration changes: expiry, sliding for every other path, `HttpOnly`, `SameSite=Lax`. The path is a constant shared with the controller's route, so the two cannot drift apart. Verified by TC-225 with the cookie handler's `TimeProvider` advanced past half the lifetime.
+Processing overview: a cookie can be renewed from two places, so both are covered (WI-004 DEC-025). In `ConfigureApplicationCookie`, alongside the existing `OnRedirectToLogin`/`OnRedirectToAccessDenied` handlers: (1) `Events.OnCheckSlidingExpiration` sets `ShouldRenew = false` for the health path; (2) Identity's `Events.OnValidatePrincipal` (the security-stamp validator, which renews after its 30-minute interval) is wrapped — it runs unchanged, then `ShouldRenew = false` for the health path, so a revoked session is still rejected. Nothing else in the cookie configuration changes: expiry, sliding for every other path, `HttpOnly`, `SameSite=Lax`. The path is a constant shared with the controller's route, so the two cannot drift apart. Verified by TC-225 with the cookie handler's `TimeProvider` advanced past half the lifetime.
 
 ## Observability
 
