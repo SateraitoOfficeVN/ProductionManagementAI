@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
+import { GuardedLink } from '../../components/GuardedLink'
 import { ApiError } from '../../lib/apiClient'
 import { useAuth } from '../auth/useAuth'
 import { listOrders, listProducts } from './api'
@@ -128,9 +129,9 @@ export function ProductionOrderListPage() {
       <main className="mx-auto grid max-w-5xl gap-4 px-4 pt-6 pb-10 sm:px-6">
         <nav aria-label="Breadcrumb" className="text-sm text-gray-500">
           {/* Always underlined, not only on hover: a link inside a line of text must not rely on colour (WCAG 1.4.1). */}
-          <Link to="/" className="text-gray-700 underline underline-offset-4">
+          <GuardedLink to="/" className="text-gray-700 underline underline-offset-4">
             Home
-          </Link>
+          </GuardedLink>
           <span aria-hidden="true"> › </span>
           Production orders
         </nav>

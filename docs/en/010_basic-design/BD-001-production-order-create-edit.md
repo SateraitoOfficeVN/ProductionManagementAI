@@ -15,7 +15,7 @@
 | Created by | Claude (for ThanhTN) |
 | Created date | 2026-09-18 |
 | Last updated by | Claude (for ThanhTN) |
-| Last updated date | 2026-09-18 |
+| Last updated date | 2026-09-22 |
 
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
@@ -24,6 +24,8 @@
 | 3 | 2026-09-18 | Claude (for ThanhTN) | DEC-017–DEC-020: plant timezone `Asia/Tokyo`; Cancel confirmation when edited (REQ-019, items 17–19, E-07/E-09); 30 seeded products; CSRF approach decided |
 | 4 | 2026-09-18 | Claude (for ThanhTN) | Aligned with DD-001: quantity upper bound (V-02, DEC-024) |
 | 5 | 2026-09-22 | Claude (for ThanhTN) | Screen B exists (WI-003): the screen's entry point and every exit that used to lead to the home page now lead to the production-order list |
+| 6 | 2026-09-22 | Claude (for ThanhTN) | Completion tracking for Screen C (WI-004 REQ-033, DEC-002/DEC-003): saving `InProgress → Completed` records the completion time (FN-006, Actions and business rules, Data design overview). No visible change to SCR-001 |
+| 7 | 2026-09-22 | Claude (for ThanhTN) | WI-004 (DEC-016, DEC-021): the shared header now carries the application navbar specified in BD-003 "Shared application header"; items 1–2 point to it. The breadcrumb stays. WI-004 DEC-022: the discard-changes confirmation (FN-009, dialog 17) now also guards leaving an edited form through any in-app link — navbar, breadcrumb, app name — not only Cancel (E-07a); Discard then goes to that link's destination. No field, rule, validation or API changes |
 
 ## System overview
 
@@ -55,10 +57,10 @@ Uses the confirmed stack (`ai/project.md`): a React (Vite + TypeScript + Tailwin
 | FN-003 | Load production order | Fetch an existing order for display in edit mode | REQ-011 |
 | FN-004 | List products | Provide the product choices for the product dropdown | REQ-015 |
 | FN-005 | Validate order input | Enforce product, quantity, due date and notes rules (client for feedback, server authoritative) | REQ-013, REQ-014, REQ-015, REQ-016 |
-| FN-006 | Enforce status transitions | Allow only the defined state-machine edges | REQ-017 |
+| FN-006 | Enforce status transitions | Allow only the defined state-machine edges; on `InProgress → Completed`, record the completion time (WI-004 FN-021) | REQ-017; WI-004 REQ-033 |
 | FN-007 | Enforce field lock by status | Reject product/quantity changes once the order is not `Draft` | REQ-018 |
 | FN-008 | Enforce authentication and role | Reject unauthenticated (401) and non-Admin/Operator (403) requests | REQ-012 |
-| FN-009 | Confirm discard on Cancel | Ask before discarding unsaved changes | REQ-019 |
+| FN-009 | Confirm discard on leaving | Ask before discarding unsaved changes, whether the user leaves by Cancel or by an in-app link (WI-004 DEC-022) | REQ-019 |
 
 ## Actors and business flow
 
@@ -191,8 +193,8 @@ Layout-level sketch only; the rendered per-state mockup belongs in DD-001.
 
 | Item No. | Region / element | Notes (behavior, condition) |
 | --- | --- | --- |
-| 1 | App header / name | Common app header |
-| 2 | Signed-in user + Sign out | Common app header (WI-001 behavior) |
+| 1 | App header with navbar | Shared application header, specified once in BD-003 "Shared application header" (H-1–H-5, E-29–E-31, WI-004 DEC-016): app name, navbar (Dashboard, Production orders, New production order; current entry marked), user and Sign out, a Menu on SP. Current entry here: New production order on create mode; Production orders on edit mode |
+| 2 | Signed-in user + Sign out | Shared header (BD-003 H-3; WI-001 behavior unchanged) |
 | 3 | Breadcrumb | Last segment "New" (create) or the order number (edit) |
 | 4 | Page heading | Text by mode, same as 0-2-1 minus the app suffix |
 | 5 | Message banner | Hidden unless there is a success or form-level error message; announced to assistive tech |
@@ -225,7 +227,7 @@ Layout-level sketch only; the rendered per-state mockup belongs in DD-001.
 +------------------------------+
 ```
 
-Same item numbers as PC. Differences: single column; quantity and due date stacked; buttons full width, Save above Cancel; breadcrumb collapses to a back link.
+Same item numbers as PC. Differences: single column; quantity and due date stacked; buttons full width, Save above Cancel; breadcrumb collapses to a back link; the navbar collapses behind the header's Menu button (BD-003 H-4, H-5).
 
 #### 2. Content block definition (CMS)
 
@@ -290,7 +292,8 @@ Client-side checks give early feedback; the server repeats every check and is au
 | E-06 | (16) Save — failure | response | Field errors → inline under each field; form-level errors (transition, lock, not found, server error) → error banner (5); 401 → `/login`; entered values are kept | Exception flows |
 | E-07 | (15) Cancel | click | If any field differs from the loaded (edit) or initial (create) values, open dialog 17. Otherwise navigate to `/production-orders` (SCR-002) without saving | REQ-019, DEC-018 |
 | E-08 | (7) Status | change | Only selectable options per M-02; no immediate save — takes effect on Save | DEC-008 |
-| E-09 | (18) Discard / (19) Keep editing | click / Escape | Discard: close the dialog and navigate to `/production-orders` without saving. Keep editing or Escape: close the dialog, return focus to Cancel, keep all values | REQ-019 |
+| E-07a | Navbar, breadcrumb or app-name link | click / Enter | If the form has unsaved changes (as E-07), cancel the navigation and open dialog 17, remembering the link's destination. Otherwise navigate normally. Browser Back, reload and closing the tab are not guarded (unchanged; WI-004 DEC-022) | REQ-019; WI-004 DEC-022 |
+| E-09 | (18) Discard / (19) Keep editing | click / Escape | Discard: close the dialog and navigate — to the remembered destination when opened by E-07a, otherwise to `/production-orders` — without saving. Keep editing or Escape: close the dialog, return focus to Cancel, keep all values | REQ-019 |
 
 #### 7. External identity linkage
 
@@ -304,8 +307,9 @@ None — no external identity linkage.
 | Create order | Save in create mode | All V-01–V-05 pass; order gets a system-generated unique order number `PO-YYYY-NNNNN` (year of creation in the `Asia/Tokyo` plant timezone, sequence restarts yearly — DEC-012) and status `Draft`; created/updated timestamps set | REQ-010, REQ-013–REQ-016 |
 | Edit order | Save in edit mode | Applicable V-01–V-08 pass; only editable fields for the saved status are changed; updated timestamp set | REQ-011, REQ-013–REQ-018 |
 | Change status | Save with a different status | Only `Draft→InProgress`, `Draft→Cancelled`, `InProgress→Completed`, `InProgress→Cancelled` | REQ-017 |
+| Record completion | Save of `InProgress→Completed` | The order's completion time is set to the time of this save, in the same save as the status change; server-set, never entered or shown on SCR-001, never changed afterwards (`Completed` is terminal). A rejected save records nothing. Consumed by the dashboard, SCR-003 (BD-003) | WI-004 REQ-033 |
 | Change product/quantity | Save in edit mode | Allowed only while saved status is `Draft`; otherwise the whole request is rejected | REQ-018, DEC-007 |
-| Cancel | Cancel button | Unsaved changes are discarded only after the user confirms | REQ-019, DEC-018 |
+| Cancel / leave | Cancel button, or any in-app link | Unsaved changes are discarded only after the user confirms | REQ-019, DEC-018; WI-004 DEC-022 |
 
 ## Success and exception flows
 
@@ -325,7 +329,7 @@ None — no external identity linkage.
 
 ## Data design overview
 
-- **ProductionOrder** — order number (system-generated, unique, `PO-YYYY-NNNNN`), reference to exactly one Product, quantity, due date, status (`Draft`/`InProgress`/`Completed`/`Cancelled`), notes, created/updated timestamps.
+- **ProductionOrder** — order number (system-generated, unique, `PO-YYYY-NNNNN`), reference to exactly one Product, quantity, due date, status (`Draft`/`InProgress`/`Completed`/`Cancelled`), notes, created/updated timestamps, and the completion time — present exactly when the status is `Completed` (added by WI-004, DB-004).
 - **Product** — name, SKU; a minimal reference table seeded with 30 sample products, no catalog UI (DEC-005, DEC-019).
 
 Relationship: many ProductionOrders → one Product (required). Column types, keys, constraints and order-number generation belong to the database-design document.

@@ -7,14 +7,14 @@ namespace ProductionManagementAI.Integration.Tests.ProductionOrders;
 
 /// <summary>
 /// DD-002 test viewpoints at integration level (I): real HTTP pipeline, real PostgreSQL, app running as pmai_app,
-/// against the 80 seeded demo orders (DB-003). Assertions are on counts, statuses and offsets from today — never on
+/// against the 124 seeded demo orders (80 from DB-003, 44 more from DB-004). Assertions are on counts, statuses and offsets from today — never on
 /// absolute dates, because the seed's due dates are relative to the migration's run date (DEC-011).
 /// Its own fixture, so the seeded data isn't disturbed by orders other test classes create.
 /// </summary>
 public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : IClassFixture<IntegrationTestFixture>
 {
     private const string Orders = "/api/production-orders";
-    private const int SeededOrders = 80;
+    private const int SeededOrders = 124; // DB-003's 80 + DB-004's 44 (WI-004 DEC-013, DEC-014)
 
     private static async Task<JsonObject> ListAsync(HttpClient client, string query = "")
     {
@@ -115,8 +115,8 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
         Assert.All(
             Items(active),
             item => Assert.Contains(item!["status"]!.GetValue<string>(), new[] { "Draft", "InProgress" }));
-        Assert.Equal(32, drafts["total"]!.GetValue<int>());
-        Assert.Equal(56, active["total"]!.GetValue<int>());
+        Assert.Equal(35, drafts["total"]!.GetValue<int>());
+        Assert.Equal(60, active["total"]!.GetValue<int>());
         Assert.Equal(SeededOrders, all["total"]!.GetValue<int>());
 
         // A repeated value collapses rather than duplicating rows.
@@ -231,9 +231,22 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
     {
         using var client = await fixture.CreateClientAsAsync("Admin");
 
-        var byNumber = OrderNumbers(await ListAsync(client, "sort=orderNumber&pageSize=100"));
+        // Every page, both directions: the seed (124 since WI-004) is larger than one page.
+        async Task<string[]> AllPages(string query)
+        {
+            var all = new List<string>();
+            for (var page = 1; ; page++)
+            {
+                var numbers = OrderNumbers(await ListAsync(client, $"{query}&pageSize=100&page={page}"));
+                if (numbers.Length == 0) return [.. all];
+                all.AddRange(numbers);
+            }
+        }
+
+        var byNumber = await AllPages("sort=orderNumber");
+        Assert.Equal(SeededOrders, byNumber.Length);
         Assert.Equal(byNumber.Order(StringComparer.Ordinal), byNumber);
-        Assert.Equal(byNumber.Reverse(), OrderNumbers(await ListAsync(client, "sort=orderNumber&dir=desc&pageSize=100")));
+        Assert.Equal(byNumber.Reverse(), await AllPages("sort=orderNumber&dir=desc"));
 
         var quantities = Items(await ListAsync(client, "sort=quantity&pageSize=100"))
             .Select(item => item!["quantity"]!.GetValue<int>()).ToArray();
@@ -261,7 +274,7 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
         using var client = await fixture.CreateClientAsAsync("Admin");
 
         var collected = new List<string>();
-        for (var page = 1; page <= 8; page++)
+        for (var page = 1; page <= (SeededOrders + 9) / 10; page++)
         {
             collected.AddRange(OrderNumbers(await ListAsync(client, $"pageSize=10&page={page}")));
         }

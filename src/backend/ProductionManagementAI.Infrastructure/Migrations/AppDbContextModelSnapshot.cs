@@ -409,6 +409,10 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<DateTimeOffset?>("CompletedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at_utc");
+
                     b.Property<DateTimeOffset>("CreatedAtUtc")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -487,8 +491,20 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_production_orders_order_year_order_seq");
 
+                    b.HasIndex(new[] { "DueDate", "OrderNumber" }, "ix_production_orders_active_due_date")
+                        .HasDatabaseName("ix_production_orders_active_due_date")
+                        .HasFilter("status IN ('Draft', 'InProgress')");
+
+                    b.HasIndex(new[] { "CompletedAtUtc" }, "ix_production_orders_completed_at_utc")
+                        .HasDatabaseName("ix_production_orders_completed_at_utc")
+                        .HasFilter("completed_at_utc IS NOT NULL");
+
                     b.ToTable("production_orders", null, t =>
                         {
+                            t.HasCheckConstraint("ck_production_orders_completed_at_matches_status", "(status = 'Completed') = (completed_at_utc IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_production_orders_completed_at_not_before_created", "completed_at_utc IS NULL OR completed_at_utc >= created_at_utc");
+
                             t.HasCheckConstraint("ck_production_orders_order_seq_range", "order_seq BETWEEN 1 AND 99999");
 
                             t.HasCheckConstraint("ck_production_orders_order_year_range", "order_year BETWEEN 2000 AND 9999");

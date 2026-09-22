@@ -1,3 +1,7 @@
+using ProductionManagementAI.Application.Dashboard;
+using ProductionManagementAI.Application.Health;
+using ProductionManagementAI.Infrastructure.Dashboard;
+using ProductionManagementAI.Infrastructure.Health;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -48,6 +52,28 @@ public static class DependencyInjection
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Task.CompletedTask;
             };
+            // WI-004 DEC-019/DEC-025: the dashboard's 30-second health poll must not keep a session alive. A cookie is
+            // renewed from two places — sliding expiration, and Identity's security-stamp revalidation (every 30 min)
+            // in OnValidatePrincipal — so both are suppressed for the health path. The stamp is still validated there,
+            // so a revoked session is still rejected. Every other request renews as before.
+            options.Events.OnCheckSlidingExpiration = context =>
+            {
+                if (IsHealthPoll(context.HttpContext))
+                {
+                    context.ShouldRenew = false;
+                }
+
+                return Task.CompletedTask;
+            };
+            var validateSecurityStamp = options.Events.OnValidatePrincipal;
+            options.Events.OnValidatePrincipal = async context =>
+            {
+                await validateSecurityStamp(context);
+                if (IsHealthPoll(context.HttpContext))
+                {
+                    context.ShouldRenew = false;
+                }
+            };
             options.Events.OnRedirectToAccessDenied = context =>
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -73,6 +99,13 @@ public static class DependencyInjection
         services.AddScoped<IProductionOrderRepository, ProductionOrderRepository>();
         services.AddScoped<IOrderNumberIssuer, OrderNumberIssuer>();
 
+        // Dashboard and health (DD-003-FN).
+        services.AddScoped<IDashboardReader, DashboardReader>();
+        services.AddScoped<IDatabasePing, DatabasePing>();
+
         return services;
     }
+
+    private static bool IsHealthPoll(HttpContext context) =>
+        context.Request.Path.StartsWithSegments(SystemHealthService.HealthPath);
 }

@@ -4,6 +4,8 @@
 
 DB-002 — requirements REQ-010–REQ-018 (`work-items/WI-002/brief.md`), basic design BD-001 (`docs/en/010_basic-design/BD-001-production-order-create-edit.md`), implements DD-001 and DD-001-API (`docs/en/020_detailed-design/`).
 
+Extended by DB-004 (`0004-completion-tracking-and-dashboard-queries.md`, WI-004): `production_orders` gains `completed_at_utc` and two check constraints. The table definition below is DB-002's and is not rewritten; read DB-004 alongside it.
+
 Physical naming follows DB-001: `snake_case` tables and columns (`EFCore.NamingConventions`, `UseSnakeCaseNamingConvention()` in `DependencyInjection.cs`), `uuid` surrogate keys defaulting to `gen_random_uuid()`, `timestamptz` UTC timestamps suffixed `_utc`, and constraint names in the `pk_`/`fk_`/`ix_`/`ck_` style EF Core generates.
 
 ## Table list

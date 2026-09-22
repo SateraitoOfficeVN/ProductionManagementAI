@@ -15,11 +15,12 @@ DD-001-API — supports DD-001; handlers designed in DD-001-FN; requirements REQ
 | Created by | Claude (for ThanhTN) |
 | Created date | 2026-09-18 |
 | Last updated by | Claude (for ThanhTN) |
-| Last updated date | 2026-09-18 |
+| Last updated date | 2026-09-22 |
 
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-18 | Claude (for ThanhTN) | Initial creation |
+| 2 | 2026-09-22 | Claude (for ThanhTN) | Reviewed for WI-004 REQ-033: no contract change. The completion time is not added to `ProductionOrderResponse` (Screen A does not show it) and is not accepted in any request; the request DTOs have no such property, so a client-sent field of that name binds to nothing |
 
 ## Overview and operation catalog
 

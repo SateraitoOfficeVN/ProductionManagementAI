@@ -15,12 +15,13 @@ DD-001-FN — used by DD-001 and DD-001-API (and later by Screen B's list DD), r
 | Created by | Claude (for ThanhTN) |
 | Created date | 2026-09-18 |
 | Last updated by | Claude (for ThanhTN) |
-| Last updated date | 2026-09-18 |
+| Last updated date | 2026-09-22 |
 
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-18 | Claude (for ThanhTN) | Initial creation. Moves DD-001 revision 1's modules 3–5 (service, plant clock, order-number issuer) into this document |
 | 2 | 2026-09-18 | Claude (for ThanhTN) | Aligned with implementation (plan revision 2): generated values come back via RETURNING instead of a re-read; the loaded `xmin` is the concurrency original; `AllowedNext()` is an extension method |
+| 3 | 2026-09-22 | Claude (for ThanhTN) | WI-004 REQ-033: UpdateAsync step 7 records the completion time through the entity; no new step, no new failure path |
 
 ## Overview and method index
 
@@ -224,7 +225,7 @@ Processing overview: the check order is fixed, so each failure has exactly one o
 | 4 | `FindAsync(id, tracked: true)`; missing → `NotFound` (`updated{outcome=not_found}`) | repository |
 | 5 | `request.Version != order.RowVersion` → `Conflict` (`updated{outcome=conflict}`, log `ProductionOrderConcurrencyConflict`) | — |
 | 6 | Remember `fromStatus`, `dueDateChanged = request.DueDate != order.DueDate`, `productChanged = request.ProductId != order.ProductId` | — |
-| 7 | `order.Update(productId, quantity, dueDate, notes, status, utcNow)`; catch `DomainRuleViolation(code)` → `RuleViolation(code)` (`updated{outcome=rule_violation}`, log `ProductionOrderRuleViolated`). The entity is unchanged when it throws | Domain (DD-001 module 1) |
+| 7 | `order.Update(productId, quantity, dueDate, notes, status, utcNow)`; catch `DomainRuleViolation(code)` → `RuleViolation(code)` (`updated{outcome=rule_violation}`, log `ProductionOrderRuleViolated`). The entity is unchanged when it throws. On `InProgress → Completed` the entity also sets `CompletedAtUtc = utcNow` (DD-001 module 1 step 5, WI-004 REQ-033); if a later step fails, nothing is saved, so no completion time is recorded | Domain (DD-001 module 1) |
 | 8 | If `productChanged`: `ProductExistsAsync` (MSG-E002). If `dueDateChanged`: `DueDate < IPlantClock.Today` → MSG-E005 (DEC-009). Errors → `Invalid`; the tracked changes are discarded (the context is request-scoped and not saved) | repository; `IPlantClock` |
 | 9 | `SaveChangesAsync`. EF adds `WHERE xmin = @original`, where the original is the `xmin` loaded in step 4 (already checked equal to `request.Version` in step 5), so a write between steps 4 and 9 is still caught | repository |
 | 10 | `DbUpdateConcurrencyException` → `Conflict` | — |

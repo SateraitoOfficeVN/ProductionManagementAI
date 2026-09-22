@@ -28,6 +28,13 @@ public static class ProductionOrderTelemetry
     public static readonly Histogram<int> ListResultSize = Meter.CreateHistogram<int>(
         "pmai.production_orders.list_result_size", description: "Rows returned on a production order list page.");
 
+    // DD-003-FN "Observability".
+    public static readonly Counter<long> DashboardLoaded = Meter.CreateCounter<long>(
+        "pmai.production_orders.dashboard_loaded", description: "Dashboard snapshot requests by outcome.");
+
+    public static readonly Counter<long> HealthChecks = Meter.CreateCounter<long>(
+        "pmai.system.health_checks", description: "Health checks by database status.");
+
     public static class Outcomes
     {
         public const string Success = "success";
