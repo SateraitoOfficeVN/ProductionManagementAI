@@ -29,6 +29,7 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-021 | 2026-09-22 | Whether SCR-001/SCR-002 keep their breadcrumbs next to the navbar | Claude (UI, during BD-003 v2) | decided | Kept — they show position, the navbar shows destinations; removing them would change both screens beyond their header |
 | DEC-022 | 2026-09-22 | Leaving an edited Screen A form through a navbar (or other in-app) link | user | decided | Ask first with the existing discard dialog, as Cancel does; implemented with a shared navigation guard, not a router migration |
 | DEC-023 | 2026-09-22 | Icons in the UI | user (mockup review) | decided | Icons in the navbar and actions, tiles, widget headings and states, and the health indicator, from `lucide-react` (ISC) — a new runtime dependency |
+| DEC-024 | 2026-09-22 | How the dashboard reader runs its SQL; the health code's namespace | Claude (technical, during implementation) | decided | ADO.NET commands on the EF connection and transaction with bound parameters, instead of `SqlQuery<T>`; namespace `Health`, not `System` |
 
 ## DEC-001: Which current-state widgets the dashboard shows
 
@@ -572,3 +573,16 @@ Raised by the user after reviewing mockup version 2: "please add icons so it mor
 | Mockup v3 | Real Lucide glyphs inlined |
 | `ai/project.md` | Frontend stack gains `lucide-react` — updated when the dependency is actually added (plan revision 3) |
 | Screens A/B | Only through the shared header (navbar, Sign out, Menu); their own bodies are unchanged |
+
+## DEC-024: Dashboard reader mechanics and the health namespace
+
+### Context
+
+Found while implementing plan revision 3, steps 3–4.
+
+### Decision and rationale
+
+- **Reader:** DD-003-FN §3 specified EF Core's `Database.SqlQuery<T>`. How it maps result columns onto ad-hoc row types under this project's snake-case naming convention is not documented clearly enough to rely on. The reader therefore runs DB-004's seven statements as ADO.NET commands on the EF connection and its `REPEATABLE READ` transaction, with every value an `NpgsqlParameter`, and maps rows by ordinal. Behavior, SQL text, the snapshot and the parameter binding are exactly as designed; only the call mechanism differs. DD-003-FN §3 was updated in the same change.
+- **Namespace:** DD-003 X-1 row 6a named `Application/System` and `Infrastructure/System`. A namespace `ProductionManagementAI.Application.System` would shadow .NET's `System` namespace inside it, so the folders and namespace are `Health`. DD-003 X-1 was updated.
+- **Decided by:** Claude, 2026-09-22 (technical; no behavior change).
+- **Verified:** a local smoke run against the migrated Compose database returned exactly DB-004's predicted figures; the integration tests (TC-203–TC-214) cover the reader.

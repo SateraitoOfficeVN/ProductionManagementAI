@@ -21,6 +21,7 @@ DD-003-FN — used by DD-003 and DD-003-API, requirements REQ-028–REQ-042.
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
 | 2 | 2026-09-22 | Claude (for ThanhTN) | §6 `SystemHealthService.CheckAsync` and `IDatabasePing` (DEC-017, DEC-020); §7 the no-renew rule for the health path (DEC-019); observability extended |
+| 3 | 2026-09-22 | Claude (for ThanhTN) | Implementation alignment (WI-004 DEC-024): §3 runs its statements through ADO.NET commands on the EF connection/transaction instead of `SqlQuery<T>`; health code in the `Health` namespace |
 
 ## Overview and method index
 
@@ -171,7 +172,7 @@ Processing overview: a pure function of T and the zone. Every calendar rule live
 | --- | --- | --- |
 | `DashboardRaw` | raw | The seven results, unshaped |
 
-Processing overview: raw SQL, because Q2's bucket expression, Q3's window count, Q5's `FILTER` aggregates and Q6's `date_trunc … AT TIME ZONE` have no clean LINQ translation. Each statement is DB-004's text, written as a C# interpolated `FormattableString`, so every `{window.…}` becomes a bound parameter. The statements are the SQL DB-004 reviewed, not a LINQ approximation of it. Results are mapped to small keyless row types (`StatusCountRow`, `WorkloadRow`, `DashboardOrderRow`, `TopProductRow`, `DeliveryRow`, `TrendRow`) via `Database.SqlQuery<T>`.
+Processing overview: raw SQL, because Q2's bucket expression, Q3's window count, Q5's `FILTER` aggregates and Q6's `date_trunc … AT TIME ZONE` have no clean LINQ translation. Each statement is DB-004's text, run as an ADO.NET command on the EF connection and transaction with every value an `NpgsqlParameter` (WI-004 DEC-024), and read by ordinal into small row records (`StatusCountRow`, `WorkloadRow`, `DashboardOrderRow`, `TopProductRow`, `DeliveryRow`, `TrendRow`). The statements are the SQL DB-004 reviewed, not a LINQ approximation of it.
 
 **Processing flow**
 

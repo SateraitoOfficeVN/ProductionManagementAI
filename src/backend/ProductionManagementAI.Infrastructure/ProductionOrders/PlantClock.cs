@@ -19,7 +19,23 @@ public sealed class PlantClock(TimeProvider timeProvider, IOptions<PlantOptions>
     // Resolved once; an unknown ID is rejected at startup by options validation, not per request.
     private readonly TimeZoneInfo _zone = TimeZoneInfo.FindSystemTimeZoneById(options.Value.TimeZone);
 
-    public DateOnly Today => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(timeProvider.GetUtcNow(), _zone).DateTime);
+    public DateOnly Today => DateOf(timeProvider.GetUtcNow());
 
     public short CurrentYear => (short)Today.Year;
+
+    public string TimeZoneId { get; } = options.Value.TimeZone;
+
+    public DateOnly DateOf(DateTimeOffset utc) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(utc, _zone).DateTime);
+
+    public DateTimeOffset StartOfDayUtc(DateOnly date)
+    {
+        // Local midnight; if a DST gap skips it, the first valid local minute of that day (DD-003-FN §5).
+        var local = date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Unspecified);
+        while (_zone.IsInvalidTime(local))
+        {
+            local = local.AddMinutes(1);
+        }
+
+        return new DateTimeOffset(local, _zone.GetUtcOffset(local)).ToUniversalTime();
+    }
 }

@@ -196,6 +196,12 @@ public class ProductionOrderServiceTests
         public DateOnly Today => today;
 
         public short CurrentYear => (short)today.Year;
+
+        public string TimeZoneId => "UTC";
+
+        public DateOnly DateOf(DateTimeOffset utc) => DateOnly.FromDateTime(utc.UtcDateTime);
+
+        public DateTimeOffset StartOfDayUtc(DateOnly date) => new(date.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
     }
 
     // ---- DD-002-FN §1: the list use case. The query itself runs against a real database in the integration

@@ -1,3 +1,7 @@
+using ProductionManagementAI.Application.Dashboard;
+using ProductionManagementAI.Application.Health;
+using ProductionManagementAI.Infrastructure.Dashboard;
+using ProductionManagementAI.Infrastructure.Health;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -48,6 +52,17 @@ public static class DependencyInjection
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Task.CompletedTask;
             };
+            // WI-004 DEC-019: the dashboard's 30-second health poll must not keep a session alive. Every other
+            // request, including the dashboard snapshot, renews as before.
+            options.Events.OnCheckSlidingExpiration = context =>
+            {
+                if (context.HttpContext.Request.Path.StartsWithSegments(SystemHealthService.HealthPath))
+                {
+                    context.ShouldRenew = false;
+                }
+
+                return Task.CompletedTask;
+            };
             options.Events.OnRedirectToAccessDenied = context =>
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -72,6 +87,10 @@ public static class DependencyInjection
         services.AddSingleton<IPlantClock, PlantClock>();
         services.AddScoped<IProductionOrderRepository, ProductionOrderRepository>();
         services.AddScoped<IOrderNumberIssuer, OrderNumberIssuer>();
+
+        // Dashboard and health (DD-003-FN).
+        services.AddScoped<IDashboardReader, DashboardReader>();
+        services.AddScoped<IDatabasePing, DatabasePing>();
 
         return services;
     }

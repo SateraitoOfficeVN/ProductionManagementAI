@@ -92,7 +92,7 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-042.
 | 4 | `src/backend/ProductionManagementAI.Api/Controllers/DashboardController.cs` | New controller | |
 | 5 | `src/backend/ProductionManagementAI.Application/Dashboard/` | `DashboardService`, `DashboardWindow`, `DashboardMapper`, `IDashboardReader`, `DashboardContracts` | New namespace |
 | 6 | `src/backend/ProductionManagementAI.Infrastructure/Dashboard/DashboardReader.cs` | Raw-SQL reader | |
-| 6a | `src/backend/ProductionManagementAI.Api/Controllers/SystemController.cs`, `Application/System/SystemHealthService.cs` (+ `IDatabasePing`), `Infrastructure/System/DatabasePing.cs` | Health endpoint | DD-003-FN §6 |
+| 6a | `src/backend/ProductionManagementAI.Api/Controllers/SystemController.cs`, `Application/Health/SystemHealthService.cs` (+ `IDatabasePing`), `Infrastructure/Health/DatabasePing.cs` (namespace `Health`, WI-004 DEC-024) | Health endpoint | DD-003-FN §6 |
 | 6b | `src/backend/ProductionManagementAI.Infrastructure/DependencyInjection.cs` | Cookie `Events.OnCheckSlidingExpiration`: no renewal for the health path | DD-003-FN §7, DEC-019 |
 | 7 | `src/backend/ProductionManagementAI.Application/ProductionOrders/Ports.cs`, `Infrastructure/ProductionOrders/PlantClock.cs` | `IPlantClock` additions | DD-003-FN §5 |
 | 8 | `src/backend/ProductionManagementAI.Domain/ProductionOrders/ProductionOrder.cs`, `Infrastructure/ProductionOrders/ProductionOrderConfigurations.cs` | `CompletedAtUtc` property, mapping and check constraints | DD-001 v4, DB-004 |

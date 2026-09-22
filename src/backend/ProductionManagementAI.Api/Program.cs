@@ -1,3 +1,5 @@
+using ProductionManagementAI.Application.Dashboard;
+using ProductionManagementAI.Application.Health;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +40,8 @@ builder.Services.AddProblemDetails(o => o.CustomizeProblemDetails = context =>
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ProductionOrderService>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<SystemHealthService>();
 
 // OpenTelemetry (DD-001 "Observability"). Collected always; exported over OTLP only when
 // OTEL_EXPORTER_OTLP_ENDPOINT is set. Npgsql spans carry no parameter values.

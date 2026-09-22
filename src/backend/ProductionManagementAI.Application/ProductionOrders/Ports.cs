@@ -8,6 +8,15 @@ public interface IPlantClock
     DateOnly Today { get; }
 
     short CurrentYear { get; }
+
+    /// <summary>The configured IANA timezone ID; passed to PostgreSQL where SQL converts to plant dates (DD-003-FN §5).</summary>
+    string TimeZoneId { get; }
+
+    /// <summary>The plant-local date of an instant.</summary>
+    DateOnly DateOf(DateTimeOffset utc);
+
+    /// <summary>The UTC instant at which a plant-local date begins.</summary>
+    DateTimeOffset StartOfDayUtc(DateOnly date);
 }
 
 /// <summary>Issues the next per-year order sequence inside the caller's transaction (DB-002, DEC-013).</summary>
