@@ -152,7 +152,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
   )
 }
 
-function StatusBadge({ status }: { status: ProductionOrderListItem['status'] }) {
+export function StatusBadge({ status }: { status: ProductionOrderListItem['status'] }) {
   return (
     <span className={`inline-block rounded-full border px-2 py-0.5 text-xs whitespace-nowrap ${statusBadge[status]}`}>
       {statusLabels[status]}

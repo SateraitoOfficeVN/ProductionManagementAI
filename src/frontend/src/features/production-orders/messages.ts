@@ -28,6 +28,12 @@ const messages: Record<string, string> = {
   'MSG-E020': "You don't have permission to view production orders.",
   'MSG-I003': 'No production orders yet. Create the first one.',
   'MSG-I004': 'No orders match your filters.',
+  // DD-003 (Screen C). MSG-E013 is reused for a failed dashboard load.
+  'MSG-E021': "You don't have permission to view the dashboard.",
+  'MSG-I005': 'No overdue orders.',
+  'MSG-I006': 'No orders due in the next 7 days.',
+  'MSG-I007': 'No open orders.',
+  'MSG-I008': 'No orders completed in the last 30 days.',
 }
 
 export function message(id: string, values: Record<string, string> = {}): string {

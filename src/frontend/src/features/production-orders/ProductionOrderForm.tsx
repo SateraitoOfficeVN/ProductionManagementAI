@@ -1,5 +1,6 @@
-import { useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigationGuard } from '../../lib/navigationGuard'
 import { ApiError } from '../../lib/apiClient'
 import { createOrder, updateOrder } from './api'
 import { DiscardChangesDialog } from './DiscardChangesDialog'
@@ -97,6 +98,25 @@ export function ProductionOrderForm({
   const statusOptions: ProductionOrderStatus[] = current ? [current.status, ...current.allowedNextStatuses] : ['Draft']
   const statusFixed = current !== null && current.allowedNextStatuses.length === 0
   const isDirty = !isSame(values, initial)
+
+  // WI-004 DEC-022: any in-app link that would leave an edited form asks first, as Cancel does (BD-001 E-07a).
+  const guard = useNavigationGuard()
+  const { pathname } = useLocation()
+  const pendingTo = useRef<string | null>(null)
+  const returnFocus = useRef<HTMLElement | null>(null)
+  useEffect(
+    () =>
+      guard.register((to) => {
+        if (!isDirty) {
+          return false
+        }
+        pendingTo.current = to
+        returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+        setConfirmingDiscard(true)
+        return true
+      }),
+    [guard, isDirty],
+  )
   const notesLength = codePointLength(values.notes)
   const selectedProduct = products.find((p) => p.id === values.productId)
 
@@ -394,12 +414,22 @@ export function ProductionOrderForm({
       <DiscardChangesDialog
         open={confirmingDiscard}
         onDiscard={() => {
+          const to = pendingTo.current ?? '/production-orders'
+          pendingTo.current = null
           setConfirmingDiscard(false)
-          navigate('/production-orders')
+          if (to === pathname) {
+            // Same route (e.g. "New production order" from an edited create form): nothing remounts, so reset here.
+            setValues(initial)
+            setErrors({})
+          } else {
+            navigate(to)
+          }
         }}
         onKeepEditing={() => {
+          const focusTarget = pendingTo.current ? returnFocus.current : cancelButton.current
+          pendingTo.current = null
           setConfirmingDiscard(false)
-          cancelButton.current?.focus()
+          ;(focusTarget ?? cancelButton.current)?.focus()
         }}
       />
     </>
