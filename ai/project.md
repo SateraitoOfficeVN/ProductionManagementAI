@@ -53,7 +53,7 @@ Verified commands, run from the repo root unless noted:
 
 **E2E** (`tests/e2e/`, against the running Compose stack): `npm ci`, `npx playwright install chromium`, then `E2E_ADMIN_PASSWORD=<SEED_ADMIN_PASSWORD> E2E_BASE_URL=http://localhost:3000 npx playwright test`. Verified in WI-002.
 
-**CI**: `.github/workflows/ci.yml` has three jobs on push/PR to `master`: backend (build + unit/integration tests), frontend (lint + build + tests), and e2e (Compose stack + Playwright, after the other two; throwaway credentials generated per run; added by RFC 0003). First executed on 2026-09-18 on PR #5, after the repository moved to the `SateraitoOfficeVN` organization (the earlier account billing lock blocked PRs #2–#4): backend, frontend and e2e all passed (https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226).
+**CI**: `.github/workflows/ci.yml` has three jobs on push/PR to `master`: backend (build + unit/integration tests), frontend (lint + build + tests), and e2e (Compose stack + Playwright, after the other two; throwaway credentials generated per run; added by RFC 0003). A push or PR that changes only Markdown, `docs/`, `work-items/`, `demos/`, `ai/` or `LICENSE` starts no run at all (RFC 0005); `.github/`, `deploy/`, `src/` and `tests/` always do. Because GitHub evaluates the filter against a PR's whole diff, a PR that also changes code still runs everything. First executed on 2026-09-18 on PR #5, after the repository moved to the `SateraitoOfficeVN` organization (the earlier account billing lock blocked PRs #2–#4): backend, frontend and e2e all passed (https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226).
 
 ## Candidate demo
 

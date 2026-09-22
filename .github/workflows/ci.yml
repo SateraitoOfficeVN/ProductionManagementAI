@@ -1,10 +1,28 @@
 name: CI
 
+# A change that touches only documentation, work-item records, demo material or the ai/ harness cannot affect what
+# these jobs verify, so it starts no run (RFC 0005). The list is repeated rather than shared through a YAML anchor:
+# GitHub Actions does not support anchors in workflow files. Note that GitHub evaluates paths-ignore for a
+# pull_request against the whole PR diff, so a PR that also changes code still runs everything.
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'work-items/**'
+      - 'demos/**'
+      - 'ai/**'
+      - 'LICENSE'
   pull_request:
     branches: [master]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'work-items/**'
+      - 'demos/**'
+      - 'ai/**'
+      - 'LICENSE'
 
 permissions:
   contents: read
