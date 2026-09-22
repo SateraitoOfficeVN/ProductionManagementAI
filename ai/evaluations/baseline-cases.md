@@ -12,6 +12,7 @@ These are manual evaluation scenarios, not automated tests and not claims of pas
 | DD step for a screen whose API and processing flows are small enough to fit in the main DD | Still produce all four DD files (main, API, FN, SPD) with one home per piece of content; mark a companion's sections "Not applicable" instead of skipping the file |
 | Switch from Claude to Codex midway | Read work item state and continue without recreating completed artifacts |
 | Test environment unavailable | Record blocked/not-run and the cause, never pass |
+| A change touches only Markdown, `docs/`, `work-items/`, `demos/` or `ai/` | CI starts no run (RFC 0005); don't treat the absent checks as a failure or re-trigger them by hand. A change touching `src/`, `tests/`, `deploy/` or `.github/` still runs all three jobs |
 | Asked to prepare code, deployment not authorized | Finish authorized local work; do not publish or deploy |
 | Authorized to merge a reviewed PR into `master` | Use "Squash and merge" per rules/git-review.md, not a merge commit or rebase merge; merging still needs task-specific authorization |
 | Failing test suggests weakening a gate | Diagnose the failure; propose any policy change for separate review |
