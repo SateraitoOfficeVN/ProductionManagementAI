@@ -5,7 +5,8 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | approved; steps 1–6 done, steps 7–8 superseded by revision 2 | user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008" |
-| 2 | 2026-09-22 | Design amendment after mockup review (navbar, health indicator, chart maximize) and design-phase close | **current** — approved; in progress | user message 2026-09-22: "ok revision 2 is approved" |
+| 2 | 2026-09-22 | Design amendment after mockup review (navbar, health indicator, chart maximize) and design-phase close | approved; complete; superseded by revision 3 | user message 2026-09-22: "ok revision 2 is approved" |
+| 3 | 2026-09-22 | Implementation, tests, PR | **current** — awaiting review | none yet |
 
 ## Revision 1 — design phase
 
@@ -96,7 +97,7 @@ The user reviews each design document as it is finished (BD-003, then DB-004 tog
 
 ---
 
-## Revision 2 — design amendment after mockup review (current)
+## Revision 2 — design amendment after mockup review
 
 Revision 2, 2026-09-22. Supersedes revision 1's steps 7–8; revision 1 stays above unchanged except for its Outcome column and Closure line. The user reviewed the DD-003 mockup and asked for three additions, settled in DEC-016–DEC-018. This revision amends the approved design to include them and then closes the design phase. Implementation, tests and the PR move to revision 3, which is drafted at the end of this revision and shown for its own approval.
 
@@ -146,8 +147,8 @@ Bring the reconciled design set up to date with DEC-016 (navbar on every screen)
 | 5 | DD-001-SPD and DD-002-SPD notes | 3, 4 | detailed-design | new versions | The navbar component is referenced, not restated | done 2026-09-22 — DD-001-SPD v2 (navbar and `NavigationGuard` registration), DD-002-SPD v2 (navbar) |
 | 6 | DB-004 check | 4 | database-design | DB-004 (unchanged, or a stop) | The ping reads no table and needs no grant | done 2026-09-22 — no change: the ping is `SELECT 1`, reads no table and needs no grant |
 | 7 | Mockup regenerated and republished | 4 | screen-design | `mockups/DD-003-screen-c-mockup.html`, same private URL | Navbar (PC and SP menu), indicator OK and database-unavailable, maximized chart artboards added | done 2026-09-22 — 11 artboards (adds database-down, SP menu, maximized chart, navbar on Screen B); one render check; republished as version 2 to https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
-| 8 | Reconcile and close the design phase | 2–7 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision; user review of the amended design set | in progress — design-consistency walk passed (evidence.md); awaiting the user's review of the amended design set |
-| 9 | Draft plan revision 3 (implementation, tests, PR) | 8 | planning | `plan.md` revision 3 | Shown to the user and stopped; no revision 3 step starts before it is explicitly approved | pending |
+| 8 | Reconcile and close the design phase | 2–7 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision; user review of the amended design set | done 2026-09-22 — design-consistency walk passed (evidence.md); the amended design set approved by the user ("the DD is approved, move on to implementation") |
+| 9 | Draft plan revision 3 (implementation, tests, PR) | 8 | planning | `plan.md` revision 3 | Shown to the user and stopped; no revision 3 step starts before it is explicitly approved | done 2026-09-22 — revision 3 appended below and shown for review |
 
 As in revision 1, the user reviews the amended design set before the design phase is closed.
 
@@ -184,3 +185,104 @@ Addition 2026-09-22, within this revision: after mockup version 2 the user asked
 - **Review status:** approved
 - **Approval source:** user message 2026-09-22: "ok revision 2 is approved"
 - **Approved revision:** revision 2, 2026-09-22
+- **Closure:** all nine steps done 2026-09-22, including the icons addition (DEC-023). The design phase is closed: BD-003 v3, BD-001 v7, BD-002 v4, DB-004, the DD-003 set (DD-003 v4, API/FN/SPD v2), DD-001 v4 set, DD-001-SPD v2, DD-002-SPD v2 and mockup v3 approved by the user ("the DD is approved, move on to implementation"). Superseded by revision 3, which was drafted, not started.
+
+---
+
+## Revision 3 — implementation, tests and PR (current)
+
+Revision 3, 2026-09-22. Supersedes revision 2, whose design phase is complete and approved. It builds Screen C and the changes it carries into Screens A and B against the approved design, and takes the work to a reviewable PR. Drafted on the user's DD approval ("the DD is approved, move on to implementation") and shown for its own approval: no step below starts until it is approved (`ai/policies.md`).
+
+### Objective
+
+Implement REQ-028–REQ-042 and the REQ-019 extension end to end in the running Compose stack. That covers DB-004's three migrations, completion stamping in Screen A, the dashboard and health endpoints with the no-renew cookie rule, the dashboard screen, the shared navbar and navigation guard, and the icons. Every acceptance criterion is covered by an automated test traced to TC-201–TC-228, and WI-003's suites stay green against the new seed.
+
+### Scope
+
+#### In scope
+
+- **Database:** DB-004's migrations in order — `AddProductionOrderCompletionTracking` (column, backfill, two checks), `AddProductionOrderDashboardIndexes` (two partial indexes, `CONCURRENTLY`, outside a transaction), `SeedDashboardDemoHistory` (re-date 16, insert 44, advance the counter, guarded).
+- **Screen A backend:** `ProductionOrder.CompletedAtUtc` set on `InProgress → Completed` (DD-001 v4 module 1 step 5), its EF mapping and check constraints.
+- **Dashboard backend:** `IPlantClock` additions; `DashboardWindow`, `IDashboardReader`/`DashboardReader` (raw SQL in one `REPEATABLE READ READ ONLY` transaction), `DashboardMapper`, `DashboardService`, `DashboardController` (`no-store`), telemetry.
+- **Health backend:** `IDatabasePing`/`DatabasePing`, `SystemHealthService`, `SystemController`, and the cookie `OnCheckSlidingExpiration` rule for the health path (DEC-019).
+- **Frontend:** `lucide-react` installed at an exact version, and `components/icons.ts`; `NavigationGuardProvider`, `GuardedLink`, `AppNavbar` in `AppHeader`; `ProductionOrderForm` registers with the guard, and the Screen A/B breadcrumbs become `GuardedLink`; the dashboard feature (page, tiles, attention list, top products, `BarChart`, `ChartDialog`, `HealthIndicator` with polling, formatters, API wrappers); route `/` → dashboard, placeholder home removed; message catalog MSG-E021, MSG-I005–MSG-I008.
+- **WI-003 regression:** tests and documents that state the old seed's figures (80 orders, 32/24/16/8, next number `00081`) move to DB-004's figures. Known today: `OrderNumberingTests.cs`, `ProductionOrderListEndpointTests.cs`, `tests/e2e/specs/screen-b.spec.ts`, `ProductionOrderListPage.test.tsx`, and DB-003's seed section (a pointer to DB-004).
+- **Tests:** backend unit, integration (dashboard and health tests on their own container, orders cleared as the owner), frontend unit (with `vitest-axe`), E2E (Playwright + axe, desktop and Pixel 7) — traced to TC-201–TC-228, plus the updated Screen A and B cases.
+- **Test plan** TP-004 (`work-items/WI-004/test-plan.md`), and the evidence and status records.
+- **Gates:** design-consistency, security-review and delivery checklists.
+- **Git:** local commits on `feature/WI-004-production-dashboard`, then push and one PR — subject to the authorization below.
+
+#### Out of scope
+
+- Merging the PR, deployment, image publication.
+- Close-out after the merge (status, `ai/project.md` — including recording `lucide-react` in the confirmed stack — `CLAUDE.md`, and the root `README.md`), which follows the merge as its own change, per the feature-delivery workflow.
+- Everything under "Not doing" in `brief.md`; any change beyond the approved design. A divergence found while coding is recorded as a decision and the document updated in the same change, never left to drift; a divergence that changes behavior is a stop condition.
+
+### Inputs and assumptions
+
+| Input (brief / BD / DD / DB / ADR / decisions) | Revision | Assumption made if input is missing or incomplete |
+| --- | --- | --- |
+| `brief.md` | revision 2 (REQ-028–REQ-042) | — |
+| BD-003, BD-001, BD-002 | v3, v7, v4 (approved) | — |
+| DB-004 | v1 (approved) | — |
+| DD-003 set, DD-001 set, DD-001-SPD, DD-002-SPD | DD-003 v4 + companions v2; DD-001 v4; SPDs v2 (approved) | — |
+| `decisions.md` DEC-001–DEC-023 | decided | — |
+| Existing code on `master` | `c3747ed` | Conventions of WI-002/WI-003 — `Result<T>`, RFC 9457, `apiClient`, `messages.ts`, telemetry, test layout — extended, not duplicated |
+| Verified commands in `ai/project.md` | current | Build, test, migration and E2E commands used as listed; no new command invented |
+| Local environment | Docker Desktop, .NET 10 SDK, Node | The WI-003 Compose volumes were removed, so the stack starts from a fresh volume and every migration (WI-001 to WI-004) runs in order; a `deploy/.env` with local values exists or is created from `.env.example` without committing it |
+
+### Deliverables and milestones
+
+| # | Milestone / step | Depends on | Skill used | Deliverable | Verification method | Outcome |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | Domain and EF: `CompletedAtUtc`, mapping, check constraints | none | implementation | `ProductionOrder`, `ProductionOrderConfigurations` | `dotnet build`; unit tests in step 7 | pending |
+| 2 | Migrations 1–3 (DB-004), applied to the local Compose database as the owner | 1 | implementation, database-design | three migrations | `dotnet ef database update`; column and checks present; no `INVALID` index; 124 orders, 35/25/56/8; counter advanced | pending |
+| 3 | `IPlantClock` additions; dashboard window, reader, mapper, service, controller, telemetry | 1 | implementation | `Application/Dashboard/*`, `Infrastructure/Dashboard/*`, `DashboardController` | `dotnet build` | pending |
+| 4 | Health: ping port, service, controller; cookie no-renew rule | 1 | implementation, security-review | `Application/System/*`, `Infrastructure/System/*`, `SystemController`, `DependencyInjection.cs` | `dotnet build` | pending |
+| 5 | Frontend foundation: `lucide-react` (exact version), `icons.ts`, navigation guard, `GuardedLink`, `AppNavbar`/`AppHeader`, Screen A form registration, breadcrumbs | none | implementation | files in DD-003 X-1 rows 2a–2f | `npm run lint`, `npm run build`; existing Screen A/B unit tests still pass | pending |
+| 6 | Frontend dashboard: page, tiles, attention list, top products, `BarChart`, `ChartDialog`, `HealthIndicator`, formatters, API wrappers, route, messages | 5 | implementation, screen-design | `features/dashboard/*`, `App.tsx`, `messages.ts` | `npm run lint`, `npm run build` | pending |
+| 7 | Backend unit tests | 1, 3, 4 | testing | `Application.Tests` additions | `dotnet test` — completion stamping (TC-207), `DashboardWindow` for every weekday and month boundary (TC-205, TC-209), mapper zero-fill and rounding (TC-203, TC-212), health outcomes | pending |
+| 8 | Backend integration tests, including WI-003 regression updates | 2, 3, 4 | testing | `Integration.Tests` additions | `dotnet test` — TC-203–TC-214, TC-218, TC-219, TC-221, TC-224, TC-225, TC-208 | pending |
+| 9 | Frontend unit tests | 5, 6 | testing | `tests/unit/` additions | `npm test` — TC-202, TC-210, TC-212, TC-215, TC-216, TC-217 (axe), TC-222, TC-223, TC-226, TC-227, TC-228; the `<dialog>` methods jsdom lacks are stubbed in the test setup only | pending |
+| 10 | E2E tests, including WI-003 regression updates | 2, 3, 4, 6 | testing | `tests/e2e/specs/` additions | Compose stack + `npx playwright test` — TC-201, TC-202, TC-213, TC-216, TC-217, TC-220, TC-222, TC-223, TC-227; Screen A and B specs still pass | pending |
+| 11 | Test plan TP-004 | 7–10 | testing | `work-items/WI-004/test-plan.md` | Every TC-201–TC-228 maps to a named test with its recorded result | pending |
+| 12 | Full local verification | 2–11 | — | `evidence.md` | `dotnet build`, `dotnet test`, `npm run lint`, `npm run build`, `npm test`, Compose + Playwright — each recorded as actually run, with counts | pending |
+| 13 | Gates: design-consistency, security-review, delivery | 12 | security-review, pr-review | `evidence.md` walks | Every checklist item answered; security review covers the two new endpoints' authorization, the raw SQL's parameter binding, the read-only transaction, the health response's fields and logging, the no-renew rule, the navigation guard, and the new dependency's licence and pinning | pending |
+| 14 | Push the branch and open a PR | 13 | pr-review, ci-cd | PR to `master` | CI (backend, frontend, e2e) green on the PR; diff reviewed against the design set | pending — needs authorization |
+
+### Roles and responsibilities
+
+| Role | Owner |
+| --- | --- |
+| Implementer, test author | this agent (Claude) |
+| Reviewer, approver, merge | ThanhTN |
+
+### Resources and external actions
+
+| Action (push / PR / merge / deploy / publish image / …) | Authorized? | Source of authorization | Scope limit |
+| --- | --- | --- | --- |
+| Local edits under `src/`, `tests/`, `docs/`, `work-items/WI-004/` | on approval of this revision | — | This revision's scope |
+| Local commits on `feature/WI-004-production-dashboard` | yes | revision 1 approval, still in force | local only |
+| `npm install lucide-react@<exact>` in `src/frontend` (changes `package.json`, `package-lock.json`) | on approval of this revision | DEC-023 (user) | one package, exact version |
+| Run the local Compose stack and apply migrations to the local database | on approval of this revision | — | local only; fresh volume; the seeds are guarded |
+| Push the branch and open a PR | **requested with this revision** | — | step 14 only |
+| Merge, deploy, publish an image | no | not authorized | — |
+
+### Risks and mitigations
+
+| Risk / stop condition | Trigger | Mitigation / response |
+| --- | --- | --- |
+| EF Core's `SqlQuery<T>` cannot map a row shape, or the explicit transaction interferes with the execution strategy | Translation or retry errors in the reader | Flat row types (DD-003-FN's recorded fallback); if Npgsql's retrying execution strategy is enabled, wrap the transaction in `CreateExecutionStrategy().ExecuteAsync`; no contract change |
+| The migration's validated CHECK fails on existing data | A `Completed` row the backfill misses, or `updated_at_utc < created_at_utc` | Backfill runs before the checks in one transaction, so a failure rolls everything back; a real violation stops the work and is reported, not bypassed |
+| WI-003 tests break beyond the known seed figures | Relative-date or paging assertions affected by 44 more orders | Fix the assertion to the new documented figures only where the figure is a seed fact; any other failure is investigated as a real regression |
+| Time-dependent tests flake | Dashboard figures depend on "now"; the seed uses the database's `now()` | Integration tests pin the plant clock and create their own rows on a cleared database; the seed test (TC-218) asserts only relative properties; E2E asserts structure and relative facts, not absolute figures |
+| The no-renew rule does not take effect | The cookie handler ignores `ShouldRenew` or uses a different clock | TC-225 with the cookie handler's `TimeProvider` advanced past half the lifetime; a failure is a stop condition, because DEC-019 is the user's decision |
+| jsdom lacks `HTMLDialogElement.showModal` | Frontend unit tests of `ChartDialog` | Stub in the test setup only; the real behavior is covered by E2E (TC-227) |
+| Polling makes E2E flaky | Health checks racing assertions | E2E waits on rendered state, not timers; polling interval unchanged in production code |
+| A design gap appears while coding | A behavior the documents do not settle | Stop and ask if it changes behavior; otherwise record a technical DEC and update the document in the same commit |
+
+### Approval / sign-off
+
+- **Review status:** awaiting review
+- **Approval source:** —
+- **Approved revision:** —

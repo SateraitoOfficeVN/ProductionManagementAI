@@ -1,6 +1,6 @@
 # Production Dashboard (Screen C) — Status Report
 
-As of 2026-09-22. Work item state: in-progress.
+As of 2026-09-22. Work item state: awaiting-plan-review.
 
 ## Overall status
 
@@ -12,16 +12,18 @@ the metric windows and sizes (DEC-008) and chose a "later" workload bar (DEC-009
 A design amendments for completion tracking are approved (the user chose to both re-date and extend the demo seed,
 DEC-013). The DD-003 set was drafted and its mockup published privately; on reviewing the mockup the user asked for a navbar
 on every screen, a server/database health indicator and chart maximize (DEC-016–DEC-018). Plan revision 2 (design
-amendment) was approved; its steps 1–7 are done and the amended design set awaits the user's review (step 8).
+amendment) is complete and the design phase is closed: the user approved the amended design set. Plan revision 3
+(implementation, tests, PR) is drafted and awaiting review; no code has been written.
 
 ## Approved plan reference
 
-[plan.md](plan.md) — approved revision 2, approval source user message 2026-09-22: "ok revision 2 is approved"; before it, approved revision 1, approval source user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008".
+[plan.md](plan.md) — revision 3 drafted 2026-09-22, awaiting review; approved revision 2, approval source user message 2026-09-22: "ok revision 2 is approved"; before it, approved revision 1, approval source user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008".
 
 ## Accomplishments this period
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | Design phase closed (amended design set approved); plan revision 3 drafted | [plan.md](plan.md) |
 | 2026-09-22 | Icons (DEC-023, user): BD-003 v3, DD-003 v4, mockup v3 republished | https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
 | 2026-09-22 | Plan revision 2 steps 1–7: BD-003 v2, BD-001 v7, BD-002 v4, DD-003 set v2/v3, DD-001-SPD v2, DD-002-SPD v2, mockup v2 republished; DEC-019 and DEC-022 decided by the user, DEC-020 and DEC-021 recorded | [evidence.md](evidence.md), https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
 | 2026-09-22 | Mockup review by the user: DEC-016 (navbar), DEC-017 (health indicator), DEC-018 (chart maximize); brief revision 2 and plan revision 2 drafted | [decisions.md](decisions.md), [plan.md](plan.md) |
@@ -36,8 +38,8 @@ amendment) was approved; its steps 1–7 are done and the amended design set awa
 
 ## Planned for next period
 
-After the amended design set is approved: close the design phase and draft plan revision 3 (implementation, tests,
-PR) for its own approval.
+After plan revision 3 is approved: implementation, tests, full local verification, gates, then the push and PR if
+authorized.
 
 ## Risks and issues
 
@@ -47,4 +49,4 @@ PR) for its own approval.
 
 ## Next action
 
-User review of the amended design set (BD-003 v3, BD-001 v7, BD-002 v4, DD-003 set, mockup v3).
+User review of plan revision 3, including authorization to push and open the PR (step 14).
