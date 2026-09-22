@@ -22,6 +22,7 @@
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation (Screen B, production-order list; WI-003 DEC-001–DEC-009) |
 | 2 | 2026-09-22 | Claude (for ThanhTN) | Reconciled with DB-003: V-09 fragment bound clarified and `\` added to the escaped characters (DEC-010); status sort defined as workflow order, not alphabetical |
 | 3 | 2026-09-22 | Claude (for ThanhTN) | Message IDs renumbered to MSG-E015–MSG-E020 / MSG-I003–MSG-I004: the drafted IDs collided with DD-001's catalog, which already defines MSG-E001–MSG-E014 and MSG-I001–MSG-I002; MSG-E002 and MSG-E013 reused instead of duplicated |
+| 4 | 2026-09-22 | Claude (for ThanhTN) | WI-004 (DEC-016, DEC-021): the shared header now carries the application navbar specified in BD-003 "Shared application header"; items 1–2 point to it. The breadcrumb stays. No field, rule, validation, event or API of this screen changes |
 
 ## System overview
 
@@ -207,8 +208,8 @@ Layout-level sketch only; the rendered per-state mockup belongs in DD-002.
 
 | Item No. | Region / element | Notes (behavior, condition) |
 | --- | --- | --- |
-| 1 | App header / name | Common app header |
-| 2 | Signed-in user + Sign out | Common app header (WI-001 behavior) |
+| 1 | App header with navbar | Shared application header, specified once in BD-003 "Shared application header" (H-1–H-5, E-29–E-31, WI-004 DEC-016): app name, navbar (Dashboard, Production orders, New production order; current entry marked), user and Sign out, a Menu on SP. Current entry here: Production orders |
+| 2 | Signed-in user + Sign out | Shared header (BD-003 H-3; WI-001 behavior unchanged) |
 | 3 | Breadcrumb | "Home > Production orders" |
 | 4 | Page heading | "Production orders" |
 | 5 | New production order | Primary action, top right; opens SCR-001 create mode |

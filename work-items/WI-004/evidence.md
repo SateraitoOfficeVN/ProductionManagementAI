@@ -19,6 +19,10 @@ Design columns are filled as each document is written; code and test columns sta
 | REQ-036 | Completion trend, 12 weeks | BD-003 D-08, §3 items 23–24, §4 M-16; DEC-010 | — | — | designed (BD, DD) |
 | REQ-037 | Average lead time, 30 days | BD-003 D-09, §3 item 15, §4 M-14 | — | — | designed (BD, DD) |
 | REQ-038 | Admin/Operator only | BD-003 0-1, FN-023, actions, exception flows | — | — | designed (BD, DD) |
+| REQ-040 | Navbar on every authenticated screen | BD-003 v2 Shared application header; BD-001 v7, BD-002 v4 items 1–2; DD-003 module 10, DD-003-SPD §8; DEC-016 | — | TC-222 | designed (BD, DD) |
+| REQ-041 | Server and database health indicator | BD-003 v2 Health definitions, item 26, M-20, E-26–E-28; DD-003-API §2; DD-003-FN §6–§7; DD-003-SPD §10, §12; DEC-017, DEC-019, DEC-020 | — | TC-224, TC-225, TC-226 | designed (BD, DD) |
+| REQ-042 | Maximize and restore a chart | BD-003 v2 items 27–29, E-24–E-25; DD-003 module 13, DD-003-SPD §11; DEC-018 | — | TC-227 | designed (BD, DD) |
+| REQ-019 (WI-002, extended) | Confirm before discarding changes — now on any in-app link | BD-001 v7 E-07a, E-09; DD-003 module 11; DD-001-SPD v2; DD-003-SPD §9; DEC-022 | — | TC-223 | designed (BD, DD) |
 | REQ-039 | Read-only, no drill-down | BD-003 §6 closing note, actions; DEC-006 | — | — | designed (BD, DD) |
 
 ## Test execution log
@@ -33,7 +37,11 @@ Design columns are filled as each document is written; code and test columns sta
 | 2026-09-22 | Mockup render check | one headless Edge screenshot of the mockup | local | pass after one fix — workload labels "Overdue"/"This week" collided and tile window captions wrapped mid-date; bar slots widened and captions put on their own line | — |
 | 2026-09-22 | design-consistency checklist (DD-003 set scope) | manual review | local | pass — walk below | this file |
 | 2026-09-22 | Mockup published | Artifact publish, private | claude.ai | done — https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot (8 artboards) | DD-003 |
-| 2026-09-22 | DD review | user review of the DD-003 set | — | not run — awaiting user | — |
+| 2026-09-22 | DD review (first pass) | user review of the DD-003 set and mockup v1 | — | changes requested — navbar, health indicator, chart maximize (DEC-016–DEC-018); handled by plan revision 2 | decisions.md |
+| 2026-09-22 | Mockup v2 render check | one headless Edge full-page screenshot | local | pass — first capture blank (anchor jump before render, a capture issue), retaken without the anchor; one caption clarified | — |
+| 2026-09-22 | Mockup v2 published | Artifact republish, private, same URL | claude.ai | done — version 2, 11 artboards | DD-003 |
+| 2026-09-22 | design-consistency checklist (plan revision 2 amendments) | manual review | local | pass — walk below | this file |
+| 2026-09-22 | Amended design review | user review of BD-003 v2, BD-001 v7, BD-002 v4, the DD-003 set and mockup v2 | — | not run — awaiting user | — |
 
 ## Design-consistency walk — BD-003 scope
 
@@ -81,3 +89,18 @@ Design columns are filled as each document is written; code and test columns sta
 | Accessibility captured | pass — DD-003 "Accessibility", DD-003-SPD §3–§6, TC-217 |
 | Migration impact described | pass — in DB-004; DD-003 names the three migrations and the deploy-order failure mode |
 | Tracing/logging specified | pass — span `ProductionOrder.Dashboard`, counter `pmai.production_orders.dashboard_loaded`, `DashboardSnapshotFailed` (DD-003-FN "Observability") |
+
+## Design-consistency walk — plan revision 2 amendments
+
+| Checklist item | Result |
+| --- | --- |
+| Requirements have stable IDs and acceptance criteria | pass — REQ-040–REQ-042 added with success and failure criteria; UC-012; REQ-019's extension recorded against WI-002's ID rather than a new one |
+| BD covers navigation, primary actions and exceptions | pass — the shared header is specified once in BD-003 and referenced from BD-001/BD-002; health exception flows (database down, server unreachable, session expired while polling) added |
+| DD agrees with BD | pass — BD-003 items 26–29, H-1–H-5, E-24–E-31, HS-01–HS-05 each have one home in DD-003 or a companion; BD-001 E-07a matches DD-003-SPD §9. One defect found and fixed during the work: the claim that SCR-001's discard confirmation already covered router navigation was false (it guards Cancel only); corrected, then settled by the user as DEC-022 |
+| API and DB mappings agree | pass — API-SYS-01 has two response fields, both produced by DD-003-FN §6; no table read, so DB-004 unchanged (checked) |
+| Missing decisions resolved | pass — DEC-019 and DEC-022 asked of the user; DEC-020, DEC-021 recorded; none open |
+| Test scenarios map to the design | pass — TC-222–TC-227 added; TC-201/TC-202 updated for the navbar |
+| Security-relevant fields identified | pass — health endpoint authenticated, two fixed fields, exception type only in logs, no-store, and no session renewal (TC-225); anonymous `/health` unchanged |
+| Accessibility captured | pass — labelled `<nav>` with `aria-current`, SP menu with `aria-expanded` and Escape, polite live region announcing changes only, shape-coded status dots, native modal `<dialog>` with focus return |
+| Migration impact described | not applicable — no schema change in this revision |
+| Tracing/logging specified | pass — span `System.Health`, counter `pmai.system.health_checks{database}`, `DatabasePingFailed` Warning |

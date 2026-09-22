@@ -2,7 +2,7 @@
 
 # Production Dashboard — Detailed Design Document (詳細設計書)
 
-DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
+DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-042.
 
 ## Document control (改版履歴)
 
@@ -13,7 +13,7 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
 | System name | ProductionManagementAI |
 | Subsystem name | Production orders |
 | Work item | WI-004 |
-| Implements | BD-003 revision 1 |
+| Implements | BD-003 revision 2 |
 | Created by | Claude (for ThanhTN) |
 | Created date | 2026-09-22 |
 | Last updated by | Claude (for ThanhTN) |
@@ -23,13 +23,14 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
 | 2 | 2026-09-22 | Claude (for ThanhTN) | Rendered mockup published and linked |
+| 3 | 2026-09-22 | Claude (for ThanhTN) | Plan revision 2 (mockup review): navbar in the shared header and the navigation guard (DEC-016, DEC-022), health indicator and its endpoint (DEC-017, DEC-019, DEC-020), chart maximize (DEC-018); page actions removed; test viewpoints TC-222–TC-227 added, TC-201/TC-202 updated |
 
 ## Overview and reference documents (概要・目次)
 
 | Field | Value |
 | --- | --- |
 | File / component name | `DashboardPage.tsx` and its child components; `DashboardController.Get` |
-| Overview | SCR-003, the production dashboard at `/`: eight read-only widgets rendered from one server snapshot, replacing the placeholder home page |
+| Overview | SCR-003, the production dashboard at `/`: eight read-only widgets rendered from one server snapshot, a server/database health indicator, and charts that maximize to the full window; replacing the placeholder home page. Also the shared header's navbar and navigation guard used by every screen |
 
 ### Module / method / processing index
 
@@ -46,6 +47,11 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
 | 9 | `DashboardController.Get` | Request boundary | §8 |
 | 10 | `DashboardService`, `DashboardWindow`, `IDashboardReader`, `DashboardMapper`, `IPlantClock` additions | Server-side snapshot | Pointer only — designed in DD-003-FN |
 | 11 | `ProductionOrder` entity — completion time | REQ-033 | Pointer only — designed in DD-001 v4 module 1 step 5 |
+| 12 | `AppNavbar` (in `AppHeader`) | The application navbar on every authenticated screen | §10 |
+| 13 | `NavigationGuard` + `GuardedLink` | Lets an edited SCR-001 form intercept in-app links (DEC-022) | §11 |
+| 14 | `HealthIndicator` + `useSystemHealth` | Item 26: status, polling, visibility pause | §12 |
+| 15 | `ChartDialog` | Items 27–29: maximized chart view | §13 |
+| 16 | `SystemController.Health`, `SystemHealthService`, `IDatabasePing`, cookie renewal rule | Health endpoint and the no-renew rule | Pointer only — designed in DD-003-FN §6–§7 |
 
 ### Reference documents
 
@@ -74,11 +80,17 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
 | No | Path / namespace | Purpose | Notes |
 | --- | --- | --- | --- |
 | 1 | `src/frontend/src/features/dashboard/` | New feature folder | `DashboardPage.tsx`, `StatusTiles.tsx`, `DeliveryTiles.tsx`, `AttentionList.tsx`, `TopProducts.tsx`, `BarChart.tsx`, `dashboardFormat.ts`, `dashboardApi.ts`, `types.ts` |
-| 2 | `src/frontend/src/App.tsx` | Route `/` → `DashboardPage`; the inline `HomePage` is deleted | DEC-005 |
+| 2 | `src/frontend/src/App.tsx` | Route `/` → `DashboardPage`; the inline `HomePage` is deleted; the authenticated routes are wrapped in `NavigationGuardProvider` | DEC-005, DEC-022 |
+| 2a | `src/frontend/src/components/` | `AppHeader.tsx` (extended), `AppNavbar.tsx`, `GuardedLink.tsx` | Shared by every screen (DEC-016) |
+| 2b | `src/frontend/src/lib/navigationGuard.tsx` | `NavigationGuardProvider`, `useNavigationGuard` | DEC-022 |
+| 2c | `src/frontend/src/features/dashboard/` | Also `HealthIndicator.tsx`, `useSystemHealth.ts`, `ChartDialog.tsx`, `systemApi.ts` | |
+| 2d | `src/frontend/src/features/production-orders/ProductionOrderForm.tsx`, `ProductionOrderPage.tsx`, `ProductionOrderListPage.tsx` | The form registers with the guard; breadcrumb links become `GuardedLink` | DEC-022 |
 | 3 | `src/frontend/src/features/production-orders/messages.ts` | The single message catalog, extended with MSG-E021 and MSG-I005–MSG-I008 | Not a second catalog |
 | 4 | `src/backend/ProductionManagementAI.Api/Controllers/DashboardController.cs` | New controller | |
 | 5 | `src/backend/ProductionManagementAI.Application/Dashboard/` | `DashboardService`, `DashboardWindow`, `DashboardMapper`, `IDashboardReader`, `DashboardContracts` | New namespace |
 | 6 | `src/backend/ProductionManagementAI.Infrastructure/Dashboard/DashboardReader.cs` | Raw-SQL reader | |
+| 6a | `src/backend/ProductionManagementAI.Api/Controllers/SystemController.cs`, `Application/System/SystemHealthService.cs` (+ `IDatabasePing`), `Infrastructure/System/DatabasePing.cs` | Health endpoint | DD-003-FN §6 |
+| 6b | `src/backend/ProductionManagementAI.Infrastructure/DependencyInjection.cs` | Cookie `Events.OnCheckSlidingExpiration`: no renewal for the health path | DD-003-FN §7, DEC-019 |
 | 7 | `src/backend/ProductionManagementAI.Application/ProductionOrders/Ports.cs`, `Infrastructure/ProductionOrders/PlantClock.cs` | `IPlantClock` additions | DD-003-FN §5 |
 | 8 | `src/backend/ProductionManagementAI.Domain/ProductionOrders/ProductionOrder.cs`, `Infrastructure/ProductionOrders/ProductionOrderConfigurations.cs` | `CompletedAtUtc` property, mapping and check constraints | DD-001 v4, DB-004 |
 | 9 | `src/backend/ProductionManagementAI.Infrastructure/Migrations/` | DB-004's three migrations | |
@@ -88,7 +100,7 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
 | No | Name | Purpose | Notes |
 | --- | --- | --- | --- |
 | 1 | `apiClient` | Fetch wrapper with 401 → `/login` | WI-001 |
-| 2 | `AppHeader`, `ProtectedRoute` | Common header and route guard | Unchanged (DEC-012) |
+| 2 | `AppHeader`, `ProtectedRoute` | Common header (now with `AppNavbar`) and route guard | DEC-016 |
 | 3 | `MessageBanner` | Error banner with its live region | DD-001 |
 | 4 | `messages.ts`, `statusLabels` | Message catalog and status labels | DD-001, DD-002 |
 
@@ -102,9 +114,9 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
 
 | No | Document | Type | Covers |
 | --- | --- | --- | --- |
-| 1 | DD-003-API-production-dashboard.md | api-design | `GET /api/dashboard` (API-DSH-01): response catalog, error codes, caching |
-| 2 | DD-003-FN-dashboard-snapshot.md | function-design | `DashboardService.GetSnapshotAsync`, `DashboardWindow.For`, `IDashboardReader.ReadAsync`, `DashboardMapper.ToResponse`, `IPlantClock` additions, observability |
-| 3 | DD-003-SPD-production-dashboard.md | screen-processing-design | P-20 to P-25 plus the controller request boundary |
+| 1 | DD-003-API-production-dashboard.md | api-design | `GET /api/dashboard` (API-DSH-01) and `GET /api/system/health` (API-SYS-01): response catalogs, error codes, caching |
+| 2 | DD-003-FN-dashboard-snapshot.md | function-design | `DashboardService.GetSnapshotAsync`, `DashboardWindow.For`, `IDashboardReader.ReadAsync`, `DashboardMapper.ToResponse`, `IPlantClock` additions, `SystemHealthService.CheckAsync`, the session-renewal rule, observability |
+| 3 | DD-003-SPD-production-dashboard.md | screen-processing-design | P-20 to P-29 plus the two controller request boundaries |
 
 ### Task / design index
 
@@ -142,7 +154,7 @@ Not applicable — plain component, no rule/validator fields.
 | 1 | `getDashboard` | Data | §7 |
 | 2 | Modules 2–6, `MessageBanner` | Children | |
 | 3 | `useAuth` | Role gate (UX only; the server is authoritative) | WI-001 |
-| 4 | `Link` | Page actions to `/production-orders` and `/production-orders/new` | react-router; DEC-012 |
+| 4 | `HealthIndicator` | Item 26, rendered beside the heading | §12 |
 
 Processing overview: DD-003-SPD §1 (P-20) and §2 (P-21). Every widget receives its slice of the same snapshot object; none fetches on its own.
 
@@ -152,7 +164,7 @@ Processing overview: DD-003-SPD §1 (P-20) and §2 (P-21). Every widget receives
 
 | Type | Name | Description |
 | --- | --- | --- |
-| JSX | — | Heading and page actions always; below them one of `loading`, `ready`, `error`, `forbidden` |
+| JSX | — | Heading and health indicator always (the indicator is hidden in `forbidden`); below them one of `loading`, `ready`, `error`, `forbidden` |
 
 ### 2. `StatusTiles` and `DeliveryTiles`
 
@@ -253,6 +265,7 @@ Not applicable — presentational.
 | 3 | `string` | `summary` | The SVG's accessible name |
 | 4 | `string[]` / `string[][]` | `tableColumns`, `tableRows` | The table equivalent |
 | 5 | `string \| undefined` | `emptyMessage` | Shown over an all-zero chart (workload: MSG-I007) |
+| 6 | `'card' \| 'maximized'` | `variant` | `card` renders the Expand control (item 27); `maximized` renders larger and without it, inside `ChartDialog` |
 
 **Dependencies**: none beyond React.
 
@@ -355,15 +368,104 @@ Processing overview: DD-003-SPD §7. `[ResponseCache(NoStore = true, Location = 
 
 Pointer only — `DashboardService`, `DashboardWindow`, `IDashboardReader`/`DashboardReader`, `DashboardMapper` and the `IPlantClock` additions are designed in **DD-003-FN**, which also specifies the span and the counter.
 
+### 10. `AppNavbar`
+
+| Field | Value |
+| --- | --- |
+| Description | The navbar inside `AppHeader` on every authenticated screen (BD-003 H-2, H-4, H-5; DEC-016) |
+| Return type | JSX element |
+| Created by / date | Claude / 2026-09-22 |
+| Last modified by / date | — |
+
+Preconditions: rendered by `AppHeader` only when a user is signed in.
+
+Not applicable — plain component.
+
+**Arguments**: none — the current route comes from `useLocation`.
+
+**Dependencies**: `GuardedLink` (§11), `useLocation`.
+
+Processing overview: DD-003-SPD §8 (P-26). Current-entry rule: `/` → Dashboard; `/production-orders` and `/production-orders/{id}` → Production orders; `/production-orders/new` → New production order.
+
+**Return value**: JSX (`<nav aria-label="Main">`, and on SP the Menu button and its panel).
+
+### 11. `NavigationGuard` and `GuardedLink`
+
+| Field | Value |
+| --- | --- |
+| Description | A context through which an edited form can intercept in-app links, and the link component that consults it (DEC-022) |
+| Return type | Context provider; hook; JSX link |
+| Created by / date | Claude / 2026-09-22 |
+| Last modified by / date | — |
+
+Preconditions: `NavigationGuardProvider` wraps the authenticated routes in `App.tsx`.
+
+Rule type: navigation interception.
+
+**Arguments / API**
+
+| Member | Signature | Behavior |
+| --- | --- | --- |
+| `useNavigationGuard().register` | `(guard: (to: string) => boolean) => () => void` | The form registers a function that returns `true` when it has taken over the navigation (it was dirty and opened its dialog). Returns the unregister function, called on unmount |
+| `GuardedLink` | props of react-router `Link` | On click: if a registered guard returns `true` for `to`, `preventDefault()`; otherwise a normal `Link`. Modified clicks (Ctrl/Cmd/Shift, middle button) are never intercepted: they open a new tab and lose nothing |
+
+**Dependencies**: react-router `Link`, `useNavigate`.
+
+Processing overview: DD-003-SPD §9 (P-27). Only one guard is registered at a time (one form per screen). The form's dialog remembers the destination and, on Discard, navigates there. This avoids migrating `BrowserRouter` to a data router for `useBlocker`. Browser Back, reload and closing the tab are intentionally not intercepted (DEC-022).
+
+**Return value**: provider, hook, link.
+
+### 12. `HealthIndicator` and `useSystemHealth`
+
+| Field | Value |
+| --- | --- |
+| Description | Item 26: shows HS-01–HS-05 with the last-check time; the hook owns the polling |
+| Return type | JSX element; hook returning `{ server, database, checkedAt, state }` |
+| Created by / date | Claude / 2026-09-22 |
+| Last modified by / date | — |
+
+Preconditions: rendered on SCR-003 outside the `forbidden` state.
+
+Rule type: status derivation (BD-003 HS-01–HS-05, DEC-020).
+
+**Arguments**: none.
+
+**Dependencies**: `systemApi.getHealth` (with a 5 s `AbortSignal.timeout`), `document.visibilityState`, `dashboardFormat.formatHealth` (M-20).
+
+Processing overview: DD-003-SPD §10 (P-28). The first check runs on mount; then every 30 s while the tab is visible; on becoming visible it checks at once. The polling uses `setTimeout` chained after each completed check, never `setInterval`, so a slow check cannot pile up concurrent requests.
+
+**Return value**: JSX: a `role="status"` region with the two statuses and "Checked HH:mm:ss".
+
+### 13. `ChartDialog`
+
+| Field | Value |
+| --- | --- |
+| Description | Items 28–29: a chart and its table in a full-window modal (DEC-018) |
+| Return type | JSX element |
+| Created by / date | Claude / 2026-09-22 |
+| Last modified by / date | — |
+
+Preconditions: opened by a chart's Expand control with that chart's props.
+
+Not applicable — presentational.
+
+**Arguments**: the same props as `BarChart` (§5), plus `open`, `onClose`, and `returnFocusTo` (the Expand button).
+
+**Dependencies**: native `<dialog>` with `showModal()`; `BarChart` with `variant="maximized"`.
+
+Processing overview: DD-003-SPD §11 (P-29). The platform provides focus containment, Escape and the backdrop; the component sets `aria-labelledby` to the chart title and restores focus on close.
+
+**Return value**: JSX (`<dialog>`).
+
 ## Screen layout and mockup
 
 Implementation-fidelity layout. It refines BD-003 §1 in three ways. The two tile rows get section labels ("Current state", "Delivery") as `<h2>` headings, so the page has a heading outline. The delivery tiles state their windows in their captions. The two charts sit side by side at `lg` and stack below it.
 
 ```
 +------------------------------------------------------------------------------------------+
-| AppHeader: ProductionManagementAI                                     Admin | Sign out     |
+| ProductionManagementAI  [Dashboard] Production orders [+ New production order]  Admin Sign out |
 +------------------------------------------------------------------------------------------+
-| Dashboard                                   [ Production orders ] [ + New production order ] |
+| Dashboard                              Server ● OK   Database ● OK   Checked 14:05:30      |
 | As of 2026-09-22 14:05 (Asia/Tokyo)                                                        |
 | [ MessageBanner — only in the error state: "Something went wrong. Try again." [Retry] ]    |
 |                                                                                            |
@@ -389,7 +491,7 @@ Implementation-fidelity layout. It refines BD-003 §1 in three ways. The two til
 | | Due in the next 7 days (8) (h3)                    | |                                 | |
 | | …                                                  | |                                 | |
 | +----------------------------------------------------+ +---------------------------------+ |
-| +--- Open workload by due week (h2) -----------+ +--- Completed per week (h2) ----------+ |
+| +--- Open workload by due week (h2) ------ ⤢ -+ +--- Completed per week (h2) ------ ⤢ -+ |
 | |  15                                          | |                                   9  | |
 | |  ██  6   7   7   6   8   6   1   1   2       | |  3  3  2  3  2  3  5  5  6  7  █  3  | |
 | |  ██ ▅▅  ▆▆  ▆▆  ▅▅  ▇▇  ▅▅  ▁▁  ▁▁  ▂▂       | |  ▃  ▃  ▂  ▃  ▂  ▃  ▅  ▅  ▆  ▇  █  ▃  | |
@@ -399,30 +501,33 @@ Implementation-fidelity layout. It refines BD-003 §1 in three ways. The two til
 +------------------------------------------------------------------------------------------+
 ```
 
-Mockup artifact: https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot — published privately on 2026-09-22 with the user's authorization ("public it privately"). Source: `docs/en/020_detailed-design/mockups/DD-003-screen-c-mockup.html`, which reuses DD-002's token system and app-look CSS verbatim, so the three mockups read as one set. Its figures are computed from DB-004's seed as it reads on a run day of 2026-09-22 (a Tuesday), not invented. Artboards: 1 ready (PC), 2 loading, 3 empty system, 4 no recent completions, 5 load error, 6 forbidden, 7 SP layout, 8 chart with its table equivalent expanded.
+Mockup artifact: https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot — published privately on 2026-09-22 with the user's authorization ("public it privately"); version 2 republished to the same URL under plan revision 2 (step 7). Source: `docs/en/020_detailed-design/mockups/DD-003-screen-c-mockup.html`, which reuses DD-002's token system and app-look CSS verbatim, so the three mockups read as one set. Its figures are computed from DB-004's seed as it reads on a run day of 2026-09-22 (a Tuesday), not invented. Artboards (version 2 of the mockup, same URL): 1 ready (PC, with the navbar and a healthy indicator), 2 loading, 3 empty system, 4 no recent completions, 5 load error with the database unavailable, 6 forbidden, 7 SP layout with the menu closed, 8 SP menu open, 9 chart with its table, 10 maximized chart, 11 the navbar on SCR-002.
 
 | Region | Contains (field/control) | Notes |
 | --- | --- | --- |
 | Header | AppHeader (items 1, 2) | Shared component, unchanged |
-| Title row | Heading (3), snapshot time (4), page actions (5, 6) | Actions right-aligned on PC, stacked full width on SP |
+| Header | AppHeader with AppNavbar (BD-003 H-1–H-5) | Shared by every screen; Menu on SP |
+| Title row | Heading (3), snapshot time (4), health indicator (26) | Indicator right-aligned on PC, wraps below on SP |
 | Banner | MessageBanner (6a) | `error` state only; `role="alert"`, carries **Retry** |
 | Current state | Items 7–11 | `<h2>` + `<ul>` of tiles |
 | Delivery | Items 12–15 | `<h2>` + `<ul>` of tiles |
 | Needs attention | Items 16–19 | `<h2>` + two `<h3>` groups |
 | Top products | Item 22 | `<h2>` + `<ol>` |
-| Workload / Trend | Items 20–21 / 23–24 | `<h2>` + SVG + disclosure + table |
+| Workload / Trend | Items 20–21 / 23–24, Expand (27) | `<h2>` + Expand + SVG + disclosure + table |
+| Maximized chart | Items 28–29 | `<dialog>` over the page |
 | Loading | Item 25 | Skeleton in each widget frame, `aria-busy` on the widget region |
 
 ## Screen item definition
 
-SCR-003 has no input field (BD-003 §5). Its only controls are the page actions, Retry and the two table disclosures; everything else is output rendered from `DashboardSnapshot` (DD-003-API).
+SCR-003 has no input field (BD-003 §5). Its only controls are the navbar (shared header), Retry, the two table disclosures, the two Expand controls and Restore; everything else is output rendered from `DashboardSnapshot` (DD-003-API).
 
 | Field | Type | Required | Validation rule | Source (BD ref) |
 | --- | --- | --- | --- | --- |
-| Production orders | `Link` | — | none — navigation | §3 item 5, E-22 |
-| New production order | `Link` | — | none — navigation | §3 item 6, E-22 |
+| Navbar links (×3), Menu (SP) | `GuardedLink`, `button` | — | none — navigation | BD-003 H-2–H-5, E-29–E-31 |
 | Retry | `button` | — | none; present only in `error` | §3 item 6a, E-21 |
 | View as table (×2) | `button` with `aria-expanded` | — | none | §3 items 21, 24, E-23 |
+| Expand (×2) | icon `button`, name "Expand {chart title}" | — | none | §3 item 27, E-24 |
+| Restore | `button` | — | none; Escape equivalent | §3 item 29, E-25 |
 
 Message catalog additions (`messages.ts`). DD-001 and DD-002 already define MSG-E001–MSG-E020 and MSG-I001–MSG-I004, so Screen C continues the same catalog:
 
@@ -445,7 +550,12 @@ Reused unchanged: MSG-E013 (load failure).
 | `ready`, empty system | 200 with `statusCounts.total = 0` | Not a separate state: tiles show 0, groups show MSG-I005/MSG-I006, top products and workload show MSG-I007, on-time and lead time show "—" with MSG-I008, trend shows twelve zero bars | Zeros |
 | `ready`, no recent completions | 200 with `onTime.completedCount = 0` | Items 14 and 15 show "—" with MSG-I008; everything else as usual | — |
 | `error` | Network failure or 5xx | MessageBanner MSG-E013 with **Retry**; no figures, no stale snapshot | — |
-| `forbidden` | Client role gate or 403 | Panel MSG-E021 in place of the widgets; page actions stay | — |
+| `forbidden` | Client role gate or 403 | Panel MSG-E021 in place of the widgets; navbar stays; no health polling | — |
+| Health: checking | First check in flight | Indicator "Checking…" | — |
+| Health: OK | Health 200 with `database: "ok"` | "Server: OK · Database: OK · Checked HH:mm:ss" | — |
+| Health: database unavailable | Health 200 with `database: "unavailable"` | "Server: OK · Database: Unavailable"; figures already shown stay | — |
+| Health: server unreachable | No answer in 5 s, network failure or 5xx | "Server: Unreachable · Database: Unknown" | — |
+| Chart maximized | Expand | `ChartDialog` open over the page; the page behind is inert | Same snapshot |
 | 401 | No valid session | `apiClient` redirects to `/login` | — |
 
 ## Processing and state transitions
@@ -462,7 +572,10 @@ This screen has no business state machine and changes no data (REQ-039). The one
 | `loading` | network or 5xx | `error` | — |
 | `error` | E-21 Retry | `loading` | Same request re-sent |
 | `ready` | E-23 View as table | `ready` | Table shown or hidden; no request |
-| any | E-22 page action | (leaves screen) | Navigates to SCR-002 or SCR-001 create |
+| `ready` | E-24 Expand | `ready` + dialog open | No request; focus into the dialog |
+| dialog open | E-25 Restore / Escape | `ready` | Focus back on Expand |
+| any except `forbidden` | E-26–E-28 health check | same | Indicator updated; figures untouched |
+| any | E-29 navbar link | (leaves screen) | Navigates to SCR-002 or SCR-001 create; health polling stops on unmount |
 | (leaves) | returns to `/` | `loading` | A new snapshot; the earlier one is never reused (`no-store`) |
 
 ### Processing flows
@@ -475,6 +588,10 @@ This screen has no business state machine and changes no data (REQ-039). The one
 | P-23 Attention groups | DD-003-SPD §4 | — |
 | P-24 Top products | DD-003-SPD §5 | — |
 | P-25 Charts | DD-003-SPD §6 | E-23 |
+| P-26 Navbar | DD-003-SPD §8 | E-29–E-31 |
+| P-27 Navigation guard | DD-003-SPD §9 | BD-001 E-07a, E-09 |
+| P-28 Health polling | DD-003-SPD §10 | E-26–E-28 |
+| P-29 Maximized chart | DD-003-SPD §11 | E-24, E-25 |
 | Server snapshot | DD-003-FN §1–§5 | — |
 
 ## APIs used
@@ -482,6 +599,7 @@ This screen has no business state machine and changes no data (REQ-039). The one
 | Endpoint | Method | Purpose | Design doc |
 | --- | --- | --- | --- |
 | `/api/dashboard` | GET | The snapshot | DD-003-API §1 |
+| `/api/system/health` | GET | Server and database status | DD-003-API §2 |
 
 ## Database and transaction mapping
 
@@ -489,6 +607,7 @@ This screen has no business state machine and changes no data (REQ-039). The one
 | --- | --- | --- | --- |
 | Dashboard snapshot | `production_orders`, joined to `products` for Q3 and Q4 | One `REPEATABLE READ READ ONLY` transaction around seven statements (DB-004, DEC-015) | Not applicable — read-only; one snapshot for every figure |
 | Record completion (SCR-001) | `production_orders.completed_at_utc` | The existing single `SaveChanges` | `xmin` token, unchanged (DD-001 v4) |
+| Health ping | none — `SELECT 1` | Single statement, 2 s timeout | Not applicable |
 
 Raw SQL is used for the snapshot's seven statements (DD-003-FN §3). That is a deliberate exception to the LINQ-first style of DD-001 and DD-002, because their aggregate shapes have no clean LINQ translation. Each statement is a `FormattableString`, so every value is a bound parameter.
 
@@ -501,11 +620,14 @@ Raw SQL is used for the snapshot's seven statements (DD-003-FN §3). That is a d
 | Database or query failure (500) | none automatic; **Retry** re-sends | Npgsql command timeout 30 s (default) | Banner MSG-E013 | `Error` `DashboardSnapshotFailed` with the exception, server-side only; generic Problem Details to the client |
 | Frontend network failure | none automatic; **Retry** | browser default | Banner MSG-E013 | `console.error` in development only |
 | Unmount mid-request | not an error | — | none | none — aborted |
+| Health: database ping fails or exceeds 2 s | none; next poll in 30 s | 2 s (server) | Indicator "Database: Unavailable" | `Warning` `DatabasePingFailed` with the exception type only; counter `database=unavailable` |
+| Health: server unreachable | none; next poll in 30 s | 5 s (browser) | Indicator "Server: Unreachable · Database: Unknown" | none client-side |
+| Health: 401 | none | — | Redirect to `/login` (the poll did not renew the session, DEC-019) | Existing `apiClient` behavior |
 | An old backend completes an order after DB-004 migration 1 | not applicable at runtime | — | That save fails with 500 | Prevented by deploy order (DB-004 "Deploy order") |
 
 ## Accessibility (WCAG 2.2 AA)
 
-Stated in BD-003's non-functional requirements and made concrete in DD-003-SPD §3–§6. In summary: one `<h1>`, then `<h2>` per widget and `<h3>` per attention group; tiles are list items with label before value; the attention tables have captions and `scope="col"` headers; each chart is `role="img"` with a summarizing name, prints every value as text, and offers a real table; emphasis never relies on color alone; the SP chart scroller is keyboard-focusable and labelled; loading is `aria-busy`, errors `role="alert"`, the finished load a polite status message. Automated checks: `vitest-axe` on the page in each state, and `@axe-core/playwright` on the running screen (TC-217).
+Stated in BD-003's non-functional requirements and made concrete in DD-003-SPD §3–§6. In summary: one `<h1>`, then `<h2>` per widget and `<h3>` per attention group; tiles are list items with label before value; the attention tables have captions and `scope="col"` headers; each chart is `role="img"` with a summarizing name, prints every value as text, and offers a real table; emphasis never relies on color alone; the SP chart scroller is keyboard-focusable and labelled; the navbar is a labelled `<nav>` with `aria-current` on the current entry and an SP Menu button with `aria-expanded` that closes on Escape; the health indicator is a polite `role="status"` region that announces changes only, with statuses in text and shape-coded dots; the maximized chart is a native modal `<dialog>` named by its title, with focus returned to Expand on close; loading is `aria-busy`, errors `role="alert"`, the finished load a polite status message. Automated checks: `vitest-axe` on the page in each state, and `@axe-core/playwright` on the running screen (TC-217).
 
 ## Test viewpoints and unresolved decisions
 
@@ -515,8 +637,8 @@ U = unit (xUnit Application/Domain, or Vitest + RTL), I = integration (`WebAppli
 
 | Scenario | Precondition | Expected result | Test-plan ID |
 | --- | --- | --- | --- |
-| Landing page (REQ-028) — E | Seeded stack | Signing in lands on `/` showing the dashboard heading, every widget, the snapshot time and both page actions; the placeholder home content is gone | TC-201 |
-| Page actions and read-only (REQ-028, REQ-039, DEC-006, DEC-012) — U, E | Ready state | **Production orders** opens `/production-orders`; **New production order** opens `/production-orders/new`; no tile, row, bar or list item is a link or has a click handler; the page issues no request other than `GET /api/dashboard` | TC-202 |
+| Landing page (REQ-028) — E | Seeded stack | Signing in lands on `/` showing the dashboard heading, every widget, the snapshot time and the navbar with Dashboard current; the placeholder home content is gone | TC-201 |
+| Read-only (REQ-039, DEC-006) — U, E | Ready state | No tile, row, bar or list item is a link or has a click handler; the page issues no request other than `GET /api/dashboard` and the health checks; opening and closing a maximized chart issues none | TC-202 |
 | Status counts (REQ-029) — I, U(fe) | Rows in each status, and a status with none | Each count exact; the empty status is 0; `total` = sum; labels are Screen A's | TC-203 |
 | Overdue and due-soon boundaries (REQ-030, D-01, D-02) — I | T pinned; active orders due T − 1, T, T + 7, T + 8; completed and cancelled orders due T − 1 | T − 1 overdue; T and T + 7 due soon; T + 8 in neither; terminal orders in neither; groups ordered by due date then order number; with 12 overdue, 10 returned and `total = 12` | TC-204 |
 | Workload buckets (REQ-031, D-03, DEC-009) — U, I | `DashboardWindow` for each weekday Mon–Sun; active orders at T − 1, T, W + 6, W + 7, W + 55, W + 56 | Exactly 10 buckets; each order in exactly one; bucket boundaries per D-03 for every weekday; the current week's first date is T; counts sum to draft + inProgress; empty buckets 0 | TC-205 |
@@ -537,7 +659,14 @@ U = unit (xUnit Application/Domain, or Vitest + RTL), I = integration (`WebAppli
 | SP layout (BD-003 SP) — E | Pixel 7 profile | Tiles two per row; attention rows as cards; chart cards scroll horizontally, the page does not | TC-220 |
 | Query string ignored (DD-003-API) — I | — | `GET /api/dashboard?today=2020-01-01&top=1000` returns the same body as without the query string | TC-221 |
 
-Regression in WI-003's own suites is a plan revision 2 task, not a new viewpoint. The tests that assert the 80-row total, the 32/24/16/8 status spread or the `00081` next number move to DB-004's figures. The tests that assert relative dates do not change.
+| Navbar (REQ-040, DEC-016) — U, E | Signed in on each of `/`, `/production-orders`, `/production-orders/{id}`, `/production-orders/new`; Pixel 7 profile | Three links on every screen; `aria-current="page"` on the right one per BD-003 H-2; not rendered on `/login`; SP: Menu toggles `aria-expanded`, Escape closes and returns focus; each link navigates | TC-222 |
+| Navigation guard (REQ-019, DEC-022) — U, E | SCR-001 with an edited field | Navbar, breadcrumb and app-name links open the discard dialog; Keep editing stays with values kept; Discard goes to the clicked link's destination; with no edits each link navigates at once; a Ctrl-click is not intercepted | TC-223 |
+| Health endpoint (REQ-041, DEC-020) — I | App as `pmai_app` | Unauthenticated 401; no role 403; healthy → 200 `{ database: "ok", checkedAt }` and nothing else; with `IDatabasePing` replaced to throw or to exceed 2 s → 200 `{ database: "unavailable" }`; `Cache-Control: no-store`; no exception text in the body | TC-224 |
+| Health poll never renews the session (DEC-019) — I | Signed in; cookie clock advanced past half its lifetime | `GET /api/system/health` returns no `Set-Cookie`; `GET /api/dashboard` at the same moment does (renewal still works for real use) | TC-225 |
+| Health indicator (REQ-041) — U(fe) | Fake timers; mocked `getHealth` | "Checking…" then OK; `unavailable` → "Database: Unavailable"; rejection or 5xx → "Server: Unreachable · Database: Unknown"; next check after 30 s, chained (no overlap); hidden tab pauses, visible tab checks at once; the live region announces a change but not a repeat; unmount stops polling | TC-226 |
+| Maximize a chart (REQ-042, DEC-018) — U(fe), E | Ready state | Expand opens a modal dialog named by the chart title, showing the chart and its table with the same numbers; no network request; Tab stays inside; Escape and Restore close it and focus returns to Expand; axe clean with the dialog open | TC-227 |
+
+Regression in WI-003's own suites is a plan revision 3 task, not a new viewpoint. The tests that assert the 80-row total, the 32/24/16/8 status spread or the `00081` next number move to DB-004's figures. The tests that assert relative dates do not change.
 
 Unresolved decisions: none for the design. The same two limitations as DD-002 carry over:
 

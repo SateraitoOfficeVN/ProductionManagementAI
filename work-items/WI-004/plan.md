@@ -5,7 +5,7 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | approved; steps 1–6 done, steps 7–8 superseded by revision 2 | user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008" |
-| 2 | 2026-09-22 | Design amendment after mockup review (navbar, health indicator, chart maximize) and design-phase close | **current** — awaiting review | none yet |
+| 2 | 2026-09-22 | Design amendment after mockup review (navbar, health indicator, chart maximize) and design-phase close | **current** — approved; in progress | user message 2026-09-22: "ok revision 2 is approved" |
 
 ## Revision 1 — design phase
 
@@ -139,14 +139,14 @@ Bring the reconciled design set up to date with DEC-016 (navbar on every screen)
 
 | # | Milestone / step | Depends on | Skill used | Deliverable | Verification method | Outcome |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Brief revision 2 and DEC-016–DEC-018 | none | requirements | `brief.md`, `decisions.md` | Each new REQ has success and failure criteria; each decision records the user's words | drafted 2026-09-22 with this revision; confirmed by this revision's approval |
-| 2 | BD-003 version 2 | 1 | basic-design, screen-design | BD-003 | REQ-040–REQ-042 each map to BD sections; the health states, poll interval, timeout and failure display are stated once; navbar on SP defined | pending |
-| 3 | Shared-header amendments to BD-001 and BD-002 | 2 | basic-design | BD-001 v7, BD-002 v4 | Only the header/navigation changes; screen transitions updated | pending |
-| 4 | DD-003 set version 2 | 2 | detailed-design, screen-design | DD-003, DD-003-API, DD-003-FN, DD-003-SPD | The health endpoint's contract, authorization, timeout, observability and security are specified; overlay focus management specified; new test viewpoints cover REQ-040–REQ-042 | pending |
-| 5 | DD-001-SPD and DD-002-SPD notes | 3, 4 | detailed-design | new versions | The navbar component is referenced, not restated | pending |
-| 6 | DB-004 check | 4 | database-design | DB-004 (unchanged, or a stop) | The ping reads no table and needs no grant | pending |
-| 7 | Mockup regenerated and republished | 4 | screen-design | `mockups/DD-003-screen-c-mockup.html`, same private URL | Navbar (PC and SP menu), indicator OK and database-unavailable, maximized chart artboards added | pending |
-| 8 | Reconcile and close the design phase | 2–7 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision; user review of the amended design set | pending |
+| 1 | Brief revision 2 and DEC-016–DEC-018 | none | requirements | `brief.md`, `decisions.md` | Each new REQ has success and failure criteria; each decision records the user's words | done 2026-09-22 — confirmed by this revision's approval |
+| 2 | BD-003 version 2 | 1 | basic-design, screen-design | BD-003 | REQ-040–REQ-042 each map to BD sections; the health states, poll interval, timeout and failure display are stated once; navbar on SP defined | done 2026-09-22 — BD-003 v2: Shared application header (H-1–H-5, E-29–E-31), Health definitions HS-01–HS-05, items 26–29, M-20, E-24–E-28, FN-024–FN-026; DEC-019 (user: poll never renews the session), DEC-020 and DEC-021 recorded; sketch figures corrected to DB-004's seed |
+| 3 | Shared-header amendments to BD-001 and BD-002 | 2 | basic-design | BD-001 v7, BD-002 v4 | Only the header/navigation changes; screen transitions updated | done 2026-09-22 — BD-001 v7 and BD-002 v4 point to the shared header. Found while writing BD-001 v7: SCR-001's discard confirmation guarded only Cancel, and a draft note wrongly said it would cover navbar links; the claim was removed and the user decided DEC-022 (every in-app link asks first), so BD-001 v7 also gains E-07a — a Screen A behavior change by the user's decision |
+| 4 | DD-003 set version 2 | 2 | detailed-design, screen-design | DD-003, DD-003-API, DD-003-FN, DD-003-SPD | The health endpoint's contract, authorization, timeout, observability and security are specified; overlay focus management specified; new test viewpoints cover REQ-040–REQ-042 | done 2026-09-22 — DD-003 v3, DD-003-API v2 (API-SYS-01), DD-003-FN v2 (§6 health service, §7 no-renew rule), DD-003-SPD v2 (§8–§12); modules 10–13 (navbar, navigation guard, health indicator, chart dialog); test viewpoints TC-222–TC-227 |
+| 5 | DD-001-SPD and DD-002-SPD notes | 3, 4 | detailed-design | new versions | The navbar component is referenced, not restated | done 2026-09-22 — DD-001-SPD v2 (navbar and `NavigationGuard` registration), DD-002-SPD v2 (navbar) |
+| 6 | DB-004 check | 4 | database-design | DB-004 (unchanged, or a stop) | The ping reads no table and needs no grant | done 2026-09-22 — no change: the ping is `SELECT 1`, reads no table and needs no grant |
+| 7 | Mockup regenerated and republished | 4 | screen-design | `mockups/DD-003-screen-c-mockup.html`, same private URL | Navbar (PC and SP menu), indicator OK and database-unavailable, maximized chart artboards added | done 2026-09-22 — 11 artboards (adds database-down, SP menu, maximized chart, navbar on Screen B); one render check; republished as version 2 to https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
+| 8 | Reconcile and close the design phase | 2–7 | — | `status.md`, `evidence.md` | `ai/checklists/design-consistency.md` passes; no open business decision; user review of the amended design set | in progress — design-consistency walk passed (evidence.md); awaiting the user's review of the amended design set |
 | 9 | Draft plan revision 3 (implementation, tests, PR) | 8 | planning | `plan.md` revision 3 | Shown to the user and stopped; no revision 3 step starts before it is explicitly approved | pending |
 
 As in revision 1, the user reviews the amended design set before the design phase is closed.
@@ -164,7 +164,7 @@ As in revision 1, the user reviews the amended design set before the design phas
 | --- | --- | --- | --- |
 | Local file edits under `work-items/WI-004/` and `docs/en/` | yes, once this revision is approved | the user's mockup-review request, 2026-09-22 | design documents only |
 | Local commits on `feature/WI-004-production-dashboard` | yes | revision 1 approval, still in force | local only |
-| Republish the mockup to its existing private URL | requested with this revision | — | step 7 only — https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
+| Republish the mockup to its existing private URL | yes | approval of this revision, 2026-09-22 | step 7 only — https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
 | git push / PR / merge / deploy | no | not authorized | — |
 
 ### Risks and mitigations
@@ -179,6 +179,6 @@ As in revision 1, the user reviews the amended design set before the design phas
 
 ### Approval / sign-off
 
-- **Review status:** awaiting review
-- **Approval source:** —
-- **Approved revision:** —
+- **Review status:** approved
+- **Approval source:** user message 2026-09-22: "ok revision 2 is approved"
+- **Approved revision:** revision 2, 2026-09-22

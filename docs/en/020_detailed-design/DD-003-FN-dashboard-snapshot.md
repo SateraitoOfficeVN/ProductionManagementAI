@@ -2,7 +2,7 @@
 
 # Dashboard Snapshot — Function Design (機能設計)
 
-DD-003-FN — used by DD-003 and DD-003-API, requirements REQ-028–REQ-039.
+DD-003-FN — used by DD-003 and DD-003-API, requirements REQ-028–REQ-042.
 
 ## Document control (改版履歴)
 
@@ -20,6 +20,7 @@ DD-003-FN — used by DD-003 and DD-003-API, requirements REQ-028–REQ-039.
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
+| 2 | 2026-09-22 | Claude (for ThanhTN) | §6 `SystemHealthService.CheckAsync` and `IDatabasePing` (DEC-017, DEC-020); §7 the no-renew rule for the health path (DEC-019); observability extended |
 
 ## Overview and method index
 
@@ -35,6 +36,8 @@ DD-003-FN — used by DD-003 and DD-003-API, requirements REQ-028–REQ-039.
 | 3 | `IDashboardReader.ReadAsync` | DB-004 Q1–Q6 in one `REPEATABLE READ READ ONLY` transaction | New port; `DashboardReader` in Infrastructure |
 | 4 | `DashboardMapper.ToResponse` | Raw rows → `DashboardResponse`: zero-filling, bucket order, lead-time rounding | New, pure |
 | 5 | `IPlantClock.DateOf` / `StartOfDayUtc` / `TimeZoneId` | Plant-local calendar conversions the window needs | Additive members on the existing port (DD-001-FN §6) |
+| 6 | `SystemHealthService.CheckAsync` | Ping the database with a 2 s timeout | API-SYS-01; port `IDatabasePing`, `DatabasePing` in Infrastructure |
+| 7 | Cookie `OnCheckSlidingExpiration` | Health requests never renew the session | `DependencyInjection.cs` |
 
 ### Shared utility references
 
@@ -247,6 +250,51 @@ An integrity guard is asserted in the unit tests, not at run time: the workload 
 
 Processing overview: `PlantClock` already resolves the `TimeZoneInfo` once. These members reuse it, so no other class converts time zones.
 
+### 6. `SystemHealthService.CheckAsync`
+
+| Field | Value |
+| --- | --- |
+| Description | Report whether the database answers `SELECT 1` within 2 seconds |
+| Return type | `Task<SystemHealthResponse>` |
+| Created by / date | Claude / 2026-09-22 |
+| Last modified by / date | — |
+
+**Arguments**
+
+| No | Type | Name | Description |
+| --- | --- | --- | --- |
+| 1 | `CancellationToken` | `cancellationToken` | The request's token |
+
+**Return value**
+
+| Type | Name | Description |
+| --- | --- | --- |
+| `SystemHealthResponse` | health | `{ Database = "ok" \| "unavailable", CheckedAt }` — never an exception for a failed ping |
+
+Processing overview: the port `IDatabasePing.PingAsync(ct)` is implemented by `DatabasePing` as `db.Database.ExecuteSqlRawAsync("SELECT 1", ct)` (constant text, no input). The service links the request token with a 2-second `CancellationTokenSource`. The port exists so the integration tests can replace it with a failing or a slow implementation (TC-224) without stopping the shared database container.
+
+**Processing flow**
+
+| Step | Description | Calls |
+| --- | --- | --- |
+| 1 | Start span `System.Health` | `ProductionOrderTelemetry.Source` |
+| 2 | `using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct); timeout.CancelAfter(2 s)` | — |
+| 3 | `await ping.PingAsync(timeout.Token)` → `database = "ok"` | `IDatabasePing` |
+| 4 | On `OperationCanceledException` **caused by the timeout** (not by `ct`), or on `DbException`/`NpgsqlException`/`InvalidOperationException` from the connection → `database = "unavailable"`; log `Warning` `DatabasePingFailed` with the exception **type** only; span status `Error` | logger |
+| 5 | If `ct` itself was cancelled (the client went away), rethrow — nothing to report | — |
+| 6 | Counter `health_checks{database}`; return `{ database, CheckedAt = timeProvider.GetUtcNow() }` | telemetry, `TimeProvider` |
+
+### 7. Session renewal rule (`OnCheckSlidingExpiration`)
+
+| Field | Value |
+| --- | --- |
+| Description | Requests to `/api/system/health` never renew the authentication cookie (DEC-019) |
+| Return type | — (cookie options event) |
+| Created by / date | Claude / 2026-09-22 |
+| Last modified by / date | — |
+
+Processing overview: in `ConfigureApplicationCookie`, alongside the existing `OnRedirectToLogin`/`OnRedirectToAccessDenied` handlers, add `Events.OnCheckSlidingExpiration = ctx => { if (ctx.HttpContext.Request.Path.StartsWithSegments("/api/system/health")) ctx.ShouldRenew = false; return Task.CompletedTask; }`. Nothing else in the cookie configuration changes: expiry, sliding for every other path, `HttpOnly`, `SameSite=Lax`. The path is a constant shared with the controller's route, so the two cannot drift apart. Verified by TC-225 with the cookie handler's `TimeProvider` advanced past half the lifetime.
+
 ## Observability
 
 Extends the existing `ProductionManagementAI.ProductionOrders` source and meter, per `ai/rules/backend.md`.
@@ -255,8 +303,10 @@ Extends the existing `ProductionManagementAI.ProductionOrders` source and meter,
 | --- | --- | --- | --- |
 | Span | `ProductionOrder.Dashboard` | Activity | `dashboard.today` (plant date), `dashboard.active_orders`, `dashboard.window_completed`; status `Error` on failure. The Npgsql instrumentation already in `Program.cs` adds a child span per statement, which shows the seven queries' individual cost |
 | Metric | `pmai.production_orders.dashboard_loaded` | Counter | `outcome` = `success` \| `error` |
+| Span | `System.Health` | Activity | status `Error` when the ping fails |
+| Metric | `pmai.system.health_checks` | Counter | `database` = `ok` \| `unavailable` — an outage shows as the `unavailable` share rising, with volume bounded by open dashboards ÷ 30 s |
 
-Logging: `Error` with the exception on failure (`DashboardSnapshotFailed`). Nothing on success — the counter and span cover it, and a dashboard load is not an auditable event. No figure or order data is logged.
+Logging: `Error` with the exception on failure (`DashboardSnapshotFailed`); `Warning` `DatabasePingFailed` with the exception type only (never the message, which can contain host or credential fragments from a connection error). Nothing on success — the counter and span cover it, and a dashboard load is not an auditable event. No figure or order data is logged.
 
 ## Unresolved decisions
 

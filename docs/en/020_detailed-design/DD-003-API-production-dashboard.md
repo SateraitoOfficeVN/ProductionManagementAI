@@ -2,7 +2,7 @@
 
 # Production Dashboard API — API Specification Design (API仕様設計)
 
-DD-003-API — supports DD-003; handler designed in DD-003-FN; requirements REQ-028–REQ-039.
+DD-003-API — supports DD-003; handler designed in DD-003-FN; requirements REQ-028–REQ-042.
 
 ## Document control (改版履歴)
 
@@ -20,6 +20,7 @@ DD-003-API — supports DD-003; handler designed in DD-003-FN; requirements REQ-
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
+| 2 | 2026-09-22 | Claude (for ThanhTN) | `GET /api/system/health` added (DEC-017, DEC-019, DEC-020); `workload[].weekStart` clarified for the current week |
 
 ## Overview and operation catalog
 
@@ -31,6 +32,7 @@ DD-003-API — supports DD-003; handler designed in DD-003-FN; requirements REQ-
 | No | Endpoint / method | Handler | Purpose | Notes |
 | --- | --- | --- | --- | --- |
 | 1 | `GET /api/dashboard` | `DashboardController.Get` → `DashboardService.GetSnapshotAsync` | The dashboard snapshot | New in WI-004 |
+| 2 | `GET /api/system/health` | `SystemController.Health` → `SystemHealthService.CheckAsync` | Database reachability for the health indicator | New in WI-004 (DEC-017) |
 
 Common rules, unchanged from DD-001-API and DD-002-API:
 
@@ -45,6 +47,7 @@ Common rules, unchanged from DD-001-API and DD-002-API:
 | ID | Endpoint | Overview | Notes |
 | --- | --- | --- | --- |
 | API-DSH-01 | `GET /api/dashboard` | Production dashboard snapshot | New; first entry of the dashboard group |
+| API-SYS-01 | `GET /api/system/health` | Server and database status for signed-in users | New; the anonymous liveness `/health` is not an API-registry entry and is unchanged |
 
 `API-PRD-01` and `API-PO-01`–`API-PO-04` stay as registered in DD-001-API and DD-002-API.
 
@@ -185,6 +188,52 @@ Example response (abridged):
 | `MSG-E013` | Unexpected failure (database, timeout) | 500 |
 
 No 400: there is no input to reject. No 404, 409 or 422: the endpoint reads a snapshot of whatever exists, including nothing (REQ-028's empty state is a 200 with zeros).
+
+### 2. GET /api/system/health
+
+| Field | Value |
+| --- | --- |
+| Description | Report whether the database answers a trivial round trip, for SCR-003's health indicator (BD-003 HS-01–HS-05) |
+| Return type | `SystemHealthResponse` |
+| Created by / date | Claude / 2026-09-22 |
+| Last modified by / date | — |
+
+**Arguments**: none; a query string is ignored.
+
+Processing overview: authorize with the same policy as the dashboard, run `SELECT 1` with a 2-second timeout (DD-003-FN §6), and answer **200 in both outcomes**. That the endpoint answered at all is the server's status; the body carries only the database's. Requests to this path never renew the sign-in cookie (DEC-019, DD-003-FN §7).
+
+**Processing flow**
+
+| Step | Description | Calls |
+| --- | --- | --- |
+| 1 | Authorize | policy `ProductionOrderEditor` |
+| 2 | Ping the database | `SystemHealthService.CheckAsync` → DD-003-FN §6 |
+| 3 | 200 with `SystemHealthResponse` and `Cache-Control: no-store`; the cookie is not reissued | — |
+
+**Request fields**: not applicable.
+
+**Response fields** — `SystemHealthResponse`
+
+| No | Name | Variable name | Type | Length | Required | Repeats (array) | Value mapping | Example | Description | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Database | `database` | string | — | yes | no | `ok` \| `unavailable` | `ok` | `unavailable` when the ping failed for any reason or took longer than 2 s | The only component the server reports on (DEC-020) |
+| 2 | Checked at | `checkedAt` | string (date-time) | — | yes | no | UTC | `2026-09-22T05:05:30Z` | When the server ran the check | Shown in plant time (BD-003 M-20) |
+
+Nothing else is returned: no version, host, connection string, latency or exception text, in either outcome.
+
+```json
+{ "database": "unavailable", "checkedAt": "2026-09-22T05:05:30Z" }
+```
+
+**Error codes**
+
+| Code | Meaning | HTTP status |
+| --- | --- | --- |
+| — | Not signed in (including a session that expired because polling did not renew it) | 401 |
+| — | Missing role | 403 |
+| `MSG-E013` | Unexpected failure outside the ping itself | 500 — the browser shows "Server: Unreachable" |
+
+A failing ping is a 200 with `database: "unavailable"`, not an error: the server answered, and reporting that is the endpoint's job.
 
 ## Unresolved decisions
 

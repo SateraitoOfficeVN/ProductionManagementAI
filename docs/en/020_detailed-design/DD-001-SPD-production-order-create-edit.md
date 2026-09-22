@@ -15,11 +15,12 @@ DD-001-SPD — elaborates DD-001, implements BD-001 (SCR-001), requirements REQ-
 | Created by | Claude (for ThanhTN) |
 | Created date | 2026-09-18 |
 | Last updated by | Claude (for ThanhTN) |
-| Last updated date | 2026-09-18 |
+| Last updated date | 2026-09-22 |
 
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-18 | Claude (for ThanhTN) | Initial creation. Moves DD-001 revision 1's processing flows P-01–P-05 into this document and splits them per component |
+| 2 | 2026-09-22 | Claude (for ThanhTN) | WI-004 (DEC-016): the page renders inside the shared `AppHeader`, which now contains the navbar (`AppNavbar`, designed in DD-003 module 10 and DD-003-SPD §8; breadcrumb links become `GuardedLink`, DD-003 module 11). No processing step of this screen changes. WI-004 DEC-022: the form registers its dirty state with the shared `NavigationGuard` (DD-003 module 11, DD-003-SPD §9), so navbar, breadcrumb and app-name links open the existing discard dialog with a pending destination (BD-001 v7 E-07a); Discard navigates there |
 
 ## Overview and process list
 

@@ -24,6 +24,10 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-016 | 2026-09-22 | Application navigation | user (mockup review) | decided | A navbar in the shared header on every screen — Dashboard, Production orders, New production order — replacing the dashboard's page actions; supersedes DEC-012 |
 | DEC-017 | 2026-09-22 | Server and database health indicator on the dashboard | user (mockup review) | decided | A status pill checked on load and every 30 s through a new authenticated endpoint that pings the database; text states, no operational detail exposed |
 | DEC-018 | 2026-09-22 | Chart full screen | user (mockup review) | decided | Each chart can be maximized to a full-window overlay and restored (Escape or Restore); no browser Fullscreen API |
+| DEC-019 | 2026-09-22 | Whether the health poll renews the sign-in session | user | decided | Never — the health endpoint is excluded from sliding-expiration renewal |
+| DEC-020 | 2026-09-22 | Health states, timeouts and endpoint | Claude (technical, during BD-003 v2) | decided | Server OK/Unreachable (5 s client timeout), Database OK/Unavailable/Unknown (`SELECT 1`, 2 s); `GET /api/system/health`, authenticated |
+| DEC-021 | 2026-09-22 | Whether SCR-001/SCR-002 keep their breadcrumbs next to the navbar | Claude (UI, during BD-003 v2) | decided | Kept — they show position, the navbar shows destinations; removing them would change both screens beyond their header |
+| DEC-022 | 2026-09-22 | Leaving an edited Screen A form through a navbar (or other in-app) link | user | decided | Ask first with the existing discard dialog, as Cancel does; implemented with a shared navigation guard, not a router migration |
 
 ## DEC-001: Which current-state widgets the dashboard shows
 
@@ -456,3 +460,83 @@ Raised by the user on reviewing the mockup: "the chart should be able to go full
 | --- | --- |
 | brief.md | New REQ-042 |
 | BD-003, DD-003, DD-003-SPD | Chart controls, overlay, focus management, a new event |
+
+## DEC-019: Whether the health poll renews the sign-in session
+
+### Context
+
+Found while starting plan revision 2. The app uses ASP.NET Core Identity's cookie defaults (`DependencyInjection.cs` sets no `ExpireTimeSpan` or `SlidingExpiration`): a 14-day session renewed on requests once more than half of it has elapsed. A dashboard polling health every 30 seconds would therefore keep its session alive indefinitely, even untouched. Plan revision 2's risks said this would be raised as a question.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| The poll never renews | The session lasts exactly as long as without the dashboard; small, targeted change | A change to the shared cookie configuration (one event handler) |
+| Accept renewal | No auth change; suits a wall display | An unattended browser keeps an Admin/Operator session forever |
+| Stop polling when idle | No auth change | More client logic; the indicator goes stale when idle |
+
+### Decision and rationale
+
+- **Decision:** requests to the health endpoint never renew the session: the cookie options' `Events.OnCheckSlidingExpiration` sets `ShouldRenew = false` for that path. Every other request, including the dashboard snapshot, renews as before.
+- **Decided by:** user, 2026-09-22 ("No — poll never renews").
+- **Rationale:** the indicator must not change how long a login lasts.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| BD-003 v2 | Health definitions, E-27, security NFR |
+| DD-003-FN v2 | The cookie event and its test |
+| ADR-0002 | None to the decision; the session behaviour it describes is unchanged for every user action |
+
+## DEC-020: Health states, timeouts and endpoint
+
+### Context
+
+DEC-017 left the exact states, timeouts and endpoint to design.
+
+### Decision and rationale
+
+- **Decision:** the browser calls `GET /api/system/health` (authenticated, `ProductionOrderEditor`, `no-store`), which runs `SELECT 1` with a 2-second timeout and returns `{ database: "ok" | "unavailable", checkedAt }` with 200 either way. The browser derives the server's status: OK when that call returns 200 within 5 seconds, Unreachable on no answer, a network failure or a 5xx, and in that case the database is Unknown rather than its last value (BD-003 HS-01–HS-05).
+- **Decided by:** Claude, 2026-09-22, during BD-003 v2 (technical detail of DEC-017).
+- **Rationale:** a 200 with a database verdict separates "the server is up but the database is not" from "nothing answers", which is what the indicator exists to show. A 2-second database timeout keeps a hung database from holding a request for the default 30 seconds. The path sits under `/api` so it goes through the same proxy and authorization as every other call, apart from the anonymous liveness `/health`.
+
+## DEC-021: Breadcrumbs next to the navbar
+
+### Context
+
+With a navbar on every screen, SCR-001's and SCR-002's breadcrumbs ("Home > Production orders > …") partly duplicate navigation.
+
+### Decision and rationale
+
+- **Decision:** keep them. The breadcrumb shows where the user is (and on SCR-001 which order); the navbar shows where they can go. Removing them would change both screens beyond their header, outside plan revision 2's scope.
+- **Decided by:** Claude, 2026-09-22, during BD-003 v2 (UI).
+
+## DEC-022: Leaving an edited Screen A form through an in-app link
+
+### Context
+
+Found while writing BD-001 v7: SCR-001's discard-changes confirmation (REQ-019, FN-009) is attached to its Cancel button only (`ProductionOrderForm.tsx`). The breadcrumb and app-name links already leave an edited form silently, and the new navbar would make that the common way out. An earlier draft of the BD-001 v7 and DD-SPD notes wrongly said the confirmation would apply to navbar links; that claim was removed before this question was asked.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Ask first, like Cancel | Consistent with REQ-019's intent; closes the existing breadcrumb gap | A small change to Screen A's behavior |
+| Leave without asking | No Screen A change | The navbar silently discards edits |
+
+### Decision and rationale
+
+- **Decision:** any in-app link that leaves an edited SCR-001 form — navbar, breadcrumb, app name — opens the existing discard dialog. Discard goes to that link's destination; Keep editing stays. Browser Back, reload and closing the tab stay unguarded, as today.
+- **Decided by:** user, 2026-09-22 ("Ask first, like Cancel").
+- **Mechanism (Claude, technical):** the app uses `BrowserRouter`, so React Router's `useBlocker` (data routers only) is unavailable without migrating the router. Instead a small `NavigationGuard` context is used: the form registers "dirty" and an "ask" callback, and a shared `GuardedLink` used by the header, navbar and breadcrumbs consults it (DD-003 module 11).
+- **Rationale:** the navbar must not make losing work easier than Cancel does.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| BD-001 v7 | FN-009, E-07a, E-09, business rule |
+| DD-001-SPD v2, DD-003 v3 | `NavigationGuard`, `GuardedLink` |
+| Plan revision 2 | Screen A gains this one behavior change beyond its header, by the user's decision |
+| Tests (revision 3) | Navbar and breadcrumb with a dirty form → dialog; Discard → destination |

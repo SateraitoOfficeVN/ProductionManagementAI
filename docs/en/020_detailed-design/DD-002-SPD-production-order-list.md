@@ -20,6 +20,7 @@ DD-002-SPD — elaborates DD-002, implements BD-002, requirements REQ-020–REQ-
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
+| 2 | 2026-09-22 | Claude (for ThanhTN) | WI-004 (DEC-016): the page renders inside the shared `AppHeader`, which now contains the navbar (`AppNavbar`, designed in DD-003 module 10 and DD-003-SPD §8; breadcrumb links become `GuardedLink`, DD-003 module 11). No processing step of this screen changes |
 
 ## Overview and process list
 
