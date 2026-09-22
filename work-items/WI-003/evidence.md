@@ -1,7 +1,6 @@
 # Production Order List (Screen B) — Requirements Traceability & Evidence
 
-As of branch `feature/WI-003-production-order-list` (commits `2fe3ec7`, `ffcd01c`, `0f1ab4d`, plus the documentation
-and record commit that carries this file), 2026-09-22.
+As of branch `feature/WI-003-production-order-list`, pushed as PR #9, 2026-09-22.
 
 ## Traceability matrix
 
@@ -36,8 +35,8 @@ and record commit that carries this file), 2026-09-22.
 | 2026-09-22 | Frontend unit | `npm test` | local, Vitest + RTL + vitest-axe | pass — 56/56 (38 existing + 18 new) | — |
 | 2026-09-22 | E2E | `npx playwright test` | local Compose stack; Playwright Chromium desktop + Pixel 7 | pass — 16/16 (8 existing + 8 new) | `tests/e2e/playwright-report/` |
 | 2026-09-22 | security-review checklist | manual review | local | pass — walk below | this file |
-| 2026-09-22 | delivery checklist | manual review | local | pass, with push/PR pending authorization — walk below | this file |
-| 2026-09-22 | CI | GitHub Actions | — | not run — the branch has not been pushed; pushing and opening the PR is plan revision 2 step 14, still awaiting authorization | — |
+| 2026-09-22 | delivery checklist | manual review | local | pass — walk below; re-checked after the push and PR | this file |
+| 2026-09-22 | CI | GitHub Actions, on PR #9 | ubuntu-latest runners | pass — all three jobs: Backend (build, test) 53s, Frontend (build, lint, test) 14s, E2E (Compose stack + Playwright) 2m35s | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684528505 |
 
 Database verification (owner connection, after `dotnet ef database update`):
 
@@ -93,11 +92,11 @@ reach the API.
 
 | Checklist item | Result |
 | --- | --- |
-| Approved scope and plan revision identifiable | pass — plan revision 2, approved for its local scope by the user's "move on to the implementation"; revision 1 is closed above it |
+| Approved scope and plan revision identifiable | pass — plan revision 2, approved for its local scope by "move on to the implementation" and for step 14 by "yes push it and open the PR"; revision 1 is closed above it |
 | Design, code and tests agree with requirements | pass — see the traceability matrix; every REQ has passing cases at the levels TP-003 lists |
 | Required checks have recorded results | pass — build, lint, unit, integration, E2E and the migration run are recorded above with counts; CI is recorded as not run, with its reason |
 | Review findings and remaining limitations explicit | pass — see "Remaining limitations" below and the defect table |
-| External operations stayed within authorization | pass — branch, worktree, local commits, the local Compose stack and a local migration only. No push, no PR, no merge, no deployment |
+| External operations stayed within authorization | pass — branch, worktree, local commits, the local Compose stack and a local migration; then the push and PR #9, each authorized by the user at execution. No merge, no deployment |
 | Status, decisions and evidence support another agent continuing | pass — `status.md` names the branch and worktree; `decisions.md` carries DEC-001–DEC-012; this file carries the commands and results |
 | No secret in diff, evidence, status, decisions or PR description | pass — checked; `deploy/.env` is untracked |
 | External content treated as data | pass — nothing outside the repository and the local stack's own responses was consumed |
@@ -119,14 +118,14 @@ Every item below was found by a check in this work item and fixed before it left
 
 ## External references
 
-- PR: not opened — plan revision 2 step 14, pending the user's authorization
-- CI run: not applicable yet — the branch has not been pushed
+- PR: https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/9 — opened 2026-09-22 with the user's authorization; not merged
+- CI run: https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684528505 — all three jobs pass on the PR head
 - Deployment: not applicable — not in scope
 
 ## Remaining limitations and next action
 
-- **Not pushed, no CI.** Everything above was run locally. The three GitHub Actions jobs (backend, frontend, e2e) have
-  not run on this branch, because pushing and opening the PR still needs authorization.
+- **Not merged.** The branch is pushed and PR #9 is open with all three CI jobs green; merging was not part of the
+  authorization and stays the user's call.
 - **A read-only role cannot be expressed.** The list endpoint reuses the `ProductionOrderEditor` policy, so a viewer
   who may read but not edit is not representable. This waits on WI-001 DEC-015 (the role/permission matrix).
 - **The index assertions prove usability, not planner choice.** At 80 rows PostgreSQL correctly prefers a sequential
@@ -137,5 +136,5 @@ Every item below was found by a check in this work item and fixed before it left
 - The local Compose stack and its `db` volume are still running from the worktree; remove them with
   `docker compose -f deploy/compose.yaml down -v` when they are no longer needed.
 
-Next action: the user authorizes pushing `feature/WI-003-production-order-list` and opening the PR (plan revision 2,
-step 14), after which the CI results are added here.
+Next action: the user reviews and merges PR #9 (squash merge, per `ai/rules/git-review.md`). After the merge, the
+worktree and the local Compose stack can be removed.

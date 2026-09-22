@@ -1,19 +1,19 @@
 # Production Order List (Screen B) — Status Report
 
-As of 2026-09-22. Work item state: implemented and verified locally; awaiting authorization to push and open the PR.
+As of 2026-09-22. Work item state: delivered — PR #9 open with CI green, awaiting the user's review and merge.
 
 ## Overall status
 
 **RAG:** Green — on track
 WI-003 was opened on 2026-09-22 after WI-002 (Screen A) was merged to `master`. The design phase (plan revision 1) is
 complete and approved in three passes — BD-002, DB-003 and the DD-002 set with its published mockup. Plan revision 2
-is approved for its local scope; steps 1–13 are done. Screen B is implemented, both migrations are applied to the
-local Compose database, and every check passes locally: 116 backend unit, 63 integration, 56 frontend and 16 E2E
-tests, plus lint and both builds. Step 14 — push and PR — is blocked on authorization, so CI has not run.
+is approved and all 14 steps are done. Screen B is implemented, both migrations are applied to the local Compose
+database, and every check passes: 116 backend unit, 63 integration, 56 frontend and 16 E2E tests, plus lint and both
+builds locally, and all three GitHub Actions jobs green on PR #9.
 
 ## Branch and worktree
 
-- Branch: `feature/WI-003-production-order-list`, 4 commits, not pushed.
+- Branch: `feature/WI-003-production-order-list`, pushed; PR #9 → `master`, not merged.
 - Worktree: `D:/Work/AI/WMS-worktrees/WI-003` (the main working directory stays on a clean `master`).
 - The local Compose stack runs from that worktree with its own `db` volume, migrated and seeded; remove it with
   `docker compose -f deploy/compose.yaml down -v` when it is no longer needed.
@@ -21,13 +21,14 @@ tests, plus lint and both builds. Step 14 — push and PR — is blocked on auth
 ## Approved plan reference
 
 [plan.md](plan.md) — revision 1 approved 2026-09-22 ("approved, let move on to BD-002") and complete; revision 2
-approved for local work 2026-09-22 ("the DD is approved, move on to the implementation"). Push and PR were explicitly
-not granted and are still pending.
+approved for local work 2026-09-22 ("the DD is approved, move on to the implementation") and for step 14 by "yes push
+it and open the PR". Merging was not requested.
 
 ## Accomplishments this period
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | Plan revision 2 step 14: branch pushed, PR #9 opened, CI green on Backend, Frontend and E2E | https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/9 |
 | 2026-09-22 | Plan revision 2 steps 11–13: TP-003 written, full local verification recorded, and the design-consistency, security-review and delivery checklists walked | [test-plan.md](test-plan.md), [evidence.md](evidence.md) |
 | 2026-09-22 | Plan revision 2 steps 5–10: tests at every level (67 backend unit, 25 integration, 18 frontend, 8 E2E) and the five defects they found, all fixed | [evidence.md](evidence.md) |
 | 2026-09-22 | Plan revision 2 steps 2–4, 7–8: migrations applied locally, the list endpoint, the React screen, and Screen A's navigation target moved to the list (BD-001 v5, DD-001, DD-001-SPD updated) | [evidence.md](evidence.md) |
@@ -39,16 +40,15 @@ not granted and are still pending.
 
 ## Planned for next period
 
-Push the branch and open the PR once authorized (plan revision 2, step 14), then record the CI result in
-`evidence.md`. After the merge, remove the worktree and the local stack.
+User review and squash merge of PR #9. After the merge, remove the worktree and the local Compose stack, and start
+Screen C (dashboard), whose widgets and metrics are still open per the roadmap.
 
 ## Risks and issues
 
 | Issue / blocker | Owner | Since | Impact |
 | --- | --- | --- | --- |
-| Push and PR not authorized | ThanhTN | 2026-09-22 | CI has not run on this branch; every check so far is local only |
 | WI-001 DEC-015 (role/permission matrix) still open | ThanhTN | 2026-09-16 | The list endpoint reuses the `ProductionOrderEditor` policy, so a read-only viewer role cannot be expressed |
 
 ## Next action
 
-ThanhTN authorizes pushing `feature/WI-003-production-order-list` and opening the PR to `master`.
+ThanhTN reviews and squash-merges PR #9.

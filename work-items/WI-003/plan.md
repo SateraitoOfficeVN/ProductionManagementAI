@@ -163,7 +163,7 @@ Implement SCR-002 end to end — database migrations, the list query endpoint, t
 | Local file edits under `src/`, `tests/`, `docs/`, `work-items/WI-003/` | yes | user message 2026-09-22 ("the DD is approved, move on to the implementation") | The WI-003 scope above |
 | Create the branch/worktree and commit locally | yes | same | `feature/WI-003-production-order-list` only |
 | Run the local Compose stack and migrations against the local database | yes | same | Local only; the seed is guarded to an empty table |
-| Push the branch and open a PR | ask at execution | not yet granted — WI-002 granted this explicitly (WI-002 DEC-027) | Step 14 |
+| Push the branch and open a PR | yes | asked and granted at execution, 2026-09-22 ("yes push it and open the PR") | Step 14 — PR #9 |
 | Merge the PR | no | not authorized | — |
 | Deploy or publish an image | no | not authorized | — |
 
@@ -180,7 +180,7 @@ Implement SCR-002 end to end — database migrations, the list query endpoint, t
 
 ### Approval / sign-off
 
-- **Review status:** submitted for review
-- **Approval source:** —
-- **Approved revision:** —
-- **Closure:** —
+- **Review status:** approved
+- **Approval source:** user messages 2026-09-22: "the DD is approved, move on to the implementation" (steps 1–13) and "yes push it and open the PR" (step 14)
+- **Approved revision:** revision 2, 2026-09-22
+- **Closure:** steps 1–14 done 2026-09-22. PR #9 is open with all three CI jobs green; merging was not requested and stays with the user.
