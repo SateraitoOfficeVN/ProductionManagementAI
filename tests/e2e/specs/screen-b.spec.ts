@@ -42,12 +42,19 @@ test('opens from the home page with the default view, and is accessible (TC-101)
 test('sorting reorders the whole result set and toggles direction (TC-109)', async ({ page }) => {
   await openList(page)
 
+  // Synchronize on the rendered state, not on the URL: the URL changes first and the query follows, so reading the
+  // rows right after toHaveURL can still see the previous response. aria-sort comes from the response the table was
+  // rendered from, which makes it the honest "this page now shows that sort" signal.
+  const orderNumberHeader = page.getByRole('columnheader', { name: /Order no\./ })
+
   await page.getByRole('button', { name: /Order no\./ }).click()
+  await expect(orderNumberHeader).toHaveAttribute('aria-sort', 'ascending')
   await expect(page).toHaveURL(/sort=orderNumber/)
   const ascending = await page.getByRole('table').getByRole('link').allInnerTexts()
   expect(ascending).toEqual([...ascending].sort())
 
   await page.getByRole('button', { name: /Order no\./ }).click()
+  await expect(orderNumberHeader).toHaveAttribute('aria-sort', 'descending')
   await expect(page).toHaveURL(/dir=desc/)
   const descending = await page.getByRole('table').getByRole('link').allInnerTexts()
   expect(descending).toEqual([...descending].sort().reverse())
@@ -63,6 +70,9 @@ test('filtering, paging and page size keep the view in the URL (TC-115, TC-116)'
   await page.getByLabel('Draft').check()
   await page.getByRole('button', { name: 'Search' }).click()
   await expect(page).toHaveURL(/status=Draft/)
+  // Again: wait for the rendered result, not just the URL. Once no "In progress" badge is left, the filtered
+  // response is the one on screen, so the total read below belongs to it.
+  await expect(page.getByRole('table').getByText('In progress')).toHaveCount(0)
   await expect(page.getByRole('status').first()).toHaveText(summary)
   const draftTotal = (await page.getByRole('status').first().textContent())!
 
@@ -93,6 +103,8 @@ test('filtering, paging and page size keep the view in the URL (TC-115, TC-116)'
 
   await page.getByRole('button', { name: 'Clear filters' }).click()
   await expect(page.getByRole('status').first()).toHaveText(summary)
+  // The unfiltered list contains statuses the Draft filter excluded, which is what says the clear took effect.
+  await expect(page.getByRole('table').getByText('In progress').first()).toBeVisible()
   expect(await page.getByRole('status').first().textContent()).not.toEqual(draftTotal)
 })
 

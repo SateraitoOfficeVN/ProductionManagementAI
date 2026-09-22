@@ -36,7 +36,9 @@ As of branch `feature/WI-003-production-order-list`, pushed as PR #9, 2026-09-22
 | 2026-09-22 | E2E | `npx playwright test` | local Compose stack; Playwright Chromium desktop + Pixel 7 | pass — 16/16 (8 existing + 8 new) | `tests/e2e/playwright-report/` |
 | 2026-09-22 | security-review checklist | manual review | local | pass — walk below | this file |
 | 2026-09-22 | delivery checklist | manual review | local | pass — walk below; re-checked after the push and PR | this file |
-| 2026-09-22 | CI | GitHub Actions, on PR #9 | ubuntu-latest runners | pass — all three jobs: Backend (build, test) 53s, Frontend (build, lint, test) 14s, E2E (Compose stack + Playwright) 2m35s | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684528505 |
+| 2026-09-22 | CI, run 1 (commit `435d837`) | GitHub Actions, on PR #9 | ubuntu-latest | pass — Backend 53s, Frontend 14s, E2E 2m35s | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684528505 |
+| 2026-09-22 | CI, run 2 (commit `2ca5f7a`, docs only) | GitHub Actions, on PR #9 | ubuntu-latest | **fail** — E2E: TC-109 read the table between the URL change and the new response. A race in the test, not in the product: the same commit's other 15 cases passed, and run 1 passed only by timing. Fixed by synchronizing on `aria-sort`, which comes from the rendered response | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684953784 |
+| 2026-09-22 | E2E after the race fix | `npx playwright test` (Screen B spec ×3, then the full suite) | local Compose stack | pass — 7/7 three times, then 16/16 | — |
 
 Database verification (owner connection, after `dotnet ef database update`):
 
@@ -100,7 +102,7 @@ reach the API.
 | Status, decisions and evidence support another agent continuing | pass — `status.md` names the branch and worktree; `decisions.md` carries DEC-001–DEC-012; this file carries the commands and results |
 | No secret in diff, evidence, status, decisions or PR description | pass — checked; `deploy/.env` is untracked |
 | External content treated as data | pass — nothing outside the repository and the local stack's own responses was consumed |
-| Flaky or skipped checks quarantined and recorded | pass — none. No test is skipped, retried or quarantined; Playwright still runs with `retries: 0` |
+| Flaky or skipped checks quarantined and recorded | pass — one test proved timing-dependent in CI (TC-109) and was fixed at the cause rather than retried or quarantined: it now waits for `aria-sort`, which is rendered from the response, instead of for the URL. Playwright still runs with `retries: 0` |
 | New third-party CI action or dependency pinned and least-privilege | not applicable — no CI or dependency change |
 
 ## Defects, failures and blockers
@@ -115,6 +117,7 @@ Every item below was found by a check in this work item and fixed before it left
 | Two axe violations on the real screen (found by E2E) | The `Cancelled` badge used `text-gray-400` (≈2.9:1 on white, fails WCAG 1.4.3); the breadcrumb link was underlined only on hover (fails 1.4.1, "link in text block") | no | Fixed in `ProductionOrderTable` and `ProductionOrderListPage`; DD-002 records both. Not waived |
 | Seed had no shared due dates (found by an integration test) | Every seeded order had a distinct due date, so the paging tie-breaker was never exercised | no | Fixed: 25 of the 80 orders now share a due date with another (55 distinct). TC-110 asserts it |
 | Screen A's numbering test asserted `00001` | The demo seed also runs in the integration-test database, so API-created orders start at `00081` | no | The test now asserts the sequence continues from the seeded counter — a stronger assertion, since that is exactly what the seed's counter row exists to guarantee. Recorded as DEC-012 |
+| TC-109 was timing-dependent (found by CI run 2) | The test read the table right after `toHaveURL`, but the URL changes before the query's response renders, so it could compare the previous page's rows. It passed locally and in CI run 1 by luck | no | Fixed at the cause: the test now waits for `aria-sort` on the sorted column, which is rendered from the response. Verified by three consecutive local runs of the spec plus a full-suite run. The same pattern was corrected in the filter journey. Not retried, not quarantined |
 
 ## External references
 
