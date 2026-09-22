@@ -19,7 +19,7 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-011 | 2026-09-22 | One snapshot endpoint or one endpoint per widget | Claude (technical, during BD-003) | decided | One endpoint returning every widget from one consistent snapshot |
 | DEC-012 | 2026-09-22 | Where the placeholder home page's two links go | Claude (UI, during BD-003) | decided | Page actions on the dashboard itself; the shared header is not changed |
 | DEC-013 | 2026-09-22 | How the demo seed gives the delivery widgets data | user | decided | Both: re-date the 16 seeded completed orders and add 40 historical completed orders |
-| DEC-014 | 2026-09-22 | Whether the seed adds active orders due beyond WI-003's 40-day horizon | Claude (technical, during DB-004) | decided — open to objection at DB-004 review | Add 4 (due +42, +49, +56, +63), so week bars 6–7 and Later are never empty |
+| DEC-014 | 2026-09-22 | Whether the seed adds active orders due beyond WI-003's 40-day horizon | Claude (technical, during DB-004) | decided — DB-004 approved without objection | Add 4 (due +42, +49, +56, +63), so week bars 6–7 and Later are never empty |
 | DEC-015 | 2026-09-22 | How the dashboard reads one consistent snapshot | Claude (technical, during DB-004) | decided | One `REPEATABLE READ READ ONLY` transaction around the seven statements |
 
 ## DEC-001: Which current-state widgets the dashboard shows
