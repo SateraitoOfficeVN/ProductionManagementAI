@@ -23,6 +23,7 @@
 | 2 | 2026-09-18 | Claude (for ThanhTN) | DEC-009–DEC-012 resolved: due-date check condition, stale-save rejection (V-08), plant timezone, `PO-YYYY-NNNNN` order number |
 | 3 | 2026-09-18 | Claude (for ThanhTN) | DEC-017–DEC-020: plant timezone `Asia/Tokyo`; Cancel confirmation when edited (REQ-019, items 17–19, E-07/E-09); 30 seeded products; CSRF approach decided |
 | 4 | 2026-09-18 | Claude (for ThanhTN) | Aligned with DD-001: quantity upper bound (V-02, DEC-024) |
+| 5 | 2026-09-22 | Claude (for ThanhTN) | Screen B exists (WI-003): the screen's entry point and every exit that used to lead to the home page now lead to the production-order list |
 
 ## System overview
 
@@ -77,13 +78,13 @@ Actors: Admin, Operator — both already signed in through WI-001's login screen
 3. User presses **Save** → server re-validates (FN-005–FN-008) and saves (FN-002).
 4. On success → form shows the saved values and "Production order {order number} saved."
 
-**Cancel (REQ-019)**: **Cancel** returns to the entry point (the home page `/` until Screen B exists) without saving. If the form has unsaved changes, the system first asks "Discard your changes?" (FN-009); **Keep editing** returns to the form with all values kept.
+**Cancel (REQ-019)**: **Cancel** returns to the production-order list, SCR-002 (`/production-orders`), without saving. If the form has unsaved changes, the system first asks "Discard your changes?" (FN-009); **Keep editing** returns to the form with all values kept.
 
 ## Screen list and screen transition
 
 | Screen ID | Screen name | Entry point | Exit / next screen |
 | --- | --- | --- | --- |
-| SCR-001 | Production Order Create/Edit | Create mode: `/production-orders/new` (a "New production order" link on the home page until Screen B exists). Edit mode: `/production-orders/{id}` (direct route; later a Screen B row action). | Save (create) → SCR-001 edit mode for the new order. Save (edit) → stays on SCR-001. Cancel → home page `/` (Screen B later). Session expired / 401 → `/login`. |
+| SCR-001 | Production Order Create/Edit | Create mode: `/production-orders/new`, from the "New production order" action on SCR-002 or on the home page. Edit mode: `/production-orders/{id}`, from a row on SCR-002 (or the direct route). | Save (create) → SCR-001 edit mode for the new order. Save (edit) → stays on SCR-001. Cancel → SCR-002 `/production-orders`. Session expired / 401 → `/login`. |
 
 Screen transition:
 
@@ -287,9 +288,9 @@ Client-side checks give early feedback; the server repeats every check and is au
 | E-04 | (16) Save | click | Run all client checks; if any fail, show inline errors and move focus to the first invalid field; otherwise send the request, disable Save, and handle the result (E-05/E-06) | FN-001, FN-002 |
 | E-05 | (16) Save — success | response | Create: navigate to `/production-orders/{new id}` and show success banner. Edit: refresh the form with saved values (including status options and lock state) and show success banner | REQ-010, REQ-011 |
 | E-06 | (16) Save — failure | response | Field errors → inline under each field; form-level errors (transition, lock, not found, server error) → error banner (5); 401 → `/login`; entered values are kept | Exception flows |
-| E-07 | (15) Cancel | click | If any field differs from the loaded (edit) or initial (create) values, open dialog 17. Otherwise navigate to `/` (Screen B once it exists) without saving | REQ-019, DEC-018 |
+| E-07 | (15) Cancel | click | If any field differs from the loaded (edit) or initial (create) values, open dialog 17. Otherwise navigate to `/production-orders` (SCR-002) without saving | REQ-019, DEC-018 |
 | E-08 | (7) Status | change | Only selectable options per M-02; no immediate save — takes effect on Save | DEC-008 |
-| E-09 | (18) Discard / (19) Keep editing | click / Escape | Discard: close the dialog and navigate to `/` without saving. Keep editing or Escape: close the dialog, return focus to Cancel, keep all values | REQ-019 |
+| E-09 | (18) Discard / (19) Keep editing | click / Escape | Discard: close the dialog and navigate to `/production-orders` without saving. Keep editing or Escape: close the dialog, return focus to Cancel, keep all values | REQ-019 |
 
 #### 7. External identity linkage
 
@@ -317,7 +318,7 @@ None — no external identity linkage.
 | Exception — validation | Any V-01–V-05 fails | Rejected, nothing saved | Inline field errors; values kept |
 | Exception — invalid transition | V-06 fails (e.g. crafted request) | Rejected, nothing saved | Error banner; status unchanged |
 | Exception — locked field changed | V-07 fails | Whole request rejected (DEC-007) | Error banner; values kept |
-| Exception — order not found | Edit route/API with unknown `id` | 404 | Not-found panel with link to `/` |
+| Exception — order not found | Edit route/API with unknown `id` | 404 | Not-found panel with a link back to the list |
 | Exception — products unavailable | Product list empty or fails to load | Save not possible in create mode | Product select shows "No products available" / load error banner |
 | Exception — concurrent change | V-08 fails: order was changed by someone else after it was loaded | Whole request rejected, nothing saved (DEC-010) | Error banner MSG-E009 with a Reload action; entered values kept until reload |
 | Exception — server/network error | Unexpected failure | Nothing assumed saved | Error banner "Something went wrong. Try again."; values kept |

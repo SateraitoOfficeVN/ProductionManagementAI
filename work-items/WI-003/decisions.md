@@ -17,6 +17,8 @@ Decisions for WI-003. Decisions carried over from earlier work items keep their 
 | DEC-009 | 2026-09-22 | How a list row is activated without losing keyboard access | Claude (UI/accessibility, during BD-002) | decided | The order-number cell is a real link; the whole-row click is a mouse convenience resolving to it |
 | DEC-010 | 2026-09-22 | Index for the case-insensitive order-number fragment search | Claude (technical, during DB-003) | decided | `pg_trgm` GIN index on `order_number`; input upper-cased and matched with `LIKE` |
 | DEC-011 | 2026-09-22 | Whether seeded due dates are fixed calendar dates or relative to the migration run date | Claude (technical, during DB-003) | decided | Relative to the run date; everything else fixed; insert guarded to an empty table |
+| DEC-012 | 2026-09-22 | Whether the demo seed should also apply to the integration-test database | Claude (technical, during implementation) | decided | Yes — the tests run the real migration set; Screen A's numbering test now asserts the sequence continues from the seeded counter |
+| DEC-012 | 2026-09-22 | Whether the demo seed should also apply to the integration-test database | Claude (technical, during implementation) | decided | Yes — the tests run the real migration set; Screen A's numbering test now asserts the sequence continues from the seeded counter |
 
 ## DEC-001: Which filters and search the list offers
 
@@ -313,3 +315,69 @@ DEC-007 asked for roughly 60–100 seeded orders. Their due dates decide whether
 | --- | --- |
 | DB-003 | Demo seed section, migration impact and rollback |
 | test-plan, E2E | Assertions written against counts, statuses and offsets from today, never absolute dates |
+
+## DEC-012: Whether the demo seed also applies to the integration-test database
+
+### Context
+
+The integration tests migrate a throwaway PostgreSQL container with the same migration set as any other environment,
+so `SeedDemoProductionOrders` runs there too. That surfaced immediately: Screen A's `OrderNumberingTests` asserted the
+first created order is `PO-YYYY-00001`, and it became `00081` behind the 80 seeded rows.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Let the seed run in tests, and adapt the affected assertion | Tests exercise the real migration set, seeded rows included; the list tests get realistic data for free; the seeded counter row is itself verified | An existing test has to change, and future tests can't assume an empty table |
+| Skip the seed in the test environment (an environment flag on the migration) | Every test starts from an empty table | A migration that behaves differently under test is a migration the tests no longer prove; the list tests would each have to build their own fixtures |
+| Delete the seeded rows in the test fixture | Empty table, seed still tested | Throws away the realistic data the list tests need, and hides the counter interaction |
+
+### Decision and rationale
+
+- **Decision:** the seed applies everywhere the migrations run, the integration-test database included. Screen A's
+  numbering test now reads the seeded counter and asserts the first API-created order is exactly `last_seq + 1`,
+  rather than `00001`.
+- **Decided by:** Claude (technical), 2026-09-22, during implementation.
+- **Rationale:** the changed assertion is stronger than the one it replaces — it verifies precisely what the seed's
+  counter row exists to guarantee, that a seeded order number and a user-created one can never collide. A migration
+  that behaved differently under test would be a migration the tests no longer prove.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| `OrderNumberingTests` | Asserts continuation from the seeded counter (TC-002 in TP-002 stays valid, with its expectation restated) |
+| DB-003, TP-003, evidence | The seed's reach is stated, and future tests needing an empty table must arrange it |
+
+## DEC-012: Whether the demo seed also applies to the integration-test database
+
+### Context
+
+The integration tests migrate a throwaway PostgreSQL container with the same migration set as any other environment,
+so `SeedDemoProductionOrders` runs there too. That surfaced immediately: Screen A's `OrderNumberingTests` asserted the
+first created order is `PO-YYYY-00001`, and it became `00081` behind the 80 seeded rows.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Let the seed run in tests, and adapt the affected assertion | Tests exercise the real migration set, seeded rows included; the list tests get realistic data for free; the seeded counter row is itself verified | An existing test has to change, and future tests can't assume an empty table |
+| Skip the seed in the test environment (an environment flag on the migration) | Every test starts from an empty table | A migration that behaves differently under test is a migration the tests no longer prove; the list tests would each have to build their own fixtures |
+| Delete the seeded rows in the test fixture | Empty table, seed still tested | Throws away the realistic data the list tests need, and hides the counter interaction |
+
+### Decision and rationale
+
+- **Decision:** the seed applies everywhere the migrations run, the integration-test database included. Screen A's
+  numbering test now reads the seeded counter and asserts the first API-created order is exactly `last_seq + 1`,
+  rather than `00001`.
+- **Decided by:** Claude (technical), 2026-09-22, during implementation.
+- **Rationale:** the changed assertion is stronger than the one it replaces — it verifies precisely what the seed's
+  counter row exists to guarantee, that a seeded order number and a user-created one can never collide. A migration
+  that behaved differently under test would be a migration the tests no longer prove.
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| `OrderNumberingTests` | Asserts continuation from the seeded counter (TC-002 in TP-002 stays valid, with its expectation restated) |
+| DB-003, TP-003, evidence | The seed's reach is stated, and future tests needing an empty table must arrange it |

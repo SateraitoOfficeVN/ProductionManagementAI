@@ -23,6 +23,7 @@ DD-002 — implements BD-002 (SCR-002), requirements REQ-020–REQ-027.
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
 | 2 | 2026-09-22 | Claude (for ThanhTN) | Rendered mockup published and linked |
+| 3 | 2026-09-22 | Claude (for ThanhTN) | Aligned with the implementation: string-bound query parameters, enum names matched by name only, the sort applied before the projection, and the two contrast/link-style corrections axe found |
 
 ## Overview and reference documents (概要・目次)
 
@@ -486,6 +487,10 @@ Message catalog additions (`messages.ts`; the server returns the same IDs as `co
 | MSG-I004 | No orders match your filters. |
 
 Reused unchanged: MSG-E002 (unknown product filter), MSG-E013 (query failure).
+
+Two visual rules were corrected during implementation, after `@axe-core/playwright` failed on the real screen: the
+`Cancelled` badge uses `text-gray-600` rather than `text-gray-400` (2.9:1 on white fails WCAG 1.4.3), and the
+breadcrumb link is underlined always, not only on hover (WCAG 1.4.1, "link in text block").
 
 ## Loading / empty / error / success states
 

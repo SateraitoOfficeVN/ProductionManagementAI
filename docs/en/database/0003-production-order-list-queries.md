@@ -137,10 +137,10 @@ DEC-007 (user) requires seeded orders so paging, sorting, filtering and the over
 | Status spread | 32 `Draft`, 24 `InProgress`, 16 `Completed`, 8 `Cancelled` — every filter combination returns a non-empty, differently sized result |
 | Products | Spread across all 30 seeded products, several with more than one order, so the product filter and the product sort are both meaningful |
 | Quantities | 1 to roughly 5,000, including boundary values 1 and a large value, so the quantity sort is visibly non-trivial |
-| Due dates | Relative to the plant-local date when the migration runs (DEC-011): roughly one quarter in the past, one at today, the rest spread over the following ten weeks |
-| Overdue rows | The past-due `Draft` and `InProgress` rows — about 15 — carry the overdue marker; past-due `Completed`/`Cancelled` rows deliberately do not, which demonstrates the second half of M-08 |
+| Due dates | Relative to the plant-local date when the migration runs (DEC-011): 20 in the past (1–14 days ago), 2 today, 58 over the following 40 days. 25 of the 80 orders deliberately share a due date with another, so the order-number tie-breaker is actually exercised; the applied seed produces 55 distinct due dates |
+| Overdue rows | The past-due `Draft` and `InProgress` rows — 15 of the 20 past-due rows — carry the overdue marker; the other 5 are `Completed`/`Cancelled` and deliberately do not, which demonstrates the second half of M-08 |
 | Notes | Present on some rows, absent on others (the list does not show notes; this keeps the seeded rows realistic for Screen A) |
-| Order numbers | Issued as `PO-<seed year>-00001` … `PO-<seed year>-00080`, with `production_order_number_counters` seeded to `last_seq = 80` for that year so the next order created through Screen A continues the sequence instead of colliding |
+| Order numbers | Issued as `PO-<seed year>-00001` … `PO-<seed year>-00080`, with `production_order_number_counters` seeded to `last_seq = 80` for that year so the next order created through Screen A continues the sequence instead of colliding. Verified by an integration test, which asserts the first API-created order is `00081` |
 | Timestamps | `created_at_utc` / `updated_at_utc` staggered over the weeks before the run date, so the "Updated" column and its sort are not all identical |
 
 Two properties of this seed are deliberate and worth stating plainly:
@@ -209,6 +209,14 @@ Two migrations, in this order:
 - **Operational note:** because the due dates are computed from the run date, re-applying this migration on a fresh volume at a later date produces different due dates (by design, DEC-011). Test assertions must therefore be written against counts, statuses and offsets from today — never against absolute dates.
 
 Both migrations run as the owner login; neither requires any change to `pmai_app`'s grants.
+
+Both were applied against the local Compose database on 2026-09-22: the two indexes exist, `pg_index` reports no
+`INVALID` index (so the non-atomic `CONCURRENTLY` path completed), and the table holds the 80 seeded orders across 55
+distinct due dates.
+
+**The seed also reaches the integration-test database**, which runs the same migrations against a throwaway
+PostgreSQL container. That is deliberate — the list tests need realistic data, and testing the real migration set is
+the point — but it means order numbers there start after the seeded 80. WI-003 DEC-012 records the consequence.
 
 ## Open decisions
 

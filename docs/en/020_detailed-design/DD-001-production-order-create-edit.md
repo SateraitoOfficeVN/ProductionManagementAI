@@ -349,8 +349,8 @@ Message catalog (`messages.ts`; the server returns the same IDs as `code`):
 | Saving | Save pressed, request in flight | Save disabled with label "Saving…"; inputs stay as they are; Cancel still enabled | Entered values |
 | Validation error | Client or 400 response | Inline errors (`FieldError`, `aria-invalid`), focus to the first invalid field | Entered values kept |
 | Rule / conflict error | 422 (MSG-E007/E008) or 409 (MSG-E009) | Error banner (`role="alert"`); for 409 the banner has a **Reload** button (re-runs P-01 and discards local edits) | Entered values kept |
-| Not found | 404 on load | Panel MSG-E011 with a "Back to home" link; no form | — |
-| Forbidden | Missing role (client check) or 403 | Panel MSG-E012 with a "Back to home" link | — |
+| Not found | 404 on load | Panel MSG-E011 with a "Back to production orders" link; no form | — |
+| Forbidden | Missing role (client check) or 403 | Panel MSG-E012 with a "Back to production orders" link | — |
 | Load error | Network/5xx on load | Panel MSG-E013 with **Try again** (re-runs P-01) | — |
 | Success | 201 / 200 | Banner MSG-I001 / MSG-I002 (`role="status"`); form reset to the saved values, so `isDirty = false` | Saved values |
 

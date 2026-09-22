@@ -183,10 +183,14 @@ Processing overview: the same filtered `IQueryable`, joined to `products` for th
 | --- | --- | --- |
 | 1 | Start from `db.ProductionOrders.AsNoTracking()` | — |
 | 2 | Apply the filters that are set | §4 |
-| 3 | Join `db.Products` on `product_id` (a navigation include is not used — the projection selects the three product columns directly) | — |
-| 4 | Apply the ordering and the `order_number` tie-breaker | §5 |
+| 3 | Join `db.Products` on `product_id` into `ProductionOrderJoin`, a named type with settable members (no navigation property exists, and EF sees through member-init projections) | — |
+| 4 | Apply the ordering and the `order_number` tie-breaker **on the joined entities** | §5 |
 | 5 | `Skip((page − 1) × pageSize).Take(pageSize)` | — |
 | 6 | Project into `ProductionOrderListRow` and `ToListAsync` | — |
+
+The order of steps 4 and 6 matters: EF Core cannot translate an `ORDER BY` that reads a member back out of a
+constructor projection, so the sort is applied before the final projection, not after it. Proven by the integration
+tests, which fail with a translation error if the two are swapped.
 
 ### 4. `ProductionOrderQueryExtensions.ApplyFilters`
 
@@ -235,7 +239,7 @@ Processing overview: each filter is added inside an `if`, so an unset filter con
 
 | No | Type | Name | Description |
 | --- | --- | --- | --- |
-| 1 | `IQueryable<…>` | `source` | The filtered, joined query |
+| 1 | `IQueryable<ProductionOrderJoin>` | `source` | The filtered query joined to `products`, before the list projection |
 | 2 | `ProductionOrderSort` | `sort` | Enum, not a string — the API layer already rejected anything outside the allow-list |
 | 3 | `SortDirection` | `dir` | `Asc` or `Desc` |
 
@@ -251,13 +255,13 @@ Processing overview: a `switch` over the enum picks the key expression; the dire
 
 | Step | Description | Calls |
 | --- | --- | --- |
-| 1 | `DueDate` → `o.DueDate` (the default) | — |
-| 2 | `OrderNumber` → `o.OrderNumber`; no tie-breaker needed (unique) | — |
-| 3 | `Product` → `p.Sku`, then `p.Name` | — |
-| 4 | `Quantity` → `o.Quantity` | — |
+| 1 | `DueDate` → `j.Order.DueDate` (the default) | — |
+| 2 | `OrderNumber` → `j.Order.OrderNumber`; no tie-breaker needed (unique) | — |
+| 3 | `Product` → `j.Product.Sku`, then `j.Product.Name` | — |
+| 4 | `Quantity` → `j.Order.Quantity` | — |
 | 5 | `Status` → the workflow rank expression `Draft=1, InProgress=2, Completed=3, Cancelled=4`, not the stored string (DB-003 sort-key mapping) | — |
-| 6 | `UpdatedAt` → `o.UpdatedAtUtc` | — |
-| 7 | Append `ThenBy(o => o.OrderNumber)` ascending (steps 1, 3–6) | — |
+| 6 | `UpdatedAt` → `j.Order.UpdatedAtUtc` | — |
+| 7 | Append `ThenBy(j => j.Order.OrderNumber)` ascending (steps 1, 3–6) | — |
 
 The direction applies to the chosen key only; the tie-breaker stays ascending, so a descending page is still a stable total order.
 

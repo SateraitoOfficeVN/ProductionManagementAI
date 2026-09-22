@@ -232,7 +232,7 @@ Processing overview: bind the query string, validate it into a typed query objec
 | Step | Description | Branch / condition | Calls | Result (state / redirect / render) |
 | --- | --- | --- | --- | --- |
 | 1 | Authorize | No session → 401; wrong role → 403 | policy `ProductionOrderEditor` | Empty body, as DD-001-API |
-| 2 | Bind the query parameters into the raw request type | Type-level binding failures (e.g. `page=abc`) are mapped by the existing `InvalidModelStateResponseFactory` to the same Problem Details shape | — | 400 with parameter-keyed message IDs |
+| 2 | Bind the query parameters into the raw request type, whose fields are all strings | No type-level binding failure is possible, so the existing `InvalidModelStateResponseFactory` never fires here: `page=abc` reaches `TryCreate` and gets MSG-E019, its designed message, rather than a generic binding error | — | — |
 | 3 | `TryCreate` validates and normalizes | Any failure → 400 with every offending parameter reported together | module 5 | — |
 | 4 | Delegate | — | `ListAsync` | — |
 | 5 | Map the result | `Ok` → 200; `Invalid` → 400 | `ToActionResult` | — |

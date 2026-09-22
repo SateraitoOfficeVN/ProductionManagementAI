@@ -104,7 +104,7 @@ The four echoed controls are returned so the client renders from the response it
 
 **Arguments**: query-string parameters only — see Request fields. No route or body parameters.
 
-Processing overview: bind and validate the query (allow-lists for `status`, `sort`, `dir`, `pageSize`; parse dates; bound `page`; trim, bound and escape the order-number fragment), then hand a validated query object to `ProductionOrderService.ListAsync` (DD-002-FN §1), which runs the count and the page query described in DB-003 and marks each row's `isOverdue` against the plant clock. Absent parameters take their defaults; parameters present but invalid are rejected, never defaulted (BD-002 V-13), so a crafted request cannot widen the query.
+Processing overview: bind the query string **as strings only** — every value is parsed by the validator, so each failure carries its designed message ID instead of a generic model-binding error — then validate it (allow-lists for `status`, `sort`, `dir`, `pageSize`; parse dates; bound `page`; trim, bound and escape the order-number fragment) and hand a validated query object to `ProductionOrderService.ListAsync` (DD-002-FN §1), which runs the count and the page query described in DB-003 and marks each row's `isOverdue` against the plant clock. Absent parameters take their defaults; parameters present but invalid are rejected, never defaulted (BD-002 V-13), so a crafted request cannot widen the query.
 
 **Processing flow**
 
@@ -129,7 +129,7 @@ Every parameter is optional. `status` is the only repeatable one (`?status=Draft
 
 | No | Name | Variable name | Type | Length | Required | Source | Example | Description | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Status | `status` | string (repeatable) | — | no | query | `Draft` | Restrict to the given statuses; absent = no restriction | Allow-list `Draft`\|`InProgress`\|`Completed`\|`Cancelled`; duplicates collapse; unknown value → 400 `MSG-E018` (BD-002 V-11) |
+| 1 | Status | `status` | string (repeatable) | — | no | query | `Draft` | Restrict to the given statuses; absent = no restriction | Allow-list `Draft`\|`InProgress`\|`Completed`\|`Cancelled`, matched **by name only** — a numeric enum value such as `3` is rejected; duplicates collapse; unknown value → 400 `MSG-E018` (BD-002 V-11) |
 | 2 | Product | `productId` | string (uuid) | 36 | no | query | `0197e4a0-…` | Restrict to one product | Unparseable → 400 `MSG-E002`; parseable but unknown → 400 `MSG-E002` (BD-002 V-12) |
 | 3 | Due from | `dueFrom` | string (date) | 10 | no | query | `2026-09-01` | Inclusive lower bound on `dueDate` | Malformed → 400 `MSG-E016` |
 | 4 | Due to | `dueTo` | string (date) | 10 | no | query | `2026-10-31` | Inclusive upper bound on `dueDate` | Malformed → 400 `MSG-E016`; `dueFrom > dueTo` → 400 `MSG-E017` on `dueFrom` (BD-002 V-10) |
