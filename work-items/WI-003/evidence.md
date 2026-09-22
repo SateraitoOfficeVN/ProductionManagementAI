@@ -39,6 +39,7 @@ As of branch `feature/WI-003-production-order-list`, pushed as PR #9, 2026-09-22
 | 2026-09-22 | CI, run 1 (commit `435d837`) | GitHub Actions, on PR #9 | ubuntu-latest | pass — Backend 53s, Frontend 14s, E2E 2m35s | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684528505 |
 | 2026-09-22 | CI, run 2 (commit `2ca5f7a`, docs only) | GitHub Actions, on PR #9 | ubuntu-latest | **fail** — E2E: TC-109 read the table between the URL change and the new response. A race in the test, not in the product: the same commit's other 15 cases passed, and run 1 passed only by timing. Fixed by synchronizing on `aria-sort`, which comes from the rendered response | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684953784 |
 | 2026-09-22 | E2E after the race fix | `npx playwright test` (Screen B spec ×3, then the full suite) | local Compose stack | pass — 7/7 three times, then 16/16 | — |
+| 2026-09-22 | CI, run 3 (commit `ea78a11`, the race fix) | GitHub Actions, on PR #9 | ubuntu-latest | pass — Backend 1m0s, Frontend 17s, E2E 2m16s | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35685579998 |
 
 Database verification (owner connection, after `dotnet ef database update`):
 
@@ -122,7 +123,9 @@ Every item below was found by a check in this work item and fixed before it left
 ## External references
 
 - PR: https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/9 — opened 2026-09-22 with the user's authorization; not merged
-- CI run: https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35684528505 — all three jobs pass on the PR head
+- CI runs on PR #9: run 1 green, run 2 red on a timing-dependent test of mine, run 3 green after fixing it at the
+  cause — https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35685579998. The commit carrying
+  this record re-runs the same suite; its result is the one the PR shows
 - Deployment: not applicable — not in scope
 
 ## Remaining limitations and next action
