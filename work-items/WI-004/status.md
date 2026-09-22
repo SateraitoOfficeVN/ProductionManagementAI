@@ -10,8 +10,7 @@ WI-004 was opened on 2026-09-22 after WI-003 (Screen B) was merged to `master`. 
 replacing `/`, read-only, and a 7-day due-soon window. Plan revision 1 (design phase) was approved; the user then set
 the metric windows and sizes (DEC-008) and chose a "later" workload bar (DEC-009). BD-003 is approved. DB-004 and the Screen
 A design amendments for completion tracking are approved (the user chose to both re-date and extend the demo seed,
-DEC-013). The DD-003 set and its mockup source are drafted and awaiting review; publishing the mockup awaits
-authorization.
+DEC-013). The DD-003 set is drafted and awaiting review; its mockup is published privately.
 
 ## Approved plan reference
 
@@ -42,4 +41,4 @@ After the DD-003 set is approved: close the design phase (step 7), then draft pl
 
 ## Next action
 
-User review of the DD-003 set; authorization to publish the mockup privately.
+User review of the DD-003 set.

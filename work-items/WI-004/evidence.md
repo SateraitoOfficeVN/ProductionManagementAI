@@ -32,7 +32,7 @@ Design columns are filled as each document is written; code and test columns sta
 | 2026-09-22 | DB review | user review of DB-004 and the Screen A amendments | — | pass — approved ("DB-004 is approved, move on to the DD") | status.md |
 | 2026-09-22 | Mockup render check | one headless Edge screenshot of the mockup | local | pass after one fix — workload labels "Overdue"/"This week" collided and tile window captions wrapped mid-date; bar slots widened and captions put on their own line | — |
 | 2026-09-22 | design-consistency checklist (DD-003 set scope) | manual review | local | pass — walk below | this file |
-| 2026-09-22 | Mockup published | Artifact publish, private | claude.ai | not run — awaiting authorization | — |
+| 2026-09-22 | Mockup published | Artifact publish, private | claude.ai | done — https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot (8 artboards) | DD-003 |
 | 2026-09-22 | DD review | user review of the DD-003 set | — | not run — awaiting user | — |
 
 ## Design-consistency walk — BD-003 scope

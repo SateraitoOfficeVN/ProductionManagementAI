@@ -22,6 +22,7 @@ DD-003 — implements BD-003 (SCR-003), requirements REQ-028–REQ-039.
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Claude (for ThanhTN) | Initial creation |
+| 2 | 2026-09-22 | Claude (for ThanhTN) | Rendered mockup published and linked |
 
 ## Overview and reference documents (概要・目次)
 
@@ -398,7 +399,7 @@ Implementation-fidelity layout. It refines BD-003 §1 in three ways. The two til
 +------------------------------------------------------------------------------------------+
 ```
 
-Mockup artifact: not yet published — publishing it privately waits on the user's authorization (plan revision 1, "Resources and external actions"). Source: `docs/en/020_detailed-design/mockups/DD-003-screen-c-mockup.html`, which reuses DD-002's token system and app-look CSS verbatim, so the three mockups read as one set. Its figures are computed from DB-004's seed as it reads on a run day of 2026-09-22 (a Tuesday), not invented. Artboards: 1 ready (PC), 2 loading, 3 empty system, 4 no recent completions, 5 load error, 6 forbidden, 7 SP layout, 8 chart with its table equivalent expanded.
+Mockup artifact: https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot — published privately on 2026-09-22 with the user's authorization ("public it privately"). Source: `docs/en/020_detailed-design/mockups/DD-003-screen-c-mockup.html`, which reuses DD-002's token system and app-look CSS verbatim, so the three mockups read as one set. Its figures are computed from DB-004's seed as it reads on a run day of 2026-09-22 (a Tuesday), not invented. Artboards: 1 ready (PC), 2 loading, 3 empty system, 4 no recent completions, 5 load error, 6 forbidden, 7 SP layout, 8 chart with its table equivalent expanded.
 
 | Region | Contains (field/control) | Notes |
 | --- | --- | --- |
