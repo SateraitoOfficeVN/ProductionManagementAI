@@ -1,29 +1,29 @@
 # Production Dashboard (Screen C) — Requirements Traceability & Evidence
 
-As of branch `feature/WI-004-production-dashboard`, 2026-09-22 (design phase, plan revision 1).
+As of branch `feature/WI-004-production-dashboard`, 2026-09-22 (plan revision 3: implementation and local verification complete; push/PR not yet authorized).
 
 ## Traceability matrix
 
-Design columns are filled as each document is written; code and test columns stay empty until plan revision 2. DD-003 maps every REQ to test viewpoints: REQ-028 TC-201/214/215/216; REQ-029 TC-203; REQ-030 TC-204; REQ-031 TC-205; REQ-032 TC-206; REQ-033 TC-207/208; REQ-034 TC-209; REQ-035 TC-210; REQ-036 TC-211; REQ-037 TC-212; REQ-038 TC-213; REQ-039 TC-202; plus TC-217 (accessibility), TC-218 (seed), TC-219 (indexes), TC-220 (SP), TC-221 (query string ignored).
+Design columns were filled as each document was written; code and test columns were filled in plan revision 3. DD-003 maps every REQ to test viewpoints: REQ-028 TC-201/214/215/216; REQ-029 TC-203; REQ-030 TC-204; REQ-031 TC-205; REQ-032 TC-206; REQ-033 TC-207/208; REQ-034 TC-209; REQ-035 TC-210; REQ-036 TC-211; REQ-037 TC-212; REQ-038 TC-213; REQ-039 TC-202; plus TC-217 (accessibility), TC-218 (seed), TC-219 (indexes), TC-220 (SP), TC-221 (query string ignored).
 
 | Requirement ID | Requirement | Design artifact | Code | Test case ID | Status |
 | --- | --- | --- | --- | --- | --- |
-| REQ-028 | Dashboard is the landing page at `/`; error and empty states | BD-003 screen transition, 0-1, §1 items 3–6/6a/25, §6 E-20–E-22, flows; DEC-005, DEC-012 | — | — | designed (BD, DD) |
-| REQ-029 | Status count tiles | BD-003 §3 items 7–11, §4 M-11 | — | — | designed (BD, DD) |
-| REQ-030 | Overdue and due-soon groups | BD-003 D-01, D-02, §3 items 16–19, §4 M-15, M-19; DEC-007, DEC-008 | — | — | designed (BD, DD) |
-| REQ-031 | Workload chart by due week | BD-003 D-03, §3 items 20–21, §4 M-16; DEC-009, DEC-010 | — | — | designed (BD, DD) |
-| REQ-032 | Top 10 products by open quantity | BD-003 D-04, §3 item 22 | — | — | designed (BD, DD) |
-| REQ-033 | Completion time recorded | BD-003 FN-021, FN-022; BD-001 v6 FN-006 and business rules; DD-001 v4 module 1 step 5, transitions, DB mapping; DD-001-FN v3 UpdateAsync step 7; DB-004 column, constraints, backfill | — | — | designed (BD, DB, DD-001, DD-003) |
-| REQ-034 | Completed this week / month | BD-003 D-05, D-06, §3 items 12–13, §4 M-18 | — | — | designed (BD, DD) |
-| REQ-035 | On-time rate, 30 days | BD-003 D-07, §3 item 14, §4 M-13 | — | — | designed (BD, DD) |
-| REQ-036 | Completion trend, 12 weeks | BD-003 D-08, §3 items 23–24, §4 M-16; DEC-010 | — | — | designed (BD, DD) |
-| REQ-037 | Average lead time, 30 days | BD-003 D-09, §3 item 15, §4 M-14 | — | — | designed (BD, DD) |
-| REQ-038 | Admin/Operator only | BD-003 0-1, FN-023, actions, exception flows | — | — | designed (BD, DD) |
-| REQ-040 | Navbar on every authenticated screen | BD-003 v2 Shared application header; BD-001 v7, BD-002 v4 items 1–2; DD-003 module 10, DD-003-SPD §8; DEC-016 | — | TC-222 | designed (BD, DD) |
-| REQ-041 | Server and database health indicator | BD-003 v2 Health definitions, item 26, M-20, E-26–E-28; DD-003-API §2; DD-003-FN §6–§7; DD-003-SPD §10, §12; DEC-017, DEC-019, DEC-020 | — | TC-224, TC-225, TC-226 | designed (BD, DD) |
-| REQ-042 | Maximize and restore a chart | BD-003 v2 items 27–29, E-24–E-25; DD-003 module 13, DD-003-SPD §11; DEC-018 | — | TC-227 | designed (BD, DD) |
-| REQ-019 (WI-002, extended) | Confirm before discarding changes — now on any in-app link | BD-001 v7 E-07a, E-09; DD-003 module 11; DD-001-SPD v2; DD-003-SPD §9; DEC-022 | — | TC-223 | designed (BD, DD) |
-| REQ-039 | Read-only, no drill-down | BD-003 §6 closing note, actions; DEC-006 | — | — | designed (BD, DD) |
+| REQ-028 | Dashboard is the landing page at `/`; error and empty states | BD-003; DD-003 module 1; DD-003-SPD §1–§2 | `DashboardPage`, `App.tsx` route, `DashboardService` | TC-201, TC-214, TC-215, TC-216 | verified |
+| REQ-029 | Status count tiles | BD-003 items 7–11 | `StatusTiles`, DB-004 Q1 in `DashboardReader`, `DashboardMapper` | TC-203 | verified |
+| REQ-030 | Overdue and due-soon groups | BD-003 D-01, D-02 | `AttentionList`, Q3a/Q3b | TC-204 | verified |
+| REQ-031 | Workload chart by due week | BD-003 D-03; DEC-009, DEC-010 | `BarChart`, Q2, `DashboardMapper.ToWorkload` | TC-205, TC-217 | verified |
+| REQ-032 | Top 10 products by open quantity | BD-003 D-04 | `TopProducts`, Q4 | TC-206 | verified |
+| REQ-033 | Completion time recorded | BD-001 v7; DD-001 v4; DB-004 | `ProductionOrder.Update`, `AddProductionOrderCompletionTracking`, `SeedDashboardDemoHistory` | TC-207, TC-208, TC-218 | verified |
+| REQ-034 | Completed this week / month | BD-003 D-05, D-06 | Q5, `DeliveryTiles` | TC-209 | verified |
+| REQ-035 | On-time rate, 30 days | BD-003 D-07, M-13 | Q5, `formatRate` | TC-210 | verified |
+| REQ-036 | Completion trend, 12 weeks | BD-003 D-08 | Q6, `DashboardMapper`, `BarChart` | TC-211, TC-217 | verified |
+| REQ-037 | Average lead time, 30 days | BD-003 D-09, M-14 | Q5, `DashboardMapper` rounding, `formatLeadTime` | TC-212 | verified |
+| REQ-038 | Admin/Operator only | BD-003 0-1; DD-003-API | `DashboardController`, `SystemController` (`ProductionOrderEditor`), client role gate | TC-213 | verified |
+| REQ-039 | Read-only, no drill-down | BD-003 §6; DEC-006 | No links in widgets; `SET TRANSACTION READ ONLY` in the reader | TC-202, TC-214 | verified |
+| REQ-040 | Navbar on every authenticated screen | BD-003 shared header; DEC-016 | `AppHeader`, `AppNavbar`, `lib/navigation.ts` | TC-222, TC-220 | verified |
+| REQ-041 | Server and database health indicator | BD-003 HS-01–HS-05; DD-003-API §2; DD-003-FN §6–§7 | `SystemHealthService`, `DatabasePing`, `SystemController`, cookie events, `useSystemHealth`, `HealthIndicator` | TC-224, TC-225, TC-226 | verified |
+| REQ-042 | Maximize and restore a chart | BD-003 items 27–29; DEC-018 | `ChartDialog`, `BarChart` | TC-227 | verified |
+| REQ-019 (WI-002, extended) | Confirm before discarding changes on any in-app link | BD-001 v7 E-07a; DEC-022 | `NavigationGuardProvider`, `GuardedLink`, `ProductionOrderForm` registration | TC-223 | verified |
 
 ## Test execution log
 
@@ -44,6 +44,20 @@ Design columns are filled as each document is written; code and test columns sta
 | 2026-09-22 | Icons added (DEC-023) | BD-003 v3 M-21, DD-003 v4, mockup v3 with Lucide 1.47.0 glyphs inlined; one render check | local | pass | — |
 | 2026-09-22 | Mockup v3 published | Artifact republish, private, same URL | claude.ai | done — version 3 | DD-003 |
 | 2026-09-22 | Amended design review | user review of BD-003 v3, BD-001 v7, BD-002 v4, the DD-003 set and mockup v3 | — | pass — approved ("the DD is approved, move on to implementation") | status.md |
+| 2026-09-22 | Migrations against the local Compose database (fresh volume) | `dotnet ef database update …` as the owner | local Compose | pass — all migrations applied; 124 orders (35/25/56/8); both checks present; six `production_orders` indexes, none INVALID; counter 124; SQL spot-check 23 of 30 on time, 13.7 days | — |
+| 2026-09-22 | Endpoint smoke run | API against the migrated database; signed-in `curl` of `/api/system/health` and `/api/dashboard` | local | pass — health `ok` with `no-store`; dashboard figures equal DB-004's prediction and the mockup | — |
+| 2026-09-22 | Backend build | `dotnet build src/backend/ProductionManagementAI.slnx` | local, .NET SDK 10 | pass — 0 warnings, 0 errors | — |
+| 2026-09-22 | Backend unit | `dotnet test src/backend/ProductionManagementAI.slnx` | local | pass — 148/148 (116 existing + 32 new) | final run |
+| 2026-09-22 | Backend integration | same command | local, Testcontainers `postgres:17`, app as `pmai_app` | pass — 85/85 (63 existing, 5 of them updated to the new seed, + 22 new). First run 83/85: TC-225 found the security-stamp renewal path (fixed, DEC-025) and a WI-003 sort test assumed one page held the whole seed (fixed to read every page) | final run |
+| 2026-09-22 | Frontend lint | `npm run lint` | local, oxlint | pass — no findings (three warnings from the first draft fixed, not suppressed) | — |
+| 2026-09-22 | Frontend build | `npm run build` | local, tsc + Vite | pass | — |
+| 2026-09-22 | Frontend unit | `npm test` | local, Vitest + RTL + vitest-axe | pass — 87/87 (56 existing + 31 new) | — |
+| 2026-09-22 | E2E | `npx playwright test` | local Compose stack; Playwright Chromium desktop + Pixel 7 | pass — 22/22 (16 existing + 6 new). First run 19/22: axe found a real contrast failure (Top products caption 4.39:1, fixed to `gray-600`), and a WI-003 journey expected "In progress" on page 1, which the new seed no longer puts there (assertion moved to "Completed") | `tests/e2e/playwright-report/` |
+| 2026-09-22 | Compose config | `docker compose -f deploy/compose.yaml config` | local | pass | — |
+| 2026-09-22 | Dependency audit | `npm audit --omit=dev` after adding `lucide-react@1.47.0` (exact pin, ISC, only peer dependency React) | local | pass — 0 vulnerabilities | — |
+| 2026-09-22 | Secret scan of the branch diff | the three local `.env` secrets searched in `git diff master` without printing them | local | pass — no credential in the diff. The local owner password is a dictionary word that also occurs as ordinary text (for example inside "postgresql"); the two other secrets do not occur | — |
+| 2026-09-22 | design-consistency, security-review, delivery checklists (implementation) | manual review | local | pass — walks below | this file |
+| 2026-09-22 | CI | GitHub Actions | — | not run — the branch is not pushed; push and PR await the user's authorization (plan revision 3 step 14) | — |
 
 ## Design-consistency walk — BD-003 scope
 
@@ -106,3 +120,48 @@ Design columns are filled as each document is written; code and test columns sta
 | Accessibility captured | pass — labelled `<nav>` with `aria-current`, SP menu with `aria-expanded` and Escape, polite live region announcing changes only, shape-coded status dots, native modal `<dialog>` with focus return |
 | Migration impact described | not applicable — no schema change in this revision |
 | Tracing/logging specified | pass — span `System.Health`, counter `pmai.system.health_checks{database}`, `DatabasePingFailed` Warning |
+
+## Design-consistency walk — implementation (plan revision 3)
+
+| Checklist item | Result |
+| --- | --- |
+| Requirements have stable IDs and acceptance criteria | pass — unchanged; every REQ traced above to code and tests |
+| BD covers navigation, primary actions and exceptions | pass — implemented as designed; no behavior outside BD-003/BD-001 v7 |
+| DD agrees with BD | pass — two implementation divergences found and recorded, documents updated in the same commits: the reader's call mechanism and the `Health` namespace (DEC-024, DD-003-FN v3/DD-003 X-1), and the session rule's second hook (DEC-025, DD-003-FN v4). TC-214's verification method was corrected to match (DD-003) |
+| API and DB mappings agree | pass — the smoke run and TC-218 show the endpoint returning exactly DB-004's predicted figures; the response shape matches DD-003-API, asserted in integration |
+| Missing decisions resolved | pass — none open |
+| Test scenarios map to the design | pass — TP-004: every TC-201–TC-228 maps to named, passing tests |
+| Security-relevant fields identified | pass — see the security walk |
+| Accessibility captured | pass — axe clean in jsdom and in a real browser (desktop and SP), with the dialog open; one real contrast failure found by E2E and fixed |
+| Migration impact described | pass — DB-004's three migrations applied on a fresh volume; the named-index pitfall caught at scaffold time (an unnamed second index on the same columns would have dropped DB-003's index) and fixed before any migration ran |
+| Tracing/logging specified | pass — span `ProductionOrder.Dashboard`, `System.Health`; counters `pmai.production_orders.dashboard_loaded`, `pmai.system.health_checks`; `DashboardSnapshotFailed`, `DatabasePingFailed` (type only) |
+
+## Security-review walk — implementation
+
+| Checklist item | Result |
+| --- | --- |
+| Every new or changed endpoint enforces auth | pass — `GET /api/dashboard` and `GET /api/system/health` carry `[Authorize(Policy = ProductionOrderEditor)]`; 401/403 asserted for both (TC-213). The anonymous liveness `/health` is unchanged |
+| External input validated; no concatenated queries | pass — neither endpoint binds input (TC-221 shows a crafted query string has no effect). The reader's SQL is constant text; every value is an `NpgsqlParameter`, including the plant time zone. The two `IN ('Draft', 'InProgress')` fragments are compile-time constants |
+| No credential in code, config, logs, evidence or diff | pass — secret scan above; `deploy/.env` is git-ignored and was copied locally only |
+| New dependencies trusted and checked | pass — `lucide-react@1.47.0`: ISC, exact pin, React peer only, `npm audit` clean (DEC-023) |
+| Least privilege | pass — no new role or grant; `pmai_app`'s table-level `UPDATE` covers the new column; the health ping reads no table |
+| External content treated as data | not applicable — no external content consumed at run time |
+| Errors leak no detail | pass — 500s use the global Problem Details handler (generic, MSG-E013); the health response has two fixed fields, and TC-224 asserts that a connection error's host text does not appear; `DatabasePingFailed` logs the exception type only |
+| No sensitive data in logs or evidence | pass — no figure, order data or connection detail is logged |
+| Trust boundary threat-modeled | pass — no new boundary. The session rule was reviewed against ADR-0002's STRIDE table: suppressing renewal on one path can only shorten a session, never extend it, and the security stamp is still validated on that path (DEC-025) |
+
+## Delivery walk — before push (plan revision 3)
+
+| Checklist item | Result |
+| --- | --- |
+| Approved scope and plan revision identifiable | pass — plan revision 3, approved 2026-09-22 ("plan approved, let move on to implementation") |
+| Design, code and tests agree with requirements | pass — traceability above; divergences recorded as DEC-024/DEC-025 with documents updated |
+| Required checks recorded; not-run checks have reasons | pass — CI not run: the branch is not pushed yet, pending authorization |
+| Review findings and limitations explicit | pass — limitations: WI-001 DEC-015 (a read-only role cannot be expressed); TP-004's "not to be tested" list; Screen B's default first page now shows old completed orders, a consequence of the seed noted for the user |
+| External operations within authorization | pass — local only: edits, commits, the local Compose stack, `npm install` of one pinned package, and republishing the private mockup (plan revision 2). No push, PR, merge or deploy |
+| Status, decisions and evidence support continuation | pass |
+| Close-out documents | not yet applicable — README, `ai/project.md` (including `lucide-react` in the confirmed stack) and `CLAUDE.md` follow the merge |
+| No secret in diff, evidence, status, decisions or PR text | pass — so far; re-checked when the PR text is written |
+| External content treated as data | pass |
+| Flaky or skipped checks quarantined with reasons | pass — none skipped or quarantined; the two first-run failures in each of integration and E2E were fixed at their cause, not retried |
+| New CI action or dependency pinned | pass — no CI change; `lucide-react` pinned exactly |

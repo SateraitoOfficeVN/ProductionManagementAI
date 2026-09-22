@@ -1,19 +1,14 @@
 # Production Dashboard (Screen C) — Status Report
 
-As of 2026-09-22. Work item state: in-progress.
+As of 2026-09-22. Work item state: in-review.
 
 ## Overall status
 
 **RAG:** Green — on track
-WI-004 was opened on 2026-09-22 after WI-003 (Screen B) was merged to `master`. The user settled the dashboard's scope
-(DEC-001–DEC-007): all four current-state widgets, completion tracking with all four history metrics, the dashboard
-replacing `/`, read-only, and a 7-day due-soon window. Plan revision 1 (design phase) was approved; the user then set
-the metric windows and sizes (DEC-008) and chose a "later" workload bar (DEC-009). BD-003 is approved. DB-004 and the Screen
-A design amendments for completion tracking are approved (the user chose to both re-date and extend the demo seed,
-DEC-013). The DD-003 set was drafted and its mockup published privately; on reviewing the mockup the user asked for a navbar
-on every screen, a server/database health indicator and chart maximize (DEC-016–DEC-018). Plan revision 2 (design
-amendment) is complete and the design phase is closed: the user approved the amended design set. Plan revision 3
-(implementation, tests, PR) is drafted and awaiting review; no code has been written.
+Screen C is implemented under plan revision 3 (steps 1–13 done). DB-004's migrations are applied to the local Compose
+database, and every check passes locally: 148 backend unit, 85 integration, 87 frontend unit and 22 E2E tests, lint
+and both builds, plus a clean dependency audit and secret scan. The branch is not pushed; step 14 (push and PR) waits
+for the user's authorization.
 
 ## Approved plan reference
 
@@ -23,6 +18,8 @@ amendment) is complete and the design phase is closed: the user approved the ame
 
 | Date | Milestone / deliverable | Evidence link |
 | --- | --- | --- |
+| 2026-09-22 | Plan revision 3 steps 1–13: implementation, tests at every level, TP-004, full local verification, gates; DEC-024, DEC-025 | [evidence.md](evidence.md), [test-plan.md](test-plan.md) |
+| 2026-09-22 | Plan revision 3 approved | [plan.md](plan.md) |
 | 2026-09-22 | Design phase closed (amended design set approved); plan revision 3 drafted | [plan.md](plan.md) |
 | 2026-09-22 | Icons (DEC-023, user): BD-003 v3, DD-003 v4, mockup v3 republished | https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
 | 2026-09-22 | Plan revision 2 steps 1–7: BD-003 v2, BD-001 v7, BD-002 v4, DD-003 set v2/v3, DD-001-SPD v2, DD-002-SPD v2, mockup v2 republished; DEC-019 and DEC-022 decided by the user, DEC-020 and DEC-021 recorded | [evidence.md](evidence.md), https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot |
@@ -38,8 +35,7 @@ amendment) is complete and the design phase is closed: the user approved the ame
 
 ## Planned for next period
 
-After plan revision 3 is approved: implementation, tests, full local verification, gates, then the push and PR if
-authorized.
+On authorization: push the branch and open the PR (step 14); after the merge, the close-out change.
 
 ## Risks and issues
 
@@ -49,4 +45,4 @@ authorized.
 
 ## Next action
 
-User review of plan revision 3, including authorization to push and open the PR (step 14).
+User authorization to push `feature/WI-004-production-dashboard` and open the PR.
