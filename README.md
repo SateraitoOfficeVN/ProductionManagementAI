@@ -5,8 +5,9 @@ An AI-assisted development harness, and the production-management demo app built
 **Status:**
 - **WI-001 (bootstrap):** application skeleton and auth foundation, merged.
 - **WI-002 (Screen A, production-order create/edit):** designed, implemented, tested and merged.
-- **CI:** runs on every PR to `master` (backend, frontend and end-to-end jobs) and passes.
-- **Next:** Screen B, the production-order list.
+- **WI-003 (Screen B, production-order list):** designed, implemented, tested and merged. It adds filtering, sorting and paging over production orders, plus 80 seeded demo orders.
+- **CI:** runs the backend, frontend and end-to-end jobs on every PR to `master` and passes. Changes that touch only documentation, work items, demos or `ai/` skip CI (RFC 0005).
+- **Next:** Screen C, the dashboard. Its widgets and metrics are settled in its own requirements step.
 
 [`ai/project.md`](ai/project.md) has the verified commands and what's still open.
 
@@ -16,7 +17,7 @@ An AI-assisted development harness, and the production-management demo app built
 2. Read [project decisions](ai/project.md) and [execution policies](ai/policies.md).
 3. Choose a [workflow](ai/workflows/README.md).
 4. Create a work item from the [templates](ai/templates/README.md).
-5. Ask Claude or Codex to draft a plan; review it before implementation.
+5. Ask Claude or Codex to draft a plan. The agent shows you each plan revision and waits for your approval before starting its steps. That includes a later revision, such as the implementation plan after the design is approved (RFC 0006).
 
 Pass the applicable gate in [checklists](ai/checklists/README.md) before calling a stage done: design-consistency, security-review, delivery or release-readiness.
 
@@ -47,7 +48,7 @@ Still open: registry/deployment host beyond local Compose, merge/deploy permissi
 - [src](src/README.md): backend (.NET 10) and frontend (Vite + React + TypeScript) application source.
 - [tests](tests/README.md): backend unit and integration tests, and Playwright E2E journeys. Frontend unit tests live in `src/frontend/tests/`.
 - [deploy](deploy/README.md): local Docker Compose environment and database logins.
-- `.github/`: the [CI workflow](.github/workflows/ci.yml) (backend, frontend and e2e jobs on every push/PR to `master`) and the [pull request template](.github/pull_request_template.md).
-- [demos](demos/README.md): the four Screen A lifecycle walkthroughs (basic design, database design, detailed design, implementation).
+- `.github/`: the [CI workflow](.github/workflows/ci.yml) (backend, frontend and e2e jobs on every push/PR to `master`, except documentation-only changes) and the [pull request template](.github/pull_request_template.md).
+- [demos](demos/README.md): the four Screen A lifecycle walkthroughs (basic design, database design, detailed design, implementation), each with a transcript and a presentation deck (PDF). The video files are kept outside git.
 
 English is the default for new project artifacts. Japanese versions are optional; how translations stay in sync with their English source is still an open decision (WI-001 DEC-013).
