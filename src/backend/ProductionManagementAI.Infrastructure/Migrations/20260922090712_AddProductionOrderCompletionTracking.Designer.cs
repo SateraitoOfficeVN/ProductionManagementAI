@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProductionManagementAI.Infrastructure;
@@ -11,9 +12,11 @@ using ProductionManagementAI.Infrastructure;
 namespace ProductionManagementAI.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260922090712_AddProductionOrderCompletionTracking")]
+    partial class AddProductionOrderCompletionTracking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -490,14 +493,6 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                     b.HasIndex("OrderYear", "OrderSeq")
                         .IsUnique()
                         .HasDatabaseName("ix_production_orders_order_year_order_seq");
-
-                    b.HasIndex(new[] { "DueDate", "OrderNumber" }, "ix_production_orders_active_due_date")
-                        .HasDatabaseName("ix_production_orders_active_due_date")
-                        .HasFilter("status IN ('Draft', 'InProgress')");
-
-                    b.HasIndex(new[] { "CompletedAtUtc" }, "ix_production_orders_completed_at_utc")
-                        .HasDatabaseName("ix_production_orders_completed_at_utc")
-                        .HasFilter("completed_at_utc IS NOT NULL");
 
                     b.ToTable("production_orders", null, t =>
                         {

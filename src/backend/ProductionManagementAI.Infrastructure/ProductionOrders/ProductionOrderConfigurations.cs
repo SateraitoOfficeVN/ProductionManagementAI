@@ -33,6 +33,15 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
                 "ck_production_orders_status", "status IN ('Draft', 'InProgress', 'Completed', 'Cancelled')");
             table.HasCheckConstraint("ck_production_orders_order_seq_range", "order_seq BETWEEN 1 AND 99999");
             table.HasCheckConstraint("ck_production_orders_order_year_range", "order_year BETWEEN 2000 AND 9999");
+
+            // DB-004: a completed order always has a completion time and no other order has one; and no lead time
+            // can be negative, whatever wrote the row.
+            table.HasCheckConstraint(
+                "ck_production_orders_completed_at_matches_status",
+                "(status = 'Completed') = (completed_at_utc IS NOT NULL)");
+            table.HasCheckConstraint(
+                "ck_production_orders_completed_at_not_before_created",
+                "completed_at_utc IS NULL OR completed_at_utc >= created_at_utc");
         });
 
         builder.HasKey(o => o.Id).HasName("pk_production_orders");
@@ -77,6 +86,16 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
             .HasDatabaseName("ix_production_orders_order_number_trgm")
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");
+
+        // DB-004 (Screen C): the open workload stays small while history grows, so the active-order queries read a
+        // partial index in due-date order; the delivery figures read recent completions only.
+        // Named overload: the same columns as DB-003's index, so an unnamed HasIndex would reconfigure that one.
+        builder.HasIndex(o => new { o.DueDate, o.OrderNumber }, "ix_production_orders_active_due_date")
+            .HasDatabaseName("ix_production_orders_active_due_date")
+            .HasFilter("status IN ('Draft', 'InProgress')");
+        builder.HasIndex(o => o.CompletedAtUtc, "ix_production_orders_completed_at_utc")
+            .HasDatabaseName("ix_production_orders_completed_at_utc")
+            .HasFilter("completed_at_utc IS NOT NULL");
     }
 }
 

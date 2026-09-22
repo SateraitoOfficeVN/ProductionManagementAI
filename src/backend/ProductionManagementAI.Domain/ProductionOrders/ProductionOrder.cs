@@ -31,6 +31,12 @@ public sealed class ProductionOrder
     public DateTimeOffset CreatedAtUtc { get; private set; }
     public DateTimeOffset UpdatedAtUtc { get; private set; }
 
+    /// <summary>
+    /// When the order became <c>Completed</c> (WI-004 REQ-033, DB-004). Set only by <see cref="Update"/> on the
+    /// <c>InProgress → Completed</c> transition; <c>Completed</c> is terminal, so it never changes afterwards.
+    /// </summary>
+    public DateTimeOffset? CompletedAtUtc { get; private set; }
+
     /// <summary>PostgreSQL <c>xmin</c>, the optimistic-concurrency token (DEC-014).</summary>
     public uint RowVersion { get; private set; }
 
@@ -75,12 +81,19 @@ public sealed class ProductionOrder
             throw new DomainRuleViolation(ProductionOrderMessages.StatusTransitionNotAllowed);
         }
 
+        var fromStatus = Status;
         ProductId = productId;
         Quantity = quantity;
         DueDate = dueDate;
         Notes = NormalizeNotes(notes);
         Status = status;
         UpdatedAtUtc = utcNow;
+
+        // DD-001 v4 module 1 step 5: the save's own time, in the same save as the status change.
+        if (fromStatus == ProductionOrderStatus.InProgress && status == ProductionOrderStatus.Completed)
+        {
+            CompletedAtUtc = utcNow;
+        }
     }
 
     /// <returns>A message ID, or <c>null</c> when valid (V-02).</returns>

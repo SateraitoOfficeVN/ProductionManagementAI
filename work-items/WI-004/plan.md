@@ -6,7 +6,7 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | approved; steps 1–6 done, steps 7–8 superseded by revision 2 | user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008" |
 | 2 | 2026-09-22 | Design amendment after mockup review (navbar, health indicator, chart maximize) and design-phase close | approved; complete; superseded by revision 3 | user message 2026-09-22: "ok revision 2 is approved" |
-| 3 | 2026-09-22 | Implementation, tests, PR | **current** — awaiting review | none yet |
+| 3 | 2026-09-22 | Implementation, tests, PR | **current** — approved; in progress | user message 2026-09-22: "plan approved, let move on to implementation" |
 
 ## Revision 1 — design phase
 
@@ -261,11 +261,11 @@ Implement REQ-028–REQ-042 and the REQ-019 extension end to end in the running 
 
 | Action (push / PR / merge / deploy / publish image / …) | Authorized? | Source of authorization | Scope limit |
 | --- | --- | --- | --- |
-| Local edits under `src/`, `tests/`, `docs/`, `work-items/WI-004/` | on approval of this revision | — | This revision's scope |
+| Local edits under `src/`, `tests/`, `docs/`, `work-items/WI-004/` | yes | revision 3 approval, 2026-09-22 | This revision's scope |
 | Local commits on `feature/WI-004-production-dashboard` | yes | revision 1 approval, still in force | local only |
-| `npm install lucide-react@<exact>` in `src/frontend` (changes `package.json`, `package-lock.json`) | on approval of this revision | DEC-023 (user) | one package, exact version |
-| Run the local Compose stack and apply migrations to the local database | on approval of this revision | — | local only; fresh volume; the seeds are guarded |
-| Push the branch and open a PR | **requested with this revision** | — | step 14 only |
+| `npm install lucide-react@<exact>` in `src/frontend` (changes `package.json`, `package-lock.json`) | yes | revision 3 approval, 2026-09-22; DEC-023 (user) | one package, exact version |
+| Run the local Compose stack and apply migrations to the local database | yes | revision 3 approval, 2026-09-22 | local only; fresh volume; the seeds are guarded |
+| Push the branch and open a PR | not yet — the approval message did not address it; asked again at step 14 | — | step 14 only |
 | Merge, deploy, publish an image | no | not authorized | — |
 
 ### Risks and mitigations
@@ -283,6 +283,6 @@ Implement REQ-028–REQ-042 and the REQ-019 extension end to end in the running 
 
 ### Approval / sign-off
 
-- **Review status:** awaiting review
-- **Approval source:** —
-- **Approved revision:** —
+- **Review status:** approved
+- **Approval source:** user message 2026-09-22: "plan approved, let move on to implementation"
+- **Approved revision:** revision 3, 2026-09-22

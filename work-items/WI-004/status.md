@@ -1,6 +1,6 @@
 # Production Dashboard (Screen C) — Status Report
 
-As of 2026-09-22. Work item state: awaiting-plan-review.
+As of 2026-09-22. Work item state: in-progress.
 
 ## Overall status
 
@@ -17,7 +17,7 @@ amendment) is complete and the design phase is closed: the user approved the ame
 
 ## Approved plan reference
 
-[plan.md](plan.md) — revision 3 drafted 2026-09-22, awaiting review; approved revision 2, approval source user message 2026-09-22: "ok revision 2 is approved"; before it, approved revision 1, approval source user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008".
+[plan.md](plan.md) — approved revision 3, approval source user message 2026-09-22: "plan approved, let move on to implementation"; approved revision 2, approval source user message 2026-09-22: "ok revision 2 is approved"; before it, approved revision 1, approval source user message 2026-09-22: "plan revision 1 is approved, let answer the DEC-008".
 
 ## Accomplishments this period
 
