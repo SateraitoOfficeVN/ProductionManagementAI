@@ -5,7 +5,7 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-22 | Design (brief → BD → DB → DD + mockup) | approved; complete; superseded by revision 2 | user message 2026-09-22: "approved, let move on to BD-002" |
-| 2 | 2026-09-22 | Implementation, tests, PR | **current** — submitted for review | — |
+| 2 | 2026-09-22 | Implementation, tests, PR | **current** — approved; complete; PR #9 squash-merged (DEC-013) | user messages 2026-09-22: "the DD is approved, move on to the implementation"; "yes push it and open the PR" |
 
 ## Revision 1 — design phase
 
@@ -183,4 +183,4 @@ Implement SCR-002 end to end — database migrations, the list query endpoint, t
 - **Review status:** approved
 - **Approval source:** user messages 2026-09-22: "the DD is approved, move on to the implementation" (steps 1–13) and "yes push it and open the PR" (step 14)
 - **Approved revision:** revision 2, 2026-09-22
-- **Closure:** steps 1–14 done 2026-09-22. PR #9 is open with all three CI jobs green; merging was not requested and stays with the user.
+- **Closure:** steps 1–14 done 2026-09-22. PR #9 was squash-merged by the user as `8eab65f` (DEC-013) with all three CI jobs green, and the branch, worktree and local Compose stack were removed. Work item complete.

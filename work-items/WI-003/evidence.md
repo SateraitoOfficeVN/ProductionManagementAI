@@ -1,6 +1,6 @@
 # Production Order List (Screen B) — Requirements Traceability & Evidence
 
-As of branch `feature/WI-003-production-order-list`, pushed as PR #9, 2026-09-22.
+As of `master` at `8eab65f`, the squash merge of PR #9, 2026-09-22.
 
 ## Traceability matrix
 
@@ -122,7 +122,7 @@ Every item below was found by a check in this work item and fixed before it left
 
 ## External references
 
-- PR: https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/9 — opened 2026-09-22 with the user's authorization; not merged
+- PR: https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/9 — opened and, on 2026-09-22, squash-merged by the user as `8eab65f`
 - CI runs on PR #9: run 1 green, run 2 red on a timing-dependent test of mine, run 3 green after fixing it at the
   cause — https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35685579998. The commit carrying
   this record re-runs the same suite; its result is the one the PR shows
@@ -130,8 +130,8 @@ Every item below was found by a check in this work item and fixed before it left
 
 ## Remaining limitations and next action
 
-- **Not merged.** The branch is pushed and PR #9 is open with all three CI jobs green; merging was not part of the
-  authorization and stays the user's call.
+- **Merged.** The user squash-merged PR #9 as `8eab65f`; the branch, its worktree and the local Compose stack
+  (containers, networks and both volumes) are removed. No environment from this work item is still running.
 - **A read-only role cannot be expressed.** The list endpoint reuses the `ProductionOrderEditor` policy, so a viewer
   who may read but not edit is not representable. This waits on WI-001 DEC-015 (the role/permission matrix).
 - **The index assertions prove usability, not planner choice.** At 80 rows PostgreSQL correctly prefers a sequential

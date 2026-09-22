@@ -18,7 +18,9 @@ Decisions for WI-003. Decisions carried over from earlier work items keep their 
 | DEC-010 | 2026-09-22 | Index for the case-insensitive order-number fragment search | Claude (technical, during DB-003) | decided | `pg_trgm` GIN index on `order_number`; input upper-cased and matched with `LIKE` |
 | DEC-011 | 2026-09-22 | Whether seeded due dates are fixed calendar dates or relative to the migration run date | Claude (technical, during DB-003) | decided | Relative to the run date; everything else fixed; insert guarded to an empty table |
 | DEC-012 | 2026-09-22 | Whether the demo seed should also apply to the integration-test database | Claude (technical, during implementation) | decided | Yes — the tests run the real migration set; Screen A's numbering test now asserts the sequence continues from the seeded counter |
+| DEC-013 | 2026-09-22 | Merge PR #9 | user | decided | Squash-merged into `master` as `8eab65f` with all three CI jobs green |
 | DEC-012 | 2026-09-22 | Whether the demo seed should also apply to the integration-test database | Claude (technical, during implementation) | decided | Yes — the tests run the real migration set; Screen A's numbering test now asserts the sequence continues from the seeded counter |
+| DEC-013 | 2026-09-22 | Merge PR #9 | user | decided | Squash-merged into `master` as `8eab65f` with all three CI jobs green |
 
 ## DEC-001: Which filters and search the list offers
 
@@ -381,3 +383,25 @@ first created order is `PO-YYYY-00001`, and it became `00081` behind the 80 seed
 | --- | --- |
 | `OrderNumberingTests` | Asserts continuation from the seeded counter (TC-002 in TP-002 stays valid, with its expectation restated) |
 | DB-003, TP-003, evidence | The seed's reach is stated, and future tests needing an empty table must arrange it |
+
+## DEC-013: Merge PR #9
+
+### Context
+
+Plan revision 2 authorized push and PR but not merging, which `ai/policies.md` keeps as a separate authorization. PR #9
+carried the whole work item: design set, implementation, migrations and tests.
+
+### Decision and rationale
+
+- **Decision:** squash-merge PR #9 into `master`. The user did this from their own GitHub account on 2026-09-22 at
+  04:16Z; the merge commit is `8eab65f`.
+- **Decided by:** user, 2026-09-22 ("i merged it, clean up the worktree and stack").
+- **Rationale:** the user reviewed the PR and all three CI jobs were green on its head. Squash merge is this project's
+  convention, one commit per PR on `master` (`ai/rules/git-review.md`, WI-002 DEC-030).
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| status.md, evidence.md, plan.md | Merge outcome recorded here, in the follow-up PR that also refreshes `ai/project.md` — this record could not be part of the PR it describes |
+| Branch, worktree, local stack | All removed after the merge |
