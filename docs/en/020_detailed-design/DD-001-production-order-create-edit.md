@@ -13,17 +13,18 @@ DD-001 — implements BD-001 (SCR-001), requirements REQ-010–REQ-019.
 | System name | ProductionManagementAI |
 | Subsystem name | Production orders |
 | Work item | WI-002 |
-| Implements | BD-001 revision 4 |
+| Implements | BD-001 revision 6 |
 | Created by | Claude (for ThanhTN) |
 | Created date | 2026-09-18 |
 | Last updated by | Claude (for ThanhTN) |
-| Last updated date | 2026-09-18 |
+| Last updated date | 2026-09-22 |
 
 | Version | Date | Author | Revision content |
 | --- | --- | --- | --- |
 | 1 | 2026-09-18 | Claude (for ThanhTN) | Initial creation |
 | 2 | 2026-09-18 | Claude (for ThanhTN) | Added the function-design (DD-001-FN) and screen-processing-design (DD-001-SPD) companions; modules 3–5 and flows P-01–P-05 moved there, with pointers left here |
 | 3 | 2026-09-18 | Claude (for ThanhTN) | Aligned with implementation (plan revision 2): `AllowedNext()` extension method; OpenTelemetry instrumentation set; test-plan IDs filled in |
+| 4 | 2026-09-22 | Claude (for ThanhTN) | Completion tracking (WI-004 REQ-033, BD-001 revision 6, DB-004): module 1 sets `CompletedAtUtc` on `InProgress → Completed`; state-transition side effect, database mapping and test viewpoints updated |
 
 ## Overview and reference documents (概要・目次)
 
@@ -183,6 +184,7 @@ Processing overview: `ProductionOrder.Create(...)` returns a new `Draft` order. 
 | 2 | If `status != Status` and `status ∉ AllowedNext(Status)` → throw `DomainRuleViolation("MSG-E007")` | `ProductionOrderStatusExtensions.AllowedNext` |
 | 3 | Assign `ProductId`, `Quantity` (only possible while `Draft`), `DueDate`, `Notes`, `Status` | — |
 | 4 | Set `UpdatedAtUtc` = the given UTC time | — |
+| 5 | If the status moved from `InProgress` to `Completed` in this call, set `CompletedAtUtc` = the same UTC time. Never set otherwise, never cleared; there is no public setter or request field for it (WI-004 REQ-033, DB-004 `ck_production_orders_completed_at_matches_status`) | — |
 
 **Return value**: none — state change or exception.
 
@@ -363,7 +365,7 @@ Message catalog (`messages.ts`; the server returns the same IDs as `code`):
 | (none) | Create (P-02) | Draft | Row inserted; counter incremented; `orders.created` metric |
 | Draft | Update with status InProgress | InProgress | Product/quantity become locked |
 | Draft | Update with status Cancelled | Cancelled | Terminal |
-| InProgress | Update with status Completed | Completed | Terminal |
+| InProgress | Update with status Completed | Completed | Terminal; `completed_at_utc` set to the save's UTC time (WI-004 REQ-033) |
 | InProgress | Update with status Cancelled | Cancelled | Terminal |
 | any | Update with the same status | same | Other editable fields saved |
 | any other pair | Update | unchanged | 422 MSG-E007 |
@@ -396,7 +398,7 @@ The step-by-step processing is in the screen-processing companion, **DD-001-SPD*
 | List products | `products` (`id, sku, name`) | none; `AsNoTracking` | not applicable |
 | Load order | `production_orders` only (no join; the client resolves the product label from the product list) | none; `AsNoTracking` for GET | not applicable |
 | Create | `production_order_number_counters`, `production_orders` | Explicit transaction: counter upsert + insert, then commit | Counter row lock; unique `(order_year, order_seq)` backstop |
-| Update | `production_orders` (+ `products` existence query when `productId` changes) | Single `SaveChanges` (implicit transaction) | `xmin` token (DEC-014): stale → 409 |
+| Update | `production_orders` (+ `products` existence query when `productId` changes); on `InProgress → Completed` the same `UPDATE` also writes `completed_at_utc` (DB-004) | Single `SaveChanges` (implicit transaction) — the status and the completion time commit together | `xmin` token (DEC-014): stale → 409 |
 
 Queries select only the columns used (projection to DTOs). The runtime login is `pmai_app`, with the grants in DB-002 (DEC-016).
 
@@ -470,6 +472,7 @@ Level: U = unit (xUnit Domain/Application, or Vitest+RTL for the frontend), I = 
 | Product rules (REQ-015) — I | — | Missing → MSG-E001; random GUID → MSG-E002 | TC-012 |
 | Notes rules (REQ-016) — U, I | — | Empty → `null`; 500 chars (incl. emoji counted as 1) pass; 501 → MSG-E006 | TC-013 |
 | Each allowed transition (REQ-017) — U, I | Order in the source state | 200, new status; `allowedNextStatuses` updated | TC-014 |
+| Completion time recorded (WI-004 REQ-033) — U, I | InProgress order; clock pinned | Saving `Completed` sets `completed_at_utc` = the save time (= `updated_at_utc`); every other transition and every same-status save leaves it unchanged (`NULL`, or the original value on a later edit of a completed order's notes); a rejected save (422, 409) sets nothing; a request body carrying a completion field is ignored | WI-004 TP-004 (ID assigned in DD-003) |
 | Disallowed transitions (REQ-017) — U, I | e.g. Draft→Completed, Completed→InProgress, Cancelled→Draft | 422 MSG-E007, status unchanged | TC-015 |
 | Status options per state (M-02) — U(fe) | Each status | Select options match; disabled for terminal states | TC-016 |
 | Locked-field change rejected whole (REQ-018, DEC-007) — U, I | InProgress order; PUT changes quantity + notes | 422 MSG-E008; notes not saved | TC-017 |

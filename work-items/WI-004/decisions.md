@@ -18,6 +18,9 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-010 | 2026-09-22 | How charts are drawn and made accessible | Claude (UI/accessibility, during BD-003) | decided | Inline SVG drawn by the page, no charting library; value labels on bars and a "View as table" disclosure |
 | DEC-011 | 2026-09-22 | One snapshot endpoint or one endpoint per widget | Claude (technical, during BD-003) | decided | One endpoint returning every widget from one consistent snapshot |
 | DEC-012 | 2026-09-22 | Where the placeholder home page's two links go | Claude (UI, during BD-003) | decided | Page actions on the dashboard itself; the shared header is not changed |
+| DEC-013 | 2026-09-22 | How the demo seed gives the delivery widgets data | user | decided | Both: re-date the 16 seeded completed orders and add 40 historical completed orders |
+| DEC-014 | 2026-09-22 | Whether the seed adds active orders due beyond WI-003's 40-day horizon | Claude (technical, during DB-004) | decided — open to objection at DB-004 review | Add 4 (due +42, +49, +56, +63), so week bars 6–7 and Later are never empty |
+| DEC-015 | 2026-09-22 | How the dashboard reads one consistent snapshot | Claude (technical, during DB-004) | decided | One `REPEATABLE READ READ ONLY` transaction around the seven statements |
 
 ## DEC-001: Which current-state widgets the dashboard shows
 
@@ -308,3 +311,62 @@ The placeholder home page at `/` holds the only links to "Production orders" and
 | --- | --- |
 | brief.md | REQ-028 success criterion: "the dashboard still offers…" instead of "the application header still leads to…" |
 | BD-003 | Items 5, 6; screen transition |
+
+## DEC-013: How the demo seed gives the delivery widgets data
+
+### Context
+
+Found while writing DB-004. WI-003's seed has only 16 `Completed` orders, all created at most 49 days before the seed ran, and a completion cannot precede creation. Those orders could fill at most the last 7 of the trend's 12 weeks, and the 30-day on-time rate would rest on about 5 orders. DEC-004 ("seed + backfill") did not say whether the seed may grow, which changes the totals Screen B shows. So the user was asked before DB-004 changed anything.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| Add ~40 historical completed orders | Full 12-week trend; a meaningful 30-day rate | Demo total grows from 80; WI-003 figures and tests that assert 80 change |
+| Re-date the existing 16 only | Screen B totals unchanged | Trend of 1–2 a week with gaps; rate on ~5 orders |
+| Convert some existing orders to `Completed` | Total stays 80 | Screen B's status spread and tests change; thinner active-order widgets |
+
+### Decision and rationale
+
+- **Decision:** both of the first two options. Re-date the 16 existing completed orders, giving them older creation dates and completion times over the last 33 days without changing their due dates. Add 40 historical completed orders completed 0–88 days ago, about 30% of them late (DB-004 "Demo seed data").
+- **Decided by:** user, 2026-09-22 ("do both 1 and 2 options").
+- **Rationale:** with both, every trend week holds at least 2 completions for any run weekday, and the 30-day rate rests on 30 orders (DB-004 "What the seed produces").
+
+### Impact
+
+| Artifact | Change required |
+| --- | --- |
+| DB-004 | Seed tables, guards, order-number allocation, recovery limits |
+| WI-003 artifacts | DB-003's seed figures and the tests asserting 80 rows, the status spread or `00081` are updated in plan revision 2 |
+
+## DEC-014: Far-due active orders in the seed
+
+### Context
+
+WI-003's seeded active orders are due at most 40 days out. On the run date the workload chart's week 7 and "Later" bars are always empty, and week 6 is empty on a Monday or Tuesday run. That makes DEC-009's "Later" bar undemonstrable. DB-004's own seed check caught the week-6 case.
+
+### Decision and rationale
+
+- **Decision:** the new seed also adds 4 active orders, due T + 42, + 49, + 56 and + 63. They always land in week 6, week 7, Later and Later, whatever the run weekday (DB-004).
+- **Decided by:** Claude, 2026-09-22, during DB-004 (technical detail of DEC-013's seed). It is flagged at DB-004 review so the user can object; it adds 4 rows to Screen B's demo total (124 instead of 120).
+- **Rationale:** every one of the ten workload bars is non-zero on the run date, so REQ-031 is visibly demonstrable.
+
+## DEC-015: How the dashboard reads one consistent snapshot
+
+### Context
+
+DEC-011 requires every widget to come from one consistent read. BD-003 left the mechanism to DB-004.
+
+### Options considered
+
+| Option | Pros | Cons |
+| --- | --- | --- |
+| One `REPEATABLE READ READ ONLY` transaction around seven ordinary statements | Each query stays readable and separately testable; PostgreSQL gives every statement the same snapshot; a read-only transaction cannot fail with a serialization error, so no retry | One explicit transaction to manage in the repository |
+| One statement with CTEs | Single round trip | Merges seven differently shaped results into one; EF Core cannot map it cleanly |
+| No guarantee (`READ COMMITTED`) | Simplest | Figures can disagree, breaking REQ-028 and BD-003's cross-checks |
+
+### Decision and rationale
+
+- **Decision:** one `REPEATABLE READ READ ONLY` transaction (DB-004 "Transactions and concurrency").
+- **Decided by:** Claude, 2026-09-22, during DB-004 (technical).
+- **Rationale:** consistent figures with ordinary queries and no retry path.
