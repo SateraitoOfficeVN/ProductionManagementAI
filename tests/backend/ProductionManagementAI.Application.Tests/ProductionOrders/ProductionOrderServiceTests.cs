@@ -198,6 +198,98 @@ public class ProductionOrderServiceTests
         public short CurrentYear => (short)today.Year;
     }
 
+    // ---- DD-002-FN §1: the list use case. The query itself runs against a real database in the integration
+    // tests; here the rows are canned so the service's own decisions can be checked without one.
+
+    private static ProductionOrderListQuery ListQuery(
+        Guid? productId = null, int page = 1, int pageSize = 20) =>
+        new([], productId, null, null, null, ProductionOrderSort.DueDate, SortDirection.Asc, page, pageSize);
+
+    private ProductionOrderListRow ListRow(DateOnly dueDate, ProductionOrderStatus status, string orderNumber) => new(
+        Guid.NewGuid(), orderNumber, KnownProduct, "P-1001", "Steel bracket", 5, dueDate, status,
+        new DateTimeOffset(2026, 9, 17, 0, 0, 0, TimeSpan.Zero));
+
+    private async Task<PagedResult<ProductionOrderListItem>> ListedAsync(ProductionOrderListQuery? query = null)
+    {
+        var result = await _service.ListAsync(query ?? ListQuery(), CancellationToken.None);
+        return Assert.IsType<Result<PagedResult<ProductionOrderListItem>>.Ok>(result).Value;
+    }
+
+    [Fact]
+    public async Task List_ReturnsThePageWithTheTotalAndEchoesTheQueryControls()
+    {
+        _repository.ListRows.AddRange([
+            ListRow(Today.AddDays(1), ProductionOrderStatus.Draft, "PO-2026-00001"),
+            ListRow(Today.AddDays(2), ProductionOrderStatus.InProgress, "PO-2026-00002"),
+            ListRow(Today.AddDays(3), ProductionOrderStatus.Completed, "PO-2026-00003"),
+        ]);
+
+        var page = await ListedAsync(ListQuery(pageSize: 10));
+
+        Assert.Equal(3, page.Total);
+        Assert.Equal(3, page.Items.Count);
+        Assert.Equal(1, page.Page);
+        Assert.Equal(10, page.PageSize);
+        Assert.Equal("dueDate", page.Sort);
+        Assert.Equal("asc", page.Dir);
+    }
+
+    [Fact]
+    public async Task List_MarksOverdueRowsAgainstThePlantDate()
+    {
+        _repository.ListRows.AddRange([
+            ListRow(Today.AddDays(-1), ProductionOrderStatus.Draft, "PO-2026-00001"),
+            ListRow(Today.AddDays(-1), ProductionOrderStatus.Completed, "PO-2026-00002"),
+            ListRow(Today, ProductionOrderStatus.InProgress, "PO-2026-00003"),
+        ]);
+
+        var page = await ListedAsync();
+
+        Assert.Equal([true, false, false], page.Items.Select(i => i.IsOverdue));
+    }
+
+    [Fact]
+    public async Task List_WithNoMatches_SkipsThePageQueryEntirely()
+    {
+        var page = await ListedAsync();
+
+        Assert.Equal(0, page.Total);
+        Assert.Empty(page.Items);
+        Assert.Equal(0, _repository.ListCallCount);
+    }
+
+    [Fact]
+    public async Task List_PageBeyondTheLastOne_IsEmptyButStillReportsTheRealTotal()
+    {
+        _repository.ListRows.Add(ListRow(Today, ProductionOrderStatus.Draft, "PO-2026-00001"));
+
+        var page = await ListedAsync(ListQuery(page: 9));
+
+        Assert.Empty(page.Items);
+        Assert.Equal(1, page.Total);
+        Assert.Equal(9, page.Page);
+    }
+
+    [Fact]
+    public async Task List_UnknownProductFilter_IsRejectedWithoutQuerying()
+    {
+        var result = await _service.ListAsync(ListQuery(productId: Guid.NewGuid()), CancellationToken.None);
+
+        var invalid = Assert.IsType<Result<PagedResult<ProductionOrderListItem>>.Invalid>(result);
+        Assert.Equal(["MSG-E002"], invalid.Errors["productId"]);
+        Assert.Equal(0, _repository.ListCallCount);
+    }
+
+    [Fact]
+    public async Task List_KnownProductFilter_IsQueried()
+    {
+        _repository.ListRows.Add(ListRow(Today, ProductionOrderStatus.Draft, "PO-2026-00001"));
+
+        var page = await ListedAsync(ListQuery(productId: KnownProduct));
+
+        Assert.Single(page.Items);
+    }
+
     private sealed class FakeIssuer : IOrderNumberIssuer
     {
         private int _last;

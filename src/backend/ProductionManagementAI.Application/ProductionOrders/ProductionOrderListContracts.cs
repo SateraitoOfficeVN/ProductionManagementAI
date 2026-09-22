@@ -108,8 +108,7 @@ public sealed record ProductionOrderListQuery(
                 continue;
             }
 
-            if (!Enum.TryParse<ProductionOrderStatus>(value, ignoreCase: true, out var status)
-                || !Enum.IsDefined(status))
+            if (!TryParseName<ProductionOrderStatus>(value, out var status))
             {
                 errors["status"] = [Msg.StatusFilterUnknown];
                 return [];
@@ -193,13 +192,33 @@ public sealed record ProductionOrderListQuery(
             return fallback;
         }
 
-        if (!Enum.TryParse<TEnum>(value, ignoreCase: true, out var parsed) || !Enum.IsDefined(parsed))
+        if (!TryParseName<TEnum>(value, out var parsed))
         {
             errors[field] = [Msg.SortOrPagingUnsupported];
             return fallback;
         }
 
         return parsed;
+    }
+
+    /// <summary>
+    /// Matches an enum by name only. Enum.TryParse would also accept the numeric value ("3" for Cancelled), which
+    /// would let a crafted request slip past an allow-list that is meant to be a list of names.
+    /// </summary>
+    private static bool TryParseName<TEnum>(string value, out TEnum parsed)
+        where TEnum : struct, Enum
+    {
+        foreach (var name in Enum.GetNames<TEnum>())
+        {
+            if (string.Equals(name, value, StringComparison.OrdinalIgnoreCase))
+            {
+                parsed = Enum.Parse<TEnum>(name);
+                return true;
+            }
+        }
+
+        parsed = default;
+        return false;
     }
 
     private static int ParseBoundedInt(

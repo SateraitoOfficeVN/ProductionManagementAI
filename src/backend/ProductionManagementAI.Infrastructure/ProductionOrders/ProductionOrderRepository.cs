@@ -38,19 +38,20 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
                 db.Products.AsNoTracking(),
                 order => order.ProductId,
                 product => product.Id,
-                (order, product) => new ProductionOrderListRow(
-                    order.Id,
-                    order.OrderNumber,
-                    product.Id,
-                    product.Sku,
-                    product.Name,
-                    order.Quantity,
-                    order.DueDate,
-                    order.Status,
-                    order.UpdatedAtUtc))
+                (order, product) => new ProductionOrderJoin { Order = order, Product = product })
             .ApplySort(query.Sort, query.Direction)
             .Skip(query.Skip)
             .Take(query.PageSize)
+            .Select(join => new ProductionOrderListRow(
+                join.Order.Id,
+                join.Order.OrderNumber,
+                join.Product.Id,
+                join.Product.Sku,
+                join.Product.Name,
+                join.Order.Quantity,
+                join.Order.DueDate,
+                join.Order.Status,
+                join.Order.UpdatedAtUtc))
             .ToListAsync(cancellationToken);
 
     public void Add(ProductionOrder order) => db.ProductionOrders.Add(order);

@@ -6,29 +6,37 @@ using static ProductionManagementAI.Integration.Tests.ProductionOrders.Productio
 
 namespace ProductionManagementAI.Integration.Tests.ProductionOrders;
 
-// Own class = own fixture = fresh database, so the per-year sequence starts at 00001 (DEC-012, DEC-013).
-// Everything runs in one test method because the assertions depend on order.
+// Own class = own fixture = fresh database. Since WI-003 that database also carries the 80 seeded demo orders
+// (DB-003, DEC-007), so the sequence continues from the seeded counter rather than starting at 00001 — which is
+// exactly what the seed's counter row exists to guarantee. Everything runs in one test method because the
+// assertions depend on order.
 public class OrderNumberingTests(IntegrationTestFixture fixture) : IClassFixture<IntegrationTestFixture>
 {
     [Fact]
-    public async Task Numbers_StartAt00001_AreGapFreeUnderConcurrency_AndOverflowIsRejectedCleanly()
+    public async Task Numbers_ContinueFromSeededCounter_AreGapFreeUnderConcurrency_AndOverflowIsRejectedCleanly()
     {
         using var client = await fixture.CreateClientAsAsync("Admin");
         var year = PlantToday.Year;
 
-        // 1. First order of the year.
+        // 0. The seed left the counter at the highest seeded sequence, so the next order can't collide with a
+        //    seeded order number (DB-003 demo seed).
+        var seeded = await fixture.ScalarAsOwnerAsync<int>(
+            $"SELECT last_seq FROM production_order_number_counters WHERE order_year = {year}");
+        Assert.Equal(80, seeded);
+
+        // 1. First order created through the API continues the sequence.
         var first = await client.CreateOrder();
-        Assert.Equal($"PO-{year}-00001", first["orderNumber"]!.GetValue<string>());
+        Assert.Equal($"PO-{year}-{seeded + 1:00000}", first["orderNumber"]!.GetValue<string>());
 
         // 2. A failed create doesn't consume a number.
         var invalid = await client.PostJson("/api/production-orders", ValidCreate(product: Guid.NewGuid()));
         Assert.Equal(HttpStatusCode.BadRequest, invalid.StatusCode);
-        Assert.Equal($"PO-{year}-00002", (await client.CreateOrder())["orderNumber"]!.GetValue<string>());
+        Assert.Equal($"PO-{year}-{seeded + 2:00000}", (await client.CreateOrder())["orderNumber"]!.GetValue<string>());
 
         // 3. 20 concurrent creates get 20 distinct, contiguous numbers.
         var results = await Task.WhenAll(Enumerable.Range(0, 20).Select(_ => client.CreateOrder()));
         var sequences = results.Select(r => int.Parse(r["orderNumber"]!.GetValue<string>()[^5..])).Order().ToArray();
-        Assert.Equal(Enumerable.Range(3, 20), sequences);
+        Assert.Equal(Enumerable.Range(seeded + 3, 20), sequences);
 
         // 4. Overflow: the 100,000th order of a year fails with a generic 500, rolls back, and inserts nothing.
         await fixture.ExecuteAsOwnerAsync($"UPDATE production_order_number_counters SET last_seq = 99999 WHERE order_year = {year}");

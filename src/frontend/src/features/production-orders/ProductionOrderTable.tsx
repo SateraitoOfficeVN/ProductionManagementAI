@@ -24,7 +24,8 @@ const statusBadge: Record<ProductionOrderListItem['status'], string> = {
   Draft: 'border-gray-300 bg-gray-100 text-gray-700',
   InProgress: 'border-blue-200 bg-blue-50 text-blue-800',
   Completed: 'border-green-200 bg-green-50 text-green-800',
-  Cancelled: 'border-gray-200 bg-white text-gray-400 line-through',
+  // gray-600, not gray-400: the lighter grey reads as 2.9:1 on white and fails WCAG 1.4.3 (caught by axe).
+  Cancelled: 'border-gray-300 bg-gray-50 text-gray-600 line-through',
 }
 
 interface Props {
