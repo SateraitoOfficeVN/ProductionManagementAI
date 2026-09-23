@@ -83,13 +83,11 @@ ai/
 │   └── baseline-cases.md          — manual scenarios, including adversarial ones
 │
 └── improvements/
-    ├── README.md                  — where adopted harness-improvement work lands
-    ├── 0001-dd-companions-always-produced.md
-    ├── 0002-plan-revision-history.md
-    └── 0003-align-rules-with-project-decisions.md
+    ├── README.md                  — index of harness-change records
+    └── NNNN-<slug>.md             — one record per harness change
 ```
 
-`ai/` sits inside the wider repository alongside its consumers and adapters — `AGENTS.md` and `CLAUDE.md` at the repo root, `.claude/` as a thin per-agent adapter (a `.codex/` counterpart hasn't been needed or created yet), `work-items/<WI-###>/` as the durable state each skill reads and writes, and `docs/en/...` as where design skills place BD/DD/DB/ADR/test output. The root `README.md`'s own "Layout" section is the map of that wider structure; this document only expands on `ai/` itself.
+`ai/` sits inside the wider repository alongside its consumers and adapters — `AGENTS.md` and `CLAUDE.md` at the repo root, `.claude/` as a thin per-agent adapter (a `.codex/` counterpart hasn't been needed or created yet), `work-items/<WI-###>/` as the durable state each skill reads and writes, `docs/en/...` as where design skills place BD/DD/DB/ADR/test output (one folder per document number, e.g. `docs/en/010_basic-design/001/`), with the English and Japanese PDFs of each document under `docs/en/pdf/` and `docs/ja/pdf/`, and `scripts/docs-pdf.py` as the tool that renders them. The root `README.md`'s own "Layout" section is the map of that wider structure; this document only expands on `ai/` itself.
 
 ## The routing chain — how a request actually flows
 
@@ -116,8 +114,8 @@ Every task enters through the same chain, regardless of which agent is running i
 | `skills/` (13 skills) | The actual "how to do X" procedures | Each is a bounded, checkable unit of work with the same 8-part shape (purpose/inputs/steps/tooling/outputs/checklist/termination/handover — see below), so it's re-runnable by any agent and its output is predictable |
 | `templates/` (12, plus the 3 `DD/` companions and the `example/` reference workbooks) | The starting document for each skill's output | Each is modeled on a real, named industry format rather than an invented one — MADR for ADRs, IEEE 829 for test plans, a PRD structure for the brief, an RFC format for improvement proposals, a Requirements Traceability Matrix for evidence, Japanese SI conventions (基本設計書/詳細設計書/テーブル定義書) for BD/DD/DB, Google's review-checklist categories for `review.md` — so the output is actually useful, not just a formality |
 | `checklists/` (4: design-consistency, security-review, delivery, release-readiness) | Point-in-time pass/fail gates | Turns "did this follow the rules" from something held in memory into an explicit, repeatable check at the moment it matters: before dependent implementation, before merge, before reporting done, before an authorized deploy |
-| `evaluations/` | Manual scenarios (18 today, including adversarial ones — prompt injection, scope creep, secret leakage) with expected behavior | Lets a change to shared guidance be checked against concrete cases instead of trusted on faith |
-| `improvements/` | Where a harness-improvement work item's artifacts land once adopted — three RFCs so far (0001: always produce all four DD documents; 0002: keep every plan revision, oldest first; 0003: align rules/skills with project decisions and run E2E in CI) | Keeps the history of *why* the harness changed, not just its current state |
+| `evaluations/` | Manual scenarios with expected behavior, covering the process rules (plan approval, document output, merge convention) and adversarial cases (prompt injection, scope creep, secret leakage) | Lets a change to shared guidance be checked against concrete cases instead of trusted on faith |
+| `improvements/` | One record per harness change, from proposal to adoption | Keeps the history of *why* the harness changed, not just its current state |
 
 **Why `policies.md`, `rules/`, and `checklists/` are three separate things** rather than one file: they answer different questions. `policies.md` answers "is this agent allowed to do this, or must it stop and ask?" `rules/` answers "what does correct look like for this kind of change?" `checklists/` answers "right now, before I move to the next step, did I actually meet that bar?" Collapsing them would either bury authorization rules inside technical detail, or turn every rule into an unenforced suggestion with no checkpoint.
 
@@ -128,11 +126,11 @@ What each of the 13 skills actually does, in the order they normally compose (a 
 | Skill | What it actually does | Primary output |
 |---|---|---|
 | `requirements` | Turns an ambiguous request into actors, use cases, in/out-of-scope behavior, and stable `REQ-###` IDs each with a success-path and failure-path acceptance criterion. Records ambiguous business rules as open questions instead of inventing them. | `work-items/<ID>/brief.md`, `docs/en/000_requirements/` |
-| `planning` | Turns a brief (or a bug/improvement problem statement) into a bounded plan: scope, dependencies, assumptions, a step list with a verification method per step, external actions separated from local work, and an explicit approval record. A revision never replaces an earlier one: the previous revision is closed in place and the new one appended, so `plan.md` reads oldest-first (RFC 0002). | `work-items/<ID>/plan.md`, `status.md` |
-| `architecture` | Describes frontend/backend/database boundaries and where auth, secrets or external input cross one; threat-models (STRIDE) a boundary touching auth/payment/PII; records one decision per ADR with alternatives assessed proportionally. | ADR(s) under `docs/en/architecture/` |
-| `basic-design` | Describes business flow, screen list, primary actions and success/exception paths for a feature; flags which fields are security/PII-relevant and where accessibility matters, without fixing implementation detail yet. | BD under `docs/en/010_basic-design/` |
-| `database-design` | Defines entities, relationships, types, keys, constraints and justified indexes; decides the migration approach (expand/contract for a live table, `CREATE INDEX CONCURRENTLY` for a live index) and the least-privilege role the app uses. | DB design under `docs/en/database/` |
-| `detailed-design` | Turns a BD into fields/validation/state transitions, the API contract (RFC 9457 error shape), persistence mapping, and what gets traced/logged for each endpoint, plus a rendered mockup for screens. Always produces all four DD documents, each piece of content in exactly one of them (RFC 0001). | `###_DD` main DD plus `###_DD-API`, `###_DD-FN`, `###_DD-SPD` under `docs/en/020_detailed-design/` |
+| `planning` | Turns a brief (or a bug/improvement problem statement) into a bounded plan: scope, dependencies, assumptions, a step list with a verification method per step, external actions separated from local work, and an explicit approval record. Every revision is shown to the user and explicitly approved before any step it covers starts; approving an earlier phase authorizes drafting the next revision, not executing it. A revision never replaces an earlier one: the previous revision is closed in place and the new one appended, so `plan.md` reads oldest-first. | `work-items/<ID>/plan.md`, `status.md` |
+| `architecture` | Describes frontend/backend/database boundaries and where auth, secrets or external input cross one; threat-models (STRIDE) a boundary touching auth/payment/PII; records one decision per ADR with alternatives assessed proportionally. | ADR(s) under `docs/en/architecture/NNNN/` |
+| `basic-design` | Describes business flow, screen list, primary actions and success/exception paths for a feature; draws the screen transition and any status workflow as Mermaid diagrams and each layout as a grey-box SVG wireframe with numbered callouts; flags which fields are security/PII-relevant and where accessibility matters, without fixing implementation detail yet. | `###_BD` with its `wireframes/` under `docs/en/010_basic-design/###/` |
+| `database-design` | Defines entities, relationships, types, keys, constraints and justified indexes; decides the migration approach (expand/contract for a live table, `CREATE INDEX CONCURRENTLY` for a live index) and the least-privilege role the app uses. | `###_DB` under `docs/en/database/###/`, numbered like the screen it serves (`000_DB` when it serves none) |
+| `detailed-design` | Turns a BD into fields/validation/state transitions, the API contract (RFC 9457 error shape), persistence mapping, and what gets traced/logged for each endpoint, plus an SVG wireframe, a Mermaid state diagram and a rendered HTML mockup with a Japanese copy for screens. Always produces all four DD documents, each piece of content in exactly one of them. | `###_DD` main DD plus `###_DD-API`, `###_DD-FN`, `###_DD-SPD`, with `wireframes/` and `mockups/`, under `docs/en/020_detailed-design/###/` |
 | `screen-design` | Specifies one screen in more depth than the BD's screen list gives — layout/navigation at BD level, or fields/interactions/WCAG 2.2 AA states at DD level. | Sections embedded in BD/DD |
 | `implementation` | Works on a dedicated branch in its own git worktree from the first change onward; writes the actual vertical slice — code, migration, config, tests and the instrumentation the DD specified — for a bounded piece of the plan; quarantines (doesn't silently retry or delete) any check that proves flaky; routes a security-relevant change through `security-review` before calling it done; once the delivery checklist passes, pushes the branch and opens a PR when authorized (otherwise leaves it ready, pending authorization). | Branch `feature/<WI-###>-<slug>` per `project.md`'s branch policy, code under `src/`, tests under `tests/`, `evidence.md` |
 | `testing` | Maps requirements and risk to test cases and the right test level (mostly unit, less integration, least E2E); runs what's available and records real results, including not-run and blocked checks. | Tests, `docs/en/testing/`, `evidence.md` |
@@ -148,7 +146,7 @@ What each file under `ai/rules/` actually constrains:
 | Rule file | Covers |
 |---|---|
 | `common.md` | Preserve approved scope; use stable IDs and link artifacts instead of duplicating them; record unresolved decisions explicitly; keep changes focused. |
-| `documentation.md` | English by default and the source of truth; each `docs/en/` document is rendered to English and Japanese PDFs under `docs/en/pdf/` and `docs/ja/pdf/` in the same change, with no Japanese Markdown (RFC 0008); stable IDs survive translation; separate confirmed facts from proposals/assumptions/open questions; update docs in the same change as the code they describe, not a follow-up. |
+| `documentation.md` | English by default and the source of truth; each `docs/en/` document is rendered to English and Japanese PDFs under `docs/en/pdf/` and `docs/ja/pdf/` in the same change, with no Japanese Markdown; UI text is quoted as the Japanese the UI shows, with an English gloss; each HTML mockup has a Japanese copy (`.ja.html`); document IDs put the number first (`001_BD`, `001_DD-API`, `001_DB`, `0001_ADR`) and a screen's BD, DD and DB share one number and one folder per type; stable IDs survive translation; separate confirmed facts from proposals/assumptions/open questions; update docs in the same change as the code they describe, not a follow-up. |
 | `frontend.md` | The confirmed stack (Vite + React + TypeScript, Tailwind CSS v4, no component kit) — adding a component kit or another UI framework is a new project decision; strict TypeScript with no `any`/non-null-assertion escapes; WCAG 2.2 AA; config via `import.meta.env`, never a secret in client code, since anything shipped to the browser is public. |
 | `backend.md` | .NET 10 with EF Core in the layered Domain/Application/Infrastructure/Api structure — another ORM or architectural pattern is a new project decision; nullable reference types enforced; API errors as RFC 9457 Problem Details with no leaked exception detail; structured logging with no secrets/PII; OpenTelemetry traces and metrics on new endpoints and jobs, not logs alone. |
 | `database.md` | PostgreSQL; parameterized queries only, never string-built SQL; expand/contract for a breaking change on a live table; `CREATE INDEX CONCURRENTLY` on a live table; least-privilege application DB role; migration impact and recovery limits described before executing. |
@@ -225,23 +223,20 @@ This shape is deliberate: (1)-(2) bound what the skill needs before it starts; (
 
 ## Where this stands, and what's next
 
-The first real end-to-end test has happened. WI-002 (Screen A, production-order create/edit) ran the full chain:
-- requirements → plan → BD → DB → DD (main + API/FN/SPD) with a rendered mockup;
-- plan revision 2 → code → unit, integration, frontend and Playwright E2E tests (133 automated checks, including axe accessibility scans);
-- security-review and delivery checklists → PR, with everything recorded in `work-items/WI-002/`.
+The full chain has now run on real work four times, from the application skeleton to three business screens:
 
-The chain held up. Two gaps surfaced along the way and were fixed through `harness-improvement` rather than silent edits:
-- **RFC 0001:** the DD companions had been optional, so function and processing design could be folded into the main DD. Now all four documents are always produced.
-- **RFC 0002:** a new plan revision overwrote the previous one. Now every revision is kept, oldest first.
+| Work item | What it exercised |
+|---|---|
+| WI-001 | `project-bootstrap`: skeleton, auth foundation, local Compose environment, CI |
+| WI-002 (Screen A, create/edit) | The first end-to-end feature: requirements → plan → BD → DB → the four DD documents with a mockup → implementation → unit, integration and E2E tests with axe → security-review and delivery checklists → PR |
+| WI-003 (Screen B, list) | Building on an existing screen: evolving a live schema, reusing shared modules and API endpoints, amending Screen A's design |
+| WI-004 (Screen C, dashboard) | A read-only screen over one consistent snapshot, a design revised after mockup review, and cross-screen changes (a navbar on every screen) |
 
-A follow-up pass (RFC 0003) closed the gaps the refreshed overview listed. The frontend/backend rules and two skills now match `project.md`, and CI gained an E2E job running the Playwright journeys against the Compose stack. The job's steps were rehearsed locally before adoption, and the rehearsal caught a missing `dotnet restore` that would have failed it on the first run.
+Each work item is recorded in `work-items/WI-00N/`. CI (backend, frontend, and E2E against the Compose stack) runs on every pull request to `master` and passes; changes that touch only documentation don't start a run. Gaps the chain exposed along the way were fixed through `harness-improvement`, not by silent edits to shared guidance.
 
-CI has now executed for the first time, on this change's own PR (#5). After the repository moved to the `SateraitoOfficeVN` organization, the earlier account billing lock no longer applied, and all three jobs passed: backend including the Testcontainers integration tests, frontend, and the new e2e job running the Playwright journeys against the Compose stack ([run](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226)).
-
-RFC 0004 brought `project.md` up to date after WI-002: it records WI-002 as merged and Screen B as next, and no longer lists CI execution as open. It also wrote the squash-merge convention, used since WI-002 DEC-030, into `rules/git-review.md`.
+The locked demo roadmap — Screens A, B and C — is complete. No further work item is planned yet.
 
 ### Known gaps
 
-- **Open project decisions remain** (deployment host, merge/deploy permissions, demo videos, the full role matrix). They are listed in `ai/project.md` and are the owner's to make.
-
-The next test is Screen B (production-order list), the first screen built on top of an existing one. It's the first time the harness has to evolve a live schema and reuse shared modules (`GET /api/products`, `001_DD-FN`) rather than create them.
+- **Open project decisions remain** (deployment host, standing merge/deploy permissions, demo videos, the full role and permission matrix). They are listed in `ai/project.md` and are the owner's to make.
+- **Deployment is untested.** `release-readiness` and the `ci-cd` skill's deployment half have not run yet, because no deployment target has been decided.
