@@ -48,7 +48,8 @@ Still open: registry/deployment host beyond local Compose, merge/deploy permissi
 - [docs](docs/README.md): requirements, basic/detailed/database designs, ADRs and test documentation in English (`docs/en/`), each with English and Japanese PDFs (`docs/en/pdf/`, `docs/ja/pdf/`), plus the initial Vietnamese specification.
 - [work-items](work-items/README.md): each work item's brief, plan (every revision), decisions, status and evidence.
 - [src](src/README.md): backend (.NET 10) and frontend (Vite + React + TypeScript) application source.
-- [tests](tests/README.md): backend unit and integration tests, and Playwright E2E journeys. Frontend unit tests live in `src/frontend/tests/`.
+- [tests](tests/README.md): backend unit (`tests/backend/`) and integration (`tests/integration/`) tests, and Playwright E2E journeys (`tests/e2e/`).
+- Frontend unit tests are the one exception: they live inside the frontend package at `src/frontend/tests/unit/` (Vitest + React Testing Library), not in `tests/frontend/`. `src/frontend` is a standalone npm package, and Vite resolves package imports by walking up from the test file to a `node_modules` folder, which a file under `tests/` never reaches. Moving them would first need an npm-workspaces setup at the repository root; that is deliberately not done ([WI-001 step 19 note](work-items/WI-001/decisions.md), [tests/frontend/README.md](tests/frontend/README.md)).
 - [deploy](deploy/README.md): local Docker Compose environment and database logins.
 - `.github/`: the [CI workflow](.github/workflows/ci.yml) (backend, frontend and e2e jobs on every push/PR to `master`, except documentation-only changes) and the [pull request template](.github/pull_request_template.md).
 - [demos](demos/README.md): the four Screen A lifecycle walkthroughs (basic design, database design, detailed design, implementation), each with a transcript and a presentation deck (PDF). The video files are kept outside git.
