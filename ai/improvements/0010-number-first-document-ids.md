@@ -2,7 +2,7 @@
 
 # RFC: Number-first document IDs and file names
 
-**Status:** under-review
+**Status:** adopted
 **Affected:** `ai/rules/documentation.md`, `ai/skills/basic-design/SKILL.md`, `ai/skills/detailed-design/SKILL.md`, `ai/skills/database-design/SKILL.md`, `ai/skills/architecture/SKILL.md`, `ai/templates/` (ID placeholders and file-name patterns), `ai/harness-overview.md`; every document, wireframe, mockup and PDF under `docs/en/` and `docs/ja/pdf/`; every reference to those IDs in `ai/`, `docs/`, `work-items/`, `src/`, `tests/`, `deploy/`, `README.md` and `CLAUDE.md`
 
 ## Summary
@@ -134,4 +134,4 @@ although each holds one file.
 
 - **Reviewer:** ThanhTN (request, 2026-09-23; scope answered the same day: file names and IDs, `001_BD_slug`, DB and
   ADR documents, wireframes, mockups and PDFs included)
-- **Adopted revision:** not yet adopted
+- **Adopted revision:** `dbc9527` on `master`, the squash-merge of PR #17 (2026-09-23)

@@ -2,7 +2,7 @@
 
 # Japanese UI and automobile-parts domain — Requirements Traceability & Evidence
 
-As of source revision/commit `ba49b96` plus uncommitted work (committed on `feature/WI-005-japanese-ui`), 2026-09-23.
+As of source revision/commit `ba49b96` plus uncommitted work (merged as `dbc9527`), 2026-09-23.
 
 ## Traceability matrix
 
@@ -40,12 +40,12 @@ As of source revision/commit `ba49b96` plus uncommitted work (committed on `feat
 
 ## External references
 
-- PR: not opened — not authorized
-- CI run: not applicable
+- PR: https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/17, squash-merged as `dbc9527`
+- CI run: https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35828068056 — backend, frontend and E2E passed
 - Mockup Artifacts republished 2026-09-23 from the updated sources, same URLs: Screen A https://claude.ai/artifact/FEo1RG27UjZ6vxFCUjxoHq (version 2), Screen B https://claude.ai/artifact/2XrZ9xnEfzQ6pCbUnZovL3 (version 2), Screen C https://claude.ai/artifact/5f5hbKibAX3xURVAS5Aeot (version 4)
 - Japanese editions of the mockups (page chrome and captions in Japanese), published 2026-09-23 on the user's request and linked from the Japanese PDFs of 001_DD, 002_DD and 003_DD: Screen A https://claude.ai/artifact/QY4W3yuMnnBXxBkN2XioiD, Screen B https://claude.ai/artifact/TTxzX1PJVyKr3aLYpHSRZK, Screen C https://claude.ai/artifact/BPRHgKEpaYBnZMCzCsUBJz. Their sources are committed beside the English mockups as `mockups/*.ja.html` (user's request; RFC 0008 Amendment 2), and the English DDs link to them too
 - Deployment: not applicable
 
 ## Remaining limitations and next action
 
-All plan steps are done locally and verified. Committed on `feature/WI-005-japanese-ui` and pushed; PR open. Not done, because not authorized: merge. The three mockup Artifacts were republished on the user's request. The Japanese translation sources for the PDFs are not committed (RFC 0008). Next action: the user reviews the work and decides on branch/commit.
+All plan steps are done locally and verified. Merged: PR #17 squash-merged into `master` as `dbc9527` on 2026-09-23 (DEC-009). Nothing is left open in this work item. The three mockup Artifacts were republished on the user's request. The Japanese translation sources for the PDFs are not committed (RFC 0008). Next action: the user reviews the work and decides on branch/commit.

@@ -7,9 +7,9 @@ An AI-assisted development harness, and the production-management demo app built
 - **WI-002 (Screen A, production-order create/edit):** designed, implemented, tested and merged.
 - **WI-003 (Screen B, production-order list):** designed, implemented, tested and merged. It adds filtering, sorting and paging over production orders, plus the first seeded demo orders.
 - **WI-004 (Screen C, production dashboard):** designed, implemented, tested and merged. The dashboard is the landing page at `/`: status and delivery figures, overdue and due-soon orders, top products, and workload and completion-trend charts that can be maximized, with a server/database health indicator. It also adds completion tracking on orders, a navbar with icons on every screen, and demo history (124 seeded orders).
-- **WI-005 (Japanese UI and automobile-parts domain):** in progress. Every screen is Japanese, and the demo data is 30 automobile parts with Japanese names; the design documents are being updated to match.
+- **WI-005 (Japanese UI and automobile-parts domain):** done and merged. Every screen is Japanese and the demo is production management for automobile parts, with 30 Japanese part names. The design documents quote the Japanese UI with an English gloss, and every design document is also published as an English and a Japanese PDF under `docs/en/pdf/` and `docs/ja/pdf/`.
 - **CI:** runs the backend, frontend and end-to-end jobs on every PR to `master` and passes. Changes that touch only documentation, work items, demos or `ai/` skip CI (RFC 0005).
-- **Next:** Screens A, B and C — the whole locked demo roadmap — are done. No further work item is planned yet.
+- **Next:** Screens A, B and C — the whole locked demo roadmap — and their Japanese localization are done. No further work item is planned yet.
 
 [`ai/project.md`](ai/project.md) has the verified commands and what's still open.
 

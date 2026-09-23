@@ -2,7 +2,7 @@
 
 # RFC: English and Japanese PDFs of every document under docs/
 
-**Status:** under-review
+**Status:** adopted
 **Affected:** `ai/rules/documentation.md`, `ai/project.md`, the seven document-producing skills (`requirements`, `architecture`, `basic-design`, `database-design`, `detailed-design`, `screen-design`, `testing`), `ai/checklists/design-consistency.md`, `ai/checklists/delivery.md`, `ai/evaluations/baseline-cases.md`, `ai/harness-overview.md`, `ai/templates/basic-design.md`, `work-items/WI-001/decisions.md` (DEC-013), `scripts/docs-pdf.py` (new), `scripts/README.md`, `docs/README.md`, `docs/en/README.md`, `docs/ja/README.md`, root `README.md`, `CLAUDE.md`
 
 ## Summary
@@ -135,7 +135,7 @@ on the pages checked.
   english"; scope, existing documents and sync answered the same day: everything under `docs/`, new and changed
   documents only, same change; revised the same day from Japanese Markdown files to English and Japanese PDFs under
   each language's `pdf` folder)
-- **Adopted revision:** not yet adopted
+- **Adopted revision:** `dbc9527` on `master`, the squash-merge of PR #17 (2026-09-23)
 
 ## Amendment 1 — quoted UI text after the Japanese UI (WI-005, 2026-09-23)
 

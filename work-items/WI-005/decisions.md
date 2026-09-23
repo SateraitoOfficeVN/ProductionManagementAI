@@ -14,6 +14,7 @@
 | DEC-006 | 2026-09-23 | Date, time and number display | ThanhTN (approved with plan revision 1) | decided | `YYYY/MM/DD`, `YYYY/MM/DD HH:mm`, counts with Japanese units, plant timezone unchanged |
 | DEC-007 | 2026-09-23 | Where the Japanese strings live | ThanhTN (approved with plan revision 1) | decided | Extend the single catalog (`messages.ts`) with a `labels` section; no new dependency |
 | DEC-008 | 2026-09-23 | How the product and note data change reaches existing databases | ThanhTN (approved with plan revision 1) | decided | A new EF migration renames the 30 seeded products (same IDs and codes) and rewrites the seeded notes, guarded to seed rows |
+| DEC-009 | 2026-09-23 | Merge PR #17 | ThanhTN | decided | Squash-merged into `master` as `dbc9527` after all three CI jobs passed |
 
 ## DEC-001: Japanese only, or switchable languages?
 
@@ -188,3 +189,11 @@ A new migration `LocalizeDemoDataToJapanese` updates the 30 product names by the
 changed `ProductSeed`), and rewrites the notes of the seeded orders only (matched by the fixed seed-ID prefixes of
 WI-003 and WI-004), so orders users created are never touched. It changes no schema and needs no new privilege. The
 Compose volume does not need wiping.
+
+## DEC-009: Merge PR #17
+
+**Status:** decided
+
+- **Decision:** PR #17 squash-merged into `master` as `dbc9527`, 2026-09-23; branch `feature/WI-005-japanese-ui` deleted.
+- **Decided by:** ThanhTN, 2026-09-23: "merge the PR when CI passes".
+- **Rationale:** backend, frontend and E2E CI jobs all passed on the PR (https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35828068056); local verification complete (evidence.md).
