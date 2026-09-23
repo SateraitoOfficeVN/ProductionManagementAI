@@ -3,9 +3,9 @@ using Msg = ProductionManagementAI.Domain.ProductionOrders.ProductionOrderMessag
 
 namespace ProductionManagementAI.Application.ProductionOrders;
 
-// Request/response shapes and the query validator for DD-002-API (GET /api/production-orders).
+// Request/response shapes and the query validator for 002_DD-API (GET /api/production-orders).
 
-/// <summary>Sort keys allowed by DD-002-API. An enum, not a string, so no client value reaches the ordering.</summary>
+/// <summary>Sort keys allowed by 002_DD-API. An enum, not a string, so no client value reaches the ordering.</summary>
 public enum ProductionOrderSort
 {
     DueDate,
@@ -24,7 +24,7 @@ public enum SortDirection
 
 /// <summary>
 /// Raw query string, bound as strings only: every value is parsed by <see cref="ProductionOrderListQuery.TryCreate"/>
-/// so each failure carries its designed message ID instead of a generic model-binding error (DD-002-API request fields).
+/// so each failure carries its designed message ID instead of a generic model-binding error (002_DD-API request fields).
 /// </summary>
 public sealed record ProductionOrderListRequest(
     string[]? Status,
@@ -37,7 +37,7 @@ public sealed record ProductionOrderListRequest(
     string? Page,
     string? PageSize);
 
-/// <summary>A validated, normalized list query (DD-002 module 5). Constructing one is the only way to reach the repository.</summary>
+/// <summary>A validated, normalized list query (002_DD module 5). Constructing one is the only way to reach the repository.</summary>
 public sealed record ProductionOrderListQuery(
     IReadOnlyList<ProductionOrderStatus> Statuses,
     Guid? ProductId,
@@ -64,7 +64,7 @@ public sealed record ProductionOrderListQuery(
 
     /// <summary>
     /// Validates and normalizes a raw query. Absent values take their defaults; a value that is present but invalid is
-    /// rejected rather than defaulted (BD-002 V-09–V-13), so a crafted request cannot widen the result set. Every
+    /// rejected rather than defaulted (002_BD V-09–V-13), so a crafted request cannot widen the result set. Every
     /// offending parameter is reported together.
     /// </summary>
     public static Result<ProductionOrderListQuery> TryCreate(ProductionOrderListRequest request)
@@ -255,7 +255,7 @@ public sealed record ProductionOrderListQuery(
     }
 }
 
-/// <summary>One projected row of the list query (DB-003 read projection). Never carries notes or the row version.</summary>
+/// <summary>One projected row of the list query (002_DB read projection). Never carries notes or the row version.</summary>
 public sealed record ProductionOrderListRow(
     Guid Id,
     string OrderNumber,
@@ -292,7 +292,7 @@ public static class ProductionOrderListMapper
 {
     /// <summary>
     /// Row → list item. <paramref name="plantToday"/> is read once per request, so every row on a page judges
-    /// "today" identically, and the function stays pure and unit-testable (BD-002 M-08, FN-013).
+    /// "today" identically, and the function stays pure and unit-testable (002_BD M-08, FN-013).
     /// </summary>
     public static ProductionOrderListItem ToListItem(ProductionOrderListRow row, DateOnly plantToday) => new(
         row.Id,

@@ -6,8 +6,8 @@ using ProductionManagementAI.Integration.Tests.ProductionOrders;
 namespace ProductionManagementAI.Integration.Tests.Dashboard;
 
 /// <summary>
-/// TC-218 and TC-219: DB-004's demo seed on a fresh database with the real clock, and the partial indexes. Its own
-/// fixture; it deletes nothing. Assertions are the relative properties DB-004 states, which hold whenever the seed ran
+/// TC-218 and TC-219: 003_DB's demo seed on a fresh database with the real clock, and the partial indexes. Its own
+/// fixture; it deletes nothing. Assertions are the relative properties 003_DB states, which hold whenever the seed ran
 /// moments before the test.
 /// </summary>
 public class DashboardSeedTests(IntegrationTestFixture fixture) : IClassFixture<IntegrationTestFixture>
@@ -43,6 +43,26 @@ public class DashboardSeedTests(IntegrationTestFixture fixture) : IClassFixture<
             "SELECT count(*) FROM production_orders WHERE completed_at_utc < created_at_utc"));
         Assert.Equal(124, await fixture.ScalarAsOwnerAsync<int>(
             "SELECT max(last_seq) FROM production_order_number_counters"));
+    }
+
+    // TC-302 (WI-005 DEC-002, DEC-008): after every migration, the demo is automobile parts in Japanese. Codes and ids
+    // are unchanged, so everything above still holds.
+    [Fact]
+    public async Task Seed_IsAutomobilePartsInJapanese()
+    {
+        Assert.Equal("ブレーキキャリパー", await fixture.ScalarAsOwnerAsync<string>(
+            "SELECT name FROM products WHERE sku = 'P-1001'"));
+        Assert.Equal("ボルト・ナットキット", await fixture.ScalarAsOwnerAsync<string>(
+            "SELECT name FROM products WHERE sku = 'P-1030'"));
+        Assert.Equal(0L, await fixture.ScalarAsOwnerAsync<long>(
+            "SELECT count(*) FROM products WHERE name ~ '^[A-Za-z ]+$'"));
+
+        Assert.Equal(16L, await fixture.ScalarAsOwnerAsync<long>(
+            "SELECT count(*) FROM production_orders WHERE notes ~ '^デモ用の製造指示 [0-9]+$'"));
+        Assert.Equal(0L, await fixture.ScalarAsOwnerAsync<long>(
+            "SELECT count(*) FROM production_orders WHERE notes LIKE 'Demo order%'"));
+        Assert.Equal("デモ用の製造指示 6", await fixture.ScalarAsOwnerAsync<string>(
+            "SELECT notes FROM production_orders WHERE id = '0197e4a0-0000-7000-8001-000000000006'"));
     }
 
     // TC-219: the partial indexes can serve their queries (not that the planner picks them at demo volume).

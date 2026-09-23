@@ -204,7 +204,7 @@ public class ProductionOrderServiceTests
         public DateTimeOffset StartOfDayUtc(DateOnly date) => new(date.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
     }
 
-    // ---- DD-002-FN §1: the list use case. The query itself runs against a real database in the integration
+    // ---- 002_DD-FN §1: the list use case. The query itself runs against a real database in the integration
     // tests; here the rows are canned so the service's own decisions can be checked without one.
 
     private static ProductionOrderListQuery ListQuery(
@@ -212,7 +212,7 @@ public class ProductionOrderServiceTests
         new([], productId, null, null, null, ProductionOrderSort.DueDate, SortDirection.Asc, page, pageSize);
 
     private ProductionOrderListRow ListRow(DateOnly dueDate, ProductionOrderStatus status, string orderNumber) => new(
-        Guid.NewGuid(), orderNumber, KnownProduct, "P-1001", "Steel bracket", 5, dueDate, status,
+        Guid.NewGuid(), orderNumber, KnownProduct, "P-1001", "ブレーキキャリパー", 5, dueDate, status,
         new DateTimeOffset(2026, 9, 17, 0, 0, 0, TimeSpan.Zero));
 
     private async Task<PagedResult<ProductionOrderListItem>> ListedAsync(ProductionOrderListQuery? query = null)
@@ -329,7 +329,7 @@ public class ProductionOrderServiceTests
 
         public void Add(ProductionOrder order) => _orders[order.Id] = order;
 
-        // The list query itself is exercised against a real database in the integration tests (DD-002-FN §2–§3);
+        // The list query itself is exercised against a real database in the integration tests (002_DD-FN §2–§3);
         // here the rows are canned so the service's own logic — the product check, the count-first path and the
         // overdue mapping — can be tested without one.
         public List<ProductionOrderListRow> ListRows { get; } = [];

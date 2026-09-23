@@ -24,17 +24,17 @@ afterEach(() => {
 const healthCalls = () => calls.filter((c) => c === 'GET /api/system/health').length
 const flush = () => act(async () => { await vi.advanceTimersByTimeAsync(0) })
 
-describe('HealthIndicator (BD-003 HS-01–HS-05, TC-226)', () => {
+describe('HealthIndicator (003_BD HS-01–HS-05, TC-226)', () => {
   it('checks at once, then shows the statuses and the check time in plant time', async () => {
     stubFetch({ 'GET /api/system/health': [ok] })
     render(<HealthIndicator timeZone="Asia/Tokyo" />)
-    expect(screen.getByRole('status')).toHaveTextContent('Checking…')
+    expect(screen.getByRole('status')).toHaveTextContent('確認中…')
 
     await flush()
 
-    expect(screen.getByRole('status')).toHaveTextContent('Server: OK')
-    expect(screen.getByRole('status')).toHaveTextContent('Database: OK')
-    expect(screen.getByText('Checked 14:05:30')).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('サーバー：正常')
+    expect(screen.getByRole('status')).toHaveTextContent('データベース：正常')
+    expect(screen.getByText('14:05:30 に確認')).toBeInTheDocument()
   })
 
   it('reports a database the server cannot reach', async () => {
@@ -42,21 +42,21 @@ describe('HealthIndicator (BD-003 HS-01–HS-05, TC-226)', () => {
     render(<HealthIndicator timeZone="Asia/Tokyo" />)
     await flush()
 
-    expect(screen.getByRole('status')).toHaveTextContent('Server: OK')
-    expect(screen.getByRole('status')).toHaveTextContent('Database: Unavailable')
+    expect(screen.getByRole('status')).toHaveTextContent('サーバー：正常')
+    expect(screen.getByRole('status')).toHaveTextContent('データベース：利用不可')
   })
 
   it('reports an unreachable server with the database unknown, never its last value', async () => {
     stubFetch({ 'GET /api/system/health': [ok, { status: 503 }] })
     render(<HealthIndicator timeZone="Asia/Tokyo" />)
     await flush()
-    expect(screen.getByRole('status')).toHaveTextContent('Database: OK')
+    expect(screen.getByRole('status')).toHaveTextContent('データベース：正常')
 
     await act(async () => { await vi.advanceTimersByTimeAsync(POLL_MS) })
 
-    expect(screen.getByRole('status')).toHaveTextContent('Server: Unreachable')
-    expect(screen.getByRole('status')).toHaveTextContent('Database: Unknown')
-    expect(screen.getByText('Last answered 14:05:30')).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('サーバー：接続不可')
+    expect(screen.getByRole('status')).toHaveTextContent('データベース：不明')
+    expect(screen.getByText('最終応答 14:05:30')).toBeInTheDocument()
   })
 
   it('polls every 30 s, chained so checks never overlap', async () => {
@@ -111,10 +111,10 @@ describe('HealthIndicator (BD-003 HS-01–HS-05, TC-226)', () => {
     stubFetch({ 'GET /api/system/health': [ok] })
     const { rerender } = render(<HealthIndicator timeZone={null} />)
     await flush()
-    expect(screen.queryByText(/Checked/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/に確認/)).not.toBeInTheDocument()
 
     rerender(<HealthIndicator timeZone="Asia/Tokyo" />)
-    expect(screen.getByText('Checked 14:05:30')).toBeInTheDocument()
-    expect(screen.getByRole('status')).not.toHaveTextContent('Checked')
+    expect(screen.getByText('14:05:30 に確認')).toBeInTheDocument()
+    expect(screen.getByRole('status')).not.toHaveTextContent('に確認')
   })
 })

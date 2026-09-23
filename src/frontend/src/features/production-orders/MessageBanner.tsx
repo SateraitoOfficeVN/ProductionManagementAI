@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { labels } from './messages'
 
 export interface Banner {
   kind: 'success' | 'error'
@@ -7,7 +8,7 @@ export interface Banner {
   onReload?: () => void
 }
 
-// BD-001 item 5. Success uses role="status", errors role="alert", so assistive tech announces them.
+// 001_BD item 5. Success uses role="status", errors role="alert", so assistive tech announces them.
 export function MessageBanner({ banner, children }: { banner: Banner | null; children?: ReactNode }) {
   if (!banner) {
     return null
@@ -28,7 +29,7 @@ export function MessageBanner({ banner, children }: { banner: Banner | null; chi
           onClick={banner.onReload}
           className="rounded border border-gray-300 bg-white px-2.5 py-1 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          Reload
+          {labels.common.reload}
         </button>
       )}
       {children}

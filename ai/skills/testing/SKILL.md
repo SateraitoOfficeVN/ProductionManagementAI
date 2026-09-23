@@ -28,7 +28,7 @@ The project's selected test framework(s) per [project context](../../project.md)
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-Tests alongside the code they verify (`tests/`), reports under `docs/en/testing/`, and `work-items/<ID>/evidence.md`, starting from the [template](../../templates/test-plan.md). Test cases use stable `TC-###` IDs tracing to the `REQ-###` they verify.
+Tests alongside the code they verify (`tests/`), reports under `docs/en/testing/`, and `work-items/<ID>/evidence.md`, starting from the [template](../../templates/test-plan.md). Test cases use stable `TC-###` IDs tracing to the `REQ-###` they verify. Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
 
 ## 6. Checklist and repeatable verification method
 

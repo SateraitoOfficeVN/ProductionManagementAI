@@ -1,16 +1,16 @@
 import { EmptyIcon, iconProps, TopProductsIcon } from '../../components/icons'
-import { message } from '../production-orders/messages'
+import { labels, message } from '../production-orders/messages'
 import { formatNumber, formatOrders } from './dashboardFormat'
 import type { DashboardSnapshot } from './types'
 
-/** Item 22 (BD-003 D-04). The rank comes from the <ol>; the bar behind each figure is decorative. */
+/** Item 22 (003_BD D-04). The rank comes from the <ol>; the bar behind each figure is decorative. */
 export function TopProducts({ products }: { products: DashboardSnapshot['topProducts'] }) {
   const max = products[0]?.openQuantity ?? 0
   return (
     <section aria-labelledby="top-products-title" className="grid content-start gap-2.5 rounded-lg border border-gray-200 bg-white p-3.5">
       <h2 id="top-products-title" className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
         <TopProductsIcon {...iconProps} />
-        Top products by open quantity
+        {labels.dashboard.topProducts}
       </h2>
       {products.length === 0 ? (
         <p className="flex items-center gap-1.5 text-sm text-gray-600">

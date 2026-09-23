@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProductionManagementAI.Infrastructure.Migrations
 {
     /// <summary>
-    /// Demo production orders, so the list screen has something to page, sort and filter (DB-003, WI-003 DEC-007).
+    /// Demo production orders, so the list screen has something to page, sort and filter (002_DB, WI-003 DEC-007).
     ///
     /// Due dates and timestamps are computed from the plant-local date at migration time (DEC-011): fixed calendar
     /// dates would leave every seeded order overdue within months, and the screen would demo badly from then on.
@@ -138,7 +138,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                 """);
 
             // Keep the per-year counter consistent, so the next order created through Screen A continues the sequence
-            // instead of colliding with a seeded order number (DB-002, DEC-013).
+            // instead of colliding with a seeded order number (001_DB, DEC-013).
             migrationBuilder.Sql(
                 $"""
                 INSERT INTO production_order_number_counters (order_year, last_seq)
@@ -155,7 +155,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             // Deletes the seeded rows by their fixed ids, which also discards any edit a user made to one of them
-            // through Screen A — the migration's only data-recovery limit (DB-003). Orders created by users have
+            // through Screen A — the migration's only data-recovery limit (002_DB). Orders created by users have
             // different ids and are untouched, as is the counter, so their numbering keeps moving forward.
             migrationBuilder.Sql($"DELETE FROM production_orders WHERE id::text LIKE '{SeedIdPrefix}%';");
         }

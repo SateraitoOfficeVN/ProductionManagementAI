@@ -7,7 +7,7 @@ TP-003, work item WI-003, revision 1, 2026-09-22.
 ## References
 
 - `brief.md` revision 1 (REQ-020–REQ-027), `decisions.md` DEC-001–DEC-012
-- BD-002 version 3, DB-003, DD-002 version 3, DD-002-API, DD-002-FN, DD-002-SPD
+- 002_BD version 3, 002_DB, 002_DD version 3, 002_DD-API, 002_DD-FN, 002_DD-SPD
 - `plan.md` revision 2, steps 5–12
 
 ## Introduction
@@ -37,7 +37,7 @@ that a crafted query cannot widen the result set.
 
 All REQs above, plus the design decisions with observable behavior: the multi-select status filter (DEC-005), the
 unfiltered default view (DEC-006), the seeded demo data (DEC-007, DEC-011), explicit Search (DEC-008), row activation
-by link (DEC-009), the trigram fragment match and its escaping (DEC-010), index usage (DB-003), and accessibility
+by link (DEC-009), the trigram fragment match and its escaping (DEC-010), index usage (002_DB), and accessibility
 (WI-002 DEC-026). Cases TC-101–TC-119 below.
 
 ## Features not to be tested
@@ -49,7 +49,7 @@ by link (DEC-009), the trigram fragment match and its escaping (DEC-010), index 
 - A manual screen-reader pass: axe covers the automated WCAG 2.2 AA rules only. Known gap.
 - Query behavior at production volume: the seeded set is 80 rows. The index assertions (TC-119) prove the indexes can
   serve the queries, not that the planner prefers them at that size — it correctly does not. Known gap, recorded in
-  DB-003's performance expectations.
+  002_DB's performance expectations.
 
 ## Approach
 
@@ -102,7 +102,7 @@ Test names are the actual test methods and titles (U = backend unit, I = integra
 | TC-116 | REQ-020, REQ-022 | Empty table / non-matching filter | F `shows the empty state, and no filter panel…`, `shows the no-match state and keeps the filter values…`; E no-match half of the URL journey | MSG-I003 with New; MSG-I004 with Clear filters and the filter values kept | medium |
 | TC-117 | REQ-020 | API returns 500 | F `shows an error banner with Retry, and Retry re-runs the same query` | MSG-E013 banner; Retry re-issues the identical query | medium |
 | TC-118 | REQ-021, REQ-023 | Table rendered | F `has no axe violations with rows rendered`, `…in the empty state`, `marks the active column with aria-sort and no other column`; E `expectNoAxeViolations` in every Screen B journey | No axe violations; `aria-sort` on exactly one column; contrast passes in a real browser | high |
-| TC-119 | REQ-022, REQ-023 (DB-003) | Seeded data, `ANALYZE` run | I `ListQueries_UseTheirIndex` (2 cases) | The default-sort query uses `ix_production_orders_due_date_order_number`; the fragment query uses `ix_production_orders_order_number_trgm` | medium |
+| TC-119 | REQ-022, REQ-023 (002_DB) | Seeded data, `ANALYZE` run | I `ListQueries_UseTheirIndex` (2 cases) | The default-sort query uses `ix_production_orders_due_date_order_number`; the fragment query uses `ix_production_orders_order_number_trgm` | medium |
 
 ## Results
 

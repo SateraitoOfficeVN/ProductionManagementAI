@@ -18,11 +18,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     {
         base.OnModelCreating(builder);
 
-        // Trigram matching for the order-number fragment filter (DB-003, WI-003 DEC-010). pg_trgm is a trusted
+        // Trigram matching for the order-number fragment filter (002_DB, WI-003 DEC-010). pg_trgm is a trusted
         // extension in PostgreSQL 17, so the migration's owner login creates it without superuser rights.
         builder.HasPostgresExtension("pg_trgm");
 
-        // Physical table names per docs/en/database/0001-identity-schema.md; EFCore.NamingConventions
+        // Physical table names per docs/en/database/000/000_DB_identity-schema.md; EFCore.NamingConventions
         // handles column snake_casing, but table renames from Identity's AspNet* defaults need to be explicit.
         builder.Entity<AppUser>(b =>
         {
@@ -46,7 +46,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         builder.Entity<IdentityUserLogin<Guid>>(b => b.ToTable("user_logins"));
         builder.Entity<IdentityUserToken<Guid>>(b => b.ToTable("user_tokens"));
 
-        // Production-order schema (DB-002): ProductionOrders/ProductionOrderConfigurations.cs.
+        // Production-order schema (001_DB): ProductionOrders/ProductionOrderConfigurations.cs.
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 }

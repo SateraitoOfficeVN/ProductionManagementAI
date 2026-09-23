@@ -3,7 +3,7 @@ using ProductionManagementAI.Domain.ProductionOrders;
 
 namespace ProductionManagementAI.Application.Tests.ProductionOrders;
 
-// DD-002 module 5, unit level (U): the list query's validation and normalization (BD-002 V-09–V-13).
+// 002_DD module 5, unit level (U): the list query's validation and normalization (002_BD V-09–V-13).
 public class ProductionOrderListQueryTests
 {
     private static ProductionOrderListRequest Request(

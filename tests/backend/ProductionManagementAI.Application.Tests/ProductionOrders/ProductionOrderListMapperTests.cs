@@ -3,7 +3,7 @@ using ProductionManagementAI.Domain.ProductionOrders;
 
 namespace ProductionManagementAI.Application.Tests.ProductionOrders;
 
-// DD-002-FN §6 / BD-002 M-08, unit level (U): the overdue rule and the row → list item mapping.
+// 002_DD-FN §6 / 002_BD M-08, unit level (U): the overdue rule and the row → list item mapping.
 public class ProductionOrderListMapperTests
 {
     private static readonly DateOnly PlantToday = new(2026, 9, 22);
@@ -13,7 +13,7 @@ public class ProductionOrderListMapperTests
         "PO-2026-00042",
         Guid.NewGuid(),
         "P-1004",
-        "Drive shaft",
+        "ドライブシャフト",
         250,
         dueDate,
         status,
@@ -50,7 +50,7 @@ public class ProductionOrderListMapperTests
 
         Assert.Equal(row.Id, item.Id);
         Assert.Equal(row.OrderNumber, item.OrderNumber);
-        Assert.Equal(new ProductSummary(row.ProductId, "P-1004", "Drive shaft"), item.Product);
+        Assert.Equal(new ProductSummary(row.ProductId, "P-1004", "ドライブシャフト"), item.Product);
         Assert.Equal(250, item.Quantity);
         Assert.Equal(row.DueDate, item.DueDate);
         Assert.Equal(ProductionOrderStatus.InProgress, item.Status);

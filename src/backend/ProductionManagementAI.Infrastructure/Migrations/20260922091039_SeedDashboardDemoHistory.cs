@@ -5,7 +5,7 @@
 namespace ProductionManagementAI.Infrastructure.Migrations
 {
     /// <summary>
-    /// Demo history for the dashboard (DB-004 migration 3, WI-004 DEC-013/DEC-014). All dates are relative to the moment
+    /// Demo history for the dashboard (003_DB migration 3, WI-004 DEC-013/DEC-014). All dates are relative to the moment
     /// the migration runs, as WI-003's seed is (WI-003 DEC-011); everything else is constant. The plant timezone is a
     /// literal because a migration cannot read application options; it matches PlantOptions.TimeZone (WI-002 DEC-017).
     /// </summary>
@@ -22,7 +22,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // 1. Re-date WI-003's 16 completed demo orders over the last 33 days (DB-004 table "Re-dated existing
+            // 1. Re-date WI-003's 16 completed demo orders over the last 33 days (003_DB table "Re-dated existing
             //    completed orders"). Due dates are left alone, so Screen B's filters and overdue markers are unaffected.
             //    Only rows with WI-003's seed id that are still Completed are touched; elsewhere this does nothing.
             migrationBuilder.Sql(
@@ -53,7 +53,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                   AND o.status = 'Completed';
                 """);
 
-            // 2. Insert 40 historical completed orders and 4 far-due active ones (DB-004 tables "New historical completed
+            // 2. Insert 40 historical completed orders and 4 far-due active ones (003_DB tables "New historical completed
             //    orders" and "New far-due active orders"). Guarded: only where WI-003's demo seed exists (a demo
             //    database) and none of these ids exist yet. Sequence numbers follow the seed year's counter, so orders
             //    a user created after WI-003's seed are never collided with.
@@ -142,7 +142,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                   AND NOT EXISTS (SELECT 1 FROM production_orders WHERE id::text LIKE '{SeedIdPrefix}%');
                 """);
 
-            // 3. Advance the counter past the new rows, so Screen A continues after them (DB-002, DEC-013).
+            // 3. Advance the counter past the new rows, so Screen A continues after them (001_DB, DEC-013).
             migrationBuilder.Sql(
                 $"""
                 INSERT INTO production_order_number_counters (order_year, last_seq)
@@ -159,7 +159,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             // Removes the 44 inserted rows by their fixed ids. The counter stays advanced (no number is reused), and the
-            // 16 re-dated rows keep their new timestamps — the recovery limit DB-004 records.
+            // 16 re-dated rows keep their new timestamps — the recovery limit 003_DB records.
             migrationBuilder.Sql($"DELETE FROM production_orders WHERE id::text LIKE '{SeedIdPrefix}%';");
         }
     }

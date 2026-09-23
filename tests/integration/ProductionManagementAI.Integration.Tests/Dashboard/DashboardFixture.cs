@@ -8,7 +8,7 @@ using ProductionManagementAI.Application.Health;
 namespace ProductionManagementAI.Integration.Tests.Dashboard;
 
 /// <summary>
-/// The dashboard's own fixture (DD-003 "Test data isolation"): its own container, a pinned clock, and a database ping
+/// The dashboard's own fixture (003_DD "Test data isolation"): its own container, a pinned clock, and a database ping
 /// a test can make fail or stall. Tests clear production_orders as the owner and insert exactly the rows they need.
 /// </summary>
 public class DashboardFixture : IntegrationTestFixture

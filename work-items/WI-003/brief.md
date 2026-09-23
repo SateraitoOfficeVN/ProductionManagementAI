@@ -27,9 +27,9 @@ Continue demonstrating the full AI development lifecycle (requirements â†’ BD â†
 
 ## Assumptions
 
-- Users reach this screen already authenticated via WI-001's cookie login (`docs/en/architecture/0002-auth-rbac-foundation.md`).
+- Users reach this screen already authenticated via WI-001's cookie login (`docs/en/architecture/0002/0002_ADR_auth-rbac-foundation.md`).
 - `Admin` and `Operator` are the only roles in the system for now (WI-001 DEC-015 placeholder roles); both may use this screen, matching Screen A (WI-002 DEC-001).
-- Production orders and products already exist with the WI-002 schema (`docs/en/database/0002-production-order-schema.md`); Screen B reads them and adds no new business entity.
+- Production orders and products already exist with the WI-002 schema (`docs/en/database/001/001_DB_production-order-schema.md`); Screen B reads them and adds no new business entity.
 - Products stay seeded reference data with no catalog UI (WI-002 DEC-005), so the product filter lists the 30 seeded products.
 - Dates shown and filtered are plant-local dates in `Asia/Tokyo` (WI-002 DEC-011, DEC-017); `due_date` is already a date, not a timestamp.
 - The placeholder home page stays; the list lives at its own route (DEC-004).

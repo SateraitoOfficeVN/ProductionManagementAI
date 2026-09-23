@@ -15,7 +15,7 @@ public interface IDatabasePing
 public sealed record SystemHealthResponse(string Database, DateTimeOffset CheckedAt);
 
 /// <summary>
-/// Database reachability for the dashboard's health indicator (DD-003-FN §6). A failed ping is a result, not an
+/// Database reachability for the dashboard's health indicator (003_DD-FN §6). A failed ping is a result, not an
 /// exception: the server answered, and saying the database did not is this endpoint's job.
 /// </summary>
 public sealed partial class SystemHealthService(IDatabasePing ping, TimeProvider timeProvider, ILogger<SystemHealthService> logger)

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { labels } from './messages'
 
 interface Props {
   open: boolean
@@ -6,8 +7,8 @@ interface Props {
   onKeepEditing: () => void
 }
 
-// BD-001 items 17–19 (REQ-019, DEC-018). The native <dialog> + showModal() gives the focus trap, Escape and
-// backdrop for free; Escape fires "cancel", which is treated as Keep editing. Keep editing gets initial focus.
+// 001_BD items 17–19 (REQ-019, DEC-018). The native <dialog> + showModal() gives the focus trap, Escape and
+// backdrop for free; Escape fires "cancel", which is treated as {labels.order.keepEditing}. {labels.order.keepEditing} gets initial focus.
 export function DiscardChangesDialog({ open, onDiscard, onKeepEditing }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
   const keepEditing = useRef<HTMLButtonElement>(null)
@@ -38,10 +39,10 @@ export function DiscardChangesDialog({ open, onDiscard, onKeepEditing }: Props) 
       className="m-auto w-[26rem] max-w-[calc(100%-2rem)] rounded-lg p-5 shadow-xl backdrop:bg-gray-900/45"
     >
       <h2 id="discard-title" className="text-base font-semibold text-gray-900">
-        Discard your changes?
+        {labels.order.discardTitle}
       </h2>
       <p id="discard-body" className="mt-2 text-sm text-gray-600">
-        Your changes to this production order haven't been saved.
+        {labels.order.discardBody}
       </p>
       <div className="mt-5 flex justify-end gap-2.5">
         <button
@@ -50,14 +51,14 @@ export function DiscardChangesDialog({ open, onDiscard, onKeepEditing }: Props) 
           onClick={onKeepEditing}
           className="rounded border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          Keep editing
+          {labels.order.keepEditing}
         </button>
         <button
           type="button"
           onClick={onDiscard}
           className="rounded bg-red-700 px-4 py-2 text-sm text-white focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          Discard
+          {labels.order.discard}
         </button>
       </div>
     </dialog>

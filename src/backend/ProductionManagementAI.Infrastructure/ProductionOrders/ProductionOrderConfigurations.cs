@@ -4,7 +4,7 @@ using ProductionManagementAI.Domain.ProductionOrders;
 
 namespace ProductionManagementAI.Infrastructure.ProductionOrders;
 
-// Physical schema per docs/en/database/0002-production-order-schema.md (DB-002). Column names are snake-cased
+// Physical schema per docs/en/database/001/001_DB_production-order-schema.md (001_DB). Column names are snake-cased
 // by EFCore.NamingConventions; constraint names are set explicitly to match the document.
 
 internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
@@ -34,7 +34,7 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
             table.HasCheckConstraint("ck_production_orders_order_seq_range", "order_seq BETWEEN 1 AND 99999");
             table.HasCheckConstraint("ck_production_orders_order_year_range", "order_year BETWEEN 2000 AND 9999");
 
-            // DB-004: a completed order always has a completion time and no other order has one; and no lead time
+            // 003_DB: a completed order always has a completion time and no other order has one; and no lead time
             // can be negative, whatever wrote the row.
             table.HasCheckConstraint(
                 "ck_production_orders_completed_at_matches_status",
@@ -47,7 +47,7 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
         builder.HasKey(o => o.Id).HasName("pk_production_orders");
         builder.Property(o => o.Id).HasDefaultValueSql("gen_random_uuid()");
 
-        // Explicit ::text casts: generation expressions must be immutable (DB-002 operational note).
+        // Explicit ::text casts: generation expressions must be immutable (001_DB operational note).
         builder.Property(o => o.OrderNumber)
             .HasMaxLength(13)
             .HasComputedColumnSql("'PO-' || order_year::text || '-' || lpad(order_seq::text, 5, '0')", stored: true);
@@ -76,7 +76,7 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
             .IsUnique()
             .HasDatabaseName("ix_production_orders_order_year_order_seq");
 
-        // DB-003 (Screen B): the default sort and the due-date range in one scan, with the unique order number as
+        // 002_DB (Screen B): the default sort and the due-date range in one scan, with the unique order number as
         // the tie-breaker that keeps paging stable.
         builder.HasIndex(o => new { o.DueDate, o.OrderNumber })
             .HasDatabaseName("ix_production_orders_due_date_order_number");
@@ -87,9 +87,9 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");
 
-        // DB-004 (Screen C): the open workload stays small while history grows, so the active-order queries read a
+        // 003_DB (Screen C): the open workload stays small while history grows, so the active-order queries read a
         // partial index in due-date order; the delivery figures read recent completions only.
-        // Named overload: the same columns as DB-003's index, so an unnamed HasIndex would reconfigure that one.
+        // Named overload: the same columns as 002_DB's index, so an unnamed HasIndex would reconfigure that one.
         builder.HasIndex(o => new { o.DueDate, o.OrderNumber }, "ix_production_orders_active_due_date")
             .HasDatabaseName("ix_production_orders_active_due_date")
             .HasFilter("status IN ('Draft', 'InProgress')");
@@ -99,7 +99,7 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
     }
 }
 
-/// <summary>Per-year counter used to issue order numbers (DB-002, DEC-013). Infrastructure-only; no domain meaning.</summary>
+/// <summary>Per-year counter used to issue order numbers (001_DB, DEC-013). Infrastructure-only; no domain meaning.</summary>
 internal sealed class ProductionOrderNumberCounter
 {
     public short OrderYear { get; set; }

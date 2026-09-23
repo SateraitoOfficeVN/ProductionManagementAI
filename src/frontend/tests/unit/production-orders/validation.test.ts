@@ -8,7 +8,7 @@ import {
   validateQuantity,
 } from '../../../src/features/production-orders/validation'
 
-describe('production order validation (BD-001 V-01–V-05)', () => {
+describe('production order validation (001_BD V-01–V-05)', () => {
   it('requires a product', () => {
     expect(validateProduct('')).toBe('MSG-E001')
     expect(validateProduct('some-id')).toBeNull()

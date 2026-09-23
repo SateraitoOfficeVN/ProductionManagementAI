@@ -5,7 +5,7 @@
 namespace ProductionManagementAI.Infrastructure.Migrations
 {
     /// <summary>
-    /// Partial indexes for the dashboard (DB-004 migration 2): the active orders in due-date order, and recent
+    /// Partial indexes for the dashboard (003_DB migration 2): the active orders in due-date order, and recent
     /// completions. Created CONCURRENTLY because production_orders is in use, so this migration is NOT atomic: after a
     /// failure, find an INVALID index with
     ///     SELECT indexrelid::regclass FROM pg_index WHERE NOT indisvalid;

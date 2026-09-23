@@ -9,11 +9,11 @@ The detailed-design step must always produce the whole DD template family as fou
 
 ## Motivation
 
-During WI-002 (Screen A, 2026-09-18), Claude produced DD-001 and only the API companion, because the template wording ("Use it when…", "None — this screen's design fits entirely in this file") allowed folding the function design and processing flows into the main document. The user pointed out that "there're still 2 templates not output to md file that are function-desing and screen-processing-design", had them produced (DD-001-FN, DD-001-SPD), and then asked to "update the templates and skill so all DD companions are always produced". The template family mirrors the reference workbook set in `ai/templates/example/DD`, and the deliverables are expected to match that full set. Evidence: `work-items/WI-002/status.md` (2026-09-18 entries), `docs/en/020_detailed-design/DD-001-*.md`.
+During WI-002 (Screen A, 2026-09-18), Claude produced 001_DD and only the API companion, because the template wording ("Use it when…", "None — this screen's design fits entirely in this file") allowed folding the function design and processing flows into the main document. The user pointed out that "there're still 2 templates not output to md file that are function-desing and screen-processing-design", had them produced (001_DD-FN, 001_DD-SPD), and then asked to "update the templates and skill so all DD companions are always produced". The template family mirrors the reference workbook set in `ai/templates/example/DD`, and the deliverables are expected to match that full set. Evidence: `work-items/WI-002/status.md` (2026-09-18 entries), `docs/en/020_detailed-design/001_DD-*.md`.
 
 ## Guide-level explanation
 
-For every DD, an agent writes four files side by side in `docs/en/020_detailed-design/`: `DD-###-{slug}.md`, `DD-###-API-{slug}.md`, `DD-###-FN-{slug}.md` and `DD-###-SPD-{slug}.md`. Each piece of content has exactly one home:
+For every DD, an agent writes four files side by side in `docs/en/020_detailed-design/###/`: `###_DD_{slug}.md`, `###_DD-API_{slug}.md`, `###_DD-FN_{slug}.md` and `###_DD-SPD_{slug}.md`. Each piece of content has exactly one home:
 
 - endpoint catalogs → API
 - backend service/Application-layer methods, shared or not → FN
@@ -41,7 +41,7 @@ A small screen or a backend-only change produces more files, some of them mostly
 
 | Case (from ai/evaluations) | Before | After | Pass/fail |
 | --- | --- | --- | --- |
-| New: "DD step for a screen whose API and flows are small" | Main DD + API companion only; FN/SPD content folded into the main DD (observed in WI-002) | Rule requires all four files; checked against WI-002's current DD set: DD-001, DD-001-API, DD-001-FN, DD-001-SPD exist, and DD-001's companion table lists all three | pass (manual check against existing files, 2026-09-18; the rule itself hasn't yet been exercised on a fresh DD) |
+| New: "DD step for a screen whose API and flows are small" | Main DD + API companion only; FN/SPD content folded into the main DD (observed in WI-002) | Rule requires all four files; checked against WI-002's current DD set: 001_DD, 001_DD-API, 001_DD-FN, 001_DD-SPD exist, and 001_DD's companion table lists all three | pass (manual check against existing files, 2026-09-18; the rule itself hasn't yet been exercised on a fresh DD) |
 | "DD field conflicts with DB constraint" | Flag and reconcile | Unchanged (the rule adds files, not consistency relaxations) | pass (no gate relaxed) |
 
 ## Risk and rollback

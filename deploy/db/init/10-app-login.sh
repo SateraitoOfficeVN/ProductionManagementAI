@@ -1,6 +1,6 @@
 #!/bin/sh
 # Runs once, on a fresh Postgres data volume (docker-entrypoint-initdb.d), before any EF migration.
-# Creates the restricted runtime login used by the backend (DEC-016, DB-002 "Application database privileges").
+# Creates the restricted runtime login used by the backend (DEC-016, 001_DB "Application database privileges").
 # Table grants come from the AddProductionOrders migration, which runs as the owner (POSTGRES_USER).
 # The password comes from PMAI_APP_DB_PASSWORD; there is no default and it is never written to the repository.
 set -eu

@@ -3,7 +3,7 @@ The source workbook's "called container" dispatch concept (one physical file ser
 
 # {API / Module Name} — API Specification Design (API仕様設計)
 
-{ID, e.g. DD-###-API} — implements/supports {DD-###, …}, requirements {REQ-###, …}.
+{ID, e.g. ###_DD-API} — implements/supports {###_DD, …}, requirements {REQ-###, …}.
 
 ## Document control (改版履歴)
 

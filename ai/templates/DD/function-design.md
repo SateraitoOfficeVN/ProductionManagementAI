@@ -3,7 +3,7 @@ The source workbook's "リクエストデータ"/"VH内容" sheets (request para
 
 # {Module Name} — Function Design (機能設計)
 
-{ID, e.g. DD-###-FN} — used by {DD-###, …}, requirements {REQ-###, …}.
+{ID, e.g. ###_DD-FN} — used by {###_DD, …}, requirements {REQ-###, …}.
 
 ## Document control (改版履歴)
 

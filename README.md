@@ -1,12 +1,13 @@
 # ProductionManagementAI
 
-An AI-assisted development harness, and the production-management demo app built with it. Claude and Codex work from the same Markdown process in [`ai/`](ai/README.md), and every piece of work is traceable from requirement to design, code, tests and evidence in [`work-items/`](work-items/README.md).
+An AI-assisted development harness, and the production-management demo app built with it: production orders for an automobile-parts manufacturer, with a Japanese UI. Claude and Codex work from the same Markdown process in [`ai/`](ai/README.md), and every piece of work is traceable from requirement to design, code, tests and evidence in [`work-items/`](work-items/README.md).
 
 **Status:**
 - **WI-001 (bootstrap):** application skeleton and auth foundation, merged.
 - **WI-002 (Screen A, production-order create/edit):** designed, implemented, tested and merged.
 - **WI-003 (Screen B, production-order list):** designed, implemented, tested and merged. It adds filtering, sorting and paging over production orders, plus the first seeded demo orders.
 - **WI-004 (Screen C, production dashboard):** designed, implemented, tested and merged. The dashboard is the landing page at `/`: status and delivery figures, overdue and due-soon orders, top products, and workload and completion-trend charts that can be maximized, with a server/database health indicator. It also adds completion tracking on orders, a navbar with icons on every screen, and demo history (124 seeded orders).
+- **WI-005 (Japanese UI and automobile-parts domain):** in progress. Every screen is Japanese, and the demo data is 30 automobile parts with Japanese names; the design documents are being updated to match.
 - **CI:** runs the backend, frontend and end-to-end jobs on every PR to `master` and passes. Changes that touch only documentation, work items, demos or `ai/` skip CI (RFC 0005).
 - **Next:** Screens A, B and C — the whole locked demo roadmap — are done. No further work item is planned yet.
 
@@ -32,7 +33,7 @@ Claude starts at [CLAUDE.md](CLAUDE.md). Codex and compatible agents start at [A
 - **Tests:** xUnit (unit + Testcontainers integration), Vitest + React Testing Library, Playwright E2E, axe accessibility checks.
 - **Delivery:** GitHub Actions CI, Docker Compose for local environments.
 
-Still open: registry/deployment host beyond local Compose, merge/deploy permissions, the Japanese-translation sync policy, how the demo videos are produced, and the full role/permission matrix. Full detail is in [`ai/project.md`](ai/project.md).
+Still open: registry/deployment host beyond local Compose, merge/deploy permissions, how the demo videos are produced, and the full role/permission matrix. Full detail is in [`ai/project.md`](ai/project.md).
 
 ## Run it locally
 
@@ -44,7 +45,7 @@ Still open: registry/deployment host beyond local Compose, merge/deploy permissi
 ## Layout
 
 - [ai](ai/README.md): shared workflows, skills, rules, templates, checklists and harness-improvement records.
-- [docs](docs/README.md): requirements, basic/detailed/database designs, ADRs and test documentation (English), plus the initial Vietnamese specification.
+- [docs](docs/README.md): requirements, basic/detailed/database designs, ADRs and test documentation in English (`docs/en/`), each with English and Japanese PDFs (`docs/en/pdf/`, `docs/ja/pdf/`), plus the initial Vietnamese specification.
 - [work-items](work-items/README.md): each work item's brief, plan (every revision), decisions, status and evidence.
 - [src](src/README.md): backend (.NET 10) and frontend (Vite + React + TypeScript) application source.
 - [tests](tests/README.md): backend unit and integration tests, and Playwright E2E journeys. Frontend unit tests live in `src/frontend/tests/`.
@@ -52,4 +53,4 @@ Still open: registry/deployment host beyond local Compose, merge/deploy permissi
 - `.github/`: the [CI workflow](.github/workflows/ci.yml) (backend, frontend and e2e jobs on every push/PR to `master`, except documentation-only changes) and the [pull request template](.github/pull_request_template.md).
 - [demos](demos/README.md): the four Screen A lifecycle walkthroughs (basic design, database design, detailed design, implementation), each with a transcript and a presentation deck (PDF). The video files are kept outside git.
 
-English is the default for new project artifacts. Japanese versions are optional; how translations stay in sync with their English source is still an open decision (WI-001 DEC-013).
+English is the default for new project artifacts and the source of truth. The Markdown under `docs/en/` is English only; each document is also published as an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, regenerated with `scripts/docs-pdf.py` whenever the document changes. Documents that predate this rule get their PDFs the next time they are edited ([RFC 0008](ai/improvements/0008-english-and-japanese-pdfs.md)).

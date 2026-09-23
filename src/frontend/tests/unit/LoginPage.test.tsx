@@ -28,23 +28,23 @@ describe('LoginPage', () => {
     const login = vi.fn().mockResolvedValue(undefined)
     renderLoginPage(login)
 
-    fireEvent.change(screen.getByLabelText('Username'), { target: { value: 'admin' } })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'correct-password' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    fireEvent.change(screen.getByLabelText('ユーザー名'), { target: { value: 'admin' } })
+    fireEvent.change(screen.getByLabelText('パスワード'), { target: { value: 'correct-password' } })
+    fireEvent.click(screen.getByRole('button', { name: 'ログイン' }))
 
     await waitFor(() => expect(login).toHaveBeenCalledWith('admin', 'correct-password'))
     await waitFor(() => expect(navigateMock).toHaveBeenCalledWith('/'))
   })
 
   it('shows a generic error message when login fails, regardless of cause', async () => {
-    const login = vi.fn().mockRejectedValue(new Error('Invalid username or password.'))
+    const login = vi.fn().mockRejectedValue(new Error('ユーザー名またはパスワードが正しくありません。'))
     renderLoginPage(login)
 
-    fireEvent.change(screen.getByLabelText('Username'), { target: { value: 'admin' } })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'wrong-password' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    fireEvent.change(screen.getByLabelText('ユーザー名'), { target: { value: 'admin' } })
+    fireEvent.change(screen.getByLabelText('パスワード'), { target: { value: 'wrong-password' } })
+    fireEvent.click(screen.getByRole('button', { name: 'ログイン' }))
 
-    expect(await screen.findByText('Invalid username or password.')).toBeInTheDocument()
+    expect(await screen.findByText('ユーザー名またはパスワードが正しくありません。')).toBeInTheDocument()
     expect(navigateMock).not.toHaveBeenCalled()
   })
 })

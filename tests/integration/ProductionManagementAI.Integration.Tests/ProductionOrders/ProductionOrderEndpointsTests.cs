@@ -9,7 +9,7 @@ using static ProductionManagementAI.Integration.Tests.ProductionOrders.Productio
 
 namespace ProductionManagementAI.Integration.Tests.ProductionOrders;
 
-// DD-001 test viewpoints at integration level (I): real HTTP pipeline, real PostgreSQL, app running as pmai_app.
+// 001_DD test viewpoints at integration level (I): real HTTP pipeline, real PostgreSQL, app running as pmai_app.
 public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : IClassFixture<IntegrationTestFixture>
 {
     private const string Orders = "/api/production-orders";

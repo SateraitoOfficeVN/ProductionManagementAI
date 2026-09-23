@@ -1,6 +1,6 @@
 # backend rules
 
-- Target .NET 10 with EF Core (Npgsql) in the layered Domain/Application/Infrastructure/Api structure from [project context](../project.md) and ADR-0001. Introducing another ORM, data-access style or architectural pattern (minimal APIs, CQRS/MediatR, …) needs a new project decision.
+- Target .NET 10 with EF Core (Npgsql) in the layered Domain/Application/Infrastructure/Api structure from [project context](../project.md) and 0001_ADR. Introducing another ORM, data-access style or architectural pattern (minimal APIs, CQRS/MediatR, …) needs a new project decision.
 - Implement the agreed API contract, validation and error behavior.
 - Keep business rules testable; use the agreed transaction and concurrency behavior.
 - Read configuration through the selected runtime mechanism; never commit credentials.

@@ -6,15 +6,15 @@ using static ProductionManagementAI.Integration.Tests.ProductionOrders.Productio
 namespace ProductionManagementAI.Integration.Tests.ProductionOrders;
 
 /// <summary>
-/// DD-002 test viewpoints at integration level (I): real HTTP pipeline, real PostgreSQL, app running as pmai_app,
-/// against the 124 seeded demo orders (80 from DB-003, 44 more from DB-004). Assertions are on counts, statuses and offsets from today — never on
+/// 002_DD test viewpoints at integration level (I): real HTTP pipeline, real PostgreSQL, app running as pmai_app,
+/// against the 124 seeded demo orders (80 from 002_DB, 44 more from 003_DB). Assertions are on counts, statuses and offsets from today — never on
 /// absolute dates, because the seed's due dates are relative to the migration's run date (DEC-011).
 /// Its own fixture, so the seeded data isn't disturbed by orders other test classes create.
 /// </summary>
 public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : IClassFixture<IntegrationTestFixture>
 {
     private const string Orders = "/api/production-orders";
-    private const int SeededOrders = 124; // DB-003's 80 + DB-004's 44 (WI-004 DEC-013, DEC-014)
+    private const int SeededOrders = 124; // 002_DB's 80 + 003_DB's 44 (WI-004 DEC-013, DEC-014)
 
     private static async Task<JsonObject> ListAsync(HttpClient client, string query = "")
     {
@@ -93,7 +93,7 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
             Assert.Equal(expected, item["isOverdue"]!.GetValue<bool>());
         }
 
-        // The seed is built so both halves of the rule are actually exercised (DB-003).
+        // The seed is built so both halves of the rule are actually exercised (002_DB).
         Assert.Contains(Items(page), item => item!["isOverdue"]!.GetValue<bool>());
         Assert.Contains(
             Items(page),
@@ -260,7 +260,7 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
             .Select(item => item!["updatedAt"]!.GetValue<string>()).ToArray();
         Assert.Equal(updated.OrderDescending(StringComparer.Ordinal), updated);
 
-        // Status sorts in workflow order, not alphabetically (DB-003 sort-key mapping).
+        // Status sorts in workflow order, not alphabetically (002_DB sort-key mapping).
         var rank = new Dictionary<string, int> { ["Draft"] = 1, ["InProgress"] = 2, ["Completed"] = 3, ["Cancelled"] = 4 };
         var ranks = Items(await ListAsync(client, "sort=status&pageSize=100"))
             .Select(item => rank[item!["status"]!.GetValue<string>()]).ToArray();
@@ -322,7 +322,7 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
         Assert.DoesNotContain("PO-", await forbidden.Content.ReadAsStringAsync(), StringComparison.Ordinal);
     }
 
-    // TC-119: the queries behind the screen are index-backed (DB-003), not sequential scans.
+    // TC-119: the queries behind the screen are index-backed (002_DB), not sequential scans.
     [Theory]
     [InlineData(
         "SELECT o.id FROM production_orders o ORDER BY o.due_date, o.order_number LIMIT 20",

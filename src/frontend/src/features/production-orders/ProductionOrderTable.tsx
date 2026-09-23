@@ -1,8 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { statusLabels } from './messages'
+import { formatDate, formatNumber, formatTimestamp } from '../../lib/format'
+import { labels, statusLabels } from './messages'
 import type { ProductionOrderListItem, ProductionOrderSort, SortDirection } from './types'
 
-// DD-002 module 3 / DD-002-SPD §4. A real <table> at sm and above, cards below it; the order-number cell is a real
+// 002_DD module 3 / 002_DD-SPD §4. A real <table> at sm and above, cards below it; the order-number cell is a real
 // link, which is what makes every row keyboard-reachable (DEC-009).
 
 interface Column {
@@ -12,12 +13,12 @@ interface Column {
 }
 
 const columns: Column[] = [
-  { key: 'orderNumber', label: 'Order no.' },
-  { key: 'product', label: 'Product' },
-  { key: 'quantity', label: 'Qty', numeric: true },
-  { key: 'dueDate', label: 'Due date' },
-  { key: 'status', label: 'Status' },
-  { key: 'updatedAt', label: 'Updated' },
+  { key: 'orderNumber', label: labels.list.columns.orderNumber },
+  { key: 'product', label: labels.list.columns.product },
+  { key: 'quantity', label: labels.list.columns.quantity, numeric: true },
+  { key: 'dueDate', label: labels.list.columns.dueDate },
+  { key: 'status', label: labels.list.columns.status },
+  { key: 'updatedAt', label: labels.list.columns.updatedAt },
 ]
 
 const statusBadge: Record<ProductionOrderListItem['status'], string> = {
@@ -58,8 +59,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
       <div className="hidden overflow-x-auto rounded-lg border border-gray-200 sm:block">
         <table className="w-full border-collapse text-sm">
           <caption className="border-b border-gray-200 bg-gray-50 px-3.5 py-2 text-left text-xs text-gray-500">
-            Production orders, sorted by {columns.find((column) => column.key === sort)?.label.toLowerCase()}{' '}
-            {dir === 'asc' ? 'ascending' : 'descending'}
+            {labels.list.caption(columns.find((column) => column.key === sort)?.label ?? '', dir === 'asc')}
           </caption>
           <thead>
             <tr>
@@ -104,9 +104,9 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
                 <td className="px-3.5 py-2.5">
                   <span className="text-gray-500 tabular-nums">{item.product.sku}</span> {item.product.name}
                 </td>
-                <td className="px-3.5 py-2.5 text-right tabular-nums">{item.quantity.toLocaleString()}</td>
+                <td className="px-3.5 py-2.5 text-right tabular-nums">{formatNumber(item.quantity)}</td>
                 <td className="px-3.5 py-2.5 whitespace-nowrap tabular-nums">
-                  {item.dueDate}
+                  {formatDate(item.dueDate)}
                   {item.isOverdue && <OverdueMarker />}
                 </td>
                 <td className="px-3.5 py-2.5">
@@ -121,7 +121,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
         </table>
       </div>
 
-      {/* SP: the whole card is the link (BD-002 §1 SP). */}
+      {/* SP: the whole card is the link (002_BD §1 SP). */}
       <ul className="grid gap-2.5 sm:hidden">
         {items.map((item) => (
           <li key={item.id}>
@@ -137,13 +137,13 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
                 <span className="text-gray-500 tabular-nums">{item.product.sku}</span> {item.product.name}
               </span>
               <span className="flex flex-wrap gap-x-3.5 gap-y-1 text-sm text-gray-500 tabular-nums">
-                <span>Qty {item.quantity.toLocaleString()}</span>
+                <span>{labels.list.cardQuantity(formatNumber(item.quantity))}</span>
                 <span>
-                  Due {item.dueDate}
+                  {labels.list.cardDue(formatDate(item.dueDate))}
                   {item.isOverdue && <OverdueMarker />}
                 </span>
               </span>
-              <span className="text-xs text-gray-500 tabular-nums">Updated {formatUpdated(item.updatedAt)}</span>
+              <span className="text-xs text-gray-500 tabular-nums">{labels.list.cardUpdated(formatUpdated(item.updatedAt))}</span>
             </Link>
           </li>
         ))}
@@ -160,14 +160,11 @@ export function StatusBadge({ status }: { status: ProductionOrderListItem['statu
   )
 }
 
-/** Text, never colour alone (BD-002 M-07/M-08, WCAG 1.4.1). */
+/** Text, never colour alone (002_BD M-07/M-08, WCAG 1.4.1). */
 function OverdueMarker() {
   return (
-    <span className="ml-1.5 rounded border border-red-200 bg-red-50 px-1.5 py-px text-xs text-red-800">Overdue</span>
+    <span className="ml-1.5 rounded border border-red-200 bg-red-50 px-1.5 py-px text-xs text-red-800">{labels.list.overdue}</span>
   )
 }
 
-function formatUpdated(value: string) {
-  const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleString()
-}
+const formatUpdated = formatTimestamp

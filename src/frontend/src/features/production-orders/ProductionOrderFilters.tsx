@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react'
 import { filterFieldOrder, validateFilters, type FilterErrors } from './listValidation'
 import { hasFilters, maxOrderNumberFilterLength } from './listViewState'
-import { message, statusLabels } from './messages'
+import { labels, message, statusLabels } from './messages'
 import type { ListFilters, Product, ProductionOrderStatus } from './types'
 
-// DD-002 module 2 / DD-002-SPD §3. The panel holds its own draft while the user edits and publishes it only on
+// 002_DD module 2 / 002_DD-SPD §3. The panel holds its own draft while the user edits and publishes it only on
 // Search (DEC-008) — that is what keeps "the URL reflects what is displayed" true.
 
 const statuses: ProductionOrderStatus[] = ['Draft', 'InProgress', 'Completed', 'Cancelled']
@@ -70,12 +70,12 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
   return (
     <form
       onSubmit={handleSubmit}
-      aria-label="Filter production orders"
+      aria-label={labels.list.filtersForm}
       className="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:p-5"
     >
       <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
         <fieldset className="grid gap-1.5">
-          <legend className="text-sm font-medium text-gray-700">Status</legend>
+          <legend className="text-sm font-medium text-gray-700">{labels.list.status}</legend>
           <div className="flex flex-wrap gap-x-5 gap-y-2 pt-1">
             {statuses.map((status) => (
               <label key={status} className="flex items-center gap-2 text-sm text-gray-900">
@@ -94,7 +94,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
 
         <div className="grid content-start gap-1.5">
           <label htmlFor="productId" className="text-sm font-medium text-gray-700">
-            Product
+            {labels.list.product}
           </label>
           <select
             id="productId"
@@ -103,7 +103,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
             onChange={(event) => setDraft({ ...draft, productId: event.target.value || null })}
             className={`${fieldClass} disabled:bg-gray-100 disabled:text-gray-500`}
           >
-            <option value="">All products</option>
+            <option value="">{labels.list.allProducts}</option>
             {products.map((product) => (
               <option key={product.id} value={product.id}>
                 {product.sku} — {product.name}
@@ -111,7 +111,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
             ))}
           </select>
           <p className="min-h-[1.25rem] text-xs text-gray-500">
-            {productsFailed ? 'Product list unavailable. The other filters still work.' : ''}
+            {productsFailed ? labels.list.productsUnavailable : ''}
           </p>
         </div>
       </div>
@@ -119,7 +119,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="grid gap-1.5">
           <label htmlFor="dueFrom" className="text-sm font-medium text-gray-700">
-            Due from
+            {labels.list.dueFrom}
           </label>
           <input
             ref={dueFromRef}
@@ -136,7 +136,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
 
         <div className="grid gap-1.5">
           <label htmlFor="dueTo" className="text-sm font-medium text-gray-700">
-            Due to
+            {labels.list.dueTo}
           </label>
           <input
             ref={dueToRef}
@@ -153,7 +153,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
 
         <div className="grid gap-1.5">
           <label htmlFor="orderNumber" className="text-sm font-medium text-gray-700">
-            Order number
+            {labels.list.orderNumber}
           </label>
           <input
             ref={orderNumberRef}
@@ -179,14 +179,14 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
           disabled={!hasFilters(draft) && !hasFilters(filters)}
           className="rounded border border-gray-300 bg-white px-4 py-2 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50"
         >
-          Clear
+          {labels.list.clear}
         </button>
         <button
           type="submit"
           disabled={busy}
           className="rounded bg-gray-900 px-4 py-2 text-white focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50"
         >
-          Search
+          {labels.list.search}
         </button>
       </div>
     </form>

@@ -1,0 +1,292 @@
+<title>製造指示 登録・編集画面</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap">
+<style>
+  /* Page chrome tokens (theme-aware). Artboards below deliberately stay light: the app itself is light-only. */
+  :root {
+    --ground: #eceef2;
+    --surface: #ffffff;
+    --ink: #171a20;
+    --muted: #5a6170;
+    --line: #d3d8e0;
+    --accent: #2c55c9;
+    --accent-soft: #e3e9fa;
+    --shadow: 0 1px 2px rgba(20, 24, 33, .06), 0 8px 24px rgba(20, 24, 33, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #111317;
+      --surface: #1a1d23;
+      --ink: #e6e8ed;
+      --muted: #9aa1ae;
+      --line: #2d323b;
+      --accent: #93b0ff;
+      --accent-soft: #1f2a45;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #111317;
+    --surface: #1a1d23;
+    --ink: #e6e8ed;
+    --muted: #9aa1ae;
+    --line: #2d323b;
+    --accent: #93b0ff;
+    --accent-soft: #1f2a45;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font: 15px/1.6 "IBM Plex Sans", "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", Meiryo, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .page { max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 64px; display: grid; gap: 40px; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace; }
+
+  header.doc { display: grid; gap: 12px; }
+  .eyebrow { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 0; font-size: 30px; line-height: 1.2; font-weight: 600; text-wrap: balance; }
+  .lede { margin: 0; max-width: 68ch; color: var(--muted); }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .facts li { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; font-size: 12px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--muted); }
+
+  nav.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  section.board { display: grid; gap: 14px; scroll-margin-top: 16px; }
+  .board-head { display: grid; gap: 4px; }
+  .board-head h2 { margin: 0; font-size: 19px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .board-head h2 .mono { font-size: 12px; font-weight: 500; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 4px; }
+  .board-head p { margin: 0; color: var(--muted); max-width: 72ch; font-size: 14px; }
+  .refs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .refs span { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; font-size: 11.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; }
+
+  .stage { overflow-x: auto; border-radius: 10px; box-shadow: var(--shadow); background: #f9fafb; border: 1px solid var(--line); }
+  .stage.sp { max-width: 400px; }
+
+  /* ===== App look: Tailwind default gray palette + system font, as in src/frontend (LoginPage.tsx) ===== */
+  .app { min-width: 760px; font: 14px/1.5 "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP", ui-sans-serif, system-ui, sans-serif; color: #111827; background: #ffffff; }
+  .stage.sp .app { min-width: 0; width: 375px; max-width: 100%; }
+  .app-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; border-bottom: 1px solid #e5e7eb; }
+  .app-bar .brand { font-weight: 500; color: #111827; }
+  .app-bar .who { color: #4b5563; font-size: 13px; display: flex; gap: 12px; align-items: center; }
+  .app-bar .who u { color: #111827; text-underline-offset: 3px; }
+  .app-main { padding: 20px 24px 28px; display: grid; gap: 14px; max-width: 768px; margin: 0 auto; }
+  .crumbs { font-size: 13px; color: #6b7280; }
+  .crumbs b { font-weight: 400; color: #374151; }
+  .app h3 { margin: 0; font-size: 20px; font-weight: 500; color: #111827; }
+  .banner { border-radius: 6px; padding: 10px 12px; font-size: 14px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+  .banner.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  .banner.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .banner .btn { padding: 5px 10px; font-size: 13px; }
+  .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px 24px; display: grid; gap: 14px; background: #fff; }
+  .row { display: grid; grid-template-columns: 140px 1fr; gap: 12px; align-items: start; }
+  .row > label, .row > .lbl { padding-top: 8px; font-size: 14px; font-weight: 500; color: #374151; }
+  .req { color: #b91c1c; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pair .row { grid-template-columns: 140px 1fr; }
+  .pair .row + .row { grid-template-columns: 90px 1fr; }
+  .ctl { display: grid; gap: 4px; }
+  .input { border: 1px solid #d1d5db; border-radius: 4px; padding: 8px 12px; background: #fff; color: #111827; min-height: 38px; display: flex; align-items: center; justify-content: space-between; }
+  .input.ph { color: #9ca3af; }
+  .input.ro { background: #f9fafb; color: #4b5563; border-style: dashed; }
+  .input.bad { border-color: #dc2626; box-shadow: 0 0 0 1px #dc2626; }
+  .input.focus { border-color: #111827; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111827; }
+  .input.dis { background: #f3f4f6; color: #6b7280; }
+  .input.area { min-height: 84px; align-items: flex-start; }
+  .caret { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #6b7280; flex: none; }
+  .cal { width: 14px; height: 14px; border: 1.5px solid #6b7280; border-radius: 2px; border-top-width: 3px; flex: none; }
+  .static { padding-top: 8px; color: #111827; }
+  .static.muted { color: #6b7280; font-style: italic; }
+  .hint { font-size: 12.5px; color: #6b7280; display: flex; gap: 6px; align-items: center; }
+  .lock { width: 9px; height: 7px; border: 1.5px solid #6b7280; border-radius: 1px; position: relative; margin-top: 4px; flex: none; }
+  .lock::before { content: ""; position: absolute; left: 1px; top: -6px; width: 4px; height: 5px; border: 1.5px solid #6b7280; border-bottom: 0; border-radius: 3px 3px 0 0; }
+  .ferr { font-size: 12.5px; color: #dc2626; }
+  .count { text-align: right; font-size: 12px; color: #6b7280; font-variant-numeric: tabular-nums; }
+  .meta { border-top: 1px solid #f3f4f6; padding-top: 12px; font-size: 12.5px; color: #6b7280; display: flex; gap: 16px; flex-wrap: wrap; }
+  .actions { display: flex; justify-content: flex-end; gap: 10px; }
+  .btn { border-radius: 4px; padding: 8px 16px; font-size: 14px; border: 1px solid transparent; white-space: nowrap; }
+  .btn.primary { background: #111827; color: #fff; }
+  .btn.primary.busy { opacity: .5; }
+  .btn.secondary { background: #fff; color: #111827; border-color: #d1d5db; }
+  .btn.danger { background: #b91c1c; color: #fff; }
+  .btn.ring { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111827; }
+  .panel { border: 1px solid #e5e7eb; border-radius: 8px; padding: 28px 24px; display: grid; gap: 8px; justify-items: start; }
+  .panel p { margin: 0; color: #374151; }
+  .panel a { color: #111827; text-underline-offset: 3px; }
+
+  /* Open select list (product dropdown workload, DEC-019/DEC-022) */
+  .listwrap { position: relative; }
+  .listbox { position: absolute; left: 0; right: 0; top: 42px; z-index: 2; background: #fff; border: 1px solid #d1d5db; border-radius: 4px; box-shadow: 0 10px 24px rgba(17, 24, 39, .14); max-height: 262px; overflow: hidden; }
+  .listbox div { padding: 5px 12px; font-size: 13.5px; color: #111827; font-variant-numeric: tabular-nums; }
+  .listbox div.hl { background: #111827; color: #fff; }
+  .listbox .more { color: #6b7280; font-style: italic; border-top: 1px solid #f3f4f6; }
+  .scrollbar { position: absolute; right: 3px; top: 4px; width: 5px; height: 70px; border-radius: 3px; background: #d1d5db; }
+  .spacer-list { height: 200px; }
+
+  /* Modal dialog */
+  .dim { position: relative; }
+  .dim::after { content: ""; position: absolute; inset: 0; background: rgba(17, 24, 39, .45); }
+  .dialog { position: absolute; z-index: 3; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 420px; max-width: calc(100% - 32px); background: #fff; border-radius: 8px; padding: 20px 22px; box-shadow: 0 20px 40px rgba(0, 0, 0, .25); display: grid; gap: 10px; }
+  .dialog h4 { margin: 0; font-size: 16px; font-weight: 600; color: #111827; }
+  .dialog p { margin: 0; color: #4b5563; font-size: 14px; }
+  .dialog .actions { margin-top: 6px; }
+
+  /* SP (< 640px) */
+  .sp .app-bar { padding: 12px 16px; }
+  .sp .app-main { padding: 16px 16px 24px; }
+  .sp .card { padding: 16px; }
+  .sp .row, .sp .pair, .sp .pair .row, .sp .pair .row + .row { grid-template-columns: 1fr; gap: 6px; }
+  .sp .row > label, .sp .row > .lbl { padding-top: 0; }
+  .sp .static { padding-top: 0; }
+  .sp .actions { flex-direction: column-reverse; }
+  .sp .actions .btn { width: 100%; text-align: center; }
+
+  footer.notes { display: grid; gap: 8px; color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 20px; }
+  footer.notes p { margin: 0; max-width: 78ch; }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="page" lang="ja">
+  <header class="doc">
+    <div class="eyebrow">WI-002 · 001_DD · SCR-001 · 静的モックアップ</div>
+    <h1>製造指示 登録・編集</h1>
+    <p class="lede">Screen A の各状態を、日本語 UI（WI-005）とアプリの既存の見た目（ログイン画面の Tailwind のグレー配色とシステムフォント）で描いたもの。説明文の番号は 001_BD §3 の項目、V- のルール、E- のイベント、001_DD の MSG- メッセージIDを指す。サンプルデータは例示である。</p>
+    <ul class="facts">
+      <li>指示番号 PO-YYYY-NNNNN</li>
+      <li>工場時刻 Asia/Tokyo</li>
+      <li>初期データ 30 製品</li>
+      <li>PC ≥ 640px · SP &lt; 640px</li>
+    </ul>
+  </header>
+
+  <nav class="toc" aria-label="状態の一覧">
+    <a href="#s1">1 登録 — 空</a>
+    <a href="#s2">2 製品一覧を展開</a>
+    <a href="#s3">3 入力エラー</a>
+    <a href="#s4">4 登録 → 編集（下書き）</a>
+    <a href="#s5">5 進行中 — ロック</a>
+    <a href="#s6">6 完了 — 終端</a>
+    <a href="#s7">7 古い保存（409）</a>
+    <a href="#s8">8 変更の破棄</a>
+    <a href="#s9">9 見つからない</a>
+    <a href="#s10">10 SP — 登録</a>
+    <a href="#s11">11 SP — ロック</a>
+  </nav>
+
+  <div id="boards"></div>
+
+  <footer class="notes">
+    <p>読み取り専用の項目（下書き以外の製造指示の製品と数量）は破線の枠とグレーの塗りで描く。フォーカスは受け取り、無効ではなく読み取り専用として読み上げられる。フォーカスリングは 2px の gray-900 に 2px の白いオフセット。ステータスの選択肢は API の <span class="mono">allowedNextStatuses</span> から取るため、サーバーが拒否する遷移を UI が示すことはない。</p>
+    <p>英語版のソース：<span class="mono">docs/en/020_detailed-design/001/mockups/001_DD_screen-a-mockup.html</span>。静的なモックアップで、操作できるプロトタイプではない。</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var USER = '山田 太郎';
+  function bar(sp) {
+    return '<div class="app-bar"><span class="brand">' + (sp ? 'PMAI' : 'ProductionManagementAI') + '</span>' +
+      '<span class="who">' + (sp ? '' : USER + ' ·') + ' <u>ログアウト</u></span></div>';
+  }
+  function row(label, req, ctl) {
+    return '<div class="row"><div class="lbl">' + label + (req ? ' <span class="req">*</span>' : '') + '</div><div class="ctl">' + ctl + '</div></div>';
+  }
+  function input(text, cls, kind) {
+    var tail = kind === 'select' ? '<span class="caret"></span>' : kind === 'date' ? '<span class="cal"></span>' : '';
+    return '<div class="input ' + (cls || '') + (kind === 'area' ? ' area' : '') + '"><span>' + text + '</span>' + tail + '</div>';
+  }
+  function form(o, sp) {
+    var h = '';
+    h += row('指示番号', false, '<div class="static' + (o.number ? '' : ' muted') + '">' + (o.number || '保存時に採番') + '</div>');
+    h += row('ステータス', false, o.statusCtl);
+    h += row('製品', true, o.productCtl);
+    var q = row('数量', true, o.qtyCtl), d = row('納期', true, o.dueCtl);
+    h += sp ? q + d : '<div class="pair">' + q + d + '</div>';
+    h += row('備考', false, o.notesCtl + '<div class="count">' + (o.count || '0/500') + '</div>');
+    if (o.meta) h += '<div class="meta"><span>登録日時 ' + o.meta[0] + '</span><span>最終更新 ' + o.meta[1] + '</span></div>';
+    return '<div class="card">' + h + '</div>';
+  }
+  function screen(o) {
+    var sp = !!o.sp;
+    var main = '<div class="crumbs">' + (sp ? '‹ 製造指示一覧' : 'ホーム / 製造指示一覧 / <b>' + (o.number || '新規') + '</b>') + '</div>' +
+      '<h3>' + (o.number ? '製造指示 ' + o.number : '新規製造指示') + '</h3>' +
+      (o.banner || '') + (o.body || form(o, sp)) +
+      (o.body ? '' : '<div class="actions"><span class="btn secondary' + (o.cancelFocus ? ' focusbtn' : '') + '">キャンセル</span><span class="btn primary' + (o.busy ? ' busy' : '') + '">' + (o.busy ? '保存中…' : '保存') + '</span></div>');
+    return '<div class="app' + (o.dim ? ' dim' : '') + '" lang="ja">' + bar(sp) + '<div class="app-main">' + main + '</div>' + (o.dialog || '') + '</div>';
+  }
+
+  var draftStatus = input('下書き', '', 'select');
+  var lockHint = '<div class="hint"><span class="lock" aria-hidden="true"></span>下書き以外の製造指示では変更できません。</div>';
+  var notes = '大阪ラインの優先生産。ロット7の鋼材を使用。';
+
+  var boards = [
+    { id: 's1', title: '登録 — 空', tag: 'create', text: 'ナビゲーションバーの「新規製造指示」から開く。ステータスは下書きに固定、指示番号は保存時に採番する。製品の項目は 30 製品を SKU 順に並べる。', refs: ['E-01', '項目 6〜16', 'REQ-010'],
+      o: { statusCtl: '<div class="static">下書き</div>', productCtl: input('製品を選択', 'ph', 'select'), qtyCtl: input('', ''), dueCtl: input('yyyy/mm/dd', 'ph', 'date'), notesCtl: input('任意', 'ph', 'area') } },
+
+    { id: 's2', title: '製品一覧を展開', tag: 'create', text: '初期データ 30 製品のネイティブのセレクト（DEC-019、DEC-022）。ラベルは「SKU — 製品名」なので、「P-102」と入力すると P-1020 番台に移る。見えるのは約 10 行で、残りはスクロールする。', refs: ['項目 8', 'M-03', 'DEC-022'],
+      o: { statusCtl: '<div class="static">下書き</div>',
+        productCtl: '<div class="listwrap">' + input('製品を選択', 'focus', 'select') + '<div class="listbox" role="presentation"><span class="scrollbar"></span>' +
+          ['P-1001 — ブレーキキャリパー', 'P-1002 — ブレーキディスクローター', 'P-1003 — ブレーキパッド', 'P-1004 — ドライブシャフト', 'P-1005 — 等速ジョイント', 'P-1006 — トランスミッションケース', 'P-1007 — ハブベアリング', 'P-1008 — ウォーターポンプ', 'P-1009 — エンジンマウント', 'P-1010 — ラジエーター'].map(function (t, i) { return '<div' + (i === 3 ? ' class="hl"' : '') + '>' + t + '</div>'; }).join('') +
+          '<div class="more">… ほか20件 (P-1011 – P-1030)</div></div><div class="spacer-list"></div></div>',
+        qtyCtl: input('', ''), dueCtl: input('yyyy/mm/dd', 'ph', 'date'), notesCtl: input('任意', 'ph', 'area') } },
+
+    { id: 's3', title: '入力エラー', tag: 'create', text: '製品が未選択、数量 0、納期が昨日の状態で保存を押した。何も送信せず、エラーを各項目の下に表示し、最初の不正な項目（製品）にフォーカスを移す。サーバーも同じメッセージを 400 のメッセージIDで返す。', refs: ['V-01', 'V-02', 'V-04', 'MSG-E001', 'MSG-E003', 'MSG-E005', 'E-04'],
+      o: { statusCtl: '<div class="static">下書き</div>',
+        productCtl: input('製品を選択', 'ph bad focus', 'select') + '<div class="ferr">製品を選択してください。</div>',
+        qtyCtl: input('0', 'bad') + '<div class="ferr">1以上の整数を入力してください。</div>',
+        dueCtl: input('2026/09/17', 'bad', 'date') + '<div class="ferr">納期に過去の日付は指定できません。</div>',
+        notesCtl: input('任意', 'ph', 'area') } },
+
+    { id: 's4', title: '登録 → 編集（下書き）', tag: 'edit', text: '登録に成功すると編集のルートに切り替わり、MSG-I001 を表示する。下書きの間はすべて編集できる。ステータスの選択肢は下書き、進行中、取消。', refs: ['P-02', 'MSG-I001', 'M-02', 'REQ-011'],
+      o: { number: 'PO-2026-00042', banner: '<div class="banner ok" role="status">製造指示 PO-2026-00042 を登録しました。</div>',
+        statusCtl: draftStatus, productCtl: input('P-1004 — ドライブシャフト', '', 'select'), qtyCtl: input('250', ''), dueCtl: input('2026/10/01', '', 'date'),
+        notesCtl: input(notes, '', 'area'), count: notes.length + '/500', meta: ['2026/09/18 10:02', '2026/09/18 10:02'] } },
+
+    { id: 's5', title: '進行中 — ロック', tag: 'edit', text: '下書きでなくなると、製品と数量は読み取り専用になる（フォーカスは受け取り、ロックのヒントを表示）。納期と備考は編集できる。ステータスの選択肢は進行中、完了、取消。保存後のバナーを示す。', refs: ['REQ-018', 'DEC-004', 'V-07', 'MSG-I002'],
+      o: { number: 'PO-2026-00042', banner: '<div class="banner ok" role="status">製造指示 PO-2026-00042 を保存しました。</div>',
+        statusCtl: input('進行中', '', 'select'), productCtl: input('P-1004 — ドライブシャフト', 'ro') + lockHint, qtyCtl: input('250', 'ro'),
+        dueCtl: input('2026/10/08', '', 'date'), notesCtl: input(notes, '', 'area'), count: notes.length + '/500', meta: ['2026/09/18 10:02', '2026/09/18 14:31'] } },
+
+    { id: 's6', title: '完了 — 終端', tag: 'edit', text: '終端のステータス：次に遷移できる状態がないため、ステータスのセレクトは無効。納期と備考は修正できる（DEC-004）。この製造指示は納期遅れだが、納期を動かさずに保存できる（DEC-009）。', refs: ['REQ-017', 'DEC-009', 'M-02'],
+      o: { number: 'PO-2026-00017',
+        statusCtl: input('完了', 'dis', 'select'), productCtl: input('P-1013 — ショックアブソーバー', 'ro') + lockHint, qtyCtl: input('40', 'ro'),
+        dueCtl: input('2026/09/12', '', 'date'), notesCtl: input('2号ラインへ納品済み。', '', 'area'), count: '11/500', meta: ['2026/09/02 09:15', '2026/09/16 17:40'] } },
+
+    { id: 's7', title: '古い保存（409）', tag: 'edit', text: '読み込んだ後に他のユーザーがこの製造指示を保存した。保存は拒否され、何も書き込まれない（DEC-010）。入力した値は画面に残る。「再読み込み」は最新の内容を取得し、手元の編集を破棄する。', refs: ['V-08', 'MSG-E009', 'DEC-010', 'P-05'],
+      o: { number: 'PO-2026-00042', banner: '<div class="banner err" role="alert"><span>この製造指示は他のユーザーによって変更されました。再読み込みして最新の内容を確認してください。</span><span class="btn secondary">再読み込み</span></div>',
+        statusCtl: input('完了', '', 'select'), productCtl: input('P-1004 — ドライブシャフト', 'ro') + lockHint, qtyCtl: input('250', 'ro'),
+        dueCtl: input('2026/10/08', '', 'date'), notesCtl: input(notes + '前倒しで完了。', '', 'area'), count: (notes.length + 7) + '/500', meta: ['2026/09/18 10:02', '2026/09/18 14:31'] } },
+
+    { id: 's8', title: '変更の破棄', tag: 'dialog', text: '編集後に「キャンセル」を押した。モーダルダイアログはフォーカスを閉じ込め、「編集を続ける」から始まり、Escape で閉じる。「破棄」は保存せずに製造指示一覧に戻る。変更がなければ「キャンセル」はすぐに離れる。', refs: ['REQ-019', 'DEC-018', '項目 17〜19', 'E-07', 'E-09'],
+      o: { number: 'PO-2026-00042', dim: true,
+        statusCtl: draftStatus, productCtl: input('P-1005 — 等速ジョイント', '', 'select'), qtyCtl: input('300', ''), dueCtl: input('2026/10/01', '', 'date'),
+        notesCtl: input(notes, '', 'area'), count: notes.length + '/500', meta: ['2026/09/18 10:02', '2026/09/18 10:02'],
+        dialog: '<div class="dialog" role="presentation"><h4>変更を破棄しますか？</h4><p>この製造指示の変更は保存されていません。</p><div class="actions"><span class="btn secondary ring">編集を続ける</span><span class="btn danger">破棄</span></div></div>' } },
+
+    { id: 's9', title: '見つからない', tag: 'edit', text: '編集のルートの ID が存在しない（404）。フォームは表示しない。権限なしと読み込みエラーのパネル（MSG-E012、MSG-E013 ＋「もう一度試す」）も同じレイアウト。', refs: ['MSG-E011', 'P-01'],
+      o: { number: null, body: '<div class="panel"><p>この製造指示は存在しません。</p><a>製造指示一覧に戻る</a></div>' } },
+
+    { id: 's10', title: 'SP — 登録', tag: 'mobile', sp: true, text: '640px 未満：1 列で、ラベルは項目の上、ボタンは全幅で「保存」が上。パンくずリストは戻るリンクに縮小する。', refs: ['001_BD §1 SP', 'X-5'],
+      o: { sp: true, statusCtl: '<div class="static">下書き</div>', productCtl: input('P-1022 — 電動ファン', '', 'select'), qtyCtl: input('1200', ''), dueCtl: input('2026/11/30', '', 'date'), notesCtl: input('任意', 'ph', 'area'), busy: true } },
+
+    { id: 's11', title: 'SP — ロック', tag: 'mobile', sp: true, text: 'スマートフォンの幅での同じロックの扱い。', refs: ['REQ-018'],
+      o: { sp: true, number: 'PO-2026-00042', statusCtl: input('進行中', '', 'select'), productCtl: input('P-1004 — ドライブシャフト', 'ro') + lockHint, qtyCtl: input('250', 'ro'),
+        dueCtl: input('2026/10/08', '', 'date'), notesCtl: input(notes, '', 'area'), count: notes.length + '/500', meta: ['2026/09/18 10:02', '2026/09/18 14:31'] } }
+  ];
+
+  var out = boards.map(function (b, i) {
+    var o = b.o; o.sp = b.sp;
+    if (o.body && o.number === null) o.number = undefined;
+    var shown = b.id === 's9' ? screen({ number: 'd2f1…', body: o.body }) : screen(o);
+    if (b.id === 's9') shown = shown.replace('製造指示 d2f1…', '製造指示').replace('<b>d2f1…</b>', '<b>d2f1a9c0…</b>');
+    return '<section class="board" id="' + b.id + '"><div class="board-head"><h2>' + (i + 1) + '. ' + b.title + ' <span class="mono">' + b.tag + '</span></h2><p>' + b.text + '</p>' +
+      '<div class="refs">' + b.refs.map(function (r) { return '<span>' + r + '</span>'; }).join('') + '</div></div>' +
+      '<div class="stage' + (b.sp ? ' sp' : '') + '">' + shown + '</div></section>';
+  }).join('');
+  document.getElementById('boards').outerHTML = '<div id="boards" style="display:grid;gap:48px">' + out + '</div>';
+})();
+</script>

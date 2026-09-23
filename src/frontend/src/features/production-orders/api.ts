@@ -21,7 +21,7 @@ export const updateOrder = (id: string, body: UpdateProductionOrderRequest) =>
   sendJson<ProductionOrder>('PUT', `/api/production-orders/${encodeURIComponent(id)}`, body)
 
 /**
- * DD-002-API §1. The query string is built by the same serializer the URL uses, so what the user sees and what is
+ * 002_DD-API §1. The query string is built by the same serializer the URL uses, so what the user sees and what is
  * queried cannot diverge. The signal cancels a query the user has already superseded.
  */
 export function listOrders(view: ListViewState, signal?: AbortSignal) {

@@ -193,210 +193,210 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001001"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Steel bracket",
+                            Name = "ブレーキキャリパー",
                             Sku = "P-1001"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001002"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Aluminium housing",
+                            Name = "ブレーキディスクローター",
                             Sku = "P-1002"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001003"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Control panel assembly",
+                            Name = "ブレーキパッド",
                             Sku = "P-1003"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001004"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Drive shaft",
+                            Name = "ドライブシャフト",
                             Sku = "P-1004"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001005"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Hydraulic valve",
+                            Name = "等速ジョイント",
                             Sku = "P-1005"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001006"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Gearbox assembly",
+                            Name = "トランスミッションケース",
                             Sku = "P-1006"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001007"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Bearing housing",
+                            Name = "ハブベアリング",
                             Sku = "P-1007"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001008"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Pump impeller",
+                            Name = "ウォーターポンプ",
                             Sku = "P-1008"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001009"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Motor mount plate",
+                            Name = "エンジンマウント",
                             Sku = "P-1009"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001010"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Conveyor roller",
+                            Name = "ラジエーター",
                             Sku = "P-1010"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001011"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Spur gear 40T",
+                            Name = "タイミングギア",
                             Sku = "P-1011"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001012"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Coupling flange",
+                            Name = "クラッチディスク",
                             Sku = "P-1012"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001013"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Pneumatic cylinder",
+                            Name = "ショックアブソーバー",
                             Sku = "P-1013"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001014"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Sensor bracket",
+                            Name = "コイルスプリング",
                             Sku = "P-1014"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001015"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Cable harness A",
+                            Name = "エンジンワイヤーハーネス",
                             Sku = "P-1015"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001016"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Cable harness B",
+                            Name = "ボディワイヤーハーネス",
                             Sku = "P-1016"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001017"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Terminal block unit",
+                            Name = "ヘッドランプユニット",
                             Sku = "P-1017"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001018"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Relay module",
+                            Name = "リレーボックス",
                             Sku = "P-1018"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001019"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Power supply unit",
+                            Name = "オルタネーター",
                             Sku = "P-1019"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001020"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "PLC enclosure",
+                            Name = "ECU ケース",
                             Sku = "P-1020"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001021"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Heat sink",
+                            Name = "インタークーラー",
                             Sku = "P-1021"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001022"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Cooling fan assembly",
+                            Name = "電動ファン",
                             Sku = "P-1022"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001023"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Filter housing",
+                            Name = "オイルフィルター",
                             Sku = "P-1023"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001024"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Valve body",
+                            Name = "スロットルボディ",
                             Sku = "P-1024"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001025"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Piston rod",
+                            Name = "ピストン",
                             Sku = "P-1025"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001026"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Spring assembly",
+                            Name = "コネクティングロッド",
                             Sku = "P-1026"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001027"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Welded frame",
+                            Name = "サブフレーム",
                             Sku = "P-1027"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001028"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Guard panel",
+                            Name = "ドアパネル",
                             Sku = "P-1028"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001029"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Hinge set",
+                            Name = "ドアヒンジ",
                             Sku = "P-1029"
                         },
                         new
                         {
                             Id = new Guid("0197e4a0-0000-7000-8000-000000001030"),
                             CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "Fastener kit",
+                            Name = "ボルト・ナットキット",
                             Sku = "P-1030"
                         });
                 });

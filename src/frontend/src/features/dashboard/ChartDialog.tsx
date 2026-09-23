@@ -1,8 +1,9 @@
 import { useEffect, useId, useRef } from 'react'
 import { iconProps, RestoreIcon } from '../../components/icons'
 import { ChartSvg, ChartTable, type ChartProps } from './BarChart'
+import { labels } from '../production-orders/messages'
 
-// Items 28–29 (DD-003 module 13, DD-003-SPD §11, DEC-018). The native <dialog> + showModal() gives focus containment,
+// Items 28–29 (003_DD module 13, 003_DD-SPD §11, DEC-018). The native <dialog> + showModal() gives focus containment,
 // Escape and an inert page behind it. It renders the snapshot already in memory: no request.
 export function ChartDialog({ open, chart, onClose }: { open: boolean; chart: ChartProps; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null)
@@ -44,7 +45,7 @@ export function ChartDialog({ open, chart, onClose }: { open: boolean; chart: Ch
               className="inline-flex items-center gap-1.5 rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <RestoreIcon {...iconProps} />
-              Restore
+              {labels.dashboard.restore}
             </button>
           </div>
           <div className="grid content-start gap-4 overflow-auto p-4 lg:grid-cols-[2fr_1fr]">

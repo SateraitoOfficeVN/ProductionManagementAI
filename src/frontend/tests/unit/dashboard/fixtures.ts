@@ -9,7 +9,7 @@ const order = (n: number, dueDate: string, status: DashboardOrder['status'] = 'I
   status,
 })
 
-/** Shaped like DB-004's run-day figures (DD-003-API example), reduced to what the tests assert. */
+/** Shaped like 003_DB's run-day figures (003_DD-API example), reduced to what the tests assert. */
 export function snapshot(overrides: Partial<DashboardSnapshot> = {}): DashboardSnapshot {
   return {
     asOf: '2026-09-22T05:05:12Z',
@@ -33,8 +33,8 @@ export function snapshot(overrides: Partial<DashboardSnapshot> = {}): DashboardS
       { kind: 'later', weekStart: null, weekEnd: null, orderCount: 6, quantity: 2250 },
     ],
     topProducts: [
-      { product: { id: 'p29', sku: 'P-1029', name: 'Hinge set' }, openQuantity: 5430, activeOrderCount: 3 },
-      { product: { id: 'p15', sku: 'P-1015', name: 'Cable harness A' }, openQuantity: 5408, activeOrderCount: 1 },
+      { product: { id: 'p29', sku: 'P-1029', name: 'ドアヒンジ' }, openQuantity: 5430, activeOrderCount: 3 },
+      { product: { id: 'p15', sku: 'P-1015', name: 'エンジンワイヤーハーネス' }, openQuantity: 5408, activeOrderCount: 1 },
     ],
     completedThisWeek: { orderCount: 3, quantity: 3097, from: '2026-09-21' },
     completedThisMonth: { orderCount: 24, quantity: 17922, from: '2026-09-01' },

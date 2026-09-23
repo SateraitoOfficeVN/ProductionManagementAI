@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProductionManagementAI.Infrastructure.Migrations
 {
     /// <summary>
-    /// Completion tracking (DB-004 migration 1, WI-004 DEC-003/DEC-004): the column, the backfill of orders already
+    /// Completion tracking (003_DB migration 1, WI-004 DEC-003/DEC-004): the column, the backfill of orders already
     /// completed, then the two checks — in one transaction, so a failing check rolls the backfill back too.
     /// The backend that sets completed_at_utc must be running before anyone completes an order on the migrated
-    /// schema (DB-004 "Deploy order").
+    /// schema (003_DB "Deploy order").
     /// </summary>
     public partial class AddProductionOrderCompletionTracking : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // DB-004 migration 1. Expand step: a nullable column with no default is a catalog-only change.
+            // 003_DB migration 1. Expand step: a nullable column with no default is a catalog-only change.
             migrationBuilder.AddColumn<DateTimeOffset>(
                 name: "completed_at_utc",
                 table: "production_orders",
@@ -43,7 +43,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // Recovery limit (DB-004): every completion time recorded after this migration is lost.
+            // Recovery limit (003_DB): every completion time recorded after this migration is lost.
             migrationBuilder.DropCheckConstraint(
                 name: "ck_production_orders_completed_at_matches_status",
                 table: "production_orders");

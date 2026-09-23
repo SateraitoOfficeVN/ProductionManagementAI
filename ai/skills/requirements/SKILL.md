@@ -27,7 +27,7 @@ None. Markdown authoring only.
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-Work item brief and requirements under `docs/en/000_requirements/`, and `work-items/<WI-###>/brief.md`, starting from the [template](../../templates/brief.md). Requirements use stable `REQ-###` IDs; use cases use `UC-###` IDs. Once assigned, an ID is never reused or renumbered — a dropped requirement is marked out of scope, not deleted.
+Work item brief and requirements under `docs/en/000_requirements/`, and `work-items/<WI-###>/brief.md`, starting from the [template](../../templates/brief.md). Requirements use stable `REQ-###` IDs; use cases use `UC-###` IDs. Once assigned, an ID is never reused or renumbered — a dropped requirement is marked out of scope, not deleted. Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
 
 ## 6. Checklist and repeatable verification method
 

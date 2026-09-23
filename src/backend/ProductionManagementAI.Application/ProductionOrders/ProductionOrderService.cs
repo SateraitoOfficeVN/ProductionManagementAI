@@ -7,7 +7,7 @@ using Msg = ProductionManagementAI.Domain.ProductionOrders.ProductionOrderMessag
 namespace ProductionManagementAI.Application.ProductionOrders;
 
 /// <summary>
-/// Production-order use cases (DD-001-FN). Checks run in a fixed order so each failure has exactly one outcome:
+/// Production-order use cases (001_DD-FN). Checks run in a fixed order so each failure has exactly one outcome:
 /// shape (400) → existence (404) → version (409) → Domain rules (422) → data-dependent checks (400) → save race (409).
 /// </summary>
 public sealed partial class ProductionOrderService(
@@ -29,7 +29,7 @@ public sealed partial class ProductionOrderService(
     }
 
     /// <summary>
-    /// One counted page of production orders for an already-validated query (DD-002-FN §1). The count runs first, so a
+    /// One counted page of production orders for an already-validated query (002_DD-FN §1). The count runs first, so a
     /// page past the last one costs one query instead of two and the total is always available for the summary.
     /// </summary>
     public async Task<Result<PagedResult<ProductionOrderListItem>>> ListAsync(
@@ -266,7 +266,7 @@ public sealed partial class ProductionOrderService(
         return new Result<ProductionOrderResponse>.Conflict();
     }
 
-    /// <summary>Filter shape only — never the order-number fragment, which is user-supplied text (DD-002-FN).</summary>
+    /// <summary>Filter shape only — never the order-number fragment, which is user-supplied text (002_DD-FN).</summary>
     private static void SetQueryTags(Activity? activity, ProductionOrderListQuery query)
     {
         if (activity is null)

@@ -13,7 +13,7 @@ public static class ProductionOrderStatusExtensions
 {
     private static readonly IReadOnlyList<ProductionOrderStatus> None = [];
 
-    // Single source of the transition table (BD-001 M-02 / V-06); the API returns it as allowedNextStatuses
+    // Single source of the transition table (001_BD M-02 / V-06); the API returns it as allowedNextStatuses
     // so the frontend never duplicates it.
     private static readonly Dictionary<ProductionOrderStatus, IReadOnlyList<ProductionOrderStatus>> Next = new()
     {

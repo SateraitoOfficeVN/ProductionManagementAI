@@ -1,4 +1,4 @@
-// The only module that imports lucide-react (WI-004 DEC-023, BD-003 M-21). Icons are re-exported under role names,
+// The only module that imports lucide-react (WI-004 DEC-023, 003_BD M-21). Icons are re-exported under role names,
 // so changing a glyph is a one-line edit here. Every use is decorative: `aria-hidden` beside visible text, or inside a
 // control that has its own accessible name.
 export {

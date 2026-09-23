@@ -8,8 +8,8 @@ using ProductionManagementAI.Application.Dashboard;
 namespace ProductionManagementAI.Infrastructure.Dashboard;
 
 /// <summary>
-/// DB-004 Q1–Q6 — seven statements — in one <c>REPEATABLE READ READ ONLY</c> transaction, so every figure comes
-/// from one snapshot (WI-004 DEC-015). The SQL is DB-004's reviewed text. Commands run on the EF connection and
+/// 003_DB Q1–Q6 — seven statements — in one <c>REPEATABLE READ READ ONLY</c> transaction, so every figure comes
+/// from one snapshot (WI-004 DEC-015). The SQL is 003_DB's reviewed text. Commands run on the EF connection and
 /// transaction through ADO.NET with bound parameters (WI-004 DEC-024): nothing is concatenated into SQL.
 /// </summary>
 internal sealed class DashboardReader(AppDbContext db) : IDashboardReader

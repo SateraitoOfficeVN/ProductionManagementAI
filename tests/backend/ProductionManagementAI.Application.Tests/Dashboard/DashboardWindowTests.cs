@@ -2,7 +2,7 @@ using ProductionManagementAI.Application.Dashboard;
 
 namespace ProductionManagementAI.Application.Tests.Dashboard;
 
-/// <summary>BD-003 D-01–D-09 calendar rules (TC-205, TC-209, unit), for every weekday and at a month boundary.</summary>
+/// <summary>003_BD D-01–D-09 calendar rules (TC-205, TC-209, unit), for every weekday and at a month boundary.</summary>
 public class DashboardWindowTests
 {
     private static readonly TokyoClock Clock = new(TimeProvider.System);

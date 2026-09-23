@@ -26,7 +26,7 @@ Demonstrate the full AI development lifecycle (requirements → BD → DB → DD
 
 ## Assumptions
 
-- Users reach this screen already authenticated via WI-001's cookie login (`docs/en/architecture/0002-auth-rbac-foundation.md`).
+- Users reach this screen already authenticated via WI-001's cookie login (`docs/en/architecture/0002/0002_ADR_auth-rbac-foundation.md`).
 - `Admin` and `Operator` are the only roles in the system for now (WI-001 DEC-015 placeholder roles); DEC-001 confirms both may use this screen.
 - Products are a minimal reference table seeded with sample data; there is no product-catalog UI (DEC-005).
 - There is no list screen yet (Screen B, a later work item); until it exists, the edit screen is reached by its direct route.

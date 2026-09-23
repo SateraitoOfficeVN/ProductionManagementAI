@@ -9,7 +9,7 @@ public interface IPlantClock
 
     short CurrentYear { get; }
 
-    /// <summary>The configured IANA timezone ID; passed to PostgreSQL where SQL converts to plant dates (DD-003-FN §5).</summary>
+    /// <summary>The configured IANA timezone ID; passed to PostgreSQL where SQL converts to plant dates (003_DD-FN §5).</summary>
     string TimeZoneId { get; }
 
     /// <summary>The plant-local date of an instant.</summary>
@@ -19,7 +19,7 @@ public interface IPlantClock
     DateTimeOffset StartOfDayUtc(DateOnly date);
 }
 
-/// <summary>Issues the next per-year order sequence inside the caller's transaction (DB-002, DEC-013).</summary>
+/// <summary>Issues the next per-year order sequence inside the caller's transaction (001_DB, DEC-013).</summary>
 public interface IOrderNumberIssuer
 {
     Task<int> NextAsync(short year, CancellationToken cancellationToken);
@@ -38,10 +38,10 @@ public interface IProductionOrderRepository
 
     Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken);
 
-    /// <summary>Exact number of orders matching the query's filters, ignoring sort and paging (DD-002-FN §2).</summary>
+    /// <summary>Exact number of orders matching the query's filters, ignoring sort and paging (002_DD-FN §2).</summary>
     Task<int> CountOrdersAsync(ProductionOrderListQuery query, CancellationToken cancellationToken);
 
-    /// <summary>One ordered, projected page of orders (DD-002-FN §3).</summary>
+    /// <summary>One ordered, projected page of orders (002_DD-FN §3).</summary>
     Task<IReadOnlyList<ProductionOrderListRow>> ListOrdersAsync(
         ProductionOrderListQuery query, CancellationToken cancellationToken);
 

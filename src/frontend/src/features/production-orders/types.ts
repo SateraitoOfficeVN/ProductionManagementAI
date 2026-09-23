@@ -1,4 +1,4 @@
-// Matches DD-001-API (ProductionOrderResponse / ProductResponse) and DD-002-API (the list contract).
+// Matches 001_DD-API (ProductionOrderResponse / ProductResponse) and 002_DD-API (the list contract).
 
 export type ProductionOrderStatus = 'Draft' | 'InProgress' | 'Completed' | 'Cancelled'
 
@@ -35,7 +35,7 @@ export interface UpdateProductionOrderRequest extends CreateProductionOrderReque
   version: number
 }
 
-// ---- Screen B: DD-002-API. The list row is deliberately narrower than ProductionOrder: no notes, no version,
+// ---- Screen B: 002_DD-API. The list row is deliberately narrower than ProductionOrder: no notes, no version,
 // no allowedNextStatuses — the list neither shows nor writes them.
 
 export interface ProductionOrderListItem {
@@ -66,7 +66,7 @@ export type SortDirection = 'asc' | 'desc'
 export const pageSizes = [10, 20, 50, 100] as const
 export type PageSize = (typeof pageSizes)[number]
 
-/** The whole view state of SCR-002, and exactly what the URL carries (BD-002 0-3, REQ-027). */
+/** The whole view state of SCR-002, and exactly what the URL carries (002_BD 0-3, REQ-027). */
 export interface ListViewState {
   statuses: ProductionOrderStatus[]
   productId: string | null

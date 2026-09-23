@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ProductionManagementAI.Infrastructure.Identity;
 
 /// <summary>
-/// Development-only seed data (ADR-0002): placeholder Admin/Operator roles and one seed admin user.
+/// Development-only seed data (0002_ADR): placeholder Admin/Operator roles and one seed admin user.
 /// Never call this outside Development — the password comes from an env var with no hardcoded fallback,
 /// and callers must not log or persist it anywhere (including evidence.md).
 /// </summary>

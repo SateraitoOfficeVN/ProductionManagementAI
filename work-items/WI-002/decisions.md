@@ -28,13 +28,13 @@ WI-002 restarted on 2026-09-18 against the rewritten BD/DD templates. DEC-001–
 | DEC-021 | 2026-09-18 | Client-side "today" for the due-date check | Claude (technical) | decided | Browser-local date for early feedback; server's plant date is authoritative |
 | DEC-022 | 2026-09-18 | Product picker for 30 products | Claude (UI) | decided | Native `<select>` ordered by SKU; no searchable combobox yet |
 | DEC-023 | 2026-09-18 | API error contract | Claude (technical) | decided | RFC 9457; 400 validation / 404 / 409 stale / 422 rule violation; `code` = message ID |
-| DEC-024 | 2026-09-18 | Quantity upper bound | Claude (technical) | decided | 999,999,999 (9 digits, BD-001 width), MSG-E010 |
+| DEC-024 | 2026-09-18 | Quantity upper bound | Claude (technical) | decided | 999,999,999 (9 digits, 001_BD width), MSG-E010 |
 | DEC-025 | 2026-09-18 | E2E test tool | user | decided | Playwright (`@playwright/test`), in `tests/e2e`, against the Compose stack |
 | DEC-026 | 2026-09-18 | Automated accessibility checks | user | decided | `vitest-axe` in component tests + `@axe-core/playwright` in E2E |
 | DEC-027 | 2026-09-18 | Git operations authorized for implementation | user | decided | Branch, worktree, local commits, push, open PR; merge not authorized |
 | DEC-028 | 2026-09-18 | Where the harness changes go | user | decided | Their own branch/PR, `feature/harness-wi002-feedback` (RFC 0001 + RFC 0002, one commit each) |
 | DEC-030 | 2026-09-18 | Merge PR #2 and PR #3 | user | decided | The user squash-merged both into `master` although CI couldn't run (GitHub billing lock) |
-| DEC-029 | 2026-09-18 | Index on `production_orders.product_id` | Claude (technical, during implementation) | decided | Keep it: EF Core's FK convention always creates it; DB-002 updated |
+| DEC-029 | 2026-09-18 | Index on `production_orders.product_id` | Claude (technical, during implementation) | decided | Keep it: EF Core's FK convention always creates it; 001_DB updated |
 | DEC-020 | 2026-09-18 | CSRF protection for order endpoints | Claude (technical security) | decided | No extra anti-forgery token: `SameSite=Lax` cookie + no CORS policy + JSON-only request bodies |
 
 ## DEC-001: Who may create/edit a production order
@@ -62,7 +62,7 @@ WI-001 seeded placeholder `Admin`/`Operator` roles, and WI-001 DEC-015 requires 
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-012, BD-001 0-1 / actions | Role restriction = Admin, Operator (resolves WI-001 DEC-015 for Screen A only) |
+| brief.md REQ-012, 001_BD 0-1 / actions | Role restriction = Admin, Operator (resolves WI-001 DEC-015 for Screen A only) |
 
 ## DEC-002: Core form fields
 
@@ -89,7 +89,7 @@ The screen's fields were not defined in the project description (§14 leaves the
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md, BD-001 §3 screen items, DB design | Field list as above plus created/updated timestamps |
+| brief.md, 001_BD §3 screen items, DB design | Field list as above plus created/updated timestamps |
 
 ## DEC-003: Status workflow
 
@@ -116,7 +116,7 @@ Edit mode needs a defined lifecycle.
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-017, BD-001 status transition | State machine as above |
+| brief.md REQ-017, 001_BD status transition | State machine as above |
 
 ## DEC-004: Edit behavior once an order is not Draft
 
@@ -143,7 +143,7 @@ Changing what is being produced after production starts is a business risk.
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-018, BD-001 §3/§5/§6 | Per-status editability |
+| brief.md REQ-018, 001_BD §3/§5/§6 | Per-status editability |
 
 ## DEC-005: How "product" is represented
 
@@ -170,7 +170,7 @@ The earlier product-catalog screen was dropped from the roadmap (WI-001 DEC-010)
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 data overview, DB design | Product entity + seed data; product lookup API for the dropdown |
+| 001_BD data overview, DB design | Product entity + seed data; product lookup API for the dropdown |
 
 ## DEC-006: Validation rules
 
@@ -197,7 +197,7 @@ Acceptance criteria need exact rules.
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-010, REQ-013–REQ-016; BD-001 §5 | Validation table. Order-number format/generation mechanism is a database-design decision. |
+| brief.md REQ-010, REQ-013–REQ-016; 001_BD §5 | Validation table. Order-number format/generation mechanism is a database-design decision. |
 
 ## DEC-007: Locked-field change submitted alongside other valid changes
 
@@ -224,7 +224,7 @@ The UI makes locked fields read-only, but the API can still receive a changed pr
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-018, BD-001 exception flows | Whole-request rejection |
+| brief.md REQ-018, 001_BD exception flows | Whole-request rejection |
 
 ## DEC-008: Status-transition UI control
 
@@ -251,7 +251,7 @@ How the user picks a new status in edit mode.
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 §3/§4/§6 | Status select options depend on current status; disabled for terminal statuses |
+| 001_BD §3/§4/§6 | Status select options depend on current status; disabled for terminal statuses |
 
 ## DEC-009: Due-date rule for an existing order already past its due date
 
@@ -259,7 +259,7 @@ How the user picks a new status in edit mode.
 
 ### Context
 
-REQ-014 says due date must be today or later. Applied literally on every save, an order whose due date has passed (e.g. an overdue `InProgress` order) could not be saved at all — including to mark it `Completed` — unless the user also moves the due date forward. This changes business behavior, so it needs the user's answer (`ai/policies.md` pause conditions). BD-001 revision 1 was drafted with the proposal as an open item; revision 2 records the decision.
+REQ-014 says due date must be today or later. Applied literally on every save, an order whose due date has passed (e.g. an overdue `InProgress` order) could not be saved at all — including to mark it `Completed` — unless the user also moves the due date forward. This changes business behavior, so it needs the user's answer (`ai/policies.md` pause conditions). 001_BD revision 1 was drafted with the proposal as an open item; revision 2 records the decision.
 
 ### Options considered
 
@@ -279,7 +279,7 @@ REQ-014 says due date must be today or later. Applied literally on every save, a
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-014, BD-001 §5 validation V-04 | Finalize the check condition once decided |
+| brief.md REQ-014, 001_BD §5 validation V-04 | Finalize the check condition once decided |
 
 ## DEC-010: Concurrent edits of the same order
 
@@ -287,7 +287,7 @@ REQ-014 says due date must be today or later. Applied literally on every save, a
 
 ### Context
 
-Two users can open the same order at once. BD-001 revision 1 left open what happens when the second one saves.
+Two users can open the same order at once. 001_BD revision 1 left open what happens when the second one saves.
 
 ### Options considered
 
@@ -306,7 +306,7 @@ Two users can open the same order at once. BD-001 revision 1 left open what happ
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-011, BD-001 exception flows / V-08 | Stale-save rejection; DD-001 and DB-002 choose the mechanism |
+| brief.md REQ-011, 001_BD exception flows / V-08 | Stale-save rejection; 001_DD and 001_DB choose the mechanism |
 
 ## DEC-011: Timezone that defines "today"
 
@@ -333,7 +333,7 @@ Both the due-date rule (REQ-014, DEC-009) and the order-number year (DEC-012) de
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 V-04, DD-001 configuration, DB-002 | Plant timezone configuration value; "today" and the order-number year computed in it |
+| 001_BD V-04, 001_DD configuration, 001_DB | Plant timezone configuration value; "today" and the order-number year computed in it |
 
 ## DEC-012: Order number format
 
@@ -355,13 +355,13 @@ DEC-006 made the order number system-generated and unique but did not fix its fo
 
 - **Decision:** `PO-YYYY-NNNNN` — "PO-", the 4-digit year the order was created (plant timezone, DEC-011), "-", then a 5-digit zero-padded sequence that restarts at 00001 each year (e.g. `PO-2026-00001`).
 - **Decided by:** user, 2026-09-18.
-- **Rationale:** user preference. The generation mechanism, and what happens if a year exceeds 99,999 orders, are DB-002 technical decisions.
+- **Rationale:** user preference. The generation mechanism, and what happens if a year exceeds 99,999 orders, are 001_DB technical decisions.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 layout / §3 item 6, DB-002 | Format and per-year sequence generation |
+| 001_BD layout / §3 item 6, 001_DB | Format and per-year sequence generation |
 
 ## DEC-013: Per-year order-number generation and overflow
 
@@ -369,7 +369,7 @@ DEC-006 made the order number system-generated and unique but did not fix its fo
 
 ### Context
 
-DEC-012 needs a sequence that restarts every year and stays unique when several users create orders at once. These are technical choices that don't change business behavior, so they were decided during database design (DB-002) rather than asked.
+DEC-012 needs a sequence that restarts every year and stays unique when several users create orders at once. These are technical choices that don't change business behavior, so they were decided during database design (001_DB) rather than asked.
 
 ### Options considered
 
@@ -391,8 +391,8 @@ For overflow past 99,999 orders in one year: reject the create (CHECK constraint
 
 | Artifact | Change required |
 | --- | --- |
-| DB-002 | Counter table, constraints, issuance SQL |
-| DD-001 | Create processing flow calls the counter upsert in the same transaction |
+| 001_DB | Counter table, constraints, issuance SQL |
+| 001_DD | Create processing flow calls the counter upsert in the same transaction |
 
 ## DEC-014: Optimistic-concurrency token
 
@@ -419,7 +419,7 @@ DEC-010 requires rejecting stale saves.
 
 | Artifact | Change required |
 | --- | --- |
-| DB-002, DD-001 API contract | `version` field in responses and update requests; mismatch → V-08 |
+| 001_DB, 001_DD API contract | `version` field in responses and update requests; mismatch → V-08 |
 
 ## DEC-015: Status storage
 
@@ -447,7 +447,7 @@ REQ-017 has four status values.
 
 | Artifact | Change required |
 | --- | --- |
-| DB-002 | `ck_production_orders_status` |
+| 001_DB | `ck_production_orders_status` |
 
 ## DEC-016: Separate migration-owner and runtime DB roles
 
@@ -455,7 +455,7 @@ REQ-017 has four status values.
 
 ### Context
 
-`ai/rules/database.md` asks for least privilege. Today the app and the migrations both connect as the Compose `POSTGRES_USER`, which owns the database. DB-002 lists the minimum runtime privileges Screen A needs.
+`ai/rules/database.md` asks for least privilege. Today the app and the migrations both connect as the Compose `POSTGRES_USER`, which owns the database. 001_DB lists the minimum runtime privileges Screen A needs.
 
 ### Options considered
 
@@ -466,7 +466,7 @@ REQ-017 has four status values.
 
 ### Decision and rationale
 
-- **Decision:** split now. The existing owner login (`POSTGRES_USER`) is used only to run migrations. The backend connects at runtime with a new restricted login that has only the privileges listed in DB-002 (plus what ASP.NET Core Identity and the startup seeder need). This applies to the local Compose environment too.
+- **Decision:** split now. The existing owner login (`POSTGRES_USER`) is used only to run migrations. The backend connects at runtime with a new restricted login that has only the privileges listed in 001_DB (plus what ASP.NET Core Identity and the startup seeder need). This applies to the local Compose environment too.
 - **Decided by:** user, 2026-09-18 (chose "Split now" over the recommended "split before non-local deployment").
 - **Rationale:** meet `ai/rules/database.md` least privilege from the first business table on, rather than retrofitting it later.
 
@@ -474,9 +474,9 @@ REQ-017 has four status values.
 
 | Artifact | Change required |
 | --- | --- |
-| DB-002 | Runtime login and grant list |
+| 001_DB | Runtime login and grant list |
 | Plan revision 2 (implementation) | Must include: creating the runtime login and grants (SQL script run as the owner), a second connection string in `deploy/compose.yaml`/`.env.example`, and updating the `dotnet ef database update` command in `ai/project.md` to use the owner login. Changes WI-001's deploy config, so the revision needs review |
-| DB-001 | Identity-table grants for the runtime login |
+| 000_DB | Identity-table grants for the runtime login |
 
 ## DEC-017: Which plant timezone
 
@@ -504,7 +504,7 @@ DEC-011 made one configured plant timezone the source of "today" (REQ-014) and o
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 V-04, DB-002, DD-001 configuration | "Today" and the order year are computed in `Asia/Tokyo` |
+| 001_BD V-04, 001_DB, 001_DD configuration | "Today" and the order year are computed in `Asia/Tokyo` |
 
 ## DEC-018: Cancel with unsaved changes
 
@@ -512,7 +512,7 @@ DEC-011 made one configured plant timezone the source of "today" (REQ-014) and o
 
 ### Context
 
-BD-001 revision 2 had Cancel leave immediately. That was a Claude assumption, not a recorded decision.
+001_BD revision 2 had Cancel leave immediately. That was a Claude assumption, not a recorded decision.
 
 ### Options considered
 
@@ -531,7 +531,7 @@ BD-001 revision 2 had Cancel leave immediately. That was a Claude assumption, no
 
 | Artifact | Change required |
 | --- | --- |
-| brief.md REQ-019, BD-001 §3/§6 | New requirement; confirmation dialog items and event |
+| brief.md REQ-019, 001_BD §3/§6 | New requirement; confirmation dialog items and event |
 
 ## DEC-019: Demo product seed data
 
@@ -539,7 +539,7 @@ BD-001 revision 2 had Cancel leave immediately. That was a Claude assumption, no
 
 ### Context
 
-DB-002 revision 1 seeded 5 placeholder products.
+001_DB revision 1 seeded 5 placeholder products.
 
 ### Options considered
 
@@ -551,7 +551,7 @@ DB-002 revision 1 seeded 5 placeholder products.
 
 ### Decision and rationale
 
-- **Decision:** seed 30 sample products (listed in DB-002).
+- **Decision:** seed 30 sample products (listed in 001_DB).
 - **Decided by:** user, 2026-09-18 ("let do 30 sample so we could get a sense of the screen work load").
 - **Rationale:** gives a realistic sense of the product dropdown's load and usability in the demo.
 
@@ -559,8 +559,8 @@ DB-002 revision 1 seeded 5 placeholder products.
 
 | Artifact | Change required |
 | --- | --- |
-| DB-002 seed data | 30 rows |
-| DD-001 | Product dropdown usability with 30 entries (e.g. ordering, and whether it needs to be searchable) |
+| 001_DB seed data | 30 rows |
+| 001_DD | Product dropdown usability with 30 entries (e.g. ordering, and whether it needs to be searchable) |
 
 ## DEC-020: CSRF protection for order endpoints
 
@@ -568,7 +568,7 @@ DB-002 revision 1 seeded 5 placeholder products.
 
 ### Context
 
-ADR-0002 left open whether cookie-authenticated state-changing endpoints need an anti-forgery token on top of `SameSite`. The first WI-002 pass concluded "no", but that record was reset and had to be reaffirmed. The current code sets the auth cookie `HttpOnly` and `SameSite=Lax` (`DependencyInjection.cs`) and registers no CORS policy.
+0002_ADR left open whether cookie-authenticated state-changing endpoints need an anti-forgery token on top of `SameSite`. The first WI-002 pass concluded "no", but that record was reset and had to be reaffirmed. The current code sets the auth cookie `HttpOnly` and `SameSite=Lax` (`DependencyInjection.cs`) and registers no CORS policy.
 
 ### Options considered
 
@@ -580,16 +580,16 @@ ADR-0002 left open whether cookie-authenticated state-changing endpoints need an
 ### Decision and rationale
 
 - **Decision:** no additional anti-forgery token. Mutating endpoints (`POST`/`PUT`) accept only `Content-Type: application/json` (anything else → 415). No CORS policy is registered, and state-changing GET endpoints are not allowed.
-- **Decided by:** Claude (technical security decision; ADR-0002 delegated it to detailed design). The user can revisit it.
+- **Decided by:** Claude (technical security decision; 0002_ADR delegated it to detailed design). The user can revisit it.
 - **Rationale:** sufficient for a single-origin app on one host. Revisit if the app is ever served next to other same-site origins, or if a CORS policy is added.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 non-functional requirements, open questions | Marked decided |
-| DD-001 API contract | JSON-only bodies, 415 on other content types |
-| ADR-0002, DB-001 | Replace the "reaffirm or revisit" note with a reference to this decision |
+| 001_BD non-functional requirements, open questions | Marked decided |
+| 001_DD API contract | JSON-only bodies, 415 on other content types |
+| 0002_ADR, 000_DB | Replace the "reaffirm or revisit" note with a reference to this decision |
 
 ## DEC-021: Client-side "today" for the due-date check
 
@@ -617,7 +617,7 @@ ADR-0002 left open whether cookie-authenticated state-changing endpoints need an
 
 | Artifact | Change required |
 | --- | --- |
-| DD-001 item (10), `validation.ts` | As described |
+| 001_DD item (10), `validation.ts` | As described |
 
 ## DEC-022: Product picker for 30 products
 
@@ -644,7 +644,7 @@ DEC-019 seeds 30 products "to get a sense of the screen work load". No UI compon
 
 | Artifact | Change required |
 | --- | --- |
-| DD-001 item (8) | Native select |
+| 001_DD item (8) | Native select |
 
 ## DEC-023: API error contract
 
@@ -652,7 +652,7 @@ DEC-019 seeds 30 products "to get a sense of the screen work load". No UI compon
 
 ### Context
 
-`ai/rules/backend.md` requires RFC 9457 Problem Details. BD-001 defines message IDs.
+`ai/rules/backend.md` requires RFC 9457 Problem Details. 001_BD defines message IDs.
 
 ### Options considered
 
@@ -663,7 +663,7 @@ DEC-019 seeds 30 products "to get a sense of the screen work load". No UI compon
 
 ### Decision and rationale
 
-- **Decision:** first option (details in DD-001-API).
+- **Decision:** first option (details in 001_DD-API).
 - **Decided by:** Claude (technical, during detailed design).
 - **Rationale:** distinct UI behavior per failure (inline, banner, banner + Reload).
 
@@ -671,7 +671,7 @@ DEC-019 seeds 30 products "to get a sense of the screen work load". No UI compon
 
 | Artifact | Change required |
 | --- | --- |
-| DD-001, DD-001-API | Error tables |
+| 001_DD, 001_DD-API | Error tables |
 
 ## DEC-024: Quantity upper bound
 
@@ -679,7 +679,7 @@ DEC-019 seeds 30 products "to get a sense of the screen work load". No UI compon
 
 ### Context
 
-BD-001 gives quantity a 9-digit width but no explicit maximum. The column is `integer`.
+001_BD gives quantity a 9-digit width but no explicit maximum. The column is `integer`.
 
 ### Options considered
 
@@ -698,7 +698,7 @@ BD-001 gives quantity a 9-digit width but no explicit maximum. The column is `in
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 V-02, DD-001 | Upper bound + MSG-E010 |
+| 001_BD V-02, 001_DD | Upper bound + MSG-E010 |
 
 ## DEC-025: E2E test tool
 
@@ -706,7 +706,7 @@ BD-001 gives quantity a 9-digit width but no explicit maximum. The column is `in
 
 ### Context
 
-No E2E tool was selected; WI-001 deferred a Playwright smoke spec. `ai/rules/testing.md` forbids choosing a test framework silently. DD-001 lists E-level scenarios.
+No E2E tool was selected; WI-001 deferred a Playwright smoke spec. `ai/rules/testing.md` forbids choosing a test framework silently. 001_DD lists E-level scenarios.
 
 ### Options considered
 
@@ -714,7 +714,7 @@ No E2E tool was selected; WI-001 deferred a Playwright smoke spec. `ai/rules/tes
 | --- | --- | --- |
 | Playwright | Multi-context (stale-save test), axe integration, fast | New toolchain in `tests/e2e` |
 | Cypress | Popular | Single-tab model makes the two-user stale-save journey awkward |
-| No E2E | Nothing new | DD-001 E-level scenarios uncovered |
+| No E2E | Nothing new | 001_DD E-level scenarios uncovered |
 
 ### Decision and rationale
 
@@ -734,7 +734,7 @@ No E2E tool was selected; WI-001 deferred a Playwright smoke spec. `ai/rules/tes
 
 ### Context
 
-DD-001 requires an automated axe check (tool deferred to plan revision 2).
+001_DD requires an automated axe check (tool deferred to plan revision 2).
 
 ### Options considered
 
@@ -816,19 +816,19 @@ RFC 0001 (always produce all four DD documents) changed shared `ai/` files. It i
 
 ### Context
 
-DB-002 (approved) deliberately omitted an index on `production_orders.product_id`. During implementation (plan revision 2, step 6), EF Core's foreign-key index convention generated one anyway. Removing it in entity configuration, and then in a model-finalizing convention, didn't work: the convention re-creates a foreign-key index whenever one is removed. Disabling the convention globally would drop the existing Identity-table foreign-key indexes in the next migration.
+001_DB (approved) deliberately omitted an index on `production_orders.product_id`. During implementation (plan revision 2, step 6), EF Core's foreign-key index convention generated one anyway. Removing it in entity configuration, and then in a model-finalizing convention, didn't work: the convention re-creates a foreign-key index whenever one is removed. Disabling the convention globally would drop the existing Identity-table foreign-key indexes in the next migration.
 
 ### Options considered
 
 | Option | Pros | Cons |
 | --- | --- | --- |
-| Keep the index, update DB-002 | No framework fighting; supports the RESTRICT check and Screen B's likely product filter | Small write cost on insert/update |
-| Hand-edit the migration to drop the `CreateIndex` | Matches DB-002 | The model snapshot still contains the index, so every future migration diverges |
+| Keep the index, update 001_DB | No framework fighting; supports the RESTRICT check and Screen B's likely product filter | Small write cost on insert/update |
+| Hand-edit the migration to drop the `CreateIndex` | Matches 001_DB | The model snapshot still contains the index, so every future migration diverges |
 | Disable the FK-index convention globally | Full control | Drops the existing Identity FK indexes |
 
 ### Decision and rationale
 
-- **Decision:** keep `ix_production_orders_product_id`, declared explicitly, and update DB-002's index table.
+- **Decision:** keep `ix_production_orders_product_id`, declared explicitly, and update 001_DB's index table.
 - **Decided by:** Claude (technical; it doesn't change business behavior). The user can revisit it.
 - **Rationale:** negligible cost at this data size, and it avoids a model/migration drift.
 
@@ -836,7 +836,7 @@ DB-002 (approved) deliberately omitted an index on `production_orders.product_id
 
 | Artifact | Change required |
 | --- | --- |
-| DB-002 index definitions | Row added; "deliberately not added" note struck through |
+| 001_DB index definitions | Row added; "deliberately not added" note struck through |
 
 ## DEC-030: Merge PR #2 and PR #3
 

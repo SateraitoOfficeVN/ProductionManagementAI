@@ -11,7 +11,8 @@ import {
   StatusInProgressIcon,
   StatusTotalIcon,
 } from '../../components/icons'
-import { message, statusLabels } from '../production-orders/messages'
+import { formatDate } from '../../lib/format'
+import { labels, message, statusLabels } from '../production-orders/messages'
 import { formatLeadTime, formatNumber, formatOrders, formatRate, formatUnits } from './dashboardFormat'
 import type { DashboardSnapshot } from './types'
 
@@ -39,11 +40,11 @@ function Tile({ Icon, label, window, value, caption, total }: {
   )
 }
 
-/** Items 7–11 (BD-003 M-11). */
+/** Items 7–11 (003_BD M-11). */
 export function StatusTiles({ counts }: { counts: DashboardSnapshot['statusCounts'] }) {
   return (
-    <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-5" aria-label="Orders by status">
-      <Tile Icon={StatusTotalIcon} label="Total" value={formatNumber(counts.total)} total />
+    <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-5" aria-label={labels.dashboard.byStatus}>
+      <Tile Icon={StatusTotalIcon} label={labels.dashboard.total} value={formatNumber(counts.total)} total />
       <Tile Icon={StatusDraftIcon} label={statusLabels.Draft} value={formatNumber(counts.draft)} />
       <Tile Icon={StatusInProgressIcon} label={statusLabels.InProgress} value={formatNumber(counts.inProgress)} />
       <Tile Icon={StatusCompletedIcon} label={statusLabels.Completed} value={formatNumber(counts.completed)} />
@@ -52,22 +53,22 @@ export function StatusTiles({ counts }: { counts: DashboardSnapshot['statusCount
   )
 }
 
-/** Items 12–15 (BD-003 D-05–D-07, D-09, M-13, M-14, M-18). */
+/** Items 12–15 (003_BD D-05–D-07, D-09, M-13, M-14, M-18). */
 export function DeliveryTiles({ snapshot }: { snapshot: DashboardSnapshot }) {
   const { completedThisWeek: week, completedThisMonth: month, onTime, leadTime } = snapshot
   const none = message('MSG-I008')
   return (
-    <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-4" aria-label="Delivery">
-      <Tile Icon={CompletedWeekIcon} label="Completed this week" window={`since Mon ${week.from}`}
+    <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-4" aria-label={labels.dashboard.delivery}>
+      <Tile Icon={CompletedWeekIcon} label={labels.dashboard.completedThisWeek} window={labels.dashboard.sinceMonday(formatDate(week.from))}
         value={formatOrders(week.orderCount)} caption={formatUnits(week.quantity)} />
-      <Tile Icon={CompletedMonthIcon} label="Completed this month" window={`since ${month.from}`}
+      <Tile Icon={CompletedMonthIcon} label={labels.dashboard.completedThisMonth} window={labels.dashboard.since(formatDate(month.from))}
         value={formatOrders(month.orderCount)} caption={formatUnits(month.quantity)} />
-      <Tile Icon={OnTimeIcon} label="On time" window="last 30 days"
+      <Tile Icon={OnTimeIcon} label={labels.dashboard.onTime} window={labels.dashboard.last30Days}
         value={formatRate(onTime.onTimeCount, onTime.completedCount)}
-        caption={onTime.completedCount === 0 ? none : `${onTime.onTimeCount} of ${onTime.completedCount} on time`} />
-      <Tile Icon={LeadTimeIcon} label="Average lead time" window="last 30 days"
+        caption={onTime.completedCount === 0 ? none : labels.dashboard.onTimeCaption(onTime.onTimeCount, onTime.completedCount)} />
+      <Tile Icon={LeadTimeIcon} label={labels.dashboard.leadTime} window={labels.dashboard.last30Days}
         value={formatLeadTime(leadTime.averageDays)}
-        caption={leadTime.averageDays === null ? none : `based on ${formatOrders(leadTime.orderCount)}`} />
+        caption={leadTime.averageDays === null ? none : labels.dashboard.basedOn(formatOrders(leadTime.orderCount))} />
     </ul>
   )
 }

@@ -5,14 +5,14 @@ using static ProductionManagementAI.Application.ProductionOrders.ProductionOrder
 
 namespace ProductionManagementAI.Application.Dashboard;
 
-/// <summary>DB-004 Q1–Q6 in one read-only snapshot (DD-003-FN §3; WI-004 DEC-015).</summary>
+/// <summary>003_DB Q1–Q6 in one read-only snapshot (003_DD-FN §3; WI-004 DEC-015).</summary>
 public interface IDashboardReader
 {
     Task<DashboardRaw> ReadAsync(DashboardWindow window, CancellationToken cancellationToken);
 }
 
 /// <summary>
-/// The dashboard snapshot (DD-003-FN §1). The clock is read once: T, every window, <c>asOf</c> and <c>today</c> all
+/// The dashboard snapshot (003_DD-FN §1). The clock is read once: T, every window, <c>asOf</c> and <c>today</c> all
 /// derive from that single reading, so a dashboard computed across midnight cannot mix two "todays".
 /// </summary>
 public sealed partial class DashboardService(

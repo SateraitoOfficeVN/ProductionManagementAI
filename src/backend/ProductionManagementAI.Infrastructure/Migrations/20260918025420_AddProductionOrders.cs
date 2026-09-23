@@ -126,7 +126,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                 column: "sku",
                 unique: true);
 
-            // Least-privilege runtime login (DB-002 "Application database privileges", DEC-016). The role is created
+            // Least-privilege runtime login (001_DB "Application database privileges", DEC-016). The role is created
             // NOLOGIN here; its LOGIN PASSWORD is set outside the migration (deploy/db/init, test fixture) so no
             // secret lives in source. Migrations themselves run as the database owner.
             migrationBuilder.Sql("""

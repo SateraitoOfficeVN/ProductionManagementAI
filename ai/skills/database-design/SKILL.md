@@ -27,7 +27,7 @@ A PostgreSQL client and the project's chosen migration tool, once selected (open
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-Database design under `docs/en/database/`, starting from the [template](../../templates/database-design.md). Document ID `DB-###`. Table and column names follow the project's naming convention once fixed; until then, use `snake_case` physical names consistently within the document.
+Database design `###_DB_{slug}.md` in its number folder `docs/en/database/###/`, starting from the [template](../../templates/database-design.md). Document ID `###_DB`, using the same number as the BD and DD of the screen it serves (`000_DB` when it serves no screen), per the [documentation rules](../../rules/documentation.md). Table and column names follow the project's naming convention once fixed; until then, use `snake_case` physical names consistently within the document. Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
 
 ## 6. Checklist and repeatable verification method
 

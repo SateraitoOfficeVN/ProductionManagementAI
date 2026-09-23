@@ -18,7 +18,7 @@ Stand up the ProductionManagementAI application skeleton (Vite+React+TS+Tailwind
 - Local Docker Compose environment (Postgres 17 + backend + frontend), `.env.example`.
 - CI skeleton (`ci.yml`): build + lint + test only.
 - `ai/project.md` updated with resolved decisions, verified commands, and the locked Screen A→B→C roadmap.
-- ADR-0001 (backend layered structure), ADR-0002 (auth/RBAC foundation incl. brief threat review), DB-001 (Identity schema).
+- 0001_ADR (backend layered structure), 0002_ADR (auth/RBAC foundation incl. brief threat review), 000_DB (Identity schema).
 
 ### Out of scope
 
@@ -33,7 +33,7 @@ Stand up the ProductionManagementAI application skeleton (Vite+React+TS+Tailwind
 | `work-items/WI-001/brief.md` | 1 | None — brief authored alongside this plan |
 | `ai/project.md` | as of 2026-09-16 | Confirmed stack facts are correct; Open decisions resolved this session per `decisions.md` |
 | `docs/vi/000-mo-ta-harness-va-quy-trinh-phat-trien-ai.md` | v0.1, 2026-09-15 | Treated as a proposal/synthesis, not an approval — decisions re-confirmed directly with the user this session |
-| ADR-0001, ADR-0002, DB-001 | not yet written | Will be authored as steps 3–4 before dependent code is written |
+| 0001_ADR, 0002_ADR, 000_DB | not yet written | Will be authored as steps 3–4 before dependent code is written |
 
 ## Deliverables and milestones
 
@@ -43,8 +43,8 @@ Execution mode: the user runs the actual scaffold/build/git commands themselves 
 | --- | --- | --- | --- | --- | --- |
 | 1 | Preflight: confirm local `dotnet`, `node`/`npm`, `docker`/`docker compose` versions | none | implementation | recorded version output | `--version` output for each tool |
 | 2 | Draft `work-items/WI-001/{brief,plan,status,decisions}.md` | none | planning | this work item's docs | files present; approval fields filled |
-| 3 | ADR-0001 (layered structure), ADR-0002 (auth/RBAC incl. threat review) | 2 | architecture | `docs/en/architecture/0001-*.md`, `0002-*.md` | reviewed against `ai/checklists/security-review.md` |
-| 4 | DB-001 (Identity schema) | 3 | database-design | `docs/en/database/0001-identity-schema.md` | reviewed against `ai/checklists/design-consistency.md` |
+| 3 | 0001_ADR (layered structure), 0002_ADR (auth/RBAC incl. threat review) | 2 | architecture | `docs/en/architecture/0001_ADR_*.md`, `0002_ADR_*.md` | reviewed against `ai/checklists/security-review.md` |
+| 4 | 000_DB (Identity schema) | 3 | database-design | `docs/en/database/000/000_DB_identity-schema.md` | reviewed against `ai/checklists/design-consistency.md` |
 | 5 | Create worktree + branch `feature/WI-001-bootstrap-skeleton` | 4 | implementation | isolated worktree | `git worktree list`; clean status on correct branch |
 | 6 | Backend solution/projects scaffold | 5 | implementation | `src/backend/*` | `dotnet build` |
 | 7 | Frontend scaffold (Vite+React+TS+Tailwind+router) | 5 | implementation | `src/frontend/*` | `npm run build` |

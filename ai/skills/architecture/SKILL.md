@@ -27,7 +27,7 @@ None. Markdown authoring only; no build or runtime environment is required.
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-Decision record(s) under `docs/en/architecture/`, one file per decision, starting from the [template](../../templates/architecture-decision.md). Filename and ID follow the MADR convention: `NNNN-short-title.md` (four-digit sequence, e.g. `0001-...`), referenced elsewhere as `ADR-NNNN`.
+Decision record(s) under `docs/en/architecture/`, one file per decision in its own number folder `NNNN/`, starting from the [template](../../templates/architecture-decision.md). The four-digit sequence follows the MADR convention; the file is named `NNNN_ADR_short-title.md` (e.g. `0001_ADR_...`) and the record is referenced elsewhere as `NNNN_ADR`, per the [documentation rules](../../rules/documentation.md). Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
 
 ## 6. Checklist and repeatable verification method
 

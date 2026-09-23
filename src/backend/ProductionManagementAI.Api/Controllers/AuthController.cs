@@ -20,7 +20,7 @@ public class AuthController(SignInManager<AppUser> signInManager, UserManager<Ap
             return Unauthorized(new { message = "Invalid username or password." });
         }
 
-        // Generic failure message regardless of which check fails (ADR-0002 STRIDE: Information disclosure).
+        // Generic failure message regardless of which check fails (0002_ADR STRIDE: Information disclosure).
         var result = await signInManager.PasswordSignInAsync(user, request.Password, isPersistent: false, lockoutOnFailure: true);
         if (!result.Succeeded)
         {

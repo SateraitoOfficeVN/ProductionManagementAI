@@ -16,7 +16,7 @@ responds to that revision after it was shown.
 
 ## Motivation
 
-Observed on 2026-09-22, in WI-003 (Screen B). The user approved the DD-002 set with "the DD is approved, move on to
+Observed on 2026-09-22, in WI-003 (Screen B). The user approved the 002_DD set with "the DD is approved, move on to
 the implementation". In that same turn the agent drafted plan revision 2 (implementation, tests, PR), appended it to
 `plan.md`, and started implementing. The user never saw revision 2 before work under it began. The plan then recorded
 the design approval as the revision's approval source and its review status as "approved". Recorded in WI-003

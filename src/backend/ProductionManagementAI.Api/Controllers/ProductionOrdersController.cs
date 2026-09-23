@@ -5,7 +5,7 @@ using ProductionManagementAI.Application.ProductionOrders;
 
 namespace ProductionManagementAI.Api.Controllers;
 
-/// <summary>DD-001-API §2–§4. Business checks live in <see cref="ProductionOrderService"/> (DD-001-FN).</summary>
+/// <summary>001_DD-API §2–§4. Business checks live in <see cref="ProductionOrderService"/> (001_DD-FN).</summary>
 [ApiController]
 [Route("api/production-orders")]
 [Authorize(Policy = AuthorizationPolicies.ProductionOrderEditor)]
@@ -22,7 +22,7 @@ public class ProductionOrdersController(ProductionOrderService service) : Contro
     public async Task<ActionResult<ProductionOrderResponse>> Get(Guid id, CancellationToken cancellationToken) =>
         ProductionOrderProblems.ToActionResult(this, await service.GetAsync(id, cancellationToken), Ok);
 
-    /// <summary>DD-002-API §1. No request body, so no [Consumes]; the query string is validated into a typed query.</summary>
+    /// <summary>002_DD-API §1. No request body, so no [Consumes]; the query string is validated into a typed query.</summary>
     [HttpGet]
     public async Task<ActionResult<PagedResult<ProductionOrderListItem>>> List(
         [FromQuery] ProductionOrderListRequest request, CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ public class ProductionOrdersController(ProductionOrderService service) : Contro
         ProductionOrderProblems.ToActionResult(this, await service.UpdateAsync(id, request, cancellationToken), Ok);
 }
 
-/// <summary>DD-001-API §1.</summary>
+/// <summary>001_DD-API §1.</summary>
 [ApiController]
 [Route("api/products")]
 [Authorize(Policy = AuthorizationPolicies.ProductionOrderEditor)]

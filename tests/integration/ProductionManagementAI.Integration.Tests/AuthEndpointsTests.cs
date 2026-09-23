@@ -5,7 +5,7 @@ using ProductionManagementAI.Application.Auth;
 
 namespace ProductionManagementAI.Integration.Tests;
 
-// Covers ADR-0002's own confirmation criteria and plan.md step 20: migration + seeded roles/user
+// Covers 0002_ADR's own confirmation criteria and plan.md step 20: migration + seeded roles/user
 // (proven implicitly — these tests fail immediately if either is missing), login/me/logout via the
 // real HTTP pipeline, and the unauthenticated-401 boundary.
 public class AuthEndpointsTests(IntegrationTestFixture fixture) : IClassFixture<IntegrationTestFixture>

@@ -1,11 +1,12 @@
 import { useId, useRef, useState, type ComponentType } from 'react'
 import { ExpandIcon, iconProps, TableIcon } from '../../components/icons'
 import { ChartDialog } from './ChartDialog'
+import { labels } from '../production-orders/messages'
 
 export interface Bar {
   label: string
   value: number
-  /** Overdue and current-week bars: darker fill and bold label, never colour alone (BD-003 D-03). */
+  /** Overdue and current-week bars: darker fill and bold label, never colour alone (003_BD D-03). */
   emphasis?: boolean
 }
 
@@ -83,7 +84,7 @@ export function ChartTable({ title, columns, rows }: { title: string; columns: s
   )
 }
 
-/** Items 20–21 / 23–24 and Expand (27): card, "View as table" disclosure, maximized dialog (DD-003 modules 5, 13). */
+/** Items 20–21 / 23–24 and Expand (27): card, "View as table" disclosure, maximized dialog (003_DD modules 5, 13). */
 export function BarChart(props: ChartProps) {
   const { title, Icon, bars, summary, caption, tableColumns, tableRows, emptyMessage } = props
   const [showTable, setShowTable] = useState(false)
@@ -103,7 +104,7 @@ export function BarChart(props: ChartProps) {
         <button
           ref={expandButton}
           type="button"
-          aria-label={`Expand ${title}`}
+          aria-label={labels.dashboard.expand(title)}
           onClick={() => setMaximized(true)}
           className="grid h-7 w-7 place-items-center rounded border border-gray-300 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
@@ -111,7 +112,7 @@ export function BarChart(props: ChartProps) {
         </button>
       </div>
       {/* On SP the chart keeps a readable width and scrolls inside its own card, never the page. */}
-      <div className="relative overflow-x-auto" tabIndex={0} aria-label={`${title}, scrollable`}>
+      <div className="relative overflow-x-auto" tabIndex={0} aria-label={labels.dashboard.scrollable(title)}>
         <ChartSvg bars={bars} summary={summary} />
         {allZero && emptyMessage && (
           <p className="absolute inset-x-0 top-0 bottom-10 grid place-items-center text-sm text-gray-600">{emptyMessage}</p>
@@ -126,7 +127,7 @@ export function BarChart(props: ChartProps) {
         className="inline-flex items-center gap-1.5 justify-self-start rounded text-sm text-gray-900 underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         <TableIcon {...iconProps} />
-        {showTable ? 'Hide table' : 'View as table'}
+        {showTable ? labels.dashboard.hideTable : labels.dashboard.viewAsTable}
       </button>
       <div id={tableId} hidden={!showTable}>
         {showTable && <ChartTable title={title} columns={tableColumns} rows={tableRows} />}

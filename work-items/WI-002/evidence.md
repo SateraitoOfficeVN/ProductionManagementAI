@@ -6,31 +6,31 @@ As of branch `feature/WI-002-production-order-screen` (commits `5c40eaa`…HEAD,
 
 | Requirement ID | Requirement | Design artifact | Code / PR | Test case ID | Status |
 | --- | --- | --- | --- | --- | --- |
-| REQ-010 | Create order | BD-001 business flow, §3, §6 E-04/E-05; DB-002 counter table, transactions; DD-001 P-02; DD-001-API §2; DD-001-FN §3; DD-001-SPD §2 | `ProductionOrderService.CreateAsync`, `OrderNumberIssuer`, `ProductionOrdersController.Create`, `ProductionOrderForm` | TC-001, TC-002 | verified |
-| REQ-011 | Edit order | BD-001 business flow, 0-3, §5 V-08, §6 E-01/E-05; DB-002 `xmin` concurrency; DD-001 P-01/P-03; DD-001-API §3–4; DD-001-FN §2, §4; DD-001-SPD §1–3 | `ProductionOrderService.GetAsync/UpdateAsync`, `ProductionOrderPage`, `ProductionOrderForm` | TC-004, TC-005, TC-006 | verified |
-| REQ-012 | Admin/Operator only | BD-001 0-1, actions, exception flows; DD-001 module 6, P-01 step 1; DD-001-API common auth | `ProductionOrderEditor` policy, controllers, `ProductionOrderPage` role gate, `apiClient` 401 handler | TC-007, TC-008, TC-009, TC-027 | verified |
-| REQ-013 | Quantity positive integer | BD-001 §5 V-02; DB-002 `ck_production_orders_quantity_positive`; DD-001 item (9), MSG-E003/E010 | `ProductionOrder.ValidateQuantity`, `validation.ts`, `ck_production_orders_quantity_positive` | TC-010 | verified |
-| REQ-014 | Due date ≥ today | BD-001 §5 V-03, V-04 (DEC-009, DEC-011); DD-001 item (10), P-02/P-03, `IPlantClock` | `ProductionOrderService` due-date checks, `PlantClock`, `validation.ts validateDueDate` | TC-003, TC-011 | verified |
-| REQ-015 | Product exists | BD-001 §5 V-01; DB-002 `fk_production_orders_products_product_id`; DD-001 item (8); DD-001-API §2 fields | `ProductExistsAsync`, FK `RESTRICT`, product `<select>` | TC-009, TC-012 | verified |
-| REQ-016 | Notes ≤ 500 | BD-001 §5 V-05; DB-002 `notes varchar(500)`; DD-001 item (11) | `ProductionOrder.ValidateNotes/NormalizeNotes`, notes counter | TC-013 | verified |
-| REQ-017 | Status state machine | BD-001 status diagram, §4 M-02, §5 V-06; DB-002 `ck_production_orders_status`; DD-001 module 2, state transitions | `ProductionOrderStatusExtensions`, `ProductionOrder.Update`, status select | TC-014, TC-015, TC-016 | verified |
-| REQ-018 | Product/quantity lock | BD-001 §3, §5 V-07; DD-001 module 1 `Update`; DD-001-FN §4 step 7 | `ProductionOrder.Update` lock check, read-only fields | TC-017, TC-018 | verified |
-| REQ-019 | Confirm discard on Cancel | BD-001 §3 items 17–19, §6 E-07/E-09; DD-001 module 9, P-04; DD-001-SPD §4 | `DiscardChangesDialog`, `ProductionOrderForm.handleCancel` | TC-019, TC-020 | verified |
+| REQ-010 | Create order | 001_BD business flow, §3, §6 E-04/E-05; 001_DB counter table, transactions; 001_DD P-02; 001_DD-API §2; 001_DD-FN §3; 001_DD-SPD §2 | `ProductionOrderService.CreateAsync`, `OrderNumberIssuer`, `ProductionOrdersController.Create`, `ProductionOrderForm` | TC-001, TC-002 | verified |
+| REQ-011 | Edit order | 001_BD business flow, 0-3, §5 V-08, §6 E-01/E-05; 001_DB `xmin` concurrency; 001_DD P-01/P-03; 001_DD-API §3–4; 001_DD-FN §2, §4; 001_DD-SPD §1–3 | `ProductionOrderService.GetAsync/UpdateAsync`, `ProductionOrderPage`, `ProductionOrderForm` | TC-004, TC-005, TC-006 | verified |
+| REQ-012 | Admin/Operator only | 001_BD 0-1, actions, exception flows; 001_DD module 6, P-01 step 1; 001_DD-API common auth | `ProductionOrderEditor` policy, controllers, `ProductionOrderPage` role gate, `apiClient` 401 handler | TC-007, TC-008, TC-009, TC-027 | verified |
+| REQ-013 | Quantity positive integer | 001_BD §5 V-02; 001_DB `ck_production_orders_quantity_positive`; 001_DD item (9), MSG-E003/E010 | `ProductionOrder.ValidateQuantity`, `validation.ts`, `ck_production_orders_quantity_positive` | TC-010 | verified |
+| REQ-014 | Due date ≥ today | 001_BD §5 V-03, V-04 (DEC-009, DEC-011); 001_DD item (10), P-02/P-03, `IPlantClock` | `ProductionOrderService` due-date checks, `PlantClock`, `validation.ts validateDueDate` | TC-003, TC-011 | verified |
+| REQ-015 | Product exists | 001_BD §5 V-01; 001_DB `fk_production_orders_products_product_id`; 001_DD item (8); 001_DD-API §2 fields | `ProductExistsAsync`, FK `RESTRICT`, product `<select>` | TC-009, TC-012 | verified |
+| REQ-016 | Notes ≤ 500 | 001_BD §5 V-05; 001_DB `notes varchar(500)`; 001_DD item (11) | `ProductionOrder.ValidateNotes/NormalizeNotes`, notes counter | TC-013 | verified |
+| REQ-017 | Status state machine | 001_BD status diagram, §4 M-02, §5 V-06; 001_DB `ck_production_orders_status`; 001_DD module 2, state transitions | `ProductionOrderStatusExtensions`, `ProductionOrder.Update`, status select | TC-014, TC-015, TC-016 | verified |
+| REQ-018 | Product/quantity lock | 001_BD §3, §5 V-07; 001_DD module 1 `Update`; 001_DD-FN §4 step 7 | `ProductionOrder.Update` lock check, read-only fields | TC-017, TC-018 | verified |
+| REQ-019 | Confirm discard on Cancel | 001_BD §3 items 17–19, §6 E-07/E-09; 001_DD module 9, P-04; 001_DD-SPD §4 | `DiscardChangesDialog`, `ProductionOrderForm.handleCancel` | TC-019, TC-020 | verified |
 
 ## Test execution log
 
 | Date | Check | Command | Environment | Result (pass / fail / not run) | Report / log link |
 | --- | --- | --- | --- | --- | --- |
-| 2026-09-18 | design-consistency checklist (BD-001 scope) | manual review | local | pass for BD-level items; DD/DB/test items not yet applicable (see below) | this file |
-| 2026-09-18 | design-consistency checklist (DB-002 scope) | manual review | local | pass — every index justified, DB vs. application-only rules listed with reasons, migration impact stated; DEC-016 (role split) decided 2026-09-18 — runtime login and grant list added | this file |
-| 2026-09-18 | design-consistency checklist (DD-001 scope) | manual review | local | pass — see the checklist walk below; mockup published privately | this file |
-| 2026-09-18 | Design review | user review of the DD-001 set and mockup | — | pass — approved by the user ("the DD is reviewed and approved") | status.md |
+| 2026-09-18 | design-consistency checklist (001_BD scope) | manual review | local | pass for BD-level items; DD/DB/test items not yet applicable (see below) | this file |
+| 2026-09-18 | design-consistency checklist (001_DB scope) | manual review | local | pass — every index justified, DB vs. application-only rules listed with reasons, migration impact stated; DEC-016 (role split) decided 2026-09-18 — runtime login and grant list added | this file |
+| 2026-09-18 | design-consistency checklist (001_DD scope) | manual review | local | pass — see the checklist walk below; mockup published privately | this file |
+| 2026-09-18 | Design review | user review of the 001_DD set and mockup | — | pass — approved by the user ("the DD is reviewed and approved") | status.md |
 | 2026-09-18 | Unit / integration / E2E | — | — | not run — no code in scope for plan revision 1 | — |
 | 2026-09-18 | Backend unit (plan rev. 2) | `dotnet test src/backend/ProductionManagementAI.slnx` | local, .NET SDK 10.0.303 | pass — 49/49 (Application.Tests: 45 new + 4 existing) | final run 03:12Z |
 | 2026-09-18 | Backend integration | same command | local, Testcontainers `postgres:17`, Docker 29.7.2; app as `pmai_app` | pass — 38/38 (34 new + 4 existing auth tests, now under the restricted login) | final run 03:12Z |
 | 2026-09-18 | Frontend lint / type check / build | `npm run lint`; `npx tsc -b`; `npm run build` (src/frontend) | local, Node 24.21.0 | pass — 0 lint findings, 0 type errors, build OK | final run 03:12Z |
 | 2026-09-18 | Frontend unit (incl. vitest-axe) | `npm test` (src/frontend) | local, Vitest 5.0.1 + jsdom | pass — 38/38 (34 new + 4 existing) | final run 03:12Z |
-| 2026-09-18 | Migration SQL review | `dotnet ef migrations script InitialIdentitySchema AddProductionOrders` | local | pass — matches DB-002 (plus DEC-029 index); `xmin` not emitted as a column; grants as specified | reviewed in session |
+| 2026-09-18 | Migration SQL review | `dotnet ef migrations script InitialIdentitySchema AddProductionOrders` | local | pass — matches 001_DB (plus DEC-029 index); `xmin` not emitted as a column; grants as specified | reviewed in session |
 | 2026-09-18 | Compose smoke | `docker compose -f deploy/compose.yaml up -d --build` after `down`/volume wipe, owner migration | local Docker Desktop | pass — `/health` 200, frontend 200, `/api/products` unauthenticated 401 via Nginx; init script created `pmai_app`; seeder ran as `pmai_app`; 30 products seeded | session log |
 | 2026-09-18 | Runtime-login privilege check (Compose DB) | `psql -U pmai_app -c "DELETE FROM production_orders"` | local Compose | pass — `permission denied for table production_orders` | session log |
 | 2026-09-18 | E2E (Playwright + axe) | `npx playwright test` (tests/e2e) with `E2E_ADMIN_PASSWORD` from deploy/.env | local Compose stack, Chromium (desktop + Pixel 7) | pass — 8/8, first run and final run | final run 03:12Z |
@@ -38,23 +38,23 @@ As of branch `feature/WI-002-production-order-screen` (commits `5c40eaa`…HEAD,
 | 2026-09-18 | CI (GitHub Actions) on PR #2 (harness) | triggered by opening the PR | GitHub | not run — both jobs refused to start: "account is locked due to a billing issue" | https://github.com/thanhtn95/ProductionManagementAI/actions/runs/35300628038 |
 | 2026-09-18 | CI (GitHub Actions), first real execution | PR #5 (harness follow-up), run on `master` content incl. all WI-002 code | GitHub `ubuntu-latest`, after the repo moved to `SateraitoOfficeVN` | pass — backend (unit + Testcontainers integration), frontend (lint/build/test), e2e (Compose + Playwright 8/8 journeys) | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226 |
 
-Design-consistency walk for BD-001:
+Design-consistency walk for 001_BD:
 
 - Requirements have stable IDs and acceptance criteria — pass (brief.md has success and failure criteria for each REQ).
 - BD covers navigation, primary actions and exceptions — pass (screen transition, §6 events, exception flows).
-- DD agrees with BD; API/DB mappings agree — pass: DD-001 items (6)–(19) follow BD-001 §3–§6 (BD-001 revision 4 picked up the one DD refinement, the V-02 upper bound); DD-001-API fields match DB-002's API mapping, and `version`/`allowedNextStatuses`/`isProductQuantityEditable` were added as response-only fields.
+- DD agrees with BD; API/DB mappings agree — pass: 001_DD items (6)–(19) follow 001_BD §3–§6 (001_BD revision 4 picked up the one DD refinement, the V-02 upper bound); 001_DD-API fields match 001_DB's API mapping, and `version`/`allowedNextStatuses`/`isProductQuantityEditable` were added as response-only fields.
 - Missing decisions resolved before dependent implementation — pass (DEC-001–DEC-012 decided; remaining items are DB/DD technical choices).
-- Test scenarios map to design — pass: DD-001 test viewpoints cover REQ-010–REQ-019 and DEC-001/009/010/012/013/016/017/020 (test-plan IDs are assigned when test-plan.md is written).
+- Test scenarios map to design — pass: 001_DD test viewpoints cover REQ-010–REQ-019 and DEC-001/009/010/012/013/016/017/020 (test-plan IDs are assigned when test-plan.md is written).
 - Security-relevant fields identified — pass (server-side role gate; no PII or secrets; CSRF decided in DEC-020; least-privilege runtime login in DEC-016).
-- Accessibility captured — pass (BD-001 non-functional requirements).
-- Migration impact — pass (DB-002: additive, recovery limit and rollback command stated).
-- Tracing/logging specified — pass: DD-001 Observability section (spans, counters, attributes, what is never logged). OpenTelemetry isn't wired in the backend yet, so plan revision 2 must add it.
+- Accessibility captured — pass (001_BD non-functional requirements).
+- Migration impact — pass (001_DB: additive, recovery limit and rollback command stated).
+- Tracing/logging specified — pass: 001_DD Observability section (spans, counters, attributes, what is never logged). OpenTelemetry isn't wired in the backend yet, so plan revision 2 must add it.
 
 Design-consistency walk after implementation (plan revision 2):
 
-- DD agrees with code — pass. Implementation-driven doc updates: DD-001 revision 3 and DD-001-FN revision 2 (`AllowedNext()` extension, values returned via `RETURNING`, instrumentation set), DB-002 (DEC-029 index, grants in the migration, login creation baked into the db image).
+- DD agrees with code — pass. Implementation-driven doc updates: 001_DD revision 3 and 001_DD-FN revision 2 (`AllowedNext()` extension, values returned via `RETURNING`, instrumentation set), 001_DB (DEC-029 index, grants in the migration, login creation baked into the db image).
 - API and DB mappings agree, including constraints and errors — pass (integration tests assert status codes, codes and constraint behavior).
-- Test scenarios map to design — pass: TC-001–TC-027 in `test-plan.md`, with IDs filled into DD-001's test viewpoints.
+- Test scenarios map to design — pass: TC-001–TC-027 in `test-plan.md`, with IDs filled into 001_DD's test viewpoints.
 
 Security-review checklist (`ai/checklists/security-review.md`):
 

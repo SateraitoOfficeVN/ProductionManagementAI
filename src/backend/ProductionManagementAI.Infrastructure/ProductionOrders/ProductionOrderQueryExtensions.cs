@@ -5,14 +5,14 @@ using ProductionManagementAI.Domain.ProductionOrders;
 namespace ProductionManagementAI.Infrastructure.ProductionOrders;
 
 /// <summary>
-/// Filter and sort composition for the list query (DD-002-FN §4–§5). Shared by the count and the page query, so the
+/// Filter and sort composition for the list query (002_DD-FN §4–§5). Shared by the count and the page query, so the
 /// two can never drift apart.
 /// </summary>
 internal static class ProductionOrderQueryExtensions
 {
     /// <summary>
     /// Composes only the filters the query actually carries. An unset filter contributes no SQL at all — a
-    /// <c>(@p IS NULL OR col = @p)</c> predicate would defeat the indexes DB-003 relies on.
+    /// <c>(@p IS NULL OR col = @p)</c> predicate would defeat the indexes 002_DB relies on.
     /// </summary>
     public static IQueryable<ProductionOrder> ApplyFilters(
         this IQueryable<ProductionOrder> source, ProductionOrderListQuery query)
@@ -85,7 +85,7 @@ internal static class ProductionOrderQueryExtensions
     }
 
     /// <summary>
-    /// Workflow order, not alphabetical (DB-003 sort-key mapping): alphabetically the statuses would read
+    /// Workflow order, not alphabetical (002_DB sort-key mapping): alphabetically the statuses would read
     /// "Cancelled, Completed, Draft, In progress", which means nothing to a planner. Translated as a SQL CASE.
     /// </summary>
     private static System.Linq.Expressions.Expression<Func<ProductionOrderJoin, int>> StatusRank => join =>

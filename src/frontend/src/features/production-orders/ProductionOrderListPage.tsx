@@ -10,7 +10,7 @@ import { MessageBanner } from './MessageBanner'
 import { ProductionOrderFilters } from './ProductionOrderFilters'
 import { ProductionOrderTable } from './ProductionOrderTable'
 import { hasFilters, useListViewState } from './listViewState'
-import { message } from './messages'
+import { labels, message } from './messages'
 import type {
   ListFilters,
   ListViewState,
@@ -28,10 +28,9 @@ type QueryResult =
   | { kind: 'forbidden' }
   | { kind: 'error' }
 
-const APP = 'ProductionManagementAI'
 const VIEWER_ROLES = ['Admin', 'Operator']
 
-// DD-002 module 1 / DD-002-SPD §1 and §6: route component for /production-orders. The URL is the single source of
+// 002_DD module 1 / 002_DD-SPD §1 and §6: route component for /production-orders. The URL is the single source of
 // truth for what is displayed; the query is a reaction to it, so Back, reload and a pasted link all take one path.
 export function ProductionOrderListPage() {
   const { user } = useAuth()
@@ -46,7 +45,7 @@ export function ProductionOrderListPage() {
   const viewKey = JSON.stringify(view)
 
   useEffect(() => {
-    document.title = `Production orders — ${APP}`
+    document.title = labels.app.title(labels.list.heading)
   }, [])
 
   useEffect(() => {
@@ -127,22 +126,22 @@ export function ProductionOrderListPage() {
     <div className="min-h-screen bg-white">
       <AppHeader />
       <main className="mx-auto grid max-w-5xl gap-4 px-4 pt-6 pb-10 sm:px-6">
-        <nav aria-label="Breadcrumb" className="text-sm text-gray-500">
+        <nav aria-label={labels.nav.breadcrumb} className="text-sm text-gray-500">
           {/* Always underlined, not only on hover: a link inside a line of text must not rely on colour (WCAG 1.4.1). */}
           <GuardedLink to="/" className="text-gray-700 underline underline-offset-4">
-            Home
+            {labels.nav.home}
           </GuardedLink>
           <span aria-hidden="true"> › </span>
-          Production orders
+          {labels.nav.orders}
         </nav>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-xl font-medium text-gray-900">Production orders</h1>
+          <h1 className="text-xl font-medium text-gray-900">{labels.list.heading}</h1>
           <Link
             to="/production-orders/new"
             className="rounded bg-gray-900 px-4 py-2 text-center text-white focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
-            + New production order
+            {labels.list.newOrder}
           </Link>
         </div>
 
@@ -153,7 +152,7 @@ export function ProductionOrderListPage() {
               onClick={() => setRetryKey((key) => key + 1)}
               className="rounded border border-gray-300 bg-white px-2.5 py-1 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              Retry
+              {labels.common.retry}
             </button>
           </MessageBanner>
         )}
@@ -182,7 +181,7 @@ export function ProductionOrderListPage() {
 
         {loading && (
           <p role="status" aria-busy="true" className="py-8 text-center text-sm text-gray-500">
-            Loading production orders…
+            {labels.list.loading}
           </p>
         )}
 
@@ -198,13 +197,13 @@ export function ProductionOrderListPage() {
         )}
 
         {page && page.total === 0 && hasFilters(view) && (
-          <Panel title={message('MSG-I004')} hint="Try widening the due-date range or removing the product filter.">
+          <Panel title={message('MSG-I004')} hint={labels.list.noMatchHint}>
             <button
               type="button"
               onClick={clearFilters}
               className="rounded border border-gray-300 bg-white px-4 py-2 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              Clear filters
+              {labels.list.clearFilters}
             </button>
           </Panel>
         )}
@@ -215,7 +214,7 @@ export function ProductionOrderListPage() {
               to="/production-orders/new"
               className="rounded bg-gray-900 px-4 py-2 text-white focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              + New production order
+              {labels.list.newOrder}
             </Link>
           </Panel>
         )}
@@ -234,7 +233,7 @@ function Panel({ title, hint, children }: { title: string; hint?: string; childr
   )
 }
 
-/** "No orders at all" is a different state from "no match" (BD-002 items 24/25). */
+/** "No orders at all" is a different state from "no match" (002_BD items 24/25). */
 function isEmptyDatabase(page: PagedResult<ProductionOrderListItem> | null, view: ListViewState) {
   return page !== null && page.total === 0 && !hasFilters(view)
 }

@@ -13,10 +13,10 @@ Decisions for WI-003. Decisions carried over from earlier work items keep their 
 | DEC-005 | 2026-09-22 | Status filter: single-select or multi-select | user | decided | Multi-select, so "all active orders" is one view |
 | DEC-006 | 2026-09-22 | Whether the default view includes `Completed` and `Cancelled` orders | user | decided | Show all orders by default; no filter is pre-applied |
 | DEC-007 | 2026-09-22 | Whether to seed demo production orders for paging/filtering | user | decided | Seed roughly 60–100 demo orders, as WI-002 DEC-019 seeded 30 products |
-| DEC-008 | 2026-09-22 | Whether filters apply as they change or on an explicit Search | Claude (UI, during BD-002) | decided | Explicit Search button; sort, paging and page size still apply immediately |
-| DEC-009 | 2026-09-22 | How a list row is activated without losing keyboard access | Claude (UI/accessibility, during BD-002) | decided | The order-number cell is a real link; the whole-row click is a mouse convenience resolving to it |
-| DEC-010 | 2026-09-22 | Index for the case-insensitive order-number fragment search | Claude (technical, during DB-003) | decided | `pg_trgm` GIN index on `order_number`; input upper-cased and matched with `LIKE` |
-| DEC-011 | 2026-09-22 | Whether seeded due dates are fixed calendar dates or relative to the migration run date | Claude (technical, during DB-003) | decided | Relative to the run date; everything else fixed; insert guarded to an empty table |
+| DEC-008 | 2026-09-22 | Whether filters apply as they change or on an explicit Search | Claude (UI, during 002_BD) | decided | Explicit Search button; sort, paging and page size still apply immediately |
+| DEC-009 | 2026-09-22 | How a list row is activated without losing keyboard access | Claude (UI/accessibility, during 002_BD) | decided | The order-number cell is a real link; the whole-row click is a mouse convenience resolving to it |
+| DEC-010 | 2026-09-22 | Index for the case-insensitive order-number fragment search | Claude (technical, during 002_DB) | decided | `pg_trgm` GIN index on `order_number`; input upper-cased and matched with `LIKE` |
+| DEC-011 | 2026-09-22 | Whether seeded due dates are fixed calendar dates or relative to the migration run date | Claude (technical, during 002_DB) | decided | Relative to the run date; everything else fixed; insert guarded to an empty table |
 | DEC-012 | 2026-09-22 | Whether the demo seed should also apply to the integration-test database | Claude (technical, during implementation) | decided | Yes — the tests run the real migration set; Screen A's numbering test now asserts the sequence continues from the seeded counter |
 | DEC-013 | 2026-09-22 | Merge PR #9 | user | decided | Squash-merged into `master` as `8eab65f` with all three CI jobs green |
 | DEC-012 | 2026-09-22 | Whether the demo seed should also apply to the integration-test database | Claude (technical, during implementation) | decided | Yes — the tests run the real migration set; Screen A's numbering test now asserts the sequence continues from the seeded counter |
@@ -47,7 +47,7 @@ Screen B has to make an order findable among many. The filter set drives the API
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-022 |
-| BD-002, DD-002, DD-002-API | Filter fields, their validation and the query contract |
+| 002_BD, 002_DD, 002_DD-API | Filter fields, their validation and the query contract |
 | DB design | Indexes covering each filter and the default sort |
 
 ## DEC-002: How volume and ordering are handled
@@ -75,8 +75,8 @@ The list must stay bounded regardless of how many orders exist, and the demo has
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-023, REQ-024 |
-| DD-002-API | `page`, `pageSize`, `sort`, `direction` parameters and their validation |
-| BD-002, mockup | Paging controls, page-size dropdown, sortable column headers |
+| 002_DD-API | `page`, `pageSize`, `sort`, `direction` parameters and their validation |
+| 002_BD, mockup | Paging controls, page-size dropdown, sortable column headers |
 
 ## DEC-003: Which actions a list row offers
 
@@ -103,7 +103,7 @@ The list could either stay read-only or carry write actions such as an inline st
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-025 |
-| BD-002 | Screen-transition diagram between Screen B and Screen A |
+| 002_BD | Screen-transition diagram between Screen B and Screen A |
 | Frontend | Routing only; no new mutating API call |
 
 ## DEC-004: Whether the list becomes the landing page
@@ -156,7 +156,7 @@ REQ-022 requires a status filter. Single-select ("All", or exactly one status) i
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-022 acceptance criteria |
-| DD-002-API | Whether `status` is a single value or a repeated parameter |
+| 002_DD-API | Whether `status` is a single value or a repeated parameter |
 
 ## DEC-006: Whether the default view includes Completed and Cancelled orders
 
@@ -182,7 +182,7 @@ Over time terminal orders (`Completed`, `Cancelled`) dominate the table, so the 
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-020, REQ-022 acceptance criteria |
-| BD-002, DD-002 | Initial filter state and how it is displayed |
+| 002_BD, 002_DD | Initial filter state and how it is displayed |
 
 ## DEC-007: Whether to seed demo production orders
 
@@ -200,7 +200,7 @@ The database currently has 30 seeded products (WI-002 DEC-019) and no seeded pro
 
 ### Decision and rationale
 
-- **Decision:** seed roughly 60–100 demo production orders, in the same way the 30 products were seeded — fixed IDs and fixed timestamps in a migration, spread across all four statuses, several products and a range of due dates (past, today and future) so paging, sorting, the overdue marker and every filter have data. The exact count, the environment scope of the seed and its reversibility are settled in DB-003.
+- **Decision:** seed roughly 60–100 demo production orders, in the same way the 30 products were seeded — fixed IDs and fixed timestamps in a migration, spread across all four statuses, several products and a range of due dates (past, today and future) so paging, sorting, the overdue marker and every filter have data. The exact count, the environment scope of the seed and its reversibility are settled in 002_DB.
 - **Decided by:** user, 2026-09-22 (Screen B design questions, option "Seed ~60-100 orders").
 - **Rationale:** without data, neither the demo nor the E2E tests can exercise paging or filtering, and creating orders by hand before each demo is not repeatable. Matching WI-002 DEC-019's approach keeps the seed reproducible.
 
@@ -226,16 +226,16 @@ REQ-022 gives the screen four filters, two of them free-form (a date range and a
 
 ### Decision and rationale
 
-- **Decision:** the filter panel is a form applied by a **Search** button or by pressing Enter inside it; **Clear** resets the filters and re-queries. Sorting, paging and the page-size change still take effect immediately, because each is a single unambiguous value with nothing to finish typing (BD-002 §6 E-11 to E-15).
-- **Decided by:** Claude (UI), 2026-09-22, while writing BD-002; open to the user's revision at design review.
+- **Decision:** the filter panel is a form applied by a **Search** button or by pressing Enter inside it; **Clear** resets the filters and re-queries. Sorting, paging and the page-size change still take effect immediately, because each is a single unambiguous value with nothing to finish typing (002_BD §6 E-11 to E-15).
+- **Decided by:** Claude (UI), 2026-09-22, while writing 002_BD; open to the user's revision at design review.
 - **Rationale:** a defined submit moment makes the filter validation (V-09, V-10), the URL history (REQ-027) and the announced result count all testable, and avoids a debounce constant that no requirement pins down.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| BD-002 | §3 items 12–13, §6 E-11, E-12 |
-| DD-002, test-plan | Event spec and the test cases for applying and clearing filters |
+| 002_BD | §3 items 12–13, §6 E-11, E-12 |
+| 002_DD, test-plan | Event spec and the test cases for applying and clearing filters |
 
 ## DEC-009: How a list row is activated without losing keyboard access
 
@@ -253,16 +253,16 @@ REQ-025 says a row is activated "by mouse or keyboard". A whole row made clickab
 
 ### Decision and rationale
 
-- **Decision:** the order-number cell of each row is a real link to `/production-orders/{id}`; clicking anywhere else in the row resolves to that same link as a mouse convenience, and does nothing when the click completes a text selection or lands on another interactive element. On SP, the whole card is the link (BD-002 §6 E-16).
-- **Decided by:** Claude (UI/accessibility), 2026-09-22, while writing BD-002.
+- **Decision:** the order-number cell of each row is a real link to `/production-orders/{id}`; clicking anywhere else in the row resolves to that same link as a mouse convenience, and does nothing when the click completes a text selection or lands on another interactive element. On SP, the whole card is the link (002_BD §6 E-16).
+- **Decided by:** Claude (UI/accessibility), 2026-09-22, while writing 002_BD.
 - **Rationale:** keeps table semantics and gives every row a genuine keyboard-reachable activation point, while preserving the wide click target a list screen is expected to have.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| BD-002 | §3 item 22, §6 E-16, non-functional accessibility |
-| DD-002, test-plan | Interaction spec plus keyboard and axe coverage for row activation |
+| 002_BD | §3 item 22, §6 E-16, non-functional accessibility |
+| 002_DD, test-plan | Interaction spec plus keyboard and axe coverage for row activation |
 
 ## DEC-010: Index for the case-insensitive order-number fragment search
 
@@ -280,42 +280,42 @@ REQ-022 requires the order-number filter to match a partial, case-insensitive fr
 
 ### Decision and rationale
 
-- **Decision:** create the `pg_trgm` extension and a GIN index `ix_production_orders_order_number_trgm` on `order_number` using `gin_trgm_ops`. The application upper-cases the fragment and matches with `LIKE` rather than `ILIKE`, since `order_number` is generated and always upper-case; `%`, `_` and `\` in the input are escaped so a search cannot widen itself (DB-003).
-- **Decided by:** Claude (technical), 2026-09-22, while writing DB-003.
+- **Decision:** create the `pg_trgm` extension and a GIN index `ix_production_orders_order_number_trgm` on `order_number` using `gin_trgm_ops`. The application upper-cases the fragment and matches with `LIKE` rather than `ILIKE`, since `order_number` is generated and always upper-case; `%`, `_` and `\` in the input are escaped so a search cannot widen itself (002_DB).
+- **Decided by:** Claude (technical), 2026-09-22, while writing 002_DB.
 - **Rationale:** it is the only option that satisfies REQ-022 as written. `pg_trgm` is a trusted extension in PostgreSQL 17, so the migration's owner login can create it without superuser rights and the runtime login needs no new privilege.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| DB-003, DB-002 | New index and extension; DB-002's "deliberately not added" note for `order_number` now points here |
-| DD-002-API | Fragment normalization and `LIKE` escaping |
+| 002_DB, 001_DB | New index and extension; 001_DB's "deliberately not added" note for `order_number` now points here |
+| 002_DD-API | Fragment normalization and `LIKE` escaping |
 | Migration | `CREATE EXTENSION IF NOT EXISTS pg_trgm` plus the index, created `CONCURRENTLY` |
 
 ## DEC-011: Whether seeded due dates are fixed or relative to the migration run date
 
 ### Context
 
-DEC-007 asked for roughly 60–100 seeded orders. Their due dates decide whether the overdue marker (REQ-021) and the due-date range filter (REQ-022) demo meaningfully. DB-002's product seed uses EF Core `HasData`, which requires constant values.
+DEC-007 asked for roughly 60–100 seeded orders. Their due dates decide whether the overdue marker (REQ-021) and the due-date range filter (REQ-022) demo meaningfully. 001_DB's product seed uses EF Core `HasData`, which requires constant values.
 
 ### Options considered
 
 | Option | Pros | Cons |
 | --- | --- | --- |
 | Relative to the run date (`INSERT … SELECT` over a generated series) | The past/today/future mix stays realistic whenever the stack is rebuilt; the overdue marker always has rows to mark | Two runs on different days produce different due dates, so tests must not assert absolute dates; cannot use `HasData` |
-| Fixed calendar dates (`HasData`, as the products use) | Byte-identical every run; consistent with DB-002's seed style | Every seeded order becomes overdue within months, and the screen demos badly from then on |
+| Fixed calendar dates (`HasData`, as the products use) | Byte-identical every run; consistent with 001_DB's seed style | Every seeded order becomes overdue within months, and the screen demos badly from then on |
 
 ### Decision and rationale
 
-- **Decision:** due dates and the created/updated timestamps are computed from the plant-local date at migration time; ids, order numbers, products, quantities, statuses and the day offsets themselves are fixed constants. The insert is guarded by `WHERE NOT EXISTS (SELECT 1 FROM production_orders)`, so it only ever fills an empty table and is idempotent. Written with `migrationBuilder.Sql(...)`, since `HasData` cannot express it (DB-003).
-- **Decided by:** Claude (technical), 2026-09-22, while writing DB-003.
+- **Decision:** due dates and the created/updated timestamps are computed from the plant-local date at migration time; ids, order numbers, products, quantities, statuses and the day offsets themselves are fixed constants. The insert is guarded by `WHERE NOT EXISTS (SELECT 1 FROM production_orders)`, so it only ever fills an empty table and is idempotent. Written with `migrationBuilder.Sql(...)`, since `HasData` cannot express it (002_DB).
+- **Decided by:** Claude (technical), 2026-09-22, while writing 002_DB.
 - **Rationale:** the seed exists to make the screen demonstrable; fixed dates would defeat that within a few months. Determinism is preserved where tests need it — counts, statuses, products and offsets from today are all fixed.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| DB-003 | Demo seed section, migration impact and rollback |
+| 002_DB | Demo seed section, migration impact and rollback |
 | test-plan, E2E | Assertions written against counts, statuses and offsets from today, never absolute dates |
 
 ## DEC-012: Whether the demo seed also applies to the integration-test database
@@ -349,7 +349,7 @@ first created order is `PO-YYYY-00001`, and it became `00081` behind the 80 seed
 | Artifact | Change required |
 | --- | --- |
 | `OrderNumberingTests` | Asserts continuation from the seeded counter (TC-002 in TP-002 stays valid, with its expectation restated) |
-| DB-003, TP-003, evidence | The seed's reach is stated, and future tests needing an empty table must arrange it |
+| 002_DB, TP-003, evidence | The seed's reach is stated, and future tests needing an empty table must arrange it |
 
 ## DEC-012: Whether the demo seed also applies to the integration-test database
 
@@ -382,7 +382,7 @@ first created order is `PO-YYYY-00001`, and it became `00081` behind the 80 seed
 | Artifact | Change required |
 | --- | --- |
 | `OrderNumberingTests` | Asserts continuation from the seeded counter (TC-002 in TP-002 stays valid, with its expectation restated) |
-| DB-003, TP-003, evidence | The seed's reach is stated, and future tests needing an empty table must arrange it |
+| 002_DB, TP-003, evidence | The seed's reach is stated, and future tests needing an empty table must arrange it |
 
 ## DEC-013: Merge PR #9
 
@@ -410,7 +410,7 @@ carried the whole work item: design set, implementation, migrations and tests.
 
 ### Context
 
-After the user approved the DD-002 set with "the DD is approved, move on to the implementation", the agent drafted plan
+After the user approved the 002_DD set with "the DD is approved, move on to the implementation", the agent drafted plan
 revision 2 (implementation, tests, PR), appended it to `plan.md`, and started implementing in the same turn. The user
 never saw revision 2 before work under it began. The plan recorded that design approval as the revision's approval
 source and its review status as "approved", and revision 1's step 7 claimed revision 2 was "submitted for review".

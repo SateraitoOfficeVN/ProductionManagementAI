@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react'
 import { AttentionIcon, DueSoonIcon, EmptyIcon, iconProps, OverdueIcon } from '../../components/icons'
-import { message } from '../production-orders/messages'
+import { formatDate } from '../../lib/format'
+import { labels, message } from '../production-orders/messages'
 import { StatusBadge } from '../production-orders/ProductionOrderTable'
 import { formatNumber, shownNote } from './dashboardFormat'
 import type { OrderGroup } from './types'
@@ -13,7 +14,7 @@ function Group({ id, title, Icon, group, emptyMessageId }: {
   emptyMessageId: string
 }) {
   const note = shownNote(group.orders.length, group.total)
-  const heading = `${title} (${group.total})`
+  const heading = labels.dashboard.groupHeading(title, group.total)
   return (
     <section aria-labelledby={id} className="grid gap-1.5">
       <h3 id={id} className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
@@ -33,11 +34,11 @@ function Group({ id, title, Icon, group, emptyMessageId }: {
               <caption className="sr-only">{heading}</caption>
               <thead className="bg-gray-50 text-left text-gray-700">
                 <tr>
-                  <th scope="col" className="px-3 py-2 font-medium">Order no.</th>
-                  <th scope="col" className="px-3 py-2 font-medium">Product</th>
-                  <th scope="col" className="px-3 py-2 text-right font-medium">Qty</th>
-                  <th scope="col" className="px-3 py-2 font-medium">Due date</th>
-                  <th scope="col" className="px-3 py-2 font-medium">Status</th>
+                  <th scope="col" className="px-3 py-2 font-medium">{labels.dashboard.orderNumber}</th>
+                  <th scope="col" className="px-3 py-2 font-medium">{labels.dashboard.product}</th>
+                  <th scope="col" className="px-3 py-2 text-right font-medium">{labels.dashboard.quantity}</th>
+                  <th scope="col" className="px-3 py-2 font-medium">{labels.dashboard.dueDate}</th>
+                  <th scope="col" className="px-3 py-2 font-medium">{labels.dashboard.status}</th>
                 </tr>
               </thead>
               <tbody>
@@ -48,7 +49,7 @@ function Group({ id, title, Icon, group, emptyMessageId }: {
                       <span className="text-gray-500 tabular-nums">{o.product.sku}</span> — {o.product.name}
                     </td>
                     <td className="px-3 py-1.5 text-right tabular-nums">{formatNumber(o.quantity)}</td>
-                    <td className="px-3 py-1.5 whitespace-nowrap tabular-nums">{o.dueDate}</td>
+                    <td className="px-3 py-1.5 whitespace-nowrap tabular-nums">{formatDate(o.dueDate)}</td>
                     <td className="px-3 py-1.5"><StatusBadge status={o.status} /></td>
                   </tr>
                 ))}
@@ -63,7 +64,7 @@ function Group({ id, title, Icon, group, emptyMessageId }: {
                   <StatusBadge status={o.status} />
                 </div>
                 <span className="text-gray-700">{o.product.sku} — {o.product.name}</span>
-                <span className="text-xs text-gray-500 tabular-nums">Qty {formatNumber(o.quantity)} · Due {o.dueDate}</span>
+                <span className="text-xs text-gray-500 tabular-nums">{labels.dashboard.cardLine(formatNumber(o.quantity), formatDate(o.dueDate))}</span>
               </li>
             ))}
           </ul>
@@ -74,16 +75,16 @@ function Group({ id, title, Icon, group, emptyMessageId }: {
   )
 }
 
-/** Items 16–19 (BD-003 D-01, D-02, M-15, M-19). */
+/** Items 16–19 (003_BD D-01, D-02, M-15, M-19). */
 export function AttentionList({ overdue, dueSoon }: { overdue: OrderGroup; dueSoon: OrderGroup }) {
   return (
     <section aria-labelledby="attention-title" className="grid content-start gap-3 rounded-lg border border-gray-200 bg-white p-3.5">
       <h2 id="attention-title" className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
         <AttentionIcon {...iconProps} />
-        Needs attention
+        {labels.dashboard.needsAttention}
       </h2>
-      <Group id="overdue-title" title="Overdue" Icon={OverdueIcon} group={overdue} emptyMessageId="MSG-I005" />
-      <Group id="due-soon-title" title="Due in the next 7 days" Icon={DueSoonIcon} group={dueSoon} emptyMessageId="MSG-I006" />
+      <Group id="overdue-title" title={labels.dashboard.overdue} Icon={OverdueIcon} group={overdue} emptyMessageId="MSG-I005" />
+      <Group id="due-soon-title" title={labels.dashboard.dueSoon} Icon={DueSoonIcon} group={dueSoon} emptyMessageId="MSG-I006" />
     </section>
   )
 }

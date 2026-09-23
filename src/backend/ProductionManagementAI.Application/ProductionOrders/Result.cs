@@ -1,7 +1,7 @@
 namespace ProductionManagementAI.Application.ProductionOrders;
 
 /// <summary>
-/// Outcome of a production-order use case (DD-001-FN). The API maps each variant to one HTTP status (DEC-023):
+/// Outcome of a production-order use case (001_DD-FN). The API maps each variant to one HTTP status (DEC-023):
 /// Ok → 200/201, Invalid → 400, NotFound → 404, Conflict → 409, RuleViolation → 422.
 /// </summary>
 public abstract record Result<T>
@@ -19,6 +19,6 @@ public abstract record Result<T>
 
     public sealed record Conflict : Result<T>;
 
-    /// <param name="Code">DD-001 message ID, e.g. MSG-E007 or MSG-E008.</param>
+    /// <param name="Code">001_DD message ID, e.g. MSG-E007 or MSG-E008.</param>
     public sealed record RuleViolation(string Code) : Result<T>;
 }

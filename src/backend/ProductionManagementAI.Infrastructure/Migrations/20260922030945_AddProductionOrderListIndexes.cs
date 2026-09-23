@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProductionManagementAI.Infrastructure.Migrations
 {
     /// <summary>
-    /// Index support for the production-order list (DB-003): the default-sort / due-date-range btree, and the pg_trgm
+    /// Index support for the production-order list (002_DB): the default-sort / due-date-range btree, and the pg_trgm
     /// GIN index behind the order-number fragment filter (WI-003 DEC-010).
     ///
     /// Both indexes are created CONCURRENTLY, because production_orders is already in use (ai/rules/database.md).
@@ -42,7 +42,7 @@ namespace ProductionManagementAI.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             // Reversing this only makes the list slower, never wrong. The extension stays: dropping it is unnecessary
-            // and would break anything else that came to depend on it (DB-003 rollback plan).
+            // and would break anything else that came to depend on it (002_DB rollback plan).
             migrationBuilder.Sql(
                 "DROP INDEX CONCURRENTLY IF EXISTS ix_production_orders_order_number_trgm;",
                 suppressTransaction: true);
