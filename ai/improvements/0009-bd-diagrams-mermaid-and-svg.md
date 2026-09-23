@@ -2,7 +2,7 @@
 
 # RFC: BD and DD diagrams as Mermaid and SVG wireframes, not ASCII
 
-**Status:** under-review
+**Status:** adopted
 **Affected:** `ai/templates/basic-design.md`, `ai/templates/detailed-design.md`, `ai/skills/basic-design/SKILL.md`, `ai/skills/detailed-design/SKILL.md`, `ai/skills/screen-design/SKILL.md`, `ai/checklists/design-consistency.md`, `ai/evaluations/baseline-cases.md`; 001_BD–003_BD and 001_DD–003_DD (redrawn), with new files under `docs/en/010_basic-design/###/wireframes/` and `docs/en/020_detailed-design/###/wireframes/`
 
 ## Summary
@@ -133,4 +133,4 @@ small plain XML.
 
 - **Reviewer:** ThanhTN (requests, 2026-09-23; formats chosen the same day: Mermaid for transitions, SVG wireframes for
   layouts, convert 001_BD–003 now; then the same for the detailed designs)
-- **Adopted revision:** not yet adopted
+- **Adopted revision:** `dbc9527` on `master`, the squash-merge of PR #17 (2026-09-23)

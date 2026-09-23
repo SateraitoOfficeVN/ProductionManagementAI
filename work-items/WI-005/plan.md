@@ -6,7 +6,7 @@ Revisions are kept in full and in chronological order (oldest first), so the pla
 
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
-| 1 | 2026-09-23 | Design updates, implementation and tests | **current** — approved | ThanhTN, 2026-09-23: "approved" (reply to revision 1 as shown) |
+| 1 | 2026-09-23 | Design updates, implementation and tests | **current** — approved, closed | ThanhTN, 2026-09-23: "approved" (reply to revision 1 as shown) |
 
 ## Revision 1 — design updates, implementation and tests
 
@@ -71,7 +71,7 @@ documents that describe the Japanese screens, with no functional change.
 | Local edits, builds, tests, local Docker Compose (applying the new migration as the owner) | yes, on approval of this revision | this revision | local machine |
 | Branch and commit | yes | ThanhTN, 2026-09-23: "create the branch and commit" | a `feature/WI-005-japanese-ui` branch, local only |
 | Push, PR | yes | ThanhTN, 2026-09-23: "push and create the PR" | `feature/WI-005-japanese-ui` to `origin`, one PR to `master` |
-| Merge | no | not yet authorized | squash-merge when authorized |
+| Merge | yes | ThanhTN, 2026-09-23: "merge the PR when CI passes" | squash-merge of PR #17 after CI passes |
 | Republish mockup Artifacts | yes | ThanhTN, 2026-09-23: "also update the mock up artifact that have been published those still in english" | the three existing mockup URLs only |
 
 ### Risks and mitigations
@@ -89,4 +89,4 @@ documents that describe the Japanese screens, with no functional change.
 - **Review status:** approved
 - **Approval source:** ThanhTN, 2026-09-23, "approved", replying to plan revision 1 after it was shown, together with DEC-002 and DEC-004–DEC-008 as proposed
 - **Approved revision:** 1, 2026-09-23
-- **Closure:** —
+- **Closure:** closed 2026-09-23. PR #17 squash-merged into `master` as `dbc9527` (DEC-009); close-out follows in its own PR
