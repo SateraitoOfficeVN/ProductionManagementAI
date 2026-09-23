@@ -70,7 +70,8 @@ documents that describe the Japanese screens, with no functional change.
 | --- | --- | --- | --- |
 | Local edits, builds, tests, local Docker Compose (applying the new migration as the owner) | yes, on approval of this revision | this revision | local machine |
 | Branch and commit | yes | ThanhTN, 2026-09-23: "create the branch and commit" | a `feature/WI-005-japanese-ui` branch, local only |
-| Push, PR, merge | no | not yet authorized | — |
+| Push, PR | yes | ThanhTN, 2026-09-23: "push and create the PR" | `feature/WI-005-japanese-ui` to `origin`, one PR to `master` |
+| Merge | no | not yet authorized | squash-merge when authorized |
 | Republish mockup Artifacts | yes | ThanhTN, 2026-09-23: "also update the mock up artifact that have been published those still in english" | the three existing mockup URLs only |
 
 ### Risks and mitigations

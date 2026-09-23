@@ -8,7 +8,7 @@ As of 2026-09-23. Work item state: in-progress.
 
 **RAG:** Green — on track
 
-Plan revision 1 approved 2026-09-23. All nine steps are done and verified locally, and committed on the local branch `feature/WI-005-japanese-ui`. Push and PR are not yet authorized.
+Plan revision 1 approved 2026-09-23. All nine steps are done and verified locally, and committed on `feature/WI-005-japanese-ui`, pushed, with a PR to `master` open for review. Merge is not yet authorized.
 
 ## Approved plan reference
 
@@ -24,14 +24,14 @@ Plan revision 1 approved 2026-09-23. All nine steps are done and verified locall
 
 ## Planned for next period
 
-On authorization, push and PR; README refresh at close-out after the merge.
+PR review and CI; on authorization, squash-merge; README refresh at close-out after the merge.
 
 ## Risks and issues
 
 | Issue / blocker | Owner | Since | Impact |
 | --- | --- | --- | --- |
-| Push/PR not yet authorized | ThanhTN | 2026-09-23 | The branch exists only locally |
+| Merge not yet authorized | ThanhTN | 2026-09-23 | The PR stays open |
 
 ## Next action
 
-Authorize (or not) push and PR for `feature/WI-005-japanese-ui`, owner ThanhTN, expected by unscheduled.
+Review the PR and authorize (or not) the squash-merge, owner ThanhTN, expected by unscheduled.

@@ -48,4 +48,4 @@ As of source revision/commit `ba49b96` plus uncommitted work (committed on `feat
 
 ## Remaining limitations and next action
 
-All plan steps are done locally and verified. Committed on the local branch `feature/WI-005-japanese-ui`. Not done, because not authorized: push, PR. The three mockup Artifacts were republished on the user's request. The Japanese translation sources for the PDFs are not committed (RFC 0008). Next action: the user reviews the work and decides on branch/commit.
+All plan steps are done locally and verified. Committed on `feature/WI-005-japanese-ui` and pushed; PR open. Not done, because not authorized: merge. The three mockup Artifacts were republished on the user's request. The Japanese translation sources for the PDFs are not committed (RFC 0008). Next action: the user reviews the work and decides on branch/commit.
