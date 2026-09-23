@@ -223,7 +223,7 @@ This shape is deliberate: (1)-(2) bound what the skill needs before it starts; (
 
 ## Where this stands, and what's next
 
-The full chain has now run on real work five times, from the application skeleton to three business screens and a localization:
+The full chain has now run on real work four times, from the application skeleton to three business screens:
 
 | Work item | What it exercised |
 |---|---|
@@ -231,11 +231,10 @@ The full chain has now run on real work five times, from the application skeleto
 | WI-002 (Screen A, create/edit) | The first end-to-end feature: requirements → plan → BD → DB → the four DD documents with a mockup → implementation → unit, integration and E2E tests with axe → security-review and delivery checklists → PR |
 | WI-003 (Screen B, list) | Building on an existing screen: evolving a live schema, reusing shared modules and API endpoints, amending Screen A's design |
 | WI-004 (Screen C, dashboard) | A read-only screen over one consistent snapshot, a design revised after mockup review, and cross-screen changes (a navbar on every screen) |
-| WI-005 (Japanese UI) | A change that touches every screen and every design document at once, with no functional change, plus a data-only migration on an existing database |
 
 Each work item is recorded in `work-items/WI-00N/`. CI (backend, frontend, and E2E against the Compose stack) runs on every pull request to `master` and passes; changes that touch only documentation don't start a run. Gaps the chain exposed along the way were fixed through `harness-improvement`, not by silent edits to shared guidance.
 
-The locked demo roadmap — Screens A, B and C — and its Japanese localization are complete. No further work item is planned yet.
+The locked demo roadmap — Screens A, B and C — is complete. No further work item is planned yet.
 
 ### Known gaps
 
