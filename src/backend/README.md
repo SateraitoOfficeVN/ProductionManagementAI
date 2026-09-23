@@ -1,6 +1,6 @@
 # backend
 
-.NET 10 backend, layered per `docs/en/architecture/0001-backend-layered-structure.md`:
+.NET 10 backend, layered per `docs/en/architecture/0001/0001_ADR_backend-layered-structure.md`:
 
 - `ProductionManagementAI.Domain` — entities, enums; no external dependencies.
 - `ProductionManagementAI.Application` — service interfaces/implementations, DTOs; depends on Domain only.

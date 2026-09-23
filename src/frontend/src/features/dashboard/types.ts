@@ -1,6 +1,6 @@
 import type { ProductionOrderStatus } from '../production-orders/types'
 
-// Mirrors DD-003-API §1 field for field.
+// Mirrors 003_DD-API §1 field for field.
 
 export interface ProductSummary {
   id: string
@@ -46,7 +46,7 @@ export interface DashboardSnapshot {
   completionTrend: { weekStart: string; weekEnd: string; orderCount: number }[]
 }
 
-/** DD-003-API §2. */
+/** 003_DD-API §2. */
 export interface SystemHealth {
   database: 'ok' | 'unavailable'
   checkedAt: string

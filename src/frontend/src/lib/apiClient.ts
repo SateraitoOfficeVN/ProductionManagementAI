@@ -1,10 +1,10 @@
-// Shared JSON fetch wrapper (DD-001 module 10). Same-origin cookies, JSON bodies only (DEC-020), RFC 9457 errors.
+// Shared JSON fetch wrapper (001_DD module 10). Same-origin cookies, JSON bodies only (DEC-020), RFC 9457 errors.
 
 export interface ProblemDetails {
   type?: string
   title?: string
   status?: number
-  /** "VALIDATION" for 400, otherwise a DD-001 message ID (e.g. MSG-E009). */
+  /** "VALIDATION" for 400, otherwise a 001_DD message ID (e.g. MSG-E009). */
   code?: string
   /** Field → message IDs (400 only). */
   errors?: Record<string, string[]>

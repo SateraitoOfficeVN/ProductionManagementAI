@@ -6,7 +6,7 @@ using Msg = ProductionManagementAI.Domain.ProductionOrders.ProductionOrderMessag
 namespace ProductionManagementAI.Api.ProductionOrders;
 
 /// <summary>
-/// RFC 9457 Problem Details for the production-order API (DD-001-API, DEC-023). Every body carries
+/// RFC 9457 Problem Details for the production-order API (001_DD-API, DEC-023). Every body carries
 /// <c>type</c>, <c>title</c>, <c>status</c>, <c>code</c> and <c>traceId</c>; 400 also carries <c>errors</c>
 /// (field → message IDs). No exception text is ever included.
 /// </summary>
@@ -14,7 +14,7 @@ public static class ProductionOrderProblems
 {
     public const string ValidationCode = "VALIDATION";
 
-    // DD-001-API field → message ID used when JSON binding itself fails (e.g. "quantity": "abc").
+    // 001_DD-API field → message ID used when JSON binding itself fails (e.g. "quantity": "abc").
     private static readonly Dictionary<string, string> BindingErrorMessage = new(StringComparer.OrdinalIgnoreCase)
     {
         ["productId"] = Msg.ProductRequired,

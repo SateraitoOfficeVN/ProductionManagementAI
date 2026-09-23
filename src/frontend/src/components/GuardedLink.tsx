@@ -4,7 +4,7 @@ import { useNavigationGuard } from '../lib/navigationGuard'
 
 type Props = Omit<LinkProps, 'to'> & { to: string }
 
-// An in-app link that an edited form can intercept (WI-004 DEC-022, DD-003-SPD §9). A modified click (new tab or
+// An in-app link that an edited form can intercept (WI-004 DEC-022, 003_DD-SPD §9). A modified click (new tab or
 // window) is never intercepted: it leaves the current page and its edits untouched.
 export function GuardedLink({ to, onClick, ...rest }: Props) {
   const guard = useNavigationGuard()

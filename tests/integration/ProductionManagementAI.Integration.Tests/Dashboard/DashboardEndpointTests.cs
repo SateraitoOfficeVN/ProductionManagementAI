@@ -9,7 +9,7 @@ using static ProductionManagementAI.Integration.Tests.ProductionOrders.Productio
 namespace ProductionManagementAI.Integration.Tests.Dashboard;
 
 /// <summary>
-/// DD-003 test viewpoints at integration level: real pipeline, real PostgreSQL, the app as pmai_app, plant clock
+/// 003_DD test viewpoints at integration level: real pipeline, real PostgreSQL, the app as pmai_app, plant clock
 /// pinned to 2031-06-11 (a Wednesday; its week starts Monday 2031-06-09). Each test clears the orders and inserts
 /// exactly its own rows, so expected figures are exact. Boundaries are chosen where UTC and Asia/Tokyo disagree.
 /// </summary>

@@ -9,18 +9,18 @@ import { renderWithAuth, stubFetch } from './harness'
 
 afterEach(() => vi.unstubAllGlobals())
 
-describe('AppNavbar (BD-003 H-1–H-5, TC-222)', () => {
+describe('AppNavbar (003_BD H-1–H-5, TC-222)', () => {
   it.each([
-    ['/', 'Dashboard'],
-    ['/production-orders', 'Production orders'],
-    ['/production-orders/o1', 'Production orders'],
-    ['/production-orders/new', 'New production order'],
+    ['/', 'ダッシュボード'],
+    ['/production-orders', '製造指示一覧'],
+    ['/production-orders/o1', '製造指示一覧'],
+    ['/production-orders/new', '新規製造指示'],
   ])('on %s marks %s as the current page', (path, current) => {
     renderWithAuth(<AppHeader />, path)
 
-    const nav = screen.getByRole('navigation', { name: 'Main' })
+    const nav = screen.getByRole('navigation', { name: 'メインメニュー' })
     const links = within(nav).getAllByRole('link')
-    expect(links.map((l) => l.textContent)).toEqual(['Dashboard', 'Production orders', 'New production order'])
+    expect(links.map((l) => l.textContent)).toEqual(['ダッシュボード', '製造指示一覧', '新規製造指示'])
     expect(within(nav).getByRole('link', { name: current })).toHaveAttribute('aria-current', 'page')
     expect(links.filter((l) => l.getAttribute('aria-current') === 'page')).toHaveLength(1)
   })
@@ -28,25 +28,25 @@ describe('AppNavbar (BD-003 H-1–H-5, TC-222)', () => {
   it('opens the SP menu, closes it on Escape and returns focus to Menu', async () => {
     const user = userEvent.setup()
     renderWithAuth(<AppHeader />, '/')
-    const menu = screen.getByRole('button', { name: 'Menu' })
+    const menu = screen.getByRole('button', { name: 'メニュー' })
     expect(menu).toHaveAttribute('aria-expanded', 'false')
 
     await user.click(menu)
-    expect(screen.getByRole('button', { name: 'Close' })).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('button', { name: '閉じる' })).toHaveAttribute('aria-expanded', 'true')
     const panel = document.getElementById('app-menu')!
-    expect(within(panel).getByRole('button', { name: 'Sign out' })).toBeInTheDocument()
+    expect(within(panel).getByRole('button', { name: 'ログアウト' })).toBeInTheDocument()
 
-    fireEvent.keyDown(within(panel).getByRole('link', { name: 'Dashboard' }), { key: 'Escape' })
+    fireEvent.keyDown(within(panel).getByRole('link', { name: 'ダッシュボード' }), { key: 'Escape' })
     expect(document.getElementById('app-menu')).toBeNull()
-    expect(screen.getByRole('button', { name: 'Menu' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'メニュー' })).toHaveFocus()
   })
 
   it('navigates from a navbar link and closes the SP menu', async () => {
     const user = userEvent.setup()
     renderWithAuth(<AppHeader />, '/')
-    await user.click(screen.getByRole('button', { name: 'Menu' }))
+    await user.click(screen.getByRole('button', { name: 'メニュー' }))
 
-    await user.click(within(document.getElementById('app-menu')!).getByRole('link', { name: 'Production orders' }))
+    await user.click(within(document.getElementById('app-menu')!).getByRole('link', { name: '製造指示一覧' }))
 
     expect(screen.getByTestId('location')).toHaveTextContent('/production-orders')
     expect(document.getElementById('app-menu')).toBeNull()
@@ -54,7 +54,7 @@ describe('AppNavbar (BD-003 H-1–H-5, TC-222)', () => {
 })
 
 describe('Navigation guard on an edited Screen A form (DEC-022, TC-223)', () => {
-  const products = [{ id: 'p1', sku: 'P-1001', name: 'Steel bracket' }]
+  const products = [{ id: 'p1', sku: 'P-1001', name: 'ブレーキキャリパー' }]
 
   function renderCreateForm() {
     stubFetch({ 'GET /api/products': { status: 200, body: products } })
@@ -71,14 +71,14 @@ describe('Navigation guard on an edited Screen A form (DEC-022, TC-223)', () => 
     )
   }
 
-  const nav = () => screen.getByRole('navigation', { name: 'Main' })
+  const nav = () => screen.getByRole('navigation', { name: 'メインメニュー' })
 
   it('leaves at once when nothing was edited', async () => {
     const user = userEvent.setup()
     renderCreateForm()
-    await screen.findByRole('button', { name: 'Save' })
+    await screen.findByRole('button', { name: '保存' })
 
-    await user.click(within(nav()).getByRole('link', { name: 'Dashboard' }))
+    await user.click(within(nav()).getByRole('link', { name: 'ダッシュボード' }))
 
     expect(screen.getByTestId('location')).toHaveTextContent(/^\/$/)
   })
@@ -86,38 +86,38 @@ describe('Navigation guard on an edited Screen A form (DEC-022, TC-223)', () => 
   it('asks first; Keep editing stays with the values; Discard goes to the clicked link', async () => {
     const user = userEvent.setup()
     renderCreateForm()
-    await user.type(await screen.findByLabelText(/Quantity/), '12')
+    await user.type(await screen.findByLabelText(/数量/), '12')
 
-    await user.click(within(nav()).getByRole('link', { name: 'Dashboard' }))
-    let dialog = screen.getByRole('dialog', { name: 'Discard your changes?' })
-    await user.click(within(dialog).getByRole('button', { name: 'Keep editing' }))
+    await user.click(within(nav()).getByRole('link', { name: 'ダッシュボード' }))
+    let dialog = screen.getByRole('dialog', { name: '変更を破棄しますか？' })
+    await user.click(within(dialog).getByRole('button', { name: '編集を続ける' }))
     expect(screen.getByTestId('location')).toHaveTextContent('/production-orders/new')
-    expect(screen.getByLabelText(/Quantity/)).toHaveValue('12')
+    expect(screen.getByLabelText(/数量/)).toHaveValue('12')
 
-    await user.click(within(nav()).getByRole('link', { name: 'Production orders' }))
-    dialog = screen.getByRole('dialog', { name: 'Discard your changes?' })
-    await user.click(within(dialog).getByRole('button', { name: 'Discard' }))
+    await user.click(within(nav()).getByRole('link', { name: '製造指示一覧' }))
+    dialog = screen.getByRole('dialog', { name: '変更を破棄しますか？' })
+    await user.click(within(dialog).getByRole('button', { name: '破棄' }))
     expect(screen.getByTestId('location')).toHaveTextContent(/^\/production-orders$/)
   })
 
   it('resets the form when the clicked link is the page itself', async () => {
     const user = userEvent.setup()
     renderCreateForm()
-    await user.type(await screen.findByLabelText(/Quantity/), '12')
+    await user.type(await screen.findByLabelText(/数量/), '12')
 
-    await user.click(within(nav()).getByRole('link', { name: 'New production order' }))
-    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Discard' }))
+    await user.click(within(nav()).getByRole('link', { name: '新規製造指示' }))
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: '破棄' }))
 
     expect(screen.getByTestId('location')).toHaveTextContent('/production-orders/new')
-    expect(screen.getByLabelText(/Quantity/)).toHaveValue('')
+    expect(screen.getByLabelText(/数量/)).toHaveValue('')
   })
 
   it('never intercepts a modified click (new tab)', async () => {
     const user = userEvent.setup()
     renderCreateForm()
-    await user.type(await screen.findByLabelText(/Quantity/), '12')
+    await user.type(await screen.findByLabelText(/数量/), '12')
 
-    fireEvent.click(within(nav()).getByRole('link', { name: 'Dashboard' }), { ctrlKey: true })
+    fireEvent.click(within(nav()).getByRole('link', { name: 'ダッシュボード' }), { ctrlKey: true })
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })

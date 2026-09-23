@@ -7,7 +7,7 @@ TP-002, work item WI-002, revision 1, 2026-09-18.
 ## References
 
 - `brief.md` revision 1 (REQ-010–REQ-019), `decisions.md` DEC-001–DEC-029
-- BD-001 revision 4, DB-002, DD-001 revision 3, DD-001-API, DD-001-FN revision 2, DD-001-SPD
+- 001_BD revision 4, 001_DB, 001_DD revision 3, 001_DD-API, 001_DD-FN revision 2, 001_DD-SPD
 - `plan.md` revision 2, step 12
 
 ## Introduction
@@ -31,7 +31,7 @@ Covers Screen A (SCR-001) end to end: domain rules, service orchestration, the H
 
 ## Features to be tested
 
-All REQs above, plus these design decisions with observable behavior: order numbering (DEC-012/013), plant timezone (DEC-017), JSON-only bodies (DEC-020), error contract (DEC-023), least-privilege runtime login (DEC-016), telemetry (DD-001 Observability), and accessibility (DEC-026). Cases TC-001–TC-027 below.
+All REQs above, plus these design decisions with observable behavior: order numbering (DEC-012/013), plant timezone (DEC-017), JSON-only bodies (DEC-020), error contract (DEC-023), least-privilege runtime login (DEC-016), telemetry (001_DD Observability), and accessibility (DEC-026). Cases TC-001–TC-027 below.
 
 ## Features not to be tested
 
@@ -44,7 +44,7 @@ All REQs above, plus these design decisions with observable behavior: order numb
 
 | Level (unit / integration / system / E2E / smoke) | Included? | Rationale |
 | --- | --- | --- |
-| Unit — backend (xUnit) | yes | Domain invariants and service check order without a host (ADR-0001) |
+| Unit — backend (xUnit) | yes | Domain invariants and service check order without a host (0001_ADR) |
 | Unit — frontend (Vitest + RTL + vitest-axe) | yes | Field behavior, states, error mapping, dialog, a11y rules in jsdom |
 | Integration (xUnit + WebApplicationFactory + Testcontainers Postgres 17) | yes | Real HTTP pipeline, auth, migrations, constraints, concurrency, privileges |
 | E2E (Playwright Chromium + @axe-core/playwright) | yes | Browser journeys and real-browser a11y (incl. contrast) against the Compose stack |
@@ -95,7 +95,7 @@ Test names are the actual test methods / titles (U = backend unit, I = integrati
 | TC-023 | — (DEC-016) | App as `pmai_app` | I `RuntimeLogin_CannotDeleteOrdersOrRunDdl`; the whole integration suite runs as `pmai_app`; manual psql on Compose | DELETE/DDL/TRUNCATE → 42501; all flows work | high |
 | TC-024 | — (Observability) | ActivityListener/MeterListener | I `CreateAndUpdate_EmitSpansAndCounters` | Create/Update spans with id/outcome/status tags; created/updated/status_transitions counters | medium |
 | TC-025 | — (DEC-026, WCAG 2.2 AA) | — | F axe in create + locked-edit tests; E axe on create, locked edit, error state, dialog | No violations | high |
-| TC-026 | — (BD-001 §1 SP) | Pixel 7 emulation | E `SP layout stacks fields and puts Save above Cancel` | Stacked fields; full-width Save above Cancel; no horizontal scroll; no axe violations | medium |
+| TC-026 | — (001_BD §1 SP) | Pixel 7 emulation | E `SP layout stacks fields and puts Save above Cancel` | Stacked fields; full-width Save above Cancel; no horizontal scroll; no axe violations | medium |
 | TC-027 | — (regression) | App as `pmai_app` | I `AuthEndpointsTests` (4) | Login/me/logout still work under the restricted login | high |
 
 ## Environmental needs

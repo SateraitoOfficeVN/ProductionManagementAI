@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers()
-    // Enums as names only ("InProgress"); an unknown or numeric value is a binding error (DD-001-API).
+    // Enums as names only ("InProgress"); an unknown or numeric value is a binding error (001_DD-API).
     .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false)))
     .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = ProductionOrderProblems.FromModelState);
 
@@ -43,7 +43,7 @@ builder.Services.AddScoped<ProductionOrderService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<SystemHealthService>();
 
-// OpenTelemetry (DD-001 "Observability"). Collected always; exported over OTLP only when
+// OpenTelemetry (001_DD "Observability"). Collected always; exported over OTLP only when
 // OTEL_EXPORTER_OTLP_ENDPOINT is set. Npgsql spans carry no parameter values.
 var otlpEndpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
 builder.Services.AddOpenTelemetry()
@@ -66,7 +66,7 @@ builder.Services.AddOpenTelemetry()
     });
 
 // Global fallback: every endpoint requires an authenticated user unless marked [AllowAnonymous]
-// (ADR-0002: role checks are enforced server-side, never inferred from a client-supplied claim).
+// (0002_ADR: role checks are enforced server-side, never inferred from a client-supplied claim).
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
@@ -85,7 +85,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-    // Development-only seed data (ADR-0002): placeholder Admin/Operator roles + one seed admin user.
+    // Development-only seed data (0002_ADR): placeholder Admin/Operator roles + one seed admin user.
     using var seedScope = app.Services.CreateScope();
     await IdentitySeeder.SeedAsync(seedScope.ServiceProvider, app.Configuration);
 }

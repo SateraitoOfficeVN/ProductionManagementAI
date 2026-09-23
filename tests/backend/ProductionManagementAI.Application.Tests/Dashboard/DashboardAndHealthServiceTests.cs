@@ -37,7 +37,7 @@ public class DashboardServiceTests
     }
 }
 
-/// <summary>DD-003-FN §6 (TC-224, unit): a failed ping is a result, not an exception.</summary>
+/// <summary>003_DD-FN §6 (TC-224, unit): a failed ping is a result, not an exception.</summary>
 public class SystemHealthServiceTests
 {
     private static readonly DateTimeOffset Now = new(2026, 9, 22, 5, 0, 0, TimeSpan.Zero);

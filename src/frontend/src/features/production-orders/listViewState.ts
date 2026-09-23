@@ -9,7 +9,7 @@ import {
   type ProductionOrderStatus,
 } from './types'
 
-// DD-002 module 6 / DD-002-SPD §2. One place converts between the URL query string and the typed view state, so the
+// 002_DD module 6 / 002_DD-SPD §2. One place converts between the URL query string and the typed view state, so the
 // page never reads location.search itself and the API query is built from the same values that are displayed.
 
 const statusValues: ProductionOrderStatus[] = ['Draft', 'InProgress', 'Completed', 'Cancelled']
@@ -50,7 +50,7 @@ export function parseViewState(params: URLSearchParams): ListViewState {
     statuses: [...new Set(statuses)],
     productId: productId && uuidPattern.test(productId) ? productId : null,
     // A malformed date is dropped, but an inverted range is kept: both ends are visible in the panel, so silently
-    // discarding one would hide the very thing the user has to fix (DD-002-SPD §2 step 3).
+    // discarding one would hide the very thing the user has to fix (002_DD-SPD §2 step 3).
     dueFrom: parseDate(params.get('dueFrom')),
     dueTo: parseDate(params.get('dueTo')),
     orderNumber: orderNumber === '' ? null : orderNumber.slice(0, maxOrderNumberFilterLength),

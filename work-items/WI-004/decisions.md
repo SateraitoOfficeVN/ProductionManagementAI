@@ -15,18 +15,18 @@ Decisions for WI-004. Decisions carried over from earlier work items keep their 
 | DEC-007 | 2026-09-22 | What "due soon" means | user | decided | Active orders due from today to today + 7 days (plant timezone) |
 | DEC-008 | 2026-09-22 | Windows and sizes each metric uses | user | decided | 10 rows per group; 8-week look-ahead; top 10 products; Mon–Sun weeks; calendar month; 30-day on-time and lead-time window; 12-week trend |
 | DEC-009 | 2026-09-22 | Where the workload chart counts active orders due after the 8-week look-ahead | user | decided | In a "later" bar, so every active order is counted exactly once |
-| DEC-010 | 2026-09-22 | How charts are drawn and made accessible | Claude (UI/accessibility, during BD-003) | decided | Inline SVG drawn by the page, no charting library; value labels on bars and a "View as table" disclosure |
-| DEC-011 | 2026-09-22 | One snapshot endpoint or one endpoint per widget | Claude (technical, during BD-003) | decided | One endpoint returning every widget from one consistent snapshot |
-| DEC-012 | 2026-09-22 | Where the placeholder home page's two links go | Claude (UI, during BD-003) | superseded by DEC-016 | Page actions on the dashboard itself; the shared header is not changed |
+| DEC-010 | 2026-09-22 | How charts are drawn and made accessible | Claude (UI/accessibility, during 003_BD) | decided | Inline SVG drawn by the page, no charting library; value labels on bars and a "View as table" disclosure |
+| DEC-011 | 2026-09-22 | One snapshot endpoint or one endpoint per widget | Claude (technical, during 003_BD) | decided | One endpoint returning every widget from one consistent snapshot |
+| DEC-012 | 2026-09-22 | Where the placeholder home page's two links go | Claude (UI, during 003_BD) | superseded by DEC-016 | Page actions on the dashboard itself; the shared header is not changed |
 | DEC-013 | 2026-09-22 | How the demo seed gives the delivery widgets data | user | decided | Both: re-date the 16 seeded completed orders and add 40 historical completed orders |
-| DEC-014 | 2026-09-22 | Whether the seed adds active orders due beyond WI-003's 40-day horizon | Claude (technical, during DB-004) | decided — DB-004 approved without objection | Add 4 (due +42, +49, +56, +63), so week bars 6–7 and Later are never empty |
-| DEC-015 | 2026-09-22 | How the dashboard reads one consistent snapshot | Claude (technical, during DB-004) | decided | One `REPEATABLE READ READ ONLY` transaction around the seven statements |
+| DEC-014 | 2026-09-22 | Whether the seed adds active orders due beyond WI-003's 40-day horizon | Claude (technical, during 003_DB) | decided — 003_DB approved without objection | Add 4 (due +42, +49, +56, +63), so week bars 6–7 and Later are never empty |
+| DEC-015 | 2026-09-22 | How the dashboard reads one consistent snapshot | Claude (technical, during 003_DB) | decided | One `REPEATABLE READ READ ONLY` transaction around the seven statements |
 | DEC-016 | 2026-09-22 | Application navigation | user (mockup review) | decided | A navbar in the shared header on every screen — Dashboard, Production orders, New production order — replacing the dashboard's page actions; supersedes DEC-012 |
 | DEC-017 | 2026-09-22 | Server and database health indicator on the dashboard | user (mockup review) | decided | A status pill checked on load and every 30 s through a new authenticated endpoint that pings the database; text states, no operational detail exposed |
 | DEC-018 | 2026-09-22 | Chart full screen | user (mockup review) | decided | Each chart can be maximized to a full-window overlay and restored (Escape or Restore); no browser Fullscreen API |
 | DEC-019 | 2026-09-22 | Whether the health poll renews the sign-in session | user | decided | Never — the health endpoint is excluded from sliding-expiration renewal |
-| DEC-020 | 2026-09-22 | Health states, timeouts and endpoint | Claude (technical, during BD-003 v2) | decided | Server OK/Unreachable (5 s client timeout), Database OK/Unavailable/Unknown (`SELECT 1`, 2 s); `GET /api/system/health`, authenticated |
-| DEC-021 | 2026-09-22 | Whether SCR-001/SCR-002 keep their breadcrumbs next to the navbar | Claude (UI, during BD-003 v2) | decided | Kept — they show position, the navbar shows destinations; removing them would change both screens beyond their header |
+| DEC-020 | 2026-09-22 | Health states, timeouts and endpoint | Claude (technical, during 003_BD v2) | decided | Server OK/Unreachable (5 s client timeout), Database OK/Unavailable/Unknown (`SELECT 1`, 2 s); `GET /api/system/health`, authenticated |
+| DEC-021 | 2026-09-22 | Whether SCR-001/SCR-002 keep their breadcrumbs next to the navbar | Claude (UI, during 003_BD v2) | decided | Kept — they show position, the navbar shows destinations; removing them would change both screens beyond their header |
 | DEC-022 | 2026-09-22 | Leaving an edited Screen A form through a navbar (or other in-app) link | user | decided | Ask first with the existing discard dialog, as Cancel does; implemented with a shared navigation guard, not a router migration |
 | DEC-023 | 2026-09-22 | Icons in the UI | user (mockup review) | decided | Icons in the navbar and actions, tiles, widget headings and states, and the health indicator, from `lucide-react` (ISC) — a new runtime dependency |
 | DEC-024 | 2026-09-22 | How the dashboard reader runs its SQL; the health code's namespace | Claude (technical, during implementation) | decided | ADO.NET commands on the EF connection and transaction with bound parameters, instead of `SqlQuery<T>`; namespace `Health`, not `System` |
@@ -54,14 +54,14 @@ Four current-state widgets were offered, each computable from the orders' presen
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-029–REQ-032 |
-| BD-003, DD-003 | One section per widget; layout on PC and SP |
-| DB-004 | Aggregate queries and their index support |
+| 003_BD, 003_DD | One section per widget; layout on PC and SP |
+| 003_DB | Aggregate queries and their index support |
 
 ## DEC-002: Whether the dashboard includes history-based metrics
 
 ### Context
 
-The schema (DB-002) holds only each order's current status and its `created_at_utc`/`updated_at_utc`. Any metric that looks back over time — what was completed when, whether it was on time — needs the completion moment, which is not stored. The user was asked whether to stay with current-state metrics (no schema change) or add completion tracking.
+The schema (001_DB) holds only each order's current status and its `created_at_utc`/`updated_at_utc`. Any metric that looks back over time — what was completed when, whether it was on time — needs the completion moment, which is not stored. The user was asked whether to stay with current-state metrics (no schema change) or add completion tracking.
 
 ### Options considered
 
@@ -81,8 +81,8 @@ The schema (DB-002) holds only each order's current status and its `created_at_u
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-033–REQ-037 |
-| DB-002 → DB-004 | New column, constraint, backfill and seed (DEC-003, DEC-004) |
-| BD-001, DD-001 set | Screen A's save records the completion time on `InProgress → Completed` |
+| 001_DB → 003_DB | New column, constraint, backfill and seed (DEC-003, DEC-004) |
+| 001_BD, 001_DD set | Screen A's save records the completion time on `InProgress → Completed` |
 
 ## DEC-003: How completion is tracked in the database
 
@@ -99,7 +99,7 @@ Follows from DEC-002. The four history metrics need only "when did this order be
 
 ### Decision and rationale
 
-- **Decision:** one nullable `completed_at_utc timestamptz` column on `production_orders`, set by the application on the `InProgress → Completed` transition (REQ-033). The exact constraint (e.g. a check tying it to `status = 'Completed'`) is settled in DB-004.
+- **Decision:** one nullable `completed_at_utc timestamptz` column on `production_orders`, set by the application on the `InProgress → Completed` transition (REQ-033). The exact constraint (e.g. a check tying it to `status = 'Completed'`) is settled in 003_DB.
 - **Decided by:** user, 2026-09-22 ("completed_at column").
 - **Rationale:** it meets every chosen metric with the least change to WI-002, and it fits the existing state machine, where `Completed` is terminal.
 
@@ -107,15 +107,15 @@ Follows from DEC-002. The four history metrics need only "when did this order be
 
 | Artifact | Change required |
 | --- | --- |
-| DB-004 | Column, constraint, migration and index design |
-| BD-001, DD-001-FN | The transition that sets it |
+| 003_DB | Column, constraint, migration and index design |
+| 001_BD, 001_DD-FN | The transition that sets it |
 | Brief "Not doing" | Status history, started-at and cancelled-at are out of scope |
 
 ## DEC-004: What happens to orders already `Completed`
 
 ### Context
 
-When the column is added, some orders are already `Completed`: 16 of the 80 seeded demo orders (DB-003), plus any a user completed by hand. Without a value they would either break the constraint or be invisible to the history widgets.
+When the column is added, some orders are already `Completed`: 16 of the 80 seeded demo orders (002_DB), plus any a user completed by hand. Without a value they would either break the constraint or be invisible to the history widgets.
 
 ### Options considered
 
@@ -126,7 +126,7 @@ When the column is added, some orders are already `Completed`: 16 of the 80 seed
 
 ### Decision and rationale
 
-- **Decision:** seeded demo orders receive plausible completion dates (and, where needed, adjusted creation dates so lead times are positive); any other `Completed` order is backfilled from its `updated_at_utc` — for a completed order, the last update is the completion save or later. Exact seeded values are settled in DB-004.
+- **Decision:** seeded demo orders receive plausible completion dates (and, where needed, adjusted creation dates so lead times are positive); any other `Completed` order is backfilled from its `updated_at_utc` — for a completed order, the last update is the completion save or later. Exact seeded values are settled in 003_DB.
 - **Decided by:** user, 2026-09-22 ("Seed + backfill").
 - **Rationale:** the demo needs populated history widgets, and `updated_at_utc` is the best available evidence for a real order.
 
@@ -134,7 +134,7 @@ When the column is added, some orders are already `Completed`: 16 of the 80 seed
 
 | Artifact | Change required |
 | --- | --- |
-| DB-004 | Backfill statement, seed values, and whether more completed demo orders are needed for a readable 12-week trend |
+| 003_DB | Backfill statement, seed values, and whether more completed demo orders are needed for a readable 12-week trend |
 | REQ-033, REQ-037 | Backfilled and seeded rows must satisfy "no negative lead time" |
 
 ## DEC-005: Where the dashboard lives
@@ -160,7 +160,7 @@ WI-003 DEC-004 kept the placeholder home page at `/` so that Screen C could take
 
 | Artifact | Change required |
 | --- | --- |
-| BD-003 | Screen transition from login; where the list and "New production order" links live |
+| 003_BD | Screen transition from login; where the list and "New production order" links live |
 | Frontend | The `/` route and the placeholder home component |
 | Screens A/B | Any link or redirect that targets `/` is checked for the new meaning |
 
@@ -194,7 +194,7 @@ Screen B keeps its filters in the URL (WI-003 REQ-027), so a widget could open a
 
 ### Context
 
-The user chose each metric (DEC-001, DEC-002) but not its exact window or size. These decide what every test asserts and what the demo seed must contain, so they were fixed before BD-003. A proposal was shown with plan revision 1; the user answered each parameter separately.
+The user chose each metric (DEC-001, DEC-002) but not its exact window or size. These decide what every test asserts and what the demo seed must contain, so they were fixed before 003_BD. A proposal was shown with plan revision 1; the user answered each parameter separately.
 
 ### Options considered and decision
 
@@ -216,8 +216,8 @@ The user chose each metric (DEC-001, DEC-002) but not its exact window or size. 
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-030–REQ-032, REQ-034–REQ-037 reference these values; open question closed |
-| BD-003, DD-003 | Each metric's definition states its window once |
-| DB-004 | Bucketing boundaries and the seed must populate an 8-week look-ahead, 10 ranked products and a 12-week trend |
+| 003_BD, 003_DD | Each metric's definition states its window once |
+| 003_DB | Bucketing boundaries and the seed must populate an 8-week look-ahead, 10 ranked products and a 12-week trend |
 
 ## DEC-009: Active orders due after the workload look-ahead
 
@@ -243,7 +243,7 @@ Found while applying DEC-008 to REQ-031. With an "overdue" bar and 8 week bars, 
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-031 success and failure criteria |
-| BD-003, DB-004, DD-003 | Ten buckets, not nine |
+| 003_BD, 003_DB, 003_DD | Ten buckets, not nine |
 
 ## DEC-010: How charts are drawn and made accessible
 
@@ -260,16 +260,16 @@ REQ-031 and REQ-036 need two bar charts. The frontend stack has no charting libr
 
 ### Decision and rationale
 
-- **Decision:** inline SVG bars rendered by React and styled with Tailwind; each bar's value printed as text; each chart `role="img"` with a summarizing accessible name; a **View as table** disclosure exposing a real `<table>` of the same figures (BD-003 §3 items 20–24, E-23).
-- **Decided by:** Claude, 2026-09-22, during BD-003 (UI/accessibility detail within the approved scope; no dependency added, so the plan's stop condition does not trigger).
+- **Decision:** inline SVG bars rendered by React and styled with Tailwind; each bar's value printed as text; each chart `role="img"` with a summarizing accessible name; a **View as table** disclosure exposing a real `<table>` of the same figures (003_BD §3 items 20–24, E-23).
+- **Decided by:** Claude, 2026-09-22, during 003_BD (UI/accessibility detail within the approved scope; no dependency added, so the plan's stop condition does not trigger).
 - **Rationale:** the charts are fixed-size bar charts (10 and 12 bars) that need no interaction; avoiding a dependency keeps the stack as confirmed, and printed values plus a table meet WCAG 1.1.1 and 1.4.1 without relying on hover.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| BD-003 | Items 20–24, accessibility NFR |
-| DD-003-SPD | Chart component structure, sizing, SP horizontal scroll |
+| 003_BD | Items 20–24, accessibility NFR |
+| 003_DD-SPD | Chart component structure, sizing, SP horizontal scroll |
 
 ## DEC-011: One snapshot endpoint or one endpoint per widget
 
@@ -286,16 +286,16 @@ Eight widgets could be served by one request or eight. REQ-028 requires "no stal
 
 ### Decision and rationale
 
-- **Decision:** one read-only endpoint returning every widget's figures computed from one consistent read with a single plant-local today, plus the snapshot time (BD-003 FN-017). How the consistent read is achieved (transaction isolation or statement shape) is settled in DB-004.
-- **Decided by:** Claude, 2026-09-22, during BD-003 (technical).
-- **Rationale:** it is the only option that satisfies REQ-028's "no partial figures" and makes the cross-checks in BD-003's consistency NFR hold; at demo volume the aggregate cost is small (to be confirmed in DB-004).
+- **Decision:** one read-only endpoint returning every widget's figures computed from one consistent read with a single plant-local today, plus the snapshot time (003_BD FN-017). How the consistent read is achieved (transaction isolation or statement shape) is settled in 003_DB.
+- **Decided by:** Claude, 2026-09-22, during 003_BD (technical).
+- **Rationale:** it is the only option that satisfies REQ-028's "no partial figures" and makes the cross-checks in 003_BD's consistency NFR hold; at demo volume the aggregate cost is small (to be confirmed in 003_DB).
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| DD-003-API | One contract covering every figure and its empty value |
-| DB-004 | The snapshot read and the cost of all queries together |
+| 003_DD-API | One contract covering every figure and its empty value |
+| 003_DB | The snapshot read and the cost of all queries together |
 
 ## DEC-012: Where the placeholder home page's two links go
 
@@ -312,8 +312,8 @@ The placeholder home page at `/` holds the only links to "Production orders" and
 
 ### Decision and rationale
 
-- **Decision:** SCR-003 carries "Production orders" and "New production order" as page actions beside its heading (BD-003 items 5, 6). The shared header is unchanged; SCR-001's and SCR-002's "Home" breadcrumb and the header's app-name link keep targeting `/`, which is now the dashboard. REQ-028's wording is corrected to match (brief revision 1, same day).
-- **Decided by:** Claude, 2026-09-22, during BD-003 (UI; chosen as the option that stays within the approved scope).
+- **Decision:** SCR-003 carries "Production orders" and "New production order" as page actions beside its heading (003_BD items 5, 6). The shared header is unchanged; SCR-001's and SCR-002's "Home" breadcrumb and the header's app-name link keep targeting `/`, which is now the dashboard. REQ-028's wording is corrected to match (brief revision 1, same day).
+- **Decided by:** Claude, 2026-09-22, during 003_BD (UI; chosen as the option that stays within the approved scope).
 - **Rationale:** keeps the change confined to the screen this work item owns. Header navigation can be proposed later as its own change if wanted.
 
 ### Impact
@@ -321,13 +321,13 @@ The placeholder home page at `/` holds the only links to "Production orders" and
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-028 success criterion: "the dashboard still offers…" instead of "the application header still leads to…" |
-| BD-003 | Items 5, 6; screen transition |
+| 003_BD | Items 5, 6; screen transition |
 
 ## DEC-013: How the demo seed gives the delivery widgets data
 
 ### Context
 
-Found while writing DB-004. WI-003's seed has only 16 `Completed` orders, all created at most 49 days before the seed ran, and a completion cannot precede creation. Those orders could fill at most the last 7 of the trend's 12 weeks, and the 30-day on-time rate would rest on about 5 orders. DEC-004 ("seed + backfill") did not say whether the seed may grow, which changes the totals Screen B shows. So the user was asked before DB-004 changed anything.
+Found while writing 003_DB. WI-003's seed has only 16 `Completed` orders, all created at most 49 days before the seed ran, and a completion cannot precede creation. Those orders could fill at most the last 7 of the trend's 12 weeks, and the 30-day on-time rate would rest on about 5 orders. DEC-004 ("seed + backfill") did not say whether the seed may grow, which changes the totals Screen B shows. So the user was asked before 003_DB changed anything.
 
 ### Options considered
 
@@ -339,34 +339,34 @@ Found while writing DB-004. WI-003's seed has only 16 `Completed` orders, all cr
 
 ### Decision and rationale
 
-- **Decision:** both of the first two options. Re-date the 16 existing completed orders, giving them older creation dates and completion times over the last 33 days without changing their due dates. Add 40 historical completed orders completed 0–88 days ago, about 30% of them late (DB-004 "Demo seed data").
+- **Decision:** both of the first two options. Re-date the 16 existing completed orders, giving them older creation dates and completion times over the last 33 days without changing their due dates. Add 40 historical completed orders completed 0–88 days ago, about 30% of them late (003_DB "Demo seed data").
 - **Decided by:** user, 2026-09-22 ("do both 1 and 2 options").
-- **Rationale:** with both, every trend week holds at least 2 completions for any run weekday, and the 30-day rate rests on 30 orders (DB-004 "What the seed produces").
+- **Rationale:** with both, every trend week holds at least 2 completions for any run weekday, and the 30-day rate rests on 30 orders (003_DB "What the seed produces").
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| DB-004 | Seed tables, guards, order-number allocation, recovery limits |
-| WI-003 artifacts | DB-003's seed figures and the tests asserting 80 rows, the status spread or `00081` are updated in plan revision 2 |
+| 003_DB | Seed tables, guards, order-number allocation, recovery limits |
+| WI-003 artifacts | 002_DB's seed figures and the tests asserting 80 rows, the status spread or `00081` are updated in plan revision 2 |
 
 ## DEC-014: Far-due active orders in the seed
 
 ### Context
 
-WI-003's seeded active orders are due at most 40 days out. On the run date the workload chart's week 7 and "Later" bars are always empty, and week 6 is empty on a Monday or Tuesday run. That makes DEC-009's "Later" bar undemonstrable. DB-004's own seed check caught the week-6 case.
+WI-003's seeded active orders are due at most 40 days out. On the run date the workload chart's week 7 and "Later" bars are always empty, and week 6 is empty on a Monday or Tuesday run. That makes DEC-009's "Later" bar undemonstrable. 003_DB's own seed check caught the week-6 case.
 
 ### Decision and rationale
 
-- **Decision:** the new seed also adds 4 active orders, due T + 42, + 49, + 56 and + 63. They always land in week 6, week 7, Later and Later, whatever the run weekday (DB-004).
-- **Decided by:** Claude, 2026-09-22, during DB-004 (technical detail of DEC-013's seed). It is flagged at DB-004 review so the user can object; it adds 4 rows to Screen B's demo total (124 instead of 120).
+- **Decision:** the new seed also adds 4 active orders, due T + 42, + 49, + 56 and + 63. They always land in week 6, week 7, Later and Later, whatever the run weekday (003_DB).
+- **Decided by:** Claude, 2026-09-22, during 003_DB (technical detail of DEC-013's seed). It is flagged at 003_DB review so the user can object; it adds 4 rows to Screen B's demo total (124 instead of 120).
 - **Rationale:** every one of the ten workload bars is non-zero on the run date, so REQ-031 is visibly demonstrable.
 
 ## DEC-015: How the dashboard reads one consistent snapshot
 
 ### Context
 
-DEC-011 requires every widget to come from one consistent read. BD-003 left the mechanism to DB-004.
+DEC-011 requires every widget to come from one consistent read. 003_BD left the mechanism to 003_DB.
 
 ### Options considered
 
@@ -374,19 +374,19 @@ DEC-011 requires every widget to come from one consistent read. BD-003 left the 
 | --- | --- | --- |
 | One `REPEATABLE READ READ ONLY` transaction around seven ordinary statements | Each query stays readable and separately testable; PostgreSQL gives every statement the same snapshot; a read-only transaction cannot fail with a serialization error, so no retry | One explicit transaction to manage in the repository |
 | One statement with CTEs | Single round trip | Merges seven differently shaped results into one; EF Core cannot map it cleanly |
-| No guarantee (`READ COMMITTED`) | Simplest | Figures can disagree, breaking REQ-028 and BD-003's cross-checks |
+| No guarantee (`READ COMMITTED`) | Simplest | Figures can disagree, breaking REQ-028 and 003_BD's cross-checks |
 
 ### Decision and rationale
 
-- **Decision:** one `REPEATABLE READ READ ONLY` transaction (DB-004 "Transactions and concurrency").
-- **Decided by:** Claude, 2026-09-22, during DB-004 (technical).
+- **Decision:** one `REPEATABLE READ READ ONLY` transaction (003_DB "Transactions and concurrency").
+- **Decided by:** Claude, 2026-09-22, during 003_DB (technical).
 - **Rationale:** consistent figures with ordinary queries and no retry path.
 
 ## DEC-016: Application navigation
 
 ### Context
 
-Raised by the user on reviewing the DD-003 mockup: the list and New-order links sat as buttons on the dashboard (DEC-012), whereas the user wants a navbar that carries the application's functions and links. DEC-012 had kept navigation off the shared header only to stay inside plan revision 1's "no visible change to Screens A and B".
+Raised by the user on reviewing the 003_DD mockup: the list and New-order links sat as buttons on the dashboard (DEC-012), whereas the user wants a navbar that carries the application's functions and links. DEC-012 had kept navigation off the shared header only to stay inside plan revision 1's "no visible change to Screens A and B".
 
 ### Options considered
 
@@ -406,8 +406,8 @@ Raised by the user on reviewing the DD-003 mockup: the list and New-order links 
 | Artifact | Change required |
 | --- | --- |
 | brief.md | REQ-028 wording; new REQ-040 |
-| BD-003 | Items 5–6 removed, navbar described; screen transition |
-| BD-001, BD-002, their DD-SPDs | The shared header now carries navigation (layout only; no behavior of either screen changes) |
+| 003_BD | Items 5–6 removed, navbar described; screen transition |
+| 001_BD, 002_BD, their DD-SPDs | The shared header now carries navigation (layout only; no behavior of either screen changes) |
 | plan.md | Revision 2 widens the design scope to the shared header |
 
 ## DEC-017: Server and database health indicator
@@ -426,7 +426,7 @@ Raised by the user on reviewing the mockup. The backend already exposes an anony
 
 ### Decision and rationale
 
-- **Decision:** a small indicator on the dashboard showing the server's and the database's status as text ("OK", and a failure state), checked on load and every 30 seconds through a **new authenticated** endpoint that runs a trivial database round trip with a short timeout. No version, hostname, connection string, latency figure or error text is exposed. The existing anonymous `/health` is left unchanged for container liveness. Exact states, timeout and endpoint path are fixed in BD-003 v2 and DD-003-API v2.
+- **Decision:** a small indicator on the dashboard showing the server's and the database's status as text ("OK", and a failure state), checked on load and every 30 seconds through a **new authenticated** endpoint that runs a trivial database round trip with a short timeout. No version, hostname, connection string, latency figure or error text is exposed. The existing anonymous `/health` is left unchanged for container liveness. Exact states, timeout and endpoint path are fixed in 003_BD v2 and 003_DD-API v2.
 - **Decided by:** user, 2026-09-22 (mockup review: "add a heath check indicator on the dashboard to show the server and db status"; follow-up: "Status pill, polled").
 - **Rationale:** keeps the indicator honest while the page is open, at negligible cost, without widening what an Operator can learn about the infrastructure.
 
@@ -435,8 +435,8 @@ Raised by the user on reviewing the mockup. The backend already exposes an anony
 | Artifact | Change required |
 | --- | --- |
 | brief.md | New REQ-041 |
-| BD-003, DD-003 set | Indicator item, states, polling; new endpoint contract, security and observability |
-| DB-004 | No schema change; the ping is `SELECT 1` |
+| 003_BD, 003_DD set | Indicator item, states, polling; new endpoint contract, security and observability |
+| 003_DB | No schema change; the ping is `SELECT 1` |
 
 ## DEC-018: Chart full screen
 
@@ -463,7 +463,7 @@ Raised by the user on reviewing the mockup: "the chart should be able to go full
 | Artifact | Change required |
 | --- | --- |
 | brief.md | New REQ-042 |
-| BD-003, DD-003, DD-003-SPD | Chart controls, overlay, focus management, a new event |
+| 003_BD, 003_DD, 003_DD-SPD | Chart controls, overlay, focus management, a new event |
 
 ## DEC-019: Whether the health poll renews the sign-in session
 
@@ -489,9 +489,9 @@ Found while starting plan revision 2. The app uses ASP.NET Core Identity's cooki
 
 | Artifact | Change required |
 | --- | --- |
-| BD-003 v2 | Health definitions, E-27, security NFR |
-| DD-003-FN v2 | The cookie event and its test |
-| ADR-0002 | None to the decision; the session behaviour it describes is unchanged for every user action |
+| 003_BD v2 | Health definitions, E-27, security NFR |
+| 003_DD-FN v2 | The cookie event and its test |
+| 0002_ADR | None to the decision; the session behaviour it describes is unchanged for every user action |
 
 ## DEC-020: Health states, timeouts and endpoint
 
@@ -501,8 +501,8 @@ DEC-017 left the exact states, timeouts and endpoint to design.
 
 ### Decision and rationale
 
-- **Decision:** the browser calls `GET /api/system/health` (authenticated, `ProductionOrderEditor`, `no-store`), which runs `SELECT 1` with a 2-second timeout and returns `{ database: "ok" | "unavailable", checkedAt }` with 200 either way. The browser derives the server's status: OK when that call returns 200 within 5 seconds, Unreachable on no answer, a network failure or a 5xx, and in that case the database is Unknown rather than its last value (BD-003 HS-01–HS-05).
-- **Decided by:** Claude, 2026-09-22, during BD-003 v2 (technical detail of DEC-017).
+- **Decision:** the browser calls `GET /api/system/health` (authenticated, `ProductionOrderEditor`, `no-store`), which runs `SELECT 1` with a 2-second timeout and returns `{ database: "ok" | "unavailable", checkedAt }` with 200 either way. The browser derives the server's status: OK when that call returns 200 within 5 seconds, Unreachable on no answer, a network failure or a 5xx, and in that case the database is Unknown rather than its last value (003_BD HS-01–HS-05).
+- **Decided by:** Claude, 2026-09-22, during 003_BD v2 (technical detail of DEC-017).
 - **Rationale:** a 200 with a database verdict separates "the server is up but the database is not" from "nothing answers", which is what the indicator exists to show. A 2-second database timeout keeps a hung database from holding a request for the default 30 seconds. The path sits under `/api` so it goes through the same proxy and authorization as every other call, apart from the anonymous liveness `/health`.
 
 ## DEC-021: Breadcrumbs next to the navbar
@@ -514,13 +514,13 @@ With a navbar on every screen, SCR-001's and SCR-002's breadcrumbs ("Home > Prod
 ### Decision and rationale
 
 - **Decision:** keep them. The breadcrumb shows where the user is (and on SCR-001 which order); the navbar shows where they can go. Removing them would change both screens beyond their header, outside plan revision 2's scope.
-- **Decided by:** Claude, 2026-09-22, during BD-003 v2 (UI).
+- **Decided by:** Claude, 2026-09-22, during 003_BD v2 (UI).
 
 ## DEC-022: Leaving an edited Screen A form through an in-app link
 
 ### Context
 
-Found while writing BD-001 v7: SCR-001's discard-changes confirmation (REQ-019, FN-009) is attached to its Cancel button only (`ProductionOrderForm.tsx`). The breadcrumb and app-name links already leave an edited form silently, and the new navbar would make that the common way out. An earlier draft of the BD-001 v7 and DD-SPD notes wrongly said the confirmation would apply to navbar links; that claim was removed before this question was asked.
+Found while writing 001_BD v7: SCR-001's discard-changes confirmation (REQ-019, FN-009) is attached to its Cancel button only (`ProductionOrderForm.tsx`). The breadcrumb and app-name links already leave an edited form silently, and the new navbar would make that the common way out. An earlier draft of the 001_BD v7 and DD-SPD notes wrongly said the confirmation would apply to navbar links; that claim was removed before this question was asked.
 
 ### Options considered
 
@@ -533,15 +533,15 @@ Found while writing BD-001 v7: SCR-001's discard-changes confirmation (REQ-019, 
 
 - **Decision:** any in-app link that leaves an edited SCR-001 form — navbar, breadcrumb, app name — opens the existing discard dialog. Discard goes to that link's destination; Keep editing stays. Browser Back, reload and closing the tab stay unguarded, as today.
 - **Decided by:** user, 2026-09-22 ("Ask first, like Cancel").
-- **Mechanism (Claude, technical):** the app uses `BrowserRouter`, so React Router's `useBlocker` (data routers only) is unavailable without migrating the router. Instead a small `NavigationGuard` context is used: the form registers "dirty" and an "ask" callback, and a shared `GuardedLink` used by the header, navbar and breadcrumbs consults it (DD-003 module 11).
+- **Mechanism (Claude, technical):** the app uses `BrowserRouter`, so React Router's `useBlocker` (data routers only) is unavailable without migrating the router. Instead a small `NavigationGuard` context is used: the form registers "dirty" and an "ask" callback, and a shared `GuardedLink` used by the header, navbar and breadcrumbs consults it (003_DD module 11).
 - **Rationale:** the navbar must not make losing work easier than Cancel does.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| BD-001 v7 | FN-009, E-07a, E-09, business rule |
-| DD-001-SPD v2, DD-003 v3 | `NavigationGuard`, `GuardedLink` |
+| 001_BD v7 | FN-009, E-07a, E-09, business rule |
+| 001_DD-SPD v2, 003_DD v3 | `NavigationGuard`, `GuardedLink` |
 | Plan revision 2 | Screen A gains this one behavior change beyond its header, by the user's decision |
 | Tests (revision 3) | Navbar and breadcrumb with a dirty form → dialog; Discard → destination |
 
@@ -561,17 +561,17 @@ Raised by the user after reviewing mockup version 2: "please add icons so it mor
 
 ### Decision and rationale
 
-- **Decision:** icons in four places — the navbar and actions, the dashboard tiles, the widget headings and state messages, and the health indicator — using `lucide-react`, pinned at an exact version (1.47.0 at the time of design). The mapping is fixed in BD-003 M-21. Icons are decorative (`aria-hidden="true"`) next to visible text everywhere; icon-only controls (Expand, Restore, Menu) keep their accessible names. No state is carried by an icon alone.
+- **Decision:** icons in four places — the navbar and actions, the dashboard tiles, the widget headings and state messages, and the health indicator — using `lucide-react`, pinned at an exact version (1.47.0 at the time of design). The mapping is fixed in 003_BD M-21. Icons are decorative (`aria-hidden="true"`) next to visible text everywhere; icon-only controls (Expand, Restore, Menu) keep their accessible names. No state is carried by an icon alone.
 - **Decided by:** user, 2026-09-22 (placement: all four options; source: "lucide-react").
 - **Rationale:** faster recognition at a glance, without a component kit and without hand-maintained artwork. It is an icon library, not a component kit, so the stack rule's intent is kept; it is still a new dependency and is recorded as such.
-- **Scope:** handled inside plan revision 2 as a direct user request editing its in-scope artifacts (BD-003, DD-003, the mockup), not a new plan revision.
+- **Scope:** handled inside plan revision 2 as a direct user request editing its in-scope artifacts (003_BD, 003_DD, the mockup), not a new plan revision.
 
 ### Impact
 
 | Artifact | Change required |
 | --- | --- |
-| BD-003 v3 | M-21 icon mapping; accessibility note |
-| DD-003 v4 | Dependency, `components/icons.ts` single import point |
+| 003_BD v3 | M-21 icon mapping; accessibility note |
+| 003_DD v4 | Dependency, `components/icons.ts` single import point |
 | Mockup v3 | Real Lucide glyphs inlined |
 | `ai/project.md` | Frontend stack gains `lucide-react` — updated when the dependency is actually added (plan revision 3) |
 | Screens A/B | Only through the shared header (navbar, Sign out, Menu); their own bodies are unchanged |
@@ -584,23 +584,23 @@ Found while implementing plan revision 3, steps 3–4.
 
 ### Decision and rationale
 
-- **Reader:** DD-003-FN §3 specified EF Core's `Database.SqlQuery<T>`. How it maps result columns onto ad-hoc row types under this project's snake-case naming convention is not documented clearly enough to rely on. The reader therefore runs DB-004's seven statements as ADO.NET commands on the EF connection and its `REPEATABLE READ` transaction, with every value an `NpgsqlParameter`, and maps rows by ordinal. Behavior, SQL text, the snapshot and the parameter binding are exactly as designed; only the call mechanism differs. DD-003-FN §3 was updated in the same change.
-- **Namespace:** DD-003 X-1 row 6a named `Application/System` and `Infrastructure/System`. A namespace `ProductionManagementAI.Application.System` would shadow .NET's `System` namespace inside it, so the folders and namespace are `Health`. DD-003 X-1 was updated.
+- **Reader:** 003_DD-FN §3 specified EF Core's `Database.SqlQuery<T>`. How it maps result columns onto ad-hoc row types under this project's snake-case naming convention is not documented clearly enough to rely on. The reader therefore runs 003_DB's seven statements as ADO.NET commands on the EF connection and its `REPEATABLE READ` transaction, with every value an `NpgsqlParameter`, and maps rows by ordinal. Behavior, SQL text, the snapshot and the parameter binding are exactly as designed; only the call mechanism differs. 003_DD-FN §3 was updated in the same change.
+- **Namespace:** 003_DD X-1 row 6a named `Application/System` and `Infrastructure/System`. A namespace `ProductionManagementAI.Application.System` would shadow .NET's `System` namespace inside it, so the folders and namespace are `Health`. 003_DD X-1 was updated.
 - **Decided by:** Claude, 2026-09-22 (technical; no behavior change).
-- **Verified:** a local smoke run against the migrated Compose database returned exactly DB-004's predicted figures; the integration tests (TC-203–TC-214) cover the reader.
+- **Verified:** a local smoke run against the migrated Compose database returned exactly 003_DB's predicted figures; the integration tests (TC-203–TC-214) cover the reader.
 
 ## DEC-025: Keeping the health poll from renewing the session
 
 ### Context
 
-Found by TC-225 during plan revision 3, step 8. DD-003-FN §7 suppressed renewal only in `OnCheckSlidingExpiration`. The test showed the cookie was still reissued on a health request made 8 days after sign-in. The cause is ASP.NET Core Identity's security-stamp validator: it runs in `OnValidatePrincipal` once its 30-minute interval has passed, and on success it replaces the principal and sets `ShouldRenew = true`. That happens before the sliding-expiration check, so the hook alone could not honour DEC-019.
+Found by TC-225 during plan revision 3, step 8. 003_DD-FN §7 suppressed renewal only in `OnCheckSlidingExpiration`. The test showed the cookie was still reissued on a health request made 8 days after sign-in. The cause is ASP.NET Core Identity's security-stamp validator: it runs in `OnValidatePrincipal` once its 30-minute interval has passed, and on success it replaces the principal and sets `ShouldRenew = true`. That happens before the sliding-expiration check, so the hook alone could not honour DEC-019.
 
 ### Decision and rationale
 
 - **Decision:** keep the sliding-expiration hook, and also wrap Identity's `OnValidatePrincipal`: run the security-stamp validation unchanged, then set `ShouldRenew = false` when the path is the health path. A revoked or changed stamp still rejects the request; only the reissue of the cookie is suppressed. Every other path is unchanged.
 - **Decided by:** Claude, 2026-09-22 (technical: the only way to implement the user's DEC-019 as stated; no behavior change beyond it).
 - **Verified:** TC-225 now passes. A health request 8 days after sign-in returns no `Set-Cookie`; a dashboard request at the same moment does.
-- **Documents:** DD-003-FN §7 updated in the same change.
+- **Documents:** 003_DD-FN §7 updated in the same change.
 
 ## DEC-026: Merge PR #15
 

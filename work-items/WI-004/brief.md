@@ -8,7 +8,7 @@
 
 Revision 1, 2026-09-22. First brief for Screen C, written after WI-003 (Screen B) was merged to `master`. The widgets and metrics that WI-001 DEC-010 left open were settled by the user on 2026-09-22 when Screen C was started (`decisions.md` DEC-001–DEC-007). The windows and sizes each metric uses were settled by the user in DEC-008 after plan revision 1 was approved; no business question is left open.
 
-Revision 2, 2026-09-22. After reviewing the DD-003 mockup the user asked for three additions (DEC-016–DEC-018): application navigation in a navbar on every screen (REQ-040, and REQ-028's wording), a server and database health indicator (REQ-041), and maximizing a chart to full window (REQ-042).
+Revision 2, 2026-09-22. After reviewing the 003_DD mockup the user asked for three additions (DEC-016–DEC-018): application navigation in a navbar on every screen (REQ-040, and REQ-028's wording), a server and database health indicator (REQ-041), and maximizing a chart to full window (REQ-042).
 
 ## Overview
 
@@ -31,11 +31,11 @@ Continue demonstrating the full AI development lifecycle (requirements → BD �
 
 ## Assumptions
 
-- Users reach this screen already authenticated via WI-001's cookie login (`docs/en/architecture/0002-auth-rbac-foundation.md`).
+- Users reach this screen already authenticated via WI-001's cookie login (`docs/en/architecture/0002/0002_ADR_auth-rbac-foundation.md`).
 - `Admin` and `Operator` are the only roles for now (WI-001 DEC-015 placeholder roles); both may view the dashboard, matching Screens A and B.
-- "Active" means status `Draft` or `InProgress`; "overdue" means an active order whose due date is before today — the same rule Screen B marks (WI-003 REQ-021, BD-002 M-08).
+- "Active" means status `Draft` or `InProgress`; "overdue" means an active order whose due date is before today — the same rule Screen B marks (WI-003 REQ-021, 002_BD M-08).
 - Every date, week and month boundary is plant-local in `Asia/Tokyo`, from the existing `IPlantClock` (WI-002 DEC-011, DEC-017).
-- Status transitions stay as WI-002 defined them: `Completed` is reachable only from `InProgress` and is terminal (BD-001 M-02), so an order is completed at most once and its completion time never changes.
+- Status transitions stay as WI-002 defined them: `Completed` is reachable only from `InProgress` and is terminal (001_BD M-02), so an order is completed at most once and its completion time never changes.
 - The 80 seeded demo orders (WI-003 DEC-007) remain; the seed is extended so the history widgets have data (DEC-004). Exact seeded values are settled in database design.
 - The dashboard shows figures as of the moment it loads; reloading the page refreshes them. No live push or auto-refresh.
 

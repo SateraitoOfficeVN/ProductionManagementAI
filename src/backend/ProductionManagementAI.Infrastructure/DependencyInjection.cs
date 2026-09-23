@@ -29,8 +29,8 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
         });
 
-        // Lockout thresholds mitigate credential-stuffing (ADR-0002 STRIDE: Spoofing);
-        // RequireUniqueEmail stays off per DB-001 (no email-based login in scope).
+        // Lockout thresholds mitigate credential-stuffing (0002_ADR STRIDE: Spoofing);
+        // RequireUniqueEmail stays off per 000_DB (no email-based login in scope).
         services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.Lockout.MaxFailedAccessAttempts = 5;
@@ -81,7 +81,7 @@ public static class DependencyInjection
             };
         });
 
-        // ADR-0002 (Tampering mitigation): persists Data Protection keys across container restarts
+        // 0002_ADR (Tampering mitigation): persists Data Protection keys across container restarts
         // so auth cookies aren't silently invalidated. Unset locally outside Docker (ephemeral keys are fine for dev).
         var dataProtectionKeysPath = configuration["DATA_PROTECTION_KEYS_PATH"];
         if (!string.IsNullOrEmpty(dataProtectionKeysPath))
@@ -89,7 +89,7 @@ public static class DependencyInjection
             services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath));
         }
 
-        // Production orders (DD-001-FN). The plant timezone is validated at startup so a bad ID fails fast.
+        // Production orders (001_DD-FN). The plant timezone is validated at startup so a bad ID fails fast.
         services.AddOptions<PlantOptions>()
             .BindConfiguration(PlantOptions.SectionName)
             .Validate(o => PlantOptions.IsValidTimeZone(o.TimeZone), "Plant:TimeZone must be a valid IANA timezone ID.")
@@ -99,7 +99,7 @@ public static class DependencyInjection
         services.AddScoped<IProductionOrderRepository, ProductionOrderRepository>();
         services.AddScoped<IOrderNumberIssuer, OrderNumberIssuer>();
 
-        // Dashboard and health (DD-003-FN).
+        // Dashboard and health (003_DD-FN).
         services.AddScoped<IDashboardReader, DashboardReader>();
         services.AddScoped<IDatabasePing, DatabasePing>();
 

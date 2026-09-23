@@ -1,4 +1,4 @@
-<!-- Basic Design Document (基本設計書) template, based on conventional Japanese SI basic-design composition and matching the format, style and content of the reference workbook at ai/templates/example/BD (00-04-01.画面設計_会員登録_入力画面.xlsx). Unlike detailed-design.md's example set, this workbook is a single file with no subfolders, so this stays one template file. Every content sheet is represented below: 改版履歴 → Document control; 0.基本情報 → 0-1/0-2/0-3 (basic info, page metadata split into its 6 head sub-sections, URL parameters); 1.画面レイアウト → Layout and mockup (per breakpoint); 2.CMS表示項目定義 → Content block definition; 3.動的表示項目定義 → Screen item definition; 4.項目加工定義 → Item value mapping; 5.バリデーションチェック定義 → Validation rules; 6.項目イベント定義 → Item events; 7.外部ID連携情報 → External identity linkage (column-per-provider). 資料テンプレ is a blank copy of another sheet's format, not distinct content, so it isn't represented separately. Copy into the relevant work item or docs/en/010_basic-design area; replace {bracketed} prompts with task-specific facts, or "Not applicable" with a reason. Do not fabricate results or approval.
+<!-- Basic Design Document (基本設計書) template, based on conventional Japanese SI basic-design composition and matching the format, style and content of the reference workbook at ai/templates/example/BD (00-04-01.画面設計_会員登録_入力画面.xlsx). Unlike detailed-design.md's example set, this workbook is a single file with no subfolders, so this stays one template file. Every content sheet is represented below: 改版履歴 → Document control; 0.基本情報 → 0-1/0-2/0-3 (basic info, page metadata split into its 6 head sub-sections, URL parameters); 1.画面レイアウト → Layout and mockup (per breakpoint, one SVG wireframe each); 2.CMS表示項目定義 → Content block definition; 3.動的表示項目定義 → Screen item definition; 4.項目加工定義 → Item value mapping; 5.バリデーションチェック定義 → Validation rules; 6.項目イベント定義 → Item events; 7.外部ID連携情報 → External identity linkage (column-per-provider). 資料テンプレ is a blank copy of another sheet's format, not distinct content, so it isn't represented separately. Copy into the relevant work item or docs/en/010_basic-design area; replace {bracketed} prompts with task-specific facts, or "Not applicable" with a reason. Do not fabricate results or approval.
 The per-screen detail block deliberately mirrors detailed-design.md's field/validation/event structure, per the reference workbook's own convention (one document carries both business and field-level detail for a screen). Keep both documents in sync as a screen moves from basic-design to detailed-design rather than letting one drift. -->
 
 # {System / Feature Name} — Basic Design Document (基本設計書)
@@ -7,7 +7,7 @@ The per-screen detail block deliberately mirrors detailed-design.md's field/vali
 
 | Field | Value |
 | --- | --- |
-| Document ID | {BD-###} |
+| Document ID | {###_BD} |
 | Category | {e.g., UI, Batch, API} |
 | System name | {system name} |
 | Subsystem name | {subsystem name, or "not applicable"} |
@@ -53,7 +53,22 @@ The per-screen detail block deliberately mirrors detailed-design.md's field/vali
 | --- | --- | --- | --- |
 | {SCR-###} | {name} | {how the user arrives here} | {where each primary action leads} |
 
-{Link a wireframe/mockup or screen-transition diagram here if one exists. Field/validation/event-level detail for each screen belongs in "Screen design detail" below, not here.}
+Screen transition:
+
+{A Mermaid `flowchart LR`, not ASCII art (RFC 0009). One node per screen and mode, labelled "{SCR-###} {name}" with its route on a second line (`<br>`); outside destinations such as `/login` or the home page as plain nodes. Solid arrows for primary actions, dotted arrows (`-. "label" .->`) for cancel/back and error exits such as a 401. Label every arrow with the action that causes it, in a few words. It must agree with the table above: every entry point and exit in the table appears as an arrow, and nothing else does. Example:}
+
+```mermaid
+flowchart LR
+    list["{SCR-###} {list screen}<br>{/route}"]
+    form["{SCR-###} {form screen}<br>{/route/new}"]
+    login["/login"]
+    list -- "{New}" --> form
+    form -- "{Save OK}" --> list
+    form -. "{Cancel}" .-> list
+    form -. "any 401" .-> login
+```
+
+{If the feature has a status workflow or another state machine, add it as a Mermaid `stateDiagram-v2` (with `direction LR`) under its own label, naming its requirement ID; mark terminal states with `--> [*]`. Omit it if there is none. Field/validation/event-level detail for each screen belongs in "Screen design detail" below, not here.}
 
 ## Screen design detail
 
@@ -130,22 +145,20 @@ The per-screen detail block deliberately mirrors detailed-design.md's field/vali
 
 #### 1. Layout and mockup
 
-{Layout/navigation-level sketch or link to a rendered mockup, per ai/skills/screen-design/SKILL.md; pixel-perfect fidelity and per-state mockups belong in detailed-design.md's "Screen layout and mockup" section. Provide one layout below per breakpoint this screen supports (at minimum PC/desktop; add SP/mobile, tablet, etc. as applicable) — mirroring the reference workbook's separate PC and SP layouts. If a breakpoint spans multiple sections of the screen, split it into numbered parts (e.g. "SP (1/2)", "SP (2/2)") as the source does.}
+{Layout/navigation-level wireframe per ai/skills/screen-design/SKILL.md; pixel-perfect fidelity and per-state mockups belong in detailed-design.md's "Screen layout and mockup" section. Provide one wireframe per breakpoint this screen supports (at minimum PC/desktop; add SP/mobile, tablet, etc. as applicable) — mirroring the reference workbook's separate PC and SP layouts. If a breakpoint spans multiple sections of the screen, split it into numbered parts (e.g. "SP (1/2)", "SP (2/2)") as the source does.}
+
+{Each wireframe is an SVG file, not ASCII art (RFC 0009), saved at `docs/en/010_basic-design/{###}/wireframes/{###_BD}_{SCR-###}-{pc|sp}.svg` (add `-1`, `-2` for split parts) and embedded as an image. Draw it as a grey-box wireframe, not a styled mockup:}
+
+- {Canvas: `viewBox` 960 wide for PC, 390 wide for SP; height as needed. A `<title>` naming the screen, breakpoint and mode, repeated in `aria-label`.}
+- {Greyscale only: header band and banners light grey (`#E5E7EB`), fields white with a grey outline (`#9CA3AF`), read-only fields light grey (`#F3F4F6`), primary buttons dark grey (`#4B5563`) with white text, secondary buttons outlined. Font `Yu Gothic UI, Meiryo, Hiragino Sans, Noto Sans JP, Segoe UI, sans-serif`, 12 px body text.}
+- {Every numbered element gets a callout badge: a dark orange (`#C2410C`) pill with its item number in white bold, placed just left of the element. The numbers are the ones in the legend table below and in §3.}
+- {Realistic sample values (a real-looking order number, product, date) instead of placeholder text, so the layout reads as the screen will.}
+- {Elements the picture can't show (dialogs, empty, loading and error states) are listed in an italic grey note at the bottom of the wireframe, and in the legend table.}
+- {The wireframes show the UI's Japanese text, as the catalog has it (`ai/rules/documentation.md`). The English and Japanese PDFs of the BD (RFC 0008) show these same SVGs, since the translation keeps the image paths.}
 
 ##### PC / desktop
 
-```
-{ASCII layout sketch, e.g.:
-+----------------------------------------------------+
-| {Header: title / breadcrumbs}                       |
-+----------------------------------------------------+
-| {Region A: fields/controls}    | {Region B: ...}    |
-|                                 |                    |
-+----------------------------------------------------+
-| {Primary actions: e.g. Save / Cancel}                |
-+----------------------------------------------------+
-}
-```
+![{SCR-###} PC layout with numbered items](wireframes/{###_BD}_{SCR-###}-pc.svg)
 
 | Item No. | Region / element | Notes (behavior, condition) |
 | --- | --- | --- |
@@ -153,7 +166,7 @@ The per-screen detail block deliberately mirrors detailed-design.md's field/vali
 
 ##### SP / mobile
 
-{Same structure as PC/desktop above: ASCII sketch (or rendered-mockup link) plus its own item-number legend. Item numbers should stay consistent with the PC layout where the same element appears in both. "Not applicable — this screen has no SP/mobile breakpoint" if responsive is "no" in 0-1.}
+{Same structure as PC/desktop above: its own SVG wireframe (`...-sp.svg`) plus its own item-number legend. Item numbers should stay consistent with the PC layout where the same element appears in both. "Not applicable — this screen has no SP/mobile breakpoint" if responsive is "no" in 0-1.}
 
 #### 2. Content block definition (CMS)
 

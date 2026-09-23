@@ -17,7 +17,7 @@ Specify a single screen's layout/navigation (BD-level) or its fields, interactio
 
 ## 3. Execution steps and applicable rules
 
-1. For BD-level work, describe layout and navigation; for DD-level work, specify fields and interactions.
+1. For BD-level work, describe layout and navigation, with an SVG wireframe per breakpoint and a Mermaid screen transition as the [BD template](../../templates/basic-design.md) specifies; for DD-level work, specify fields and interactions.
 2. Specify validation, loading/empty/error/success states, and WCAG 2.2 AA behavior (keyboard operability, focus order, contrast) — per [frontend rules](../../rules/frontend.md).
 3. Map detailed interactions to the agreed API; stay within the confirmed frontend stack and don't introduce a component kit or another UI framework, per [frontend rules](../../rules/frontend.md).
 4. At DD-level (full interaction spec), produce a rendered mockup with the `design` skill: one artboard per key state (create/empty, populated/edit, any locked-or-restricted variant, validation-error, success), matching the frontend's existing visual vocabulary (tokens/components already in `src/frontend`, once any exist) rather than inventing a new look. Default to a static mockup; build a clickable prototype only if asked. Publish it as an Artifact and link the URL from the DD's "Screen layout and mockup" section.
@@ -28,7 +28,7 @@ The `design` skill for the rendered mockup (step 3.4); it does not imply a UI fr
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-Screen sections written directly into the relevant BD (`docs/en/010_basic-design/`) or DD (`docs/en/020_detailed-design/`), plus the rendered mockup's Artifact URL linked from the DD's "Mockup artifact" line (step 3.4). Uses the screen's existing `SCR-###` ID from basic-design.md; do not assign a new ID for the same screen.
+Screen sections written directly into the relevant BD (`docs/en/010_basic-design/###/`) or DD (`docs/en/020_detailed-design/###/`), plus the rendered mockup's Artifact URL linked from the DD's "Mockup artifact" line (step 3.4). Uses the screen's existing `SCR-###` ID from basic-design.md; do not assign a new ID for the same screen. Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
 
 ## 6. Checklist and repeatable verification method
 

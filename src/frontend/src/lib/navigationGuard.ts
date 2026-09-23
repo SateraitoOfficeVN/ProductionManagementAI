@@ -10,7 +10,7 @@ export interface NavigationGuardValue {
   intercepts: (to: string) => boolean
 }
 
-// WI-004 DEC-022 (DD-003 module 11). BrowserRouter has no useBlocker, so in-app links consult this context instead.
+// WI-004 DEC-022 (003_DD module 11). BrowserRouter has no useBlocker, so in-app links consult this context instead.
 // Without a provider (e.g. a component rendered alone in a test) nothing is ever intercepted.
 const noGuard: NavigationGuardValue = { register: () => () => {}, intercepts: () => false }
 

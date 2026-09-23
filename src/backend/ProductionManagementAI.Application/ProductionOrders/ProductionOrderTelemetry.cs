@@ -3,7 +3,7 @@ using System.Diagnostics.Metrics;
 
 namespace ProductionManagementAI.Application.ProductionOrders;
 
-/// <summary>Spans and counters specified in DD-001 "Observability".</summary>
+/// <summary>Spans and counters specified in 001_DD "Observability".</summary>
 public static class ProductionOrderTelemetry
 {
     public const string Name = "ProductionManagementAI.ProductionOrders";
@@ -21,14 +21,14 @@ public static class ProductionOrderTelemetry
     public static readonly Counter<long> StatusTransitions =
         Meter.CreateCounter<long>("pmai.production_orders.status_transitions", description: "Successful status changes.");
 
-    // DD-002-FN "Observability".
+    // 002_DD-FN "Observability".
     public static readonly Counter<long> Listed =
         Meter.CreateCounter<long>("pmai.production_orders.listed", description: "Production order list queries by outcome.");
 
     public static readonly Histogram<int> ListResultSize = Meter.CreateHistogram<int>(
         "pmai.production_orders.list_result_size", description: "Rows returned on a production order list page.");
 
-    // DD-003-FN "Observability".
+    // 003_DD-FN "Observability".
     public static readonly Counter<long> DashboardLoaded = Meter.CreateCounter<long>(
         "pmai.production_orders.dashboard_loaded", description: "Dashboard snapshot requests by outcome.");
 

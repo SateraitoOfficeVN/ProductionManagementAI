@@ -2,7 +2,7 @@ using ProductionManagementAI.Domain.ProductionOrders;
 
 namespace ProductionManagementAI.Application.ProductionOrders;
 
-// Request/response shapes for DD-001-API. Request fields are nullable so a missing field is reported as
+// Request/response shapes for 001_DD-API. Request fields are nullable so a missing field is reported as
 // "required" with its message ID instead of failing model binding.
 
 public sealed record CreateProductionOrderRequest(Guid? ProductId, int? Quantity, DateOnly? DueDate, string? Notes);

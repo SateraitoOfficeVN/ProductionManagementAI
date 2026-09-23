@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+/* WI-005: Japanese UI. System Japanese fonts first, so kana and kanji never fall back to a mismatched face. */
+@theme {
+  --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP",
+    ui-sans-serif, system-ui, sans-serif;
+}

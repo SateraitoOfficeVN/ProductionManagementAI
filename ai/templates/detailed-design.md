@@ -3,24 +3,24 @@
 - DD/api-design.md — per-endpoint request/response field catalogs, matching example/DD/API/70-00-02.API仕様設計_....xlsx. Always produced: every endpoint this DD's screen calls is catalogued there, including small screen-owned ones; this file's "APIs used" only lists the endpoints and links to their sections.
 - DD/function-design.md — per-method design of the backend service/Application-layer methods behind this DD's endpoints (shared across screens or not), matching example/DD/Functions/90-11-02.機能設計_....xlsx. Always produced: this file's "Module design" keeps the screen-owned domain entities/rules, UI components and controllers, and points to the companion for the service methods.
 - DD/screen-processing-design.md — step-by-step processing flow (branching, redirects, per-component breakdown), matching example/DD/画面処理設計/00-04-01.画面処理設計_....xlsx. Always produced: the step-by-step flows live there, one block per component; this file's "Processing and state transitions" keeps only the state-transition table and a flow → section pointer table.
-All four documents are always produced for every DD, as separate Markdown files side by side in docs/en/020_detailed-design/: `{DD-###}-{slug}.md` (this file), `{DD-###}-API-{slug}.md`, `{DD-###}-FN-{slug}.md` and `{DD-###}-SPD-{slug}.md`, with document IDs `{DD-###}`, `{DD-###}-API`, `{DD-###}-FN` and `{DD-###}-SPD`. Each piece of content has exactly one home among the four; the others point to it rather than repeating it. When a companion's subject genuinely doesn't exist for a DD (e.g. a backend-only DD with no screen), the companion is still produced, with each of its sections marked "Not applicable — {reason}" rather than the file being skipped.
+All four documents are always produced for every DD, as separate Markdown files side by side in docs/en/020_detailed-design/: `{###_DD}_{slug}.md` (this file), `{###_DD}-API_{slug}.md`, `{###_DD}-FN_{slug}.md` and `{###_DD}-SPD_{slug}.md`, with document IDs `{###_DD}`, `{###_DD}-API`, `{###_DD}-FN` and `{###_DD}-SPD`. Each piece of content has exactly one home among the four; the others point to it rather than repeating it. When a companion's subject genuinely doesn't exist for a DD (e.g. a backend-only DD with no screen), the companion is still produced, with each of its sections marked "Not applicable — {reason}" rather than the file being skipped.
 List all three companion documents in "Companion design documents" below. This file's own "Module design" keeps the reference workbook's Rule-type/Rule-references/Condition-references/Check-parameters sub-block (from its Container/Rule sheets) for a module that is itself a business rule or validator owned by this screen. Where a legacy ASPX-specific concept (e.g. an XML rule engine, .aspx include paths) has no direct equivalent in this project's .NET 10 + EF Core / React stack, fill that field with "not applicable — {reason}" rather than deleting it.
 Copy into the relevant work item or docs/en/020_detailed-design area; replace {bracketed} prompts with task-specific facts, or "Not applicable" with a reason. Do not fabricate results or approval. -->
 
 # {Screen / Module Name} — Detailed Design Document (詳細設計書)
 
-{DD-###} — implements {BD-###}, requirements {REQ-###, …}.
+{###_DD} — implements {###_BD}, requirements {REQ-###, …}.
 
 ## Document control (改版履歴)
 
 | Field | Value |
 | --- | --- |
-| Document ID | {DD-###} |
+| Document ID | {###_DD} |
 | Category | {e.g., UI, API, Function} |
 | System name | {system name} |
 | Subsystem name | {subsystem name, or "not applicable"} |
 | Work item | {WI-###} |
-| Implements | {BD-###} |
+| Implements | {###_BD} |
 | Created by | {name} |
 | Created date | {YYYY-MM-DD} |
 | Last updated by | {name} |
@@ -97,9 +97,9 @@ Copy into the relevant work item or docs/en/020_detailed-design area; replace {b
 
 | No | Document | Type | Covers |
 | --- | --- | --- | --- |
-| 1 | {DD-###}-API-{slug}.md | api-design | {endpoints} |
-| 2 | {DD-###}-FN-{slug}.md | function-design | {service methods} |
-| 3 | {DD-###}-SPD-{slug}.md | screen-processing-design | {per-component processing blocks} |
+| 1 | {###_DD}-API_{slug}.md | api-design | {endpoints} |
+| 2 | {###_DD}-FN_{slug}.md | function-design | {service methods} |
+| 3 | {###_DD}-SPD_{slug}.md | screen-processing-design | {per-component processing blocks} |
 
 ### Task / design index
 
@@ -184,26 +184,17 @@ Processing overview: {prose summary of the algorithm/flow}.
 
 ## Screen layout and mockup
 
-{Visual layout for this screen, at implementation fidelity: an ASCII sketch below (authoritative for the field/region mapping, since it's plain text and version-controlled), plus a rendered mockup covering the screen's key states — at minimum create/empty, populated/edit, a locked-or-restricted variant if any field is conditionally read-only, a validation-error state, and success. Produce the rendered mockup with the `design` skill (Claude Design canvas, published as an Artifact) per `ai/skills/screen-design/SKILL.md`, matching the frontend's existing visual vocabulary (styles/tokens already in `src/frontend`) rather than inventing a new look; a static mockup is the default, a clickable prototype only if asked. If this refines a BD-level wireframe, note what changed and why. "None" is not acceptable once fields are defined — a reader must be able to see where each field/control sits and, for anything the ASCII sketch can't convey (state, color, disabled styling), what it actually looks like.}
+{Visual layout for this screen, at implementation fidelity: an SVG wireframe (authoritative for the field/region mapping, since it's plain XML and version-controlled), plus a rendered mockup covering the screen's key states — at minimum create/empty, populated/edit, a locked-or-restricted variant if any field is conditionally read-only, a validation-error state, and success. Produce the rendered mockup with the `design` skill (Claude Design canvas, published as an Artifact) per `ai/skills/screen-design/SKILL.md`, matching the frontend's existing visual vocabulary (styles/tokens already in `src/frontend`) rather than inventing a new look; a static mockup is the default, a clickable prototype only if asked. If this refines a BD-level wireframe, note what changed and why. "None" is not acceptable once fields are defined — a reader must be able to see where each field/control sits and, for anything the wireframe can't convey (color, exact styling), what it actually looks like.}
 
-```
-{ASCII layout sketch, e.g.:
-+----------------------------------------------------+
-| {Header: title / breadcrumbs}                       |
-+----------------------------------------------------+
-| {Region A: fields/controls}    | {Region B: ...}    |
-|                                 |                    |
-+----------------------------------------------------+
-| {Primary actions: e.g. Save / Cancel}                |
-+----------------------------------------------------+
-}
-```
+{The wireframe is an SVG, not ASCII art (RFC 0009), saved at `docs/en/020_detailed-design/{###}/wireframes/{###_DD}_{SCR-###}-pc.svg` and embedded as an image. It follows the BD wireframe conventions in `ai/templates/basic-design.md` (canvas widths, greyscale palette, numbered callout badges using the BD's item numbers, realistic sample values, a note for what isn't drawn), at DD fidelity: the representative populated state with its real labels, hint texts, locked or read-only styling, and error-text slots. Draw dialogs and whole-screen states the main wireframe can't show (empty, no-match) as their own SVGs, `…-dialog.svg` or `…-states.svg`, each embedded under a one-line caption. Add an SP wireframe (`…-sp.svg`) only where the DD changes the BD's SP layout.}
+
+![{SCR-###} PC layout with numbered items](wireframes/{###_DD}_{SCR-###}-pc.svg)
 
 {Mockup artifact: link to the published rendered mockup (default), or "none — {reason}" only for a DD with no visual screen (e.g. a backend-only endpoint).}
 
 | Region | Contains (field/control) | Notes |
 | --- | --- | --- |
-| {region name from sketch above} | {field/control, cross-referenced to Screen item definition} | {responsive behavior, conditional visibility, or "none"} |
+| {region name from the wireframe above} | {field/control, cross-referenced to Screen item definition} | {responsive behavior, conditional visibility, or "none"} |
 
 ## Screen item definition
 
@@ -223,6 +214,16 @@ Processing overview: {prose summary of the algorithm/flow}.
 
 ### State transitions
 
+{A Mermaid `stateDiagram-v2` (`direction LR`) of the transitions in the table below, then the table itself, which stays the authoritative list with each transition's side effect. The diagram shows the transitions between distinct states; transitions from "any" state and events that keep the state may stay table-only, with a one-line note under the diagram saying so. Example:}
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> {state}: {event}
+    {state} --> {state}: {event}
+    {state} --> [*]
+```
+
 | From state | Event | To state | Side effect |
 | --- | --- | --- | --- |
 | {state} | {event} | {state} | {e.g. record created, notification sent} |
@@ -231,7 +232,7 @@ Processing overview: {prose summary of the algorithm/flow}.
 
 | Flow | Where (screen-processing-design / function-design section) | Events |
 | --- | --- | --- |
-| {flow name} | {{DD-###}-SPD §… / {DD-###}-FN §…} | {BD event IDs} |
+| {flow name} | {{###_DD}-SPD §… / {###_DD}-FN §…} | {BD event IDs} |
 
 ## APIs used
 
@@ -239,7 +240,7 @@ Processing overview: {prose summary of the algorithm/flow}.
 
 | Endpoint | Method | Purpose | Design doc |
 | --- | --- | --- | --- |
-| {/path} | {GET/POST/PUT/DELETE} | {} | {{DD-###}-API §…} |
+| {/path} | {GET/POST/PUT/DELETE} | {} | {{###_DD}-API §…} |
 
 ## Database and transaction mapping
 

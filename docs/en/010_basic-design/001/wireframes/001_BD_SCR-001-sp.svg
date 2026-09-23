@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 700" width="390" height="700" font-family="Yu Gothic UI, Meiryo, Hiragino Sans, Noto Sans JP, Segoe UI, sans-serif" role="img" aria-label="SCR-001 Production order create/edit — SP layout">
+  <title>SCR-001 Production order create/edit — SP layout</title>
+  <rect x="0.5" y="0.5" width="389" height="699" rx="8" fill="#fff" stroke="#9CA3AF"/>
+  <rect x="1" y="1" width="388" height="48" rx="7" fill="#E5E7EB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="11.0" y="16" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="29" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="34" y="29" font-size="14" font-weight="700" fill="#374151" text-anchor="start">PMAI</text>
+  <rect x="285.0" y="16" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="294" y="29" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <rect x="310" y="10" width="66" height="28" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="343.0" y="28.0" font-size="12" font-weight="600" fill="#374151" text-anchor="middle">メニュー</text>
+  <rect x="11.0" y="63" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="76" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="34" y="76" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">‹ 製造指示一覧</text>
+  <rect x="11.0" y="93" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="106" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="34" y="108" font-size="18" font-weight="700" fill="#374151" text-anchor="start">新規製造指示</text>
+  <rect x="11.0" y="129" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="142" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <rect x="34" y="124" width="340" height="28" rx="4" fill="#E5E7EB" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="44" y="142" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start" font-style="italic">message banner</text>
+  <rect x="11.0" y="165" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="178" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="34" y="178" font-size="12" font-weight="400" fill="#374151" text-anchor="start">指示番号</text>
+  <rect x="16" y="186" width="358" height="30" rx="4" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="25" y="205.0" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">保存時に採番</text>
+  <rect x="11.0" y="227" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="240" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <text x="34" y="240" font-size="12" font-weight="400" fill="#374151" text-anchor="start">ステータス</text>
+  <rect x="16" y="248" width="358" height="30" rx="4" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="25" y="267.0" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">下書き</text>
+  <rect x="11.0" y="289" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="302" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+  <text x="34" y="302" font-size="12" font-weight="400" fill="#374151" text-anchor="start">製品 *</text>
+  <rect x="16" y="310" width="358" height="30" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="25" y="329.0" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">製品を選択</text>
+  <text x="362" y="329.0" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">▾</text>
+  <rect x="11.0" y="351" width="18" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="364" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">9</text>
+  <text x="34" y="364" font-size="12" font-weight="400" fill="#374151" text-anchor="start">数量 *</text>
+  <rect x="16" y="372" width="358" height="30" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="9.0" y="413" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="426" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">10</text>
+  <text x="34" y="426" font-size="12" font-weight="400" fill="#374151" text-anchor="start">納期 *</text>
+  <rect x="16" y="434" width="358" height="30" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="25" y="453.0" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">yyyy/mm/dd</text>
+  <rect x="9.0" y="475" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="488" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">11</text>
+  <text x="36" y="488" font-size="12" font-weight="400" fill="#374151" text-anchor="start">備考</text>
+  <rect x="16" y="496" width="358" height="64" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="25" y="532.0" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">任意</text>
+  <rect x="299.0" y="567" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="310" y="580" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">12</text>
+  <text x="374" y="580" font-size="11" font-weight="400" fill="#6B7280" text-anchor="end">0/500</text>
+  <rect x="9.0" y="593" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="606" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">13</text>
+  <rect x="35.0" y="593" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="46" y="606" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">14</text>
+  <text x="62" y="606" font-size="11" font-weight="400" fill="#6B7280" text-anchor="start">登録日時 / 最終更新 (edit mode)</text>
+  <rect x="9.0" y="631" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="644" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">16</text>
+  <rect x="36" y="624" width="338" height="34" rx="4" fill="#4B5563" stroke="#4B5563" stroke-width="1"/>
+  <text x="205.0" y="645.0" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">保存</text>
+  <rect x="9.0" y="673" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="20" y="686" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">15</text>
+  <rect x="36" y="666" width="338" height="34" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="205.0" y="687.0" font-size="12" font-weight="600" fill="#374151" text-anchor="middle">キャンセル</text>
+</svg>

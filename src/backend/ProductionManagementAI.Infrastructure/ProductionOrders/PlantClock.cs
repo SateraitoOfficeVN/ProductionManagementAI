@@ -29,7 +29,7 @@ public sealed class PlantClock(TimeProvider timeProvider, IOptions<PlantOptions>
 
     public DateTimeOffset StartOfDayUtc(DateOnly date)
     {
-        // Local midnight; if a DST gap skips it, the first valid local minute of that day (DD-003-FN §5).
+        // Local midnight; if a DST gap skips it, the first valid local minute of that day (003_DD-FN §5).
         var local = date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Unspecified);
         while (_zone.IsInvalidTime(local))
         {

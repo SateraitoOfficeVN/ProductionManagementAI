@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './useAuth'
+import { labels } from '../production-orders/messages'
 
 export function LoginPage() {
   const { login } = useAuth()
@@ -18,8 +19,8 @@ export function LoginPage() {
       await login(userName, password)
       navigate('/')
     } catch {
-      // Generic message regardless of cause, matching the backend's own generic failure response (ADR-0002).
-      setError('Invalid username or password.')
+      // Generic message regardless of cause, matching the backend's own generic failure response (0002_ADR).
+      setError(labels.login.failed)
     } finally {
       setIsSubmitting(false)
     }
@@ -28,11 +29,11 @@ export function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center">
       <form onSubmit={(event) => void handleSubmit(event)} className="w-full max-w-sm space-y-4 rounded-lg border border-gray-200 p-6">
-        <h1 className="text-xl font-medium text-gray-900">Sign in</h1>
+        <h1 className="text-xl font-medium text-gray-900">{labels.login.title}</h1>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <div>
           <label htmlFor="userName" className="block text-sm font-medium text-gray-700">
-            Username
+            {labels.login.userName}
           </label>
           <input
             id="userName"
@@ -46,7 +47,7 @@ export function LoginPage() {
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
+            {labels.login.password}
           </label>
           <input
             id="password"
@@ -63,7 +64,7 @@ export function LoginPage() {
           disabled={isSubmitting}
           className="w-full rounded bg-gray-900 px-3 py-2 text-white disabled:opacity-50"
         >
-          {isSubmitting ? 'Signing in…' : 'Sign in'}
+          {isSubmitting ? labels.login.submitting : labels.login.submit}
         </button>
       </form>
     </main>

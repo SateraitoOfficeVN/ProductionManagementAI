@@ -2,7 +2,7 @@
 
 # {System Name} — Database Design Document (テーブル定義書)
 
-{DB-###} — requirements {REQ-###, …}, implements {DD-###}.
+{###_DB} — requirements {REQ-###, …}, implements {###_DD}.
 
 ## Table list
 

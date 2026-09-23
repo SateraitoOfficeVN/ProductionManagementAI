@@ -2,13 +2,14 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { setUnauthorizedHandler } from '../../lib/apiClient'
 import { AuthContext } from './authContext'
 import type { User } from './types'
+import { labels } from '../production-orders/messages'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   // Any 401 from the shared apiClient (e.g. session expired mid-edit) clears the user; ProtectedRoute then
-  // redirects to /login (DD-001-SPD §3).
+  // redirects to /login (001_DD-SPD §3).
   useEffect(() => {
     setUnauthorizedHandler(() => setUser(null))
     return () => setUnauthorizedHandler(null)
@@ -40,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (!response.ok) {
-      throw new Error('Invalid username or password.')
+      throw new Error(labels.login.failed)
     }
 
     setUser((await response.json()) as User)

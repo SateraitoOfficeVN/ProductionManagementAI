@@ -1,5 +1,5 @@
-// Client-side checks (BD-001 V-01–V-05). Advisory only: the server repeats every check and is authoritative.
-// Each returns a DD-001 message ID, or null when valid.
+// Client-side checks (001_BD V-01–V-05). Advisory only: the server repeats every check and is authoritative.
+// Each returns a 001_DD message ID, or null when valid.
 
 export const MAX_QUANTITY = 999_999_999
 export const MAX_NOTES = 500

@@ -3,7 +3,7 @@ using ProductionManagementAI.Domain.ProductionOrders;
 
 namespace ProductionManagementAI.Application.Tests.Dashboard;
 
-/// <summary>DD-003-FN §4: zero-filling, bucket order and the one rounding rule (TC-203, TC-205, TC-211, TC-212, unit).</summary>
+/// <summary>003_DD-FN §4: zero-filling, bucket order and the one rounding rule (TC-203, TC-205, TC-211, TC-212, unit).</summary>
 public class DashboardMapperTests
 {
     private static readonly DashboardWindow Window = DashboardWindow.For(new DateOnly(2026, 9, 23), new TokyoClock(TimeProvider.System));
@@ -97,7 +97,7 @@ public class DashboardMapperTests
     public void Group_total_comes_from_the_window_count_and_empty_is_zero()
     {
         var row = new DashboardOrderRow(Guid.NewGuid(), "PO-2026-00001", 5, new DateOnly(2026, 9, 1), "InProgress",
-            Guid.NewGuid(), "P-1001", "Steel bracket", 12);
+            Guid.NewGuid(), "P-1001", "ブレーキキャリパー", 12);
 
         var response = DashboardMapper.ToResponse(Window, Raw(overdue: [row]), AsOf);
 

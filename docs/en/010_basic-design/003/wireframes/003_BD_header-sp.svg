@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 250" width="390" height="250" font-family="Yu Gothic UI, Meiryo, Hiragino Sans, Noto Sans JP, Segoe UI, sans-serif" role="img" aria-label="Shared application header — SP (&lt; 640px), menu open">
+  <title>Shared application header — SP (&lt; 640px), menu open</title>
+  <rect x="0.5" y="0.5" width="389" height="249" rx="8" fill="#fff" stroke="#9CA3AF"/>
+  <rect x="1" y="1" width="388" height="48" rx="7" fill="#E5E7EB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="9.5" y="16" width="29" height="18" rx="9" fill="#C2410C"/>
+  <text x="24" y="29" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">H-1</text>
+  <text x="46" y="29" font-size="14" font-weight="700" fill="#374151" text-anchor="start">PMAI</text>
+  <rect x="267.5" y="16" width="29" height="18" rx="9" fill="#C2410C"/>
+  <text x="282" y="29" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">H-4</text>
+  <rect x="304" y="10" width="70" height="28" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="339.0" y="28.0" font-size="12" font-weight="600" fill="#374151" text-anchor="middle">閉じる</text>
+  <rect x="16" y="60" width="358" height="150" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="25.5" y="71" width="29" height="18" rx="9" fill="#C2410C"/>
+  <text x="40" y="84" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">H-5</text>
+  <text x="66" y="84" font-size="13" font-weight="700" fill="#374151" text-anchor="start">ダッシュボード</text>
+  <line x1="66" y1="96" x2="358" y2="96" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="66" y="118" font-size="13" font-weight="400" fill="#374151" text-anchor="start">製造指示一覧</text>
+  <line x1="66" y1="130" x2="358" y2="130" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="66" y="152" font-size="13" font-weight="400" fill="#374151" text-anchor="start">+ 新規製造指示</text>
+  <line x1="66" y1="164" x2="358" y2="164" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="66" y="186" font-size="13" font-weight="400" fill="#374151" text-anchor="start">Admin · ログアウト</text>
+  <text x="16" y="234" font-size="11" font-weight="400" fill="#6B7280" text-anchor="start" font-style="italic">Menu open: the button reads 閉じる (Close); Escape closes it.</text>
+</svg>

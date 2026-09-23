@@ -1,11 +1,11 @@
 import { expect, test, type Page } from '@playwright/test'
 import { expectNoAxeViolations, futureDate, openCreateForm, signIn } from './helpers'
 
-// Screen C (SCR-003) and the shared navbar — DD-003 E-level viewpoints (TC-201, TC-202, TC-216, TC-217, TC-222,
-// TC-223, TC-227). The stack carries DB-004's demo seed; figures depend on the day the seed ran, so assertions are
+// Screen C (SCR-003) and the shared navbar — 003_DD E-level viewpoints (TC-201, TC-202, TC-216, TC-217, TC-222,
+// TC-223, TC-227). The stack carries 003_DB's demo seed; figures depend on the day the seed ran, so assertions are
 // structural or relative (tiles sum to the total, workload sums to Draft + In progress), never absolute.
 
-const nav = (page: Page) => page.getByRole('navigation', { name: 'Main' })
+const nav = (page: Page) => page.getByRole('navigation', { name: 'メインメニュー' })
 
 async function tileValue(page: Page, list: string, label: string): Promise<number> {
   const tile = page.getByRole('list', { name: list }).getByRole('listitem').filter({ hasText: label }).first()
@@ -19,25 +19,25 @@ test.beforeEach(async ({ page }) => {
 
 test('login lands on the dashboard with every widget, healthy status and no axe violations (TC-201, TC-217)', async ({ page }) => {
   await expect(page).toHaveURL(/\/$/)
-  await expect(page).toHaveTitle('Dashboard — ProductionManagementAI')
-  await expect(page.getByText(/^As of \d{4}-\d{2}-\d{2} \d{2}:\d{2} \(Asia\/Tokyo\)$/)).toBeVisible()
-  await expect(nav(page).getByRole('link', { name: 'Dashboard' })).toHaveAttribute('aria-current', 'page')
+  await expect(page).toHaveTitle('ダッシュボード — ProductionManagementAI')
+  await expect(page.getByText(/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 時点（Asia\/Tokyo）$/)).toBeVisible()
+  await expect(nav(page).getByRole('link', { name: 'ダッシュボード' })).toHaveAttribute('aria-current', 'page')
 
-  for (const heading of ['Needs attention', 'Top products by open quantity', 'Open workload by due week', 'Completed per week, last 12 weeks']) {
+  for (const heading of ['要注意', '未完了数量の多い製品', '納期週別の未完了作業量', '週別の完了件数（直近12週）']) {
     await expect(page.getByRole('heading', { name: heading })).toBeVisible()
   }
-  await expect(page.getByRole('status').filter({ hasText: 'Database: OK' })).toBeVisible()
+  await expect(page.getByRole('status').filter({ hasText: 'データベース：正常' })).toBeVisible()
 
-  const total = await tileValue(page, 'Orders by status', 'Total')
+  const total = await tileValue(page, 'ステータス別の製造指示', '合計')
   const parts = await Promise.all(
-    ['Draft', 'In progress', 'Completed', 'Cancelled'].map((label) => tileValue(page, 'Orders by status', label)),
+    ['下書き', '進行中', '完了', '取消'].map((label) => tileValue(page, 'ステータス別の製造指示', label)),
   )
   expect(total).toBeGreaterThan(0)
   expect(parts.reduce((a, b) => a + b, 0)).toBe(total)
 
   // The workload bars sum to the active orders (DEC-009, one snapshot): read them from the chart's own table.
-  await page.getByRole('button', { name: 'View as table' }).first().click()
-  const orders = await page.getByRole('table', { name: 'Open workload by due week' }).locator('tbody tr td:nth-child(3)').allInnerTexts()
+  await page.getByRole('button', { name: '表で表示' }).first().click()
+  const orders = await page.getByRole('table', { name: '納期週別の未完了作業量' }).locator('tbody tr td:nth-child(3)').allInnerTexts()
   expect(orders).toHaveLength(10)
   expect(orders.map((n) => Number(n.replace(/,/g, ''))).reduce((a, b) => a + b, 0)).toBe(parts[0] + parts[1])
 
@@ -47,16 +47,16 @@ test('login lands on the dashboard with every widget, healthy status and no axe 
 test('widgets are read-only and the navbar reaches every screen with the right current page (TC-202, TC-222)', async ({ page }) => {
   await expect(page.getByRole('main').getByRole('link')).toHaveCount(0)
 
-  await nav(page).getByRole('link', { name: 'Production orders' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Production orders' })).toBeVisible()
-  await expect(nav(page).getByRole('link', { name: 'Production orders' })).toHaveAttribute('aria-current', 'page')
+  await nav(page).getByRole('link', { name: '製造指示一覧' }).click()
+  await expect(page.getByRole('heading', { level: 1, name: '製造指示一覧' })).toBeVisible()
+  await expect(nav(page).getByRole('link', { name: '製造指示一覧' })).toHaveAttribute('aria-current', 'page')
 
-  await nav(page).getByRole('link', { name: 'New production order' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'New production order' })).toBeVisible()
-  await expect(nav(page).getByRole('link', { name: 'New production order' })).toHaveAttribute('aria-current', 'page')
+  await nav(page).getByRole('link', { name: '新規製造指示' }).click()
+  await expect(page.getByRole('heading', { level: 1, name: '新規製造指示' })).toBeVisible()
+  await expect(nav(page).getByRole('link', { name: '新規製造指示' })).toHaveAttribute('aria-current', 'page')
 
-  await nav(page).getByRole('link', { name: 'Dashboard' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Dashboard' })).toBeVisible()
+  await nav(page).getByRole('link', { name: 'ダッシュボード' }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'ダッシュボード' })).toBeVisible()
   await expectNoAxeViolations(page)
 })
 
@@ -72,25 +72,25 @@ test('a failed load shows Retry and no figures; Retry recovers (TC-216)', async 
   await page.goto('/')
 
   const alert = page.getByRole('alert')
-  await expect(alert).toContainText('Something went wrong. Try again.')
-  await expect(page.getByRole('list', { name: 'Orders by status' })).toHaveCount(0)
+  await expect(alert).toContainText('問題が発生しました。もう一度お試しください。')
+  await expect(page.getByRole('list', { name: 'ステータス別の製造指示' })).toHaveCount(0)
   await expect(nav(page)).toBeVisible()
 
-  await alert.getByRole('button', { name: 'Retry' }).click()
-  await expect(page.getByRole('list', { name: 'Orders by status' })).toBeVisible()
+  await alert.getByRole('button', { name: '再試行' }).click()
+  await expect(page.getByRole('list', { name: 'ステータス別の製造指示' })).toBeVisible()
 })
 
 test('a chart maximizes to a dialog, keeps focus inside, and restores focus on Escape (TC-227)', async ({ page }) => {
-  const expand = page.getByRole('button', { name: 'Expand Completed per week, last 12 weeks' })
+  const expand = page.getByRole('button', { name: '週別の完了件数（直近12週）を拡大' })
   let requests = 0
   page.on('request', (r) => { if (r.url().endsWith('/api/dashboard')) requests++ })
 
   await expand.click()
-  const dialog = page.getByRole('dialog', { name: 'Completed per week, last 12 weeks' })
+  const dialog = page.getByRole('dialog', { name: '週別の完了件数（直近12週）' })
   await expect(dialog).toBeVisible()
-  await expect(dialog.getByRole('button', { name: 'Restore' })).toBeFocused()
+  await expect(dialog.getByRole('button', { name: '元に戻す' })).toBeFocused()
   await expect(dialog.getByRole('table')).toBeVisible()
-  await expect(dialog.getByRole('img', { name: /^Orders completed per week, last 12 weeks: / })).toBeVisible()
+  await expect(dialog.getByRole('img', { name: /^週別の完了件数（直近12週）：/ })).toBeVisible()
 
   await page.keyboard.press('Tab')
   await page.keyboard.press('Tab')
@@ -105,17 +105,17 @@ test('a chart maximizes to a dialog, keeps focus inside, and restores focus on E
 
 test('an edited order asks before a navbar link leaves it; Discard follows the link (TC-223)', async ({ page }) => {
   await openCreateForm(page)
-  await page.getByLabel('Quantity').fill('7')
-  await page.getByLabel('Due date').fill(futureDate())
+  await page.getByLabel('数量').fill('7')
+  await page.getByLabel('納期').fill(futureDate())
 
-  await nav(page).getByRole('link', { name: 'Dashboard' }).click()
-  const dialog = page.getByRole('dialog', { name: 'Discard your changes?' })
+  await nav(page).getByRole('link', { name: 'ダッシュボード' }).click()
+  const dialog = page.getByRole('dialog', { name: '変更を破棄しますか？' })
   await expect(dialog).toBeVisible()
-  await dialog.getByRole('button', { name: 'Keep editing' }).click()
+  await dialog.getByRole('button', { name: '編集を続ける' }).click()
   await expect(page).toHaveURL(/\/production-orders\/new$/)
-  await expect(page.getByLabel('Quantity')).toHaveValue('7')
+  await expect(page.getByLabel('数量')).toHaveValue('7')
 
-  await nav(page).getByRole('link', { name: 'Dashboard' }).click()
-  await page.getByRole('dialog', { name: 'Discard your changes?' }).getByRole('button', { name: 'Discard' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Dashboard' })).toBeVisible()
+  await nav(page).getByRole('link', { name: 'ダッシュボード' }).click()
+  await page.getByRole('dialog', { name: '変更を破棄しますか？' }).getByRole('button', { name: '破棄' }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'ダッシュボード' })).toBeVisible()
 })

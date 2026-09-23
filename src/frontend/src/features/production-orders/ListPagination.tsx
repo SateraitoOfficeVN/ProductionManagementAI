@@ -1,6 +1,7 @@
 import { pageSizes, type PageSize } from './types'
+import { labels } from './messages'
 
-// DD-002 module 4 / DD-002-SPD §5. Bounds come from the response's total and page size, not from what the client
+// 002_DD module 4 / 002_DD-SPD §5. Bounds come from the response's total and page size, not from what the client
 // asked for, so the controls stay correct even after a superseded or retried request.
 
 interface Props {
@@ -18,7 +19,7 @@ export function ListSummary({ total, page, pageSize }: Pick<Props, 'total' | 'pa
 
   return (
     <p role="status" className="text-sm text-gray-700 tabular-nums">
-      {total === 0 ? 'No orders' : `${first}–${last} of ${total} orders`}
+      {total === 0 ? labels.list.summaryNone : labels.list.summary(first, last, total)}
     </p>
   )
 }
@@ -26,7 +27,7 @@ export function ListSummary({ total, page, pageSize }: Pick<Props, 'total' | 'pa
 export function PageSizeSelect({ pageSize, onPageSize }: Pick<Props, 'pageSize' | 'onPageSize'>) {
   return (
     <span className="flex items-center gap-2 text-sm text-gray-500">
-      <label htmlFor="pageSize">Rows</label>
+      <label htmlFor="pageSize">{labels.list.rows}</label>
       <select
         id="pageSize"
         value={pageSize}
@@ -47,17 +48,17 @@ export function ListPagination({ total, page, pageSize, onPage }: Omit<Props, 'o
   const lastPage = Math.max(1, Math.ceil(total / pageSize))
 
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-3.5 text-sm text-gray-700">
+    <nav aria-label={labels.list.pagination} className="flex items-center justify-center gap-3.5 text-sm text-gray-700">
       <button
         type="button"
         onClick={() => onPage(page - 1)}
         disabled={page <= 1}
         className="rounded border border-gray-300 bg-white px-3 py-1.5 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:border-gray-200 disabled:text-gray-400"
       >
-        ‹ Previous<span className="sr-only"> page</span>
+        <span aria-hidden="true">{labels.list.previous}</span><span className="sr-only">{labels.list.previousPage}</span>
       </button>
       <span className="tabular-nums">
-        Page {page} of {lastPage}
+        {labels.list.page(page, lastPage)}
       </span>
       <button
         type="button"
@@ -65,7 +66,7 @@ export function ListPagination({ total, page, pageSize, onPage }: Omit<Props, 'o
         disabled={page >= lastPage}
         className="rounded border border-gray-300 bg-white px-3 py-1.5 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:border-gray-200 disabled:text-gray-400"
       >
-        Next<span className="sr-only"> page</span> ›
+        <span aria-hidden="true">{labels.list.next}</span><span className="sr-only">{labels.list.nextPage}</span>
       </button>
     </nav>
   )

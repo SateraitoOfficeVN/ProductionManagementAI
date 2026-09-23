@@ -17,17 +17,17 @@ Turn an accepted brief into business flow, screen-level behavior and the primary
 
 ## 3. Execution steps and applicable rules
 
-1. Describe business flow, screen entry/exit and primary actions.
-2. Define layout/wireframe and visible states without prematurely fixing implementation details, per [frontend rules](../../rules/frontend.md) where UI is involved.
+1. Describe business flow, screen entry/exit and primary actions. Draw the screen transition, and any status workflow, as Mermaid diagrams per the [template](../../templates/basic-design.md), never as ASCII art.
+2. Define layout/wireframe and visible states without prematurely fixing implementation details. Draw one grey-box SVG wireframe per breakpoint under `docs/en/010_basic-design/###/wireframes/`, following the template's conventions (numbered callouts that match the item legend), per [frontend rules](../../rules/frontend.md) where UI is involved.
 3. Map design sections to requirements, flag security/PII-relevant fields and accessibility needs, and identify unresolved behavior — link requirements to BD per [documentation rules](../../rules/documentation.md).
 
 ## 4. Required tools/scripts and environmental conditions
 
-None required. An optional wireframe/diagramming tool may be used for the screen-transition diagram; no UI framework choice is implied by using one.
+None required. Mermaid renders in GitHub and most Markdown viewers, so no tool is needed for the transition diagram. The SVG wireframes can be written by hand or with any drawing tool that exports plain SVG; check that each one renders (open it in a browser) before handing over. No UI framework choice is implied by either.
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-BD document under `docs/en/010_basic-design/`, starting from the [template](../../templates/basic-design.md). Document ID `BD-###`; screens use stable `SCR-###` IDs and functions use `FN-###` IDs, both referenced (never restated) from detailed-design.md.
+BD document `###_BD_{slug}.md` in its number folder `docs/en/010_basic-design/###/`, starting from the [template](../../templates/basic-design.md). Document ID `###_BD`; screens use stable `SCR-###` IDs and functions use `FN-###` IDs, both referenced (never restated) from detailed-design.md. Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
 
 ## 6. Checklist and repeatable verification method
 

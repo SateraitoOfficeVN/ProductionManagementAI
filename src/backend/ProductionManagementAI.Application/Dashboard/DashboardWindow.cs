@@ -4,7 +4,7 @@ namespace ProductionManagementAI.Application.Dashboard;
 
 /// <summary>
 /// Every date and UTC instant the dashboard's figures depend on, derived from the plant-local date T
-/// (DD-003-FN §2, BD-003 D-01–D-09, DB-004's parameter table). A pure value, so every calendar rule is unit-tested
+/// (003_DD-FN §2, 003_BD D-01–D-09, 003_DB's parameter table). A pure value, so every calendar rule is unit-tested
 /// for each weekday and month boundary without a database.
 /// </summary>
 public sealed record DashboardWindow(

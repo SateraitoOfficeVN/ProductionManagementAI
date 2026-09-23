@@ -9,8 +9,8 @@ import type { ProductionOrder } from '../../../src/features/production-orders/ty
 import { localToday } from '../../../src/features/production-orders/validation'
 
 const products = [
-  { id: 'p1', sku: 'P-1001', name: 'Steel bracket' },
-  { id: 'p4', sku: 'P-1004', name: 'Drive shaft' },
+  { id: 'p1', sku: 'P-1001', name: 'ブレーキキャリパー' },
+  { id: 'p4', sku: 'P-1004', name: 'ドライブシャフト' },
 ]
 
 const future = '2099-10-01'
@@ -79,7 +79,7 @@ function renderPage(path: string, roles = ['Operator']) {
       <AuthContext.Provider value={auth}>
         <Routes>
           <Route path="/" element={<div>Home page</div>} />
-          {/* Cancel returns to Screen B now that the list exists (BD-002 screen transition, WI-003). */}
+          {/* Cancel returns to Screen B now that the list exists (002_BD screen transition, WI-003). */}
           <Route path="/production-orders" element={<div>Production order list</div>} />
           <Route path="/production-orders/new" element={<ProductionOrderPage />} />
           <Route path="/production-orders/:id" element={<ProductionOrderPage />} />
@@ -90,45 +90,45 @@ function renderPage(path: string, roles = ['Operator']) {
   )
 }
 
-const saveButton = () => screen.getByRole('button', { name: 'Save' })
+const saveButton = () => screen.getByRole('button', { name: '保存' })
 
 describe('ProductionOrderPage — create mode', () => {
   it('shows an empty form with Draft status, "Assigned on save", and the product list, with no axe violations', async () => {
     const { container } = renderPage('/production-orders/new')
 
-    expect(await screen.findByLabelText(/Product/)).toBeInTheDocument()
-    expect(screen.getByRole('heading', { level: 1, name: 'New production order' })).toBeInTheDocument()
-    expect(screen.getByText('Assigned on save')).toBeInTheDocument()
-    expect(screen.getByText('Draft')).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: 'P-1004 — Drive shaft' })).toBeInTheDocument()
-    expect(document.title).toBe('New production order — ProductionManagementAI')
+    expect(await screen.findByLabelText(/製品/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: '新規製造指示' })).toBeInTheDocument()
+    expect(screen.getByText('保存時に採番')).toBeInTheDocument()
+    expect(screen.getByText('下書き')).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'P-1004 — ドライブシャフト' })).toBeInTheDocument()
+    expect(document.title).toBe('新規製造指示 — ProductionManagementAI')
     expect(await axe(container)).toHaveNoViolations()
   })
 
   it('blocks Save with inline errors and focuses the first invalid field', async () => {
     const user = userEvent.setup()
     renderPage('/production-orders/new')
-    await screen.findByLabelText(/Product/)
+    await screen.findByLabelText(/製品/)
 
     await user.click(saveButton())
 
-    expect(screen.getByText('Select a product.')).toBeInTheDocument()
-    expect(screen.getByText('Enter a whole number of 1 or more.')).toBeInTheDocument()
-    expect(screen.getByText('Enter a due date.')).toBeInTheDocument()
-    expect(screen.getByLabelText(/Product/)).toHaveFocus()
-    expect(screen.getByLabelText(/Product/)).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('製品を選択してください。')).toBeInTheDocument()
+    expect(screen.getByText('1以上の整数を入力してください。')).toBeInTheDocument()
+    expect(screen.getByText('納期を入力してください。')).toBeInTheDocument()
+    expect(screen.getByLabelText(/製品/)).toHaveFocus()
+    expect(screen.getByLabelText(/製品/)).toHaveAttribute('aria-invalid', 'true')
     expect(calls.some((c) => c.method === 'POST')).toBe(false)
   })
 
   it('rejects a past due date on create', async () => {
     const user = userEvent.setup()
     renderPage('/production-orders/new')
-    const due = await screen.findByLabelText(/Due date/)
+    const due = await screen.findByLabelText(/納期/)
 
     await user.type(due, '2000-01-01')
     await user.tab()
 
-    expect(screen.getByText("Due date can't be in the past.")).toBeInTheDocument()
+    expect(screen.getByText('納期に過去の日付は指定できません。')).toBeInTheDocument()
   })
 
   it('creates the order, then shows it in edit mode with the created message', async () => {
@@ -138,12 +138,12 @@ describe('ProductionOrderPage — create mode', () => {
     routes['GET /api/production-orders/o1'] = { status: 200, body: created }
     renderPage('/production-orders/new')
 
-    await user.selectOptions(await screen.findByLabelText(/Product/), 'p4')
-    await user.type(screen.getByLabelText(/Quantity/), '250')
-    await user.type(screen.getByLabelText(/Due date/), future)
+    await user.selectOptions(await screen.findByLabelText(/製品/), 'p4')
+    await user.type(screen.getByLabelText(/数量/), '250')
+    await user.type(screen.getByLabelText(/納期/), future)
     await user.click(saveButton())
 
-    expect(await screen.findByRole('status')).toHaveTextContent('Production order PO-2026-00001 created.')
+    expect(await screen.findByRole('status')).toHaveTextContent('製造指示 PO-2026-00001 を登録しました。')
     expect(screen.getByTestId('location')).toHaveTextContent('/production-orders/o1')
     expect(calls.find((c) => c.method === 'POST')?.body).toEqual({
       productId: 'p4',
@@ -161,21 +161,21 @@ describe('ProductionOrderPage — create mode', () => {
     }
     renderPage('/production-orders/new')
 
-    await user.selectOptions(await screen.findByLabelText(/Product/), 'p1')
-    await user.type(screen.getByLabelText(/Quantity/), '5')
-    await user.type(screen.getByLabelText(/Due date/), future)
+    await user.selectOptions(await screen.findByLabelText(/製品/), 'p1')
+    await user.type(screen.getByLabelText(/数量/), '5')
+    await user.type(screen.getByLabelText(/納期/), future)
     await user.click(saveButton())
 
-    expect(await screen.findByText('The selected product no longer exists.')).toBeInTheDocument()
+    expect(await screen.findByText('選択した製品は存在しません。')).toBeInTheDocument()
   })
 
   it('shows "No products available" when the list is empty', async () => {
     routes['GET /api/products'] = { status: 200, body: [] }
     renderPage('/production-orders/new')
 
-    const select = await screen.findByLabelText(/Product/)
+    const select = await screen.findByLabelText(/製品/)
     expect(select).toBeDisabled()
-    expect(within(select).getByRole('option', { name: 'No products available.' })).toBeInTheDocument()
+    expect(within(select).getByRole('option', { name: '利用可能な製品がありません。' })).toBeInTheDocument()
   })
 })
 
@@ -187,17 +187,17 @@ describe('ProductionOrderPage — edit mode', () => {
     }
     const { container } = renderPage('/production-orders/o1')
 
-    const product = await screen.findByLabelText(/Product/)
+    const product = await screen.findByLabelText(/製品/)
     expect(product).toHaveAttribute('readonly')
-    expect(product).toHaveValue('P-1004 — Drive shaft')
-    expect(product).toHaveAccessibleDescription('Locked after the order leaves Draft.')
-    expect(screen.getByLabelText(/Quantity/)).toHaveAttribute('readonly')
+    expect(product).toHaveValue('P-1004 — ドライブシャフト')
+    expect(product).toHaveAccessibleDescription('下書き以外の製造指示では変更できません。')
+    expect(screen.getByLabelText(/数量/)).toHaveAttribute('readonly')
     expect(
-      within(screen.getByLabelText('Status'))
+      within(screen.getByLabelText('ステータス'))
         .getAllByRole('option')
         .map((o) => o.textContent),
-    ).toEqual(['In progress', 'Completed', 'Cancelled'])
-    expect(document.title).toBe('Production order PO-2026-00042 — ProductionManagementAI')
+    ).toEqual(['進行中', '完了', '取消'])
+    expect(document.title).toBe('製造指示 PO-2026-00042 — ProductionManagementAI')
     expect(await axe(container)).toHaveNoViolations()
   })
 
@@ -208,7 +208,7 @@ describe('ProductionOrderPage — edit mode', () => {
     }
     renderPage('/production-orders/o1')
 
-    expect(await screen.findByLabelText('Status')).toBeDisabled()
+    expect(await screen.findByLabelText('ステータス')).toBeDisabled()
   })
 
   it('lets an overdue order save without moving its due date (DEC-009)', async () => {
@@ -218,12 +218,12 @@ describe('ProductionOrderPage — edit mode', () => {
     routes['PUT /api/production-orders/o1'] = { status: 200, body: { ...overdue, notes: 'x', version: 8 } }
     renderPage('/production-orders/o1')
 
-    const notes = await screen.findByLabelText('Notes')
+    const notes = await screen.findByLabelText('備考')
     await user.clear(notes)
     await user.type(notes, 'x')
     await user.click(saveButton())
 
-    expect(await screen.findByRole('status')).toHaveTextContent('Production order PO-2026-00042 saved.')
+    expect(await screen.findByRole('status')).toHaveTextContent('製造指示 PO-2026-00042 を保存しました。')
     expect(calls.find((c) => c.method === 'PUT')?.body).toMatchObject({ dueDate: '2000-01-01', version: 7, status: 'Draft' })
   })
 
@@ -236,16 +236,16 @@ describe('ProductionOrderPage — edit mode', () => {
     routes['PUT /api/production-orders/o1'] = { status: 409, body: { code: 'MSG-E009' } }
     renderPage('/production-orders/o1')
 
-    await user.type(await screen.findByLabelText('Notes'), ' mine')
+    await user.type(await screen.findByLabelText('備考'), ' mine')
     await user.click(saveButton())
 
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent('This order was changed by someone else. Reload to see the latest version.')
-    expect(screen.getByLabelText('Notes')).toHaveValue('note mine') // values kept
+    expect(alert).toHaveTextContent('この製造指示は他のユーザーによって変更されました。再読み込みして最新の内容を確認してください。')
+    expect(screen.getByLabelText('備考')).toHaveValue('note mine') // values kept
 
-    await user.click(within(alert).getByRole('button', { name: 'Reload' }))
+    await user.click(within(alert).getByRole('button', { name: '再読み込み' }))
 
-    await waitFor(() => expect(screen.getByLabelText('Notes')).toHaveValue('someone else'))
+    await waitFor(() => expect(screen.getByLabelText('備考')).toHaveValue('someone else'))
   })
 
   it('shows the rule-violation message from a 422', async () => {
@@ -254,11 +254,11 @@ describe('ProductionOrderPage — edit mode', () => {
     routes['PUT /api/production-orders/o1'] = { status: 422, body: { code: 'MSG-E008' } }
     renderPage('/production-orders/o1')
 
-    await user.type(await screen.findByLabelText('Notes'), '!')
+    await user.type(await screen.findByLabelText('備考'), '!')
     await user.click(saveButton())
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      "Product and quantity can't be changed after the order leaves Draft.",
+      "下書き以外の製造指示では、製品と数量を変更できません。",
     )
   })
 
@@ -266,8 +266,8 @@ describe('ProductionOrderPage — edit mode', () => {
     routes['GET /api/production-orders/missing'] = { status: 404, body: { code: 'MSG-E011' } }
     renderPage('/production-orders/missing')
 
-    expect(await screen.findByRole('alert')).toHaveTextContent("This production order doesn't exist.")
-    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
+    expect(await screen.findByRole('alert')).toHaveTextContent('この製造指示は存在しません。')
+    expect(screen.queryByRole('button', { name: '保存' })).not.toBeInTheDocument()
   })
 
   it('flags notes over 500 code points', async () => {
@@ -275,13 +275,13 @@ describe('ProductionOrderPage — edit mode', () => {
     routes['GET /api/production-orders/o1'] = { status: 200, body: order({ notes: 'a'.repeat(500) }) }
     renderPage('/production-orders/o1')
 
-    const notes = await screen.findByLabelText('Notes')
+    const notes = await screen.findByLabelText('備考')
     expect(screen.getByText('500/500')).toBeInTheDocument()
     await user.type(notes, 'b')
     await user.tab()
 
     expect(screen.getByText('501/500')).toBeInTheDocument()
-    expect(screen.getByText("Notes can't exceed 500 characters.")).toBeInTheDocument()
+    expect(screen.getByText('備考は500文字以内で入力してください。')).toBeInTheDocument()
   })
 })
 
@@ -289,7 +289,7 @@ describe('ProductionOrderPage — access and cancel', () => {
   it('shows the permission panel without calling the API when the user has neither role', () => {
     renderPage('/production-orders/new', [])
 
-    expect(screen.getByRole('alert')).toHaveTextContent("You don't have permission to manage production orders.")
+    expect(screen.getByRole('alert')).toHaveTextContent('製造指示を管理する権限がありません。')
     expect(calls).toHaveLength(0)
   })
 
@@ -297,9 +297,9 @@ describe('ProductionOrderPage — access and cancel', () => {
     const user = userEvent.setup()
     routes['GET /api/production-orders/o1'] = { status: 200, body: order() }
     renderPage('/production-orders/o1')
-    await screen.findByLabelText('Notes')
+    await screen.findByLabelText('備考')
 
-    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    await user.click(screen.getByRole('button', { name: 'キャンセル' }))
 
     expect(screen.getByText('Production order list')).toBeInTheDocument()
   })
@@ -309,26 +309,26 @@ describe('ProductionOrderPage — access and cancel', () => {
     routes['GET /api/production-orders/o1'] = { status: 200, body: order() }
     renderPage('/production-orders/o1')
 
-    await user.type(await screen.findByLabelText('Notes'), ' edited')
-    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    await user.type(await screen.findByLabelText('備考'), ' edited')
+    await user.click(screen.getByRole('button', { name: 'キャンセル' }))
 
-    const dialog = screen.getByRole('dialog', { name: 'Discard your changes?' })
-    expect(within(dialog).getByRole('button', { name: 'Keep editing' })).toHaveFocus()
+    const dialog = screen.getByRole('dialog', { name: '変更を破棄しますか？' })
+    expect(within(dialog).getByRole('button', { name: '編集を続ける' })).toHaveFocus()
 
-    await user.click(within(dialog).getByRole('button', { name: 'Keep editing' }))
+    await user.click(within(dialog).getByRole('button', { name: '編集を続ける' }))
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(screen.getByLabelText('Notes')).toHaveValue('note edited')
-    expect(screen.getByRole('button', { name: 'Cancel' })).toHaveFocus()
+    expect(screen.getByLabelText('備考')).toHaveValue('note edited')
+    expect(screen.getByRole('button', { name: 'キャンセル' })).toHaveFocus()
   })
 
   it('Discard leaves without saving', async () => {
     const user = userEvent.setup()
     renderPage('/production-orders/new')
 
-    await user.type(await screen.findByLabelText(/Quantity/), '5')
-    await user.click(screen.getByRole('button', { name: 'Cancel' }))
-    await user.click(screen.getByRole('button', { name: 'Discard' }))
+    await user.type(await screen.findByLabelText(/数量/), '5')
+    await user.click(screen.getByRole('button', { name: 'キャンセル' }))
+    await user.click(screen.getByRole('button', { name: '破棄' }))
 
     expect(screen.getByText('Production order list')).toBeInTheDocument()
     expect(calls.some((c) => c.method === 'POST')).toBe(false)

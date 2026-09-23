@@ -19,19 +19,19 @@ describe('DashboardPage (SCR-003)', () => {
   it('renders every widget from one snapshot, in plant time, with no axe violations (TC-201, TC-217)', async () => {
     const { container } = renderDashboard()
 
-    expect(await screen.findByText('As of 2026-09-22 14:05 (Asia/Tokyo)')).toBeInTheDocument()
-    expect(document.title).toBe('Dashboard — ProductionManagementAI')
-    const status = screen.getByRole('list', { name: 'Orders by status' })
+    expect(await screen.findByText('2026/09/22 14:05 時点（Asia/Tokyo）')).toBeInTheDocument()
+    expect(document.title).toBe('ダッシュボード — ProductionManagementAI')
+    const status = screen.getByRole('list', { name: 'ステータス別の製造指示' })
     expect(within(status).getByText('124')).toBeInTheDocument()
-    expect(within(status).getByText('In progress')).toBeInTheDocument()
+    expect(within(status).getByText('進行中')).toBeInTheDocument()
     expect(screen.getByText('77%')).toBeInTheDocument()
-    expect(screen.getByText('23 of 30 on time')).toBeInTheDocument()
-    expect(screen.getByText('13.7 days')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Overdue (15)' })).toBeInTheDocument()
-    expect(screen.getByText('Showing 10 of 15')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Due in the next 7 days (2)' })).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: /^Open workload by due week: Overdue 15, This week 7/ })).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: /^Orders completed per week, last 12 weeks: .*This week 3$/ })).toBeInTheDocument()
+    expect(screen.getByText('30件中 23件が期限内')).toBeInTheDocument()
+    expect(screen.getByText('13.7日')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '納期遅れ（15件）' })).toBeInTheDocument()
+    expect(screen.getByText('15件中 10件を表示')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '7日以内に納期（2件）' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /^納期週別の未完了作業量：納期遅れ 15件、今週 7件/ })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /^週別の完了件数（直近12週）：.*今週 3件$/ })).toBeInTheDocument()
     expect(await axe(container)).toHaveNoViolations()
   })
 
@@ -47,11 +47,11 @@ describe('DashboardPage (SCR-003)', () => {
   it('shows zeros, "none" messages and — for an empty system, without an error (TC-215)', async () => {
     renderDashboard({ status: 200, body: emptySnapshot() })
 
-    expect(await screen.findByText('No overdue orders.')).toBeInTheDocument()
-    expect(screen.getByText('No orders due in the next 7 days.')).toBeInTheDocument()
-    expect(screen.getAllByText('No open orders.')).toHaveLength(2) // top products and the workload chart
+    expect(await screen.findByText('納期遅れの製造指示はありません。')).toBeInTheDocument()
+    expect(screen.getByText('7日以内に納期の製造指示はありません。')).toBeInTheDocument()
+    expect(screen.getAllByText('未完了の製造指示はありません。')).toHaveLength(2) // top products and the workload chart
     expect(screen.getAllByText('—')).toHaveLength(2)
-    expect(screen.getAllByText('No orders completed in the last 30 days.')).toHaveLength(2)
+    expect(screen.getAllByText('直近30日に完了した製造指示はありません。')).toHaveLength(2)
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
@@ -60,10 +60,10 @@ describe('DashboardPage (SCR-003)', () => {
     renderDashboard([{ status: 500 }, { status: 200, body: snapshot() }])
 
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent('Something went wrong. Try again.')
+    expect(alert).toHaveTextContent('問題が発生しました。もう一度お試しください。')
     expect(screen.queryByText('77%')).not.toBeInTheDocument()
 
-    await user.click(within(alert).getByRole('button', { name: 'Retry' }))
+    await user.click(within(alert).getByRole('button', { name: '再試行' }))
 
     expect(await screen.findByText('77%')).toBeInTheDocument()
     expect(calls.filter((c) => c === 'GET /api/dashboard')).toHaveLength(2)
@@ -71,13 +71,13 @@ describe('DashboardPage (SCR-003)', () => {
 
   it('shows the permission panel on 403, and nothing without a role (TC-213)', async () => {
     renderDashboard({ status: 403 })
-    expect(await screen.findByText("You don't have permission to view the dashboard.")).toBeInTheDocument()
+    expect(await screen.findByText('ダッシュボードを閲覧する権限がありません。')).toBeInTheDocument()
     vi.unstubAllGlobals()
   })
 
   it('never calls the API for a signed-in user without Admin or Operator (TC-213)', async () => {
     renderDashboard(undefined, [])
-    expect(screen.getByText("You don't have permission to view the dashboard.")).toBeInTheDocument()
+    expect(screen.getByText('ダッシュボードを閲覧する権限がありません。')).toBeInTheDocument()
     expect(calls).toHaveLength(0)
   })
 
@@ -87,16 +87,16 @@ describe('DashboardPage (SCR-003)', () => {
     await screen.findByText('77%')
     const before = calls.length
 
-    const toggle = screen.getAllByRole('button', { name: 'View as table' })[0]
+    const toggle = screen.getAllByRole('button', { name: '表で表示' })[0]
     await user.click(toggle)
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByRole('table', { name: 'Open workload by due week' })).toBeInTheDocument()
-    expect(screen.getByRole('cell', { name: 'before 2026-09-22' })).toBeInTheDocument()
+    expect(screen.getByRole('table', { name: '納期週別の未完了作業量' })).toBeInTheDocument()
+    expect(screen.getByRole('cell', { name: '2026/09/22より前' })).toBeInTheDocument()
 
-    const expand = screen.getByRole('button', { name: 'Expand Completed per week, last 12 weeks' })
+    const expand = screen.getByRole('button', { name: '週別の完了件数（直近12週）を拡大' })
     await user.click(expand)
-    const dialog = screen.getByRole('dialog', { name: 'Completed per week, last 12 weeks' })
-    const restore = within(dialog).getByRole('button', { name: 'Restore' })
+    const dialog = screen.getByRole('dialog', { name: '週別の完了件数（直近12週）' })
+    const restore = within(dialog).getByRole('button', { name: '元に戻す' })
     expect(restore).toHaveFocus()
     expect(within(dialog).getByRole('table')).toBeInTheDocument()
     expect(await axe(container)).toHaveNoViolations()

@@ -16,7 +16,7 @@ export interface HealthState {
 export const POLL_MS = 30_000
 export const TIMEOUT_MS = 5_000
 
-// BD-003 HS-01–HS-05, E-26–E-28; DD-003-SPD §10. Checks are chained with setTimeout after each completes, so a slow
+// 003_BD HS-01–HS-05, E-26–E-28; 003_DD-SPD §10. Checks are chained with setTimeout after each completes, so a slow
 // check never overlaps the next; polling pauses while the tab is hidden and resumes with an immediate check.
 export function useSystemHealth(): HealthState {
   const [state, setState] = useState<HealthState>({ phase: 'checking', server: 'ok', database: 'unknown', lastAnswered: null })

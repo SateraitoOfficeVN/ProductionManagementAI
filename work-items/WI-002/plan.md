@@ -15,16 +15,16 @@ Revision 1, 2026-09-18. This restarts WI-002 after its first design pass was scr
 
 ### Objective
 
-Produce the reconciled design set for Screen A (brief, BD-001, DB-002, and DD-001 with a rendered mockup), tracing every requirement in `brief.md`.
+Produce the reconciled design set for Screen A (brief, 001_BD, 001_DB, and 001_DD with a rendered mockup), tracing every requirement in `brief.md`.
 
 ### Scope
 
 #### In scope
 
 - Requirements brief and decision log (`work-items/WI-002/`).
-- Basic design BD-001 (`docs/en/010_basic-design/`).
-- Database design DB-002 (`docs/en/database/`).
-- Detailed design DD-001 with a rendered mockup (`docs/en/020_detailed-design/`), using the DD companion templates only if needed.
+- Basic design 001_BD (`docs/en/010_basic-design/`).
+- Database design 001_DB (`docs/en/database/`).
+- Detailed design 001_DD with a rendered mockup (`docs/en/020_detailed-design/`), using the DD companion templates only if needed.
 - Design-consistency reconciliation across all of the above.
 
 #### Out of scope
@@ -38,7 +38,7 @@ Produce the reconciled design set for Screen A (brief, BD-001, DB-002, and DD-00
 | Input (brief / BD / DD / DB / ADR / decisions) | Revision | Assumption made if input is missing or incomplete |
 | --- | --- | --- |
 | First-pass business answers | `demos/01-basic-design/WI-002/recording.md`, `demos/03-database-design/WI-002/recording.md` | Carried over unchanged as DEC-001–DEC-008 |
-| ADR-0001, ADR-0002, DB-001 | current `master` | Stack/auth conventions unchanged |
+| 0001_ADR, 0002_ADR, 000_DB | current `master` | Stack/auth conventions unchanged |
 | `ai/templates/basic-design.md`, `detailed-design.md`, `DD/*` | commit `e7e0d36` | — |
 | DEC-009–DEC-020 | decided 2026-09-18 | — |
 | DEC-016 (split DB logins now) | decided 2026-09-18 | Carried into plan revision 2 (implementation): runtime login, grants script, Compose/`.env.example` change. This touches WI-001's deploy config, so revision 2 needs its own review |
@@ -48,10 +48,10 @@ Produce the reconciled design set for Screen A (brief, BD-001, DB-002, and DD-00
 | # | Milestone / step | Depends on | Skill used | Deliverable | Verification method | Outcome |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Requirements brief + decision log | none | requirements | `work-items/WI-002/brief.md`, `decisions.md` | Every REQ has success + failure criteria | done 2026-09-18 — REQ-010–REQ-018 (REQ-019 added later via DEC-018) |
-| 2 | Basic design | 1 | basic-design, screen-design | `docs/en/010_basic-design/BD-001-production-order-create-edit.md` | Every REQ mapped to a BD section; design-consistency checklist | done 2026-09-18 — BD-001 revisions 1–4 |
-| 3 | Resolve DEC-009 | 2 | — | `decisions.md`, BD-001 V-04 | User answer recorded | done 2026-09-18 — DEC-009–DEC-012 answered together |
-| 4 | Database design | 2 | database-design | `docs/en/database/0002-production-order-schema.md` (DB-002) | Constraints/indexes justified; migration impact stated | done 2026-09-18 — reviewed by the user; DEC-013–DEC-016, DEC-019 |
-| 5 | Detailed design + rendered mockup | 3, 4 | detailed-design, screen-design | `docs/en/020_detailed-design/DD-001-production-order-create-edit.md` + mockup | DD agrees with BD and DB; test viewpoints cover every REQ | done 2026-09-18 — DD-001, DD-001-API, DD-001-FN, DD-001-SPD (FN/SPD added at the user's request) + mockup https://claude.ai/artifact/FEo1RG27UjZ6vxFCUjxoHq; DEC-021–DEC-024 |
+| 2 | Basic design | 1 | basic-design, screen-design | `docs/en/010_basic-design/001/001_BD_production-order-create-edit.md` | Every REQ mapped to a BD section; design-consistency checklist | done 2026-09-18 — 001_BD revisions 1–4 |
+| 3 | Resolve DEC-009 | 2 | — | `decisions.md`, 001_BD V-04 | User answer recorded | done 2026-09-18 — DEC-009–DEC-012 answered together |
+| 4 | Database design | 2 | database-design | `docs/en/database/001/001_DB_production-order-schema.md` (001_DB) | Constraints/indexes justified; migration impact stated | done 2026-09-18 — reviewed by the user; DEC-013–DEC-016, DEC-019 |
+| 5 | Detailed design + rendered mockup | 3, 4 | detailed-design, screen-design | `docs/en/020_detailed-design/001/001_DD_production-order-create-edit.md` + mockup | DD agrees with BD and DB; test viewpoints cover every REQ | done 2026-09-18 — 001_DD, 001_DD-API, 001_DD-FN, 001_DD-SPD (FN/SPD added at the user's request) + mockup https://claude.ai/artifact/FEo1RG27UjZ6vxFCUjxoHq; DEC-021–DEC-024 |
 | 6 | Reconcile and close design phase | 5 | — | `status.md`, `evidence.md` | design-consistency checklist passes; no open business decision | done 2026-09-18 — checklist passed; DD set approved by the user |
 
 ### Roles and responsibilities
@@ -88,11 +88,11 @@ Produce the reconciled design set for Screen A (brief, BD-001, DB-002, and DD-00
 
 ## Revision 2 — implementation (current)
 
-Revision 2, 2026-09-18. Supersedes revision 1 (design phase: brief, BD-001, DB-002, DD-001 set and mockup), which is complete: all six steps are done, and the design was approved by the user on 2026-09-18 ("the DD is reviewed and approved, so let move on"). This revision adds implementation, tests, and the authorized push/PR. Revision 1 is kept in full above.
+Revision 2, 2026-09-18. Supersedes revision 1 (design phase: brief, 001_BD, 001_DB, 001_DD set and mockup), which is complete: all six steps are done, and the design was approved by the user on 2026-09-18 ("the DD is reviewed and approved, so let move on"). This revision adds implementation, tests, and the authorized push/PR. Revision 1 is kept in full above.
 
 ### Objective
 
-Implement SCR-001 exactly as designed in BD-001 (revision 4), DB-002 and the DD-001 set (DD-001, DD-001-API, DD-001-FN, DD-001-SPD), with automated tests covering REQ-010–REQ-019. Deliver it as a pull request to `master`.
+Implement SCR-001 exactly as designed in 001_BD (revision 4), 001_DB and the 001_DD set (001_DD, 001_DD-API, 001_DD-FN, 001_DD-SPD), with automated tests covering REQ-010–REQ-019. Deliver it as a pull request to `master`.
 
 ### Scope
 
@@ -119,10 +119,10 @@ Implement SCR-001 exactly as designed in BD-001 (revision 4), DB-002 and the DD-
 | Input (brief / BD / DD / DB / ADR / decisions) | Revision | Assumption made if input is missing or incomplete |
 | --- | --- | --- |
 | brief.md | revision 1 (REQ-010–REQ-019) | — |
-| BD-001 | revision 4 | — |
-| DB-002 | reviewed 2026-09-18 | — |
-| DD-001 / -API / -FN / -SPD | DD-001 revision 2, companions revision 1, approved 2026-09-18 | — |
-| ADR-0001, ADR-0002, DB-001 | current `master` + WI-002 edits | — |
+| 001_BD | revision 4 | — |
+| 001_DB | reviewed 2026-09-18 | — |
+| 001_DD / -API / -FN / -SPD | 001_DD revision 2, companions revision 1, approved 2026-09-18 | — |
+| 0001_ADR, 0002_ADR, 000_DB | current `master` + WI-002 edits | — |
 | decisions.md | DEC-001–DEC-028 | — |
 | Branch naming | WI-001 DEC-009 (`feature/<WI-id>-slug`) | `ai/skills/implementation/SKILL.md` suggests `work-items/<WI-###>`; the project's explicit decision DEC-009 wins (`ai/rules/common.md`) |
 | NuGet/npm package versions | latest stable at implementation time | Pinned exact versions; each new dependency is checked for known vulnerabilities (`dotnet list package --vulnerable`, `npm audit`) before use |
@@ -132,17 +132,17 @@ Implement SCR-001 exactly as designed in BD-001 (revision 4), DB-002 and the DD-
 | # | Milestone / step | Depends on | Skill used | Deliverable | Verification method | Outcome |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Harness branch: create worktree `../WMS-worktrees/harness-wi002-feedback` on `feature/harness-wi002-feedback` from `master` (renamed by the amendment below); copy the RFC 0001 and RFC 0002 changes (`ai/templates/**`, `ai/skills/detailed-design/SKILL.md`, `ai/skills/planning/SKILL.md`, `ai/evaluations/baseline-cases.md`, `ai/improvements/**`); commit as two commits, one per RFC | none | harness-improvement | commit on the harness branch | `git diff master --stat` shows only `ai/` files | done 2026-09-18 — `feature/harness-wi002-feedback`: `dc228ab` (RFC 0001), `4912857` (RFC 0002, added by the amendment) |
-| 2 | Screen A branch: create worktree `../WMS-worktrees/WI-002` on `feature/WI-002-production-order-screen` from `master`; copy the WI-002 design files (work item, docs, `CLAUDE.md`, READMEs, ADR-0002/DB-001 edits); commit the "design phase" | none | implementation | commit on the WI-002 branch | Diff contains only WI-002 design files | done 2026-09-18 — `5c40eaa` design-phase commit |
+| 2 | Screen A branch: create worktree `../WMS-worktrees/WI-002` on `feature/WI-002-production-order-screen` from `master`; copy the WI-002 design files (work item, docs, `CLAUDE.md`, READMEs, 0002_ADR/000_DB edits); commit the "design phase" | none | implementation | commit on the WI-002 branch | Diff contains only WI-002 design files | done 2026-09-18 — `5c40eaa` design-phase commit |
 | 3 | Clean the main worktree: after verifying both commits contain every copied file (`git diff --no-index` per file), revert those modified/new files in the main worktree so `master` is clean again. `demos/` is left alone | 1, 2 | — | clean `master` worktree | `git status` shows only `demos/` untracked | done 2026-09-18 — `git status` on master shows only `demos/` |
 | 4 | Domain: `ProductionOrder`, `ProductionOrderStatus`, `Product`, `DomainRuleViolation` + unit tests | 2 | implementation, testing | `src/backend/...Domain/ProductionOrders/`, tests | `dotnet test` (unit) | done 2026-09-18 — `a2c1ea7`; unit tests pass |
 | 5 | Application: `ProductionOrderService`, DTOs, `Result`, `IPlantClock`, `IOrderNumberIssuer`, `IProductionOrderRepository`, telemetry + unit tests (`FakeTimeProvider`) | 4 | implementation, testing | `...Application/ProductionOrders/`, tests | `dotnet test` (unit) | done 2026-09-18 — `a2c1ea7`; 49/49 unit tests |
-| 6 | Infrastructure: EF configurations (`xmin`, generated column, CHECKs), repository, `PlantClock`, `OrderNumberIssuer`, migration `AddProductionOrders` (seed 30 products; `CREATE ROLE pmai_app NOLOGIN` if missing, plus the least-privilege grants from DB-002 on the new and identity tables — no password in the migration) | 5 | implementation, database-design | `...Infrastructure/ProductionOrders/`, `Migrations/` | Migration SQL reviewed (`dotnet ef migrations script`); applied to a local DB | done 2026-09-18 — `e4a5256`; migration SQL reviewed; DEC-029 (EF keeps the product_id FK index) |
+| 6 | Infrastructure: EF configurations (`xmin`, generated column, CHECKs), repository, `PlantClock`, `OrderNumberIssuer`, migration `AddProductionOrders` (seed 30 products; `CREATE ROLE pmai_app NOLOGIN` if missing, plus the least-privilege grants from 001_DB on the new and identity tables — no password in the migration) | 5 | implementation, database-design | `...Infrastructure/ProductionOrders/`, `Migrations/` | Migration SQL reviewed (`dotnet ef migrations script`); applied to a local DB | done 2026-09-18 — `e4a5256`; migration SQL reviewed; DEC-029 (EF keeps the product_id FK index) |
 | 7 | DB login split (DEC-016): Postgres init script `deploy/db/init/10-app-login.sh` (sets `LOGIN PASSWORD` for `pmai_app` from the new required env var `PMAI_APP_DB_PASSWORD`, no default); backend connection string uses `pmai_app`; migration command documented with the owner connection; `.env.example`, `deploy/README.md`, `ai/project.md` updated. The existing local `db` volume must be wiped once so the init script runs | 6 | implementation, security-review | `deploy/`, docs | `docker compose config`; stack starts; app works as `pmai_app`; `DELETE` as `pmai_app` is denied | done 2026-09-18 — `e4a5256` + db image change; volume wiped, init script ran, owner migration applied, `DELETE` as `pmai_app` denied. The bind mount was refused by Docker Desktop file sharing, so the script is baked into `deploy/docker/db.Dockerfile` |
 | 8 | Api: controllers, `ProductionOrderEditor` policy, `AddProblemDetails` + `InvalidModelStateResponseFactory` (message IDs), JSON enum-as-string, `[Consumes]`, `Plant:TimeZone` options with startup validation, OpenTelemetry (ASP.NET Core, EF/Npgsql, OTLP exporter only if the endpoint is set) | 6 | implementation | `...Api/` | `dotnet build` with no warnings introduced | done 2026-09-18 — `e4a5256`; 0 warnings |
-| 9 | Integration tests: all DD-001 I-level viewpoints, including concurrent creates, stale save, 401/403/415, Problem Details shape, runtime-login privileges, telemetry (in-memory exporter). The fixture creates `pmai_app` in the Testcontainers DB and runs the app as it | 7, 8 | testing | `tests/integration/.../ProductionOrders/` | `dotnet test src/backend/ProductionManagementAI.slnx` | done 2026-09-18 — 38/38 integration tests |
-| 10 | Frontend: `apiClient`, `AppHeader`, feature folder per DD-001 X-1, routes, home link; component tests incl. `vitest-axe` | 8 | implementation, screen-design, testing | `src/frontend/src/...`, `src/frontend/tests/unit/production-orders/` | `npm run lint`, `npm test`, `npm run build` | done 2026-09-18 — `f5609d7`; lint/tsc/build clean; 38/38 frontend tests |
+| 9 | Integration tests: all 001_DD I-level viewpoints, including concurrent creates, stale save, 401/403/415, Problem Details shape, runtime-login privileges, telemetry (in-memory exporter). The fixture creates `pmai_app` in the Testcontainers DB and runs the app as it | 7, 8 | testing | `tests/integration/.../ProductionOrders/` | `dotnet test src/backend/ProductionManagementAI.slnx` | done 2026-09-18 — 38/38 integration tests |
+| 10 | Frontend: `apiClient`, `AppHeader`, feature folder per 001_DD X-1, routes, home link; component tests incl. `vitest-axe` | 8 | implementation, screen-design, testing | `src/frontend/src/...`, `src/frontend/tests/unit/production-orders/` | `npm run lint`, `npm test`, `npm run build` | done 2026-09-18 — `f5609d7`; lint/tsc/build clean; 38/38 frontend tests |
 | 11 | E2E: `tests/e2e` Playwright project (own `package.json`), journeys: create → edit → complete; validation errors; locked fields; discard dialog; stale save (two contexts); axe scan per state | 7, 10 | testing | `tests/e2e/` | `npx playwright test` against the Compose stack | done 2026-09-18 — 8/8 Playwright journeys (desktop + Pixel 7) incl. axe |
-| 12 | Test plan: `work-items/WI-002/test-plan.md` with `TC-###` → REQ mapping; update the DD-001 test viewpoints' Test-plan ID column | 9–11 | testing | test-plan.md, DD-001 | Every REQ has ≥ 1 TC with a recorded result | done 2026-09-18 — `test-plan.md` TP-002 (TC-001–TC-027); DD-001 IDs filled |
+| 12 | Test plan: `work-items/WI-002/test-plan.md` with `TC-###` → REQ mapping; update the 001_DD test viewpoints' Test-plan ID column | 9–11 | testing | test-plan.md, 001_DD | Every REQ has ≥ 1 TC with a recorded result | done 2026-09-18 — `test-plan.md` TP-002 (TC-001–TC-027); 001_DD IDs filled |
 | 13 | Full verification run from a clean environment; security-review and delivery checklists; `evidence.md`, `status.md` | 12 | security-review, pr-review | evidence, status | Checklists recorded pass/fail with reasons | done 2026-09-18 — final run 03:12Z all green; security-review and delivery checklists pass (`evidence.md`) |
 | 14 | Push both branches and open two PRs to `master` (Screen A; harness). Watch the triggered CI runs and record the results. Merge is not done | 13 (Screen A); 1 (harness) | pr-review, ci-cd | 2 PRs | PR links + CI results in evidence | done 2026-09-18 — PR #3 (Screen A) https://github.com/thanhtn95/ProductionManagementAI/pull/3 and PR #2 (harness) opened; CI jobs not started on either (GitHub billing lock); GitGuardian secret scan passed on both; not merged (not authorized) |
 

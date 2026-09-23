@@ -3,7 +3,7 @@ The source workbook gives one processing-definition block per physical file/comp
 
 # {Screen Name} — Screen Processing Design (画面処理設計)
 
-{ID, e.g. DD-###-SPD} — elaborates {DD-###}, implements {BD-###}, requirements {REQ-###, …}.
+{ID, e.g. ###_DD-SPD} — elaborates {###_DD}, implements {###_BD}, requirements {REQ-###, …}.
 
 ## Document control (改版履歴)
 

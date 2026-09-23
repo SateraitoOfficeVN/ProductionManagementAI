@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 
 namespace ProductionManagementAI.Integration.Tests.ProductionOrders;
 
-/// <summary>Small JSON helpers so tests can send exactly the payloads DD-001-API describes, including malformed ones.</summary>
+/// <summary>Small JSON helpers so tests can send exactly the payloads 001_DD-API describes, including malformed ones.</summary>
 internal static class ProductionOrderApi
 {
     public static readonly Guid SteelBracket = Guid.Parse("0197e4a0-0000-7000-8000-000000001001");

@@ -7,7 +7,7 @@ using static ProductionManagementAI.Integration.Tests.ProductionOrders.Productio
 namespace ProductionManagementAI.Integration.Tests.ProductionOrders;
 
 // Own class = own fixture = fresh database. Since WI-003/WI-004 that database also carries the 124 seeded demo orders
-// (DB-003, DB-004), so the sequence continues from the seeded counter rather than starting at 00001 — which is
+// (002_DB, 003_DB), so the sequence continues from the seeded counter rather than starting at 00001 — which is
 // exactly what the seed's counter row exists to guarantee. Everything runs in one test method because the
 // assertions depend on order.
 public class OrderNumberingTests(IntegrationTestFixture fixture) : IClassFixture<IntegrationTestFixture>
@@ -19,7 +19,7 @@ public class OrderNumberingTests(IntegrationTestFixture fixture) : IClassFixture
         var year = PlantToday.Year;
 
         // 0. The seed left the counter at the highest seeded sequence, so the next order can't collide with a
-        //    seeded order number (DB-003 demo seed).
+        //    seeded order number (002_DB demo seed).
         var seeded = await fixture.ScalarAsOwnerAsync<int>(
             $"SELECT last_seq FROM production_order_number_counters WHERE order_year = {year}");
         Assert.Equal(124, seeded);

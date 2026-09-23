@@ -7,7 +7,7 @@ import { useAuth } from '../auth/useAuth'
 import { getOrder, listProducts } from './api'
 import type { Banner } from './MessageBanner'
 import { ProductionOrderForm } from './ProductionOrderForm'
-import { message } from './messages'
+import { labels, message } from './messages'
 import type { Product, ProductionOrder } from './types'
 
 type LoadResult =
@@ -18,10 +18,9 @@ type LoadResult =
 
 type PageState = { kind: 'loading' } | LoadResult
 
-const APP = 'ProductionManagementAI'
 const EDITOR_ROLES = ['Admin', 'Operator']
 
-// DD-001 module 7 / DD-001-SPD §1 (P-01): route component for /production-orders/new and /production-orders/:id.
+// 001_DD module 7 / 001_DD-SPD §1 (P-01): route component for /production-orders/new and /production-orders/:id.
 export function ProductionOrderPage() {
   const { id } = useParams()
   const mode = id === undefined ? 'create' : 'edit'
@@ -45,7 +44,7 @@ export function ProductionOrderPage() {
   const reload = useCallback(() => setLoadKey((key) => key + 1), [])
 
   // Declared before the load effect so it runs first: capture the one-time flash handed over by the create
-  // redirect, then clear it from history so Back/refresh doesn't repeat it (DD-001-SPD §1 step 8). The page
+  // redirect, then clear it from history so Back/refresh doesn't repeat it (001_DD-SPD §1 step 8). The page
   // instance is reused when /new becomes /:id, so this can't be read once at mount.
   useEffect(() => {
     if (navigationFlash) {
@@ -87,28 +86,28 @@ export function ProductionOrderPage() {
   }, [canEdit, id, requestKey])
 
   const order = state.kind === 'ready' ? state.order : null
-  const heading = order ? `Production order ${order.orderNumber}` : 'New production order'
+  const heading = order ? labels.order.heading(order.orderNumber) : labels.order.headingNew
 
   useEffect(() => {
-    document.title = mode === 'edit' && !order ? `Production order — ${APP}` : `${heading} — ${APP}`
+    document.title = labels.app.title(mode === 'edit' && !order ? labels.order.headingPending : heading)
   }, [heading, mode, order])
 
   return (
     <div className="min-h-screen bg-white">
       <AppHeader />
       <main className="mx-auto grid max-w-3xl gap-4 px-4 pt-5 pb-8 sm:px-6">
-        <nav aria-label="Breadcrumb" className="text-sm text-gray-500">
+        <nav aria-label={labels.nav.breadcrumb} className="text-sm text-gray-500">
           <GuardedLink to="/production-orders" className="underline-offset-4 hover:underline">
-            {/* Back goes to the list now that Screen B exists (BD-002 screen transition). */}
-            <span className="sm:hidden">‹ Production orders</span>
-            <span className="hidden sm:inline">Production orders</span>
+            {/* Back goes to the list now that Screen B exists (002_BD screen transition). */}
+            <span className="sm:hidden">{labels.order.breadcrumbBack}</span>
+            <span className="hidden sm:inline">{labels.nav.orders}</span>
           </GuardedLink>
           <span className="hidden sm:inline">
             {' / '}
-            <span className="text-gray-700">{order ? order.orderNumber : mode === 'create' ? 'New' : ''}</span>
+            <span className="text-gray-700">{order ? order.orderNumber : mode === 'create' ? labels.order.breadcrumbNew : ''}</span>
           </span>
         </nav>
-        <h1 className="text-xl font-medium text-gray-900">{mode === 'edit' && !order ? 'Production order' : heading}</h1>
+        <h1 className="text-xl font-medium text-gray-900">{mode === 'edit' && !order ? labels.order.headingPending : heading}</h1>
 
         {state.kind === 'loading' && <LoadingCard />}
         {state.kind === 'forbidden' && <Panel text={message('MSG-E012')} />}
@@ -136,7 +135,7 @@ export function ProductionOrderPage() {
 
 function LoadingCard() {
   return (
-    <div aria-busy="true" aria-label="Loading production order" className="grid gap-3 rounded-lg border border-gray-200 p-6">
+    <div aria-busy="true" aria-label={labels.order.loading} className="grid gap-3 rounded-lg border border-gray-200 p-6">
       {[0, 1, 2, 3].map((row) => (
         <div key={row} className="h-9 animate-pulse rounded bg-gray-100 motion-reduce:animate-none" />
       ))}
@@ -162,11 +161,11 @@ function Panel({ text, onRetry }: { text: string; onRetry?: () => void }) {
           onClick={onRetry}
           className="rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          Try again
+          {labels.common.tryAgain}
         </button>
       ) : (
         <Link to="/production-orders" className="text-gray-900 underline underline-offset-4">
-          Back to production orders
+          {labels.common.backToOrders}
         </Link>
       )}
     </div>

@@ -7,11 +7,11 @@ import { AuthContext, type AuthContextValue } from '../../../src/features/auth/a
 import { ProductionOrderListPage } from '../../../src/features/production-orders/ProductionOrderListPage'
 import type { PagedResult, ProductionOrderListItem } from '../../../src/features/production-orders/types'
 
-// DD-002 test viewpoints at unit level (U): TC-102, TC-103, TC-112, TC-115, TC-116, TC-117, TC-118.
+// 002_DD test viewpoints at unit level (U): TC-102, TC-103, TC-112, TC-115, TC-116, TC-117, TC-118.
 
 const products = [
-  { id: 'p1', sku: 'P-1001', name: 'Steel bracket' },
-  { id: 'p4', sku: 'P-1004', name: 'Drive shaft' },
+  { id: 'p1', sku: 'P-1001', name: 'ブレーキキャリパー' },
+  { id: 'p4', sku: 'P-1004', name: 'ドライブシャフト' },
 ]
 
 function item(overrides: Partial<ProductionOrderListItem> = {}): ProductionOrderListItem {
@@ -114,10 +114,10 @@ describe('ProductionOrderListPage — rows and states', () => {
       '/production-orders/o1',
     )
     expect(within(row).getByText('P-1004')).toBeInTheDocument()
-    expect(within(row).getByText(/Drive shaft/)).toBeInTheDocument()
+    expect(within(row).getByText(/ドライブシャフト/)).toBeInTheDocument()
     expect(within(row).getByText('250')).toBeInTheDocument()
-    expect(within(row).getByText(/2026-09-30/)).toBeInTheDocument()
-    expect(within(row).getByText('In progress')).toBeInTheDocument()
+    expect(within(row).getByText('2026/09/30')).toBeInTheDocument()
+    expect(within(row).getByText('進行中')).toBeInTheDocument()
     // No raw identifier or bare enum name is shown (REQ-021 failure criterion).
     expect(row.textContent).not.toContain('o1')
     expect(row.textContent).not.toContain('InProgress')
@@ -135,16 +135,16 @@ describe('ProductionOrderListPage — rows and states', () => {
 
     const rows = within(await screen.findByRole('table')).getAllByRole('row')
 
-    expect(within(rows[1]).getByText('Overdue')).toBeInTheDocument()
-    expect(within(rows[2]).queryByText('Overdue')).not.toBeInTheDocument()
+    expect(within(rows[1]).getByText('納期遅れ')).toBeInTheDocument()
+    expect(within(rows[2]).queryByText('納期遅れ')).not.toBeInTheDocument()
   })
 
   it('shows the empty state, and no filter panel, when no order exists at all (REQ-020, TC-116)', async () => {
     listReply({ status: 200, body: page({ items: [], total: 0 }) })
     renderList()
 
-    expect(await screen.findByText('No production orders yet. Create the first one.')).toBeInTheDocument()
-    expect(screen.queryByRole('form', { name: 'Filter production orders' })).not.toBeInTheDocument()
+    expect(await screen.findByText('製造指示はまだありません。最初の1件を登録してください。')).toBeInTheDocument()
+    expect(screen.queryByRole('form', { name: '製造指示の絞り込み' })).not.toBeInTheDocument()
     expect(screen.queryByRole('table')).not.toBeInTheDocument()
   })
 
@@ -152,10 +152,10 @@ describe('ProductionOrderListPage — rows and states', () => {
     listReply({ status: 200, body: page({ items: [], total: 0 }) })
     renderList('/production-orders?status=Draft&orderNumber=ZZZ')
 
-    expect(await screen.findByText('No orders match your filters.')).toBeInTheDocument()
-    expect(screen.getByLabelText('Order number')).toHaveValue('ZZZ')
-    expect(screen.getByLabelText('Draft')).toBeChecked()
-    expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument()
+    expect(await screen.findByText('絞り込みに一致する製造指示はありません。')).toBeInTheDocument()
+    expect(screen.getByLabelText('指示番号')).toHaveValue('ZZZ')
+    expect(screen.getByLabelText('下書き')).toBeChecked()
+    expect(screen.getByRole('button', { name: '絞り込みをクリア' })).toBeInTheDocument()
   })
 
   it('shows an error banner with Retry, and Retry re-runs the same query (TC-117)', async () => {
@@ -163,11 +163,11 @@ describe('ProductionOrderListPage — rows and states', () => {
     listReply({ status: 500, body: { code: 'MSG-E013' } })
     renderList('/production-orders?status=Draft')
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Something went wrong. Try again.')
+    expect(await screen.findByRole('alert')).toHaveTextContent('問題が発生しました。もう一度お試しください。')
     const before = requested.length
 
     listReply({ status: 200, body: page() })
-    await user.click(screen.getByRole('button', { name: 'Retry' }))
+    await user.click(screen.getByRole('button', { name: '再試行' }))
 
     await waitFor(() => expect(requested.length).toBeGreaterThan(before))
     expect(lastQuery().searchParams.get('status')).toBe('Draft')
@@ -177,7 +177,7 @@ describe('ProductionOrderListPage — rows and states', () => {
   it('shows the forbidden panel without querying when the user has no role (REQ-026)', () => {
     renderList('/production-orders', [])
 
-    expect(screen.getByText("You don't have permission to view production orders.")).toBeInTheDocument()
+    expect(screen.getByText('製造指示を閲覧する権限がありません。')).toBeInTheDocument()
     expect(requested).toHaveLength(0)
   })
 })
@@ -214,8 +214,8 @@ describe('ProductionOrderListPage — view state in the URL (REQ-027, TC-115)', 
     renderList()
     await screen.findByRole('table')
 
-    await user.click(screen.getByLabelText('Draft'))
-    await user.click(screen.getByRole('button', { name: 'Search' }))
+    await user.click(screen.getByLabelText('下書き'))
+    await user.click(screen.getByRole('button', { name: '検索' }))
 
     await waitFor(() => expect(location()).toContain('status=Draft'))
     expect(location()).not.toContain('pageSize')
@@ -230,11 +230,11 @@ describe('ProductionOrderListPage — filtering, sorting and paging', () => {
     renderList('/production-orders?page=3')
     await screen.findByRole('table')
 
-    await user.click(within(table()).getByRole('button', { name: /Quantity|Qty/ }))
+    await user.click(within(table()).getByRole('button', { name: /数量/ }))
     await waitFor(() => expect(location()).toContain('sort=quantity'))
     expect(location()).not.toContain('page=3')
 
-    await user.selectOptions(screen.getByLabelText('Rows'), '50')
+    await user.selectOptions(screen.getByLabelText('表示件数'), '50')
     await waitFor(() => expect(location()).toContain('pageSize=50'))
     expect(location()).not.toContain('page=3')
   })
@@ -246,7 +246,7 @@ describe('ProductionOrderListPage — filtering, sorting and paging', () => {
     renderList('/production-orders?sort=quantity')
     await screen.findByRole('table')
 
-    await user.click(within(table()).getByRole('button', { name: /Qty/ }))
+    await user.click(within(table()).getByRole('button', { name: /数量/ }))
 
     await waitFor(() => expect(location()).toContain('dir=desc'))
   })
@@ -260,7 +260,7 @@ describe('ProductionOrderListPage — filtering, sorting and paging', () => {
 
     expect(sorted).toHaveLength(1)
     expect(sorted[0]).toHaveAttribute('aria-sort', 'descending')
-    expect(sorted[0]).toHaveTextContent(/Qty/)
+    expect(sorted[0]).toHaveTextContent(/数量/)
   })
 
   it('validates the filter panel before querying, and keeps the loaded rows (V-09, V-10)', async () => {
@@ -269,14 +269,14 @@ describe('ProductionOrderListPage — filtering, sorting and paging', () => {
     await screen.findByRole('table')
     const before = requested.length
 
-    await user.type(screen.getByLabelText('Due from'), '2026-10-01')
-    await user.type(screen.getByLabelText('Due to'), '2026-09-01')
-    await user.click(screen.getByRole('button', { name: 'Search' }))
+    await user.type(screen.getByLabelText('納期（開始）'), '2026-10-01')
+    await user.type(screen.getByLabelText('納期（終了）'), '2026-09-01')
+    await user.click(screen.getByRole('button', { name: '検索' }))
 
-    expect(await screen.findByText("'Due from' must be on or before 'Due to'.")).toBeInTheDocument()
+    expect(await screen.findByText('納期（開始）は納期（終了）以前の日付にしてください。')).toBeInTheDocument()
     expect(requested).toHaveLength(before)
     expect(screen.getByRole('table')).toBeInTheDocument()
-    expect(screen.getByLabelText('Due from')).toHaveFocus()
+    expect(screen.getByLabelText('納期（開始）')).toHaveFocus()
   })
 
   it('disables the paging controls at the ends rather than hiding them (REQ-024)', async () => {
@@ -285,25 +285,25 @@ describe('ProductionOrderListPage — filtering, sorting and paging', () => {
 
     await screen.findByRole('table')
 
-    expect(screen.getByRole('button', { name: /Previous/ })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /Next/ })).toBeEnabled()
-    expect(screen.getByText('Page 1 of 2')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '前のページ' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '次のページ' })).toBeEnabled()
+    expect(screen.getByText('1 / 2 ページ')).toBeInTheDocument()
   })
 
   it('keeps the paging controls usable on a page past the last one (REQ-024, TC-111)', async () => {
     listReply({ status: 200, body: page({ items: [], total: 40, page: 9, pageSize: 20 }) })
     renderList('/production-orders?page=9')
 
-    expect(await screen.findByText('Page 9 of 2')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Previous/ })).toBeEnabled()
-    expect(screen.queryByText('No orders match your filters.')).not.toBeInTheDocument()
+    expect(await screen.findByText('9 / 2 ページ')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '前のページ' })).toBeEnabled()
+    expect(screen.queryByText('絞り込みに一致する製造指示はありません。')).not.toBeInTheDocument()
   })
 
   it('announces the result range and total in a live region (M-09)', async () => {
     listReply({ status: 200, body: page({ total: 80, page: 2, pageSize: 20 }) })
     renderList('/production-orders?page=2')
 
-    expect(await screen.findByText('21–40 of 80 orders')).toHaveAttribute('role', 'status')
+    expect(await screen.findByText('80件中 21〜40件')).toHaveAttribute('role', 'status')
   })
 })
 
@@ -318,7 +318,7 @@ describe('ProductionOrderListPage — accessibility (TC-118)', () => {
   it('has no axe violations in the empty state', async () => {
     listReply({ status: 200, body: page({ items: [], total: 0 }) })
     const { container } = renderList()
-    await screen.findByText('No production orders yet. Create the first one.')
+    await screen.findByText('製造指示はまだありません。最初の1件を登録してください。')
 
     expect(await axe(container)).toHaveNoViolations()
   })

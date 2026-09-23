@@ -7,7 +7,7 @@ TP-004, work item WI-004, revision 1, 2026-09-22.
 ## References
 
 - `brief.md` revision 2 (REQ-028–REQ-042, and the REQ-019 extension), `decisions.md` DEC-001–DEC-025
-- BD-003 v3, BD-001 v7, BD-002 v4, DB-004, DD-003 v4 with DD-003-API v2, DD-003-FN v4, DD-003-SPD v2; DD-001 v4 set
+- 003_BD v3, 001_BD v7, 002_BD v4, 003_DB, 003_DD v4 with 003_DD-API v2, 003_DD-FN v4, 003_DD-SPD v2; 001_DD v4 set
 - `plan.md` revision 3, steps 7–12
 
 ## Introduction
@@ -19,7 +19,7 @@ E2E (`ai/rules/testing.md`).
 
 Everything that depends on "today" is tested with a pinned clock: the backend unit tests pin a `FakeTimeProvider`,
 and the integration tests pin plant today at Wednesday 2031-06-11 on their own container, with the orders cleared as
-the owner (DD-003 "Test data isolation"). The seed is tested separately, on a fresh container with the real clock
+the owner (003_DD "Test data isolation"). The seed is tested separately, on a fresh container with the real clock
 (TC-218). Boundaries are placed where UTC and `Asia/Tokyo` disagree, so a UTC mistake fails a test.
 
 ## Test items
@@ -55,7 +55,7 @@ rule (DEC-019, DEC-025), breadcrumbs kept (DEC-021), icons decorative (DEC-023),
   gap, unchanged from TP-002/TP-003.
 - A manual screen-reader pass: axe covers the automated WCAG 2.2 AA rules only. A known gap.
 - Query cost at production volume: the demo holds 124 rows. TC-219 proves the partial indexes can serve their queries,
-  not that the planner prefers them at that size. A known gap, recorded in DB-004.
+  not that the planner prefers them at that size. A known gap, recorded in 003_DB.
 - A daylight-saving plant zone: `Asia/Tokyo` has none. `StartOfDayUtc`'s DST-gap rule is reviewed in code only.
 - A real database outage in E2E: the unavailable state is tested by replacing the ping in integration (TC-224) and by
   mocking the response in frontend unit tests (TC-226).
@@ -104,7 +104,7 @@ Test names are the actual test methods and titles (U = backend unit, I = integra
 | TC-205 | REQ-031 (DEC-009) | Every weekday | U `Week0_is_the_Monday_on_or_before_today_for_every_weekday` (7 cases), `Workload_has_exactly_ten_buckets…`, `The_current_week_bucket_starts_today…`; I `Workload_PutsEveryActiveOrderInExactlyOneOfTenBuckets` | 10 buckets in order; each active order in exactly one; the current week starts today; sum = Draft + In progress | high |
 | TC-206 | REQ-032 | 12 products, one tie, one completed-only | I `TopProducts_RanksTenByOpenQuantity_TiesBySku_ActiveOnly` | 10 products, quantity descending, tie by SKU, completed-only product absent | high |
 | TC-207 | REQ-033 | InProgress order | U `Completing_an_in_progress_order_records_the_save_time`, `Other_saves_never_record_a_completion_time` (5 cases), `Editing_a_completed_order_later_keeps_its_completion_time`, `A_rejected_transition_records_nothing`; I `CompletingThroughTheApi_RecordsTheSaveTime_AndARequestCannotSetIt` | Set on InProgress → Completed only, equal to `updated_at_utc`; unchanged by later edits; never from a request; not exposed | high |
-| TC-208 | REQ-033 (DB-004) | Migrated database | I `CompletionChecks_RejectInconsistentRows` (3 cases); I `Seed_ProducesTheFiguresDb004States` (no negative lead time) | Each inconsistent update is a check violation (23514) | high |
+| TC-208 | REQ-033 (003_DB) | Migrated database | I `CompletionChecks_RejectInconsistentRows` (3 cases); I `Seed_ProducesTheFiguresDb004States` (no negative lead time) | Each inconsistent update is a check violation (23514) | high |
 | TC-209 | REQ-034 | Completions at plant midnights | U `Utc_bounds_are_plant_midnights_not_utc_midnights`, `Month_start_on_the_first_of_the_month_is_today`; I `CompletedThisWeekAndMonth_UsePlantMidnights` | Monday 00:00 JST in the week, Sunday 23:59 JST not; 1 June 00:00 JST in the month, 31 May 23:59 not | high |
 | TC-210 | REQ-035 | Six orders around the boundaries | U mapper on-time cases; I `OnTimeRate_ComparesThePlantCompletionDate_OverThirtyDays`; F `rounds the on-time rate half up…` | 3 of 4: completion on the due date is on time; 00:30 JST the day after is late (UTC would say on time); T−29 in, T−30 out; cancelled excluded; client 77%/33%/67%/— | high |
 | TC-211 | REQ-036 | Four completions | U `Trend_has_twelve_weeks_oldest_first_with_zeros_filled`; I `Trend_HasTwelveWeeks_ZeroFilled_BucketedInPlantTime` | 12 weeks, zero-filled; Monday 00:00 JST counts in its own week; 13 weeks ago excluded | high |
@@ -114,10 +114,10 @@ Test names are the actual test methods and titles (U = backend unit, I = integra
 | TC-215 | REQ-028 | No orders | U `Nothing_completed_gives_null_lead_time_and_zero_counts`; I `EmptySystem_Is200_WithZerosAndNoAverage`; F `shows zeros, "none" messages and — for an empty system…` | 200 with zeros and `averageDays` null; MSG-I005–MSG-I008 and "—"; no error | medium |
 | TC-216 | REQ-028 | Snapshot 500 | F `shows the error banner with Retry…`; E `a failed load shows Retry and no figures; Retry recovers` | MSG-E013 with Retry; no figures; the navbar still works; Retry loads | medium |
 | TC-217 | REQ-031, REQ-036 (DEC-010) | Each state | F axe in `renders every widget…` and `toggles each chart table…`; E `expectNoAxeViolations` in every Screen C journey | No axe violations, including contrast; charts `role="img"` named with every value; View as table exposes a real table | high |
-| TC-218 | DB-004 (DEC-013, DEC-014) | Fresh container, real clock | I `Seed_ProducesTheFiguresDb004States` | 124 orders 35/25/56/8; every trend week ≥ 2; every workload bucket > 0; 23 of 30 on time; 13.7 days; 15 overdue, 8 due soon; top 10; counter 124 | high |
-| TC-219 | DB-004 | Seeded, `ANALYZE`, seqscan off | I `PartialIndexes_CanServeTheDashboardQueries` (2 cases) | The overdue query uses `ix_production_orders_active_due_date`; the completion range uses `ix_production_orders_completed_at_utc` | medium |
-| TC-220 | BD-003 SP layout | Pixel 7 | E `SP dashboard: menu navbar, two tiles per row, charts scroll in their card, never the page` | Navbar behind Menu; tiles side by side; chart card scrolls; the page does not | medium |
-| TC-221 | DD-003-API | — | I `QueryString_IsIgnored` | Identical body with a crafted query string | medium |
+| TC-218 | 003_DB (DEC-013, DEC-014) | Fresh container, real clock | I `Seed_ProducesTheFiguresDb004States` | 124 orders 35/25/56/8; every trend week ≥ 2; every workload bucket > 0; 23 of 30 on time; 13.7 days; 15 overdue, 8 due soon; top 10; counter 124 | high |
+| TC-219 | 003_DB | Seeded, `ANALYZE`, seqscan off | I `PartialIndexes_CanServeTheDashboardQueries` (2 cases) | The overdue query uses `ix_production_orders_active_due_date`; the completion range uses `ix_production_orders_completed_at_utc` | medium |
+| TC-220 | 003_BD SP layout | Pixel 7 | E `SP dashboard: menu navbar, two tiles per row, charts scroll in their card, never the page` | Navbar behind Menu; tiles side by side; chart card scrolls; the page does not | medium |
+| TC-221 | 003_DD-API | — | I `QueryString_IsIgnored` | Identical body with a crafted query string | medium |
 | TC-222 | REQ-040 (DEC-016) | Each route | F `on %s marks %s as the current page` (4 cases), `opens the SP menu, closes it on Escape…`, `navigates from a navbar link and closes the SP menu`; E `widgets are read-only and the navbar reaches every screen…`, SP journey | Three links everywhere; exactly one `aria-current="page"`, edit route under Production orders; SP menu `aria-expanded`, Escape returns focus | high |
 | TC-223 | REQ-019 (DEC-022) | Edited create form | F `leaves at once when nothing was edited`, `asks first; Keep editing stays with the values; Discard goes to the clicked link`, `resets the form when the clicked link is the page itself`, `never intercepts a modified click (new tab)`; E `an edited order asks before a navbar link leaves it…` | Dialog before leaving; Keep editing keeps values; Discard follows the link, or resets on the same page; Ctrl-click not intercepted | high |
 | TC-224 | REQ-041 (DEC-020) | App as `pmai_app` | U `A_database_that_answers_is_ok`, `A_database_error_is_unavailable`, `A_ping_that_outlasts_the_timeout_is_unavailable`, `A_caller_that_goes_away_is_not_reported_as_unavailable`; I `Health_ReportsOnlyTheDatabaseVerdict_AndIsNotCached`; I 401/403 in `Unauthenticated_Is401_AndNoRole_Is403` | Two fields only; `no-store`; failure and stall both "unavailable" with 200; no error text or host in the body | high |

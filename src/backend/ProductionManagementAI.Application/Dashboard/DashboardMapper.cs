@@ -4,7 +4,7 @@ using ProductionManagementAI.Domain.ProductionOrders;
 namespace ProductionManagementAI.Application.Dashboard;
 
 /// <summary>
-/// Shapes the reader's raw rows into the API response (DD-003-FN §4): every "missing means zero" rule and the one
+/// Shapes the reader's raw rows into the API response (003_DD-FN §4): every "missing means zero" rule and the one
 /// rounding rule the server owns. Pure, so it is unit-tested without a database.
 /// </summary>
 public static class DashboardMapper
@@ -59,7 +59,7 @@ public static class DashboardMapper
                     Enum.Parse<ProductionOrderStatus>(r.Status)))
                 .ToArray());
 
-    /// <summary>Exactly ten buckets in display order: overdue, eight weeks, later (BD-003 D-03, DEC-009).</summary>
+    /// <summary>Exactly ten buckets in display order: overdue, eight weeks, later (003_BD D-03, DEC-009).</summary>
     private static WorkloadBucket[] ToWorkload(DashboardWindow window, IReadOnlyList<WorkloadRow> rows)
     {
         (int Count, long Quantity) Of(int bucket)

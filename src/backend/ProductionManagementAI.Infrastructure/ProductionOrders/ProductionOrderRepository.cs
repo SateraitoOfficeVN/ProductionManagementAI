@@ -23,12 +23,12 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
         return query.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
-    // DD-002-FN §2: filters only, and no join — every list filter is a predicate on production_orders (DB-003).
+    // 002_DD-FN §2: filters only, and no join — every list filter is a predicate on production_orders (002_DB).
     public Task<int> CountOrdersAsync(ProductionOrderListQuery query, CancellationToken cancellationToken) =>
         db.ProductionOrders.AsNoTracking().ApplyFilters(query).CountAsync(cancellationToken);
 
-    // DD-002-FN §3: filter, join for the displayed product, project, order, then page. Notes, xmin, order_year,
-    // order_seq and created_at_utc are never selected (DB-003 read projection).
+    // 002_DD-FN §3: filter, join for the displayed product, project, order, then page. Notes, xmin, order_year,
+    // order_seq and created_at_utc are never selected (002_DB read projection).
     public async Task<IReadOnlyList<ProductionOrderListRow>> ListOrdersAsync(
         ProductionOrderListQuery query, CancellationToken cancellationToken) =>
         await db.ProductionOrders
@@ -80,7 +80,7 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
     }
 }
 
-/// <summary>DB-002 counter upsert, run inside the caller's transaction (DEC-013).</summary>
+/// <summary>001_DB counter upsert, run inside the caller's transaction (DEC-013).</summary>
 internal sealed class OrderNumberIssuer(AppDbContext db) : IOrderNumberIssuer
 {
     public async Task<int> NextAsync(short year, CancellationToken cancellationToken)

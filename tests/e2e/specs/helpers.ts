@@ -11,11 +11,11 @@ export function adminPassword(): string {
 
 export async function signIn(page: Page) {
   await page.goto('/login')
-  await page.getByLabel('Username').fill('admin')
-  await page.getByLabel('Password').fill(adminPassword())
-  await page.getByRole('button', { name: 'Sign in' }).click()
+  await page.getByLabel('ユーザー名').fill('admin')
+  await page.getByLabel('パスワード').fill(adminPassword())
+  await page.getByRole('button', { name: 'ログイン' }).click()
   // Login lands on the dashboard (WI-004 DEC-005). Not a navbar link: on SP those sit behind the Menu button.
-  await expect(page.getByRole('heading', { level: 1, name: 'Dashboard' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'ダッシュボード' })).toBeVisible()
 }
 
 /**
@@ -30,7 +30,7 @@ export function productField(page: Page): Locator {
 /** Opens the create screen and waits until the form has finished loading (the Save button only exists then). */
 export async function openCreateForm(page: Page) {
   await page.goto('/production-orders/new')
-  await expect(page.getByRole('button', { name: 'Save' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '保存' })).toBeVisible()
 }
 
 /** A due date safely in the future regardless of the browser's or the plant's timezone. */
@@ -41,15 +41,15 @@ export function futureDate(daysAhead = 30): string {
 
 export async function createOrder(page: Page, opts: { product?: string; quantity?: string; notes?: string } = {}) {
   await openCreateForm(page)
-  await productField(page).selectOption({ label: opts.product ?? 'P-1004 — Drive shaft' })
-  await page.getByLabel('Quantity').fill(opts.quantity ?? '250')
-  await page.getByLabel('Due date').fill(futureDate())
+  await productField(page).selectOption({ label: opts.product ?? 'P-1004 — ドライブシャフト' })
+  await page.getByLabel('数量').fill(opts.quantity ?? '250')
+  await page.getByLabel('納期').fill(futureDate())
   if (opts.notes) {
-    await page.getByLabel('Notes').fill(opts.notes)
+    await page.getByLabel('備考').fill(opts.notes)
   }
-  await page.getByRole('button', { name: 'Save' }).click()
+  await page.getByRole('button', { name: '保存' }).click()
   const status = page.getByRole('status')
-  await expect(status).toHaveText(/^Production order PO-\d{4}-\d{5} created\.$/)
+  await expect(status).toHaveText(/^製造指示 PO-\d{4}-\d{5} を登録しました。$/)
   const orderNumber = (await status.textContent())!.match(/PO-\d{4}-\d{5}/)![0]
   return { orderNumber, url: page.url() }
 }

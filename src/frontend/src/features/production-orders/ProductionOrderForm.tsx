@@ -5,7 +5,7 @@ import { ApiError } from '../../lib/apiClient'
 import { createOrder, updateOrder } from './api'
 import { DiscardChangesDialog } from './DiscardChangesDialog'
 import { MessageBanner, type Banner } from './MessageBanner'
-import { message, statusLabels } from './messages'
+import { labels, message, statusLabels } from './messages'
 import type { Product, ProductionOrder, ProductionOrderStatus } from './types'
 import {
   MAX_NOTES,
@@ -16,6 +16,7 @@ import {
   validateProduct,
   validateQuantity,
 } from './validation'
+import { formatTimestamp } from '../../lib/format'
 
 type Field = 'productId' | 'quantity' | 'dueDate' | 'notes'
 const FIELDS: Field[] = ['productId', 'quantity', 'dueDate', 'notes']
@@ -61,14 +62,12 @@ function isSame(a: FormValues, b: FormValues): boolean {
   )
 }
 
-const timestampFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-
 const inputClass =
   'w-full rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none aria-[invalid=true]:border-red-600 disabled:bg-gray-100 disabled:text-gray-500'
 const readOnlyClass =
   'w-full rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-gray-600 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none'
 
-// DD-001 module 8 / DD-001-SPD §2–§3: controlled form for BD-001 items 6–16.
+// 001_DD module 8 / 001_DD-SPD §2–§3: controlled form for 001_BD items 6–16.
 export function ProductionOrderForm({
   mode,
   order,
@@ -99,7 +98,7 @@ export function ProductionOrderForm({
   const statusFixed = current !== null && current.allowedNextStatuses.length === 0
   const isDirty = !isSame(values, initial)
 
-  // WI-004 DEC-022: any in-app link that would leave an edited form asks first, as Cancel does (BD-001 E-07a).
+  // WI-004 DEC-022: any in-app link that would leave an edited form asks first, as Cancel does (001_BD E-07a).
   const guard = useNavigationGuard()
   const { pathname } = useLocation()
   const pendingTo = useRef<string | null>(null)
@@ -255,16 +254,16 @@ export function ProductionOrderForm({
       <form noValidate onSubmit={(event) => void handleSubmit(event)} className="grid gap-4">
         <div className="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
           <p className="text-xs text-gray-500">
-            <span aria-hidden="true">* </span>Required fields are marked with an asterisk.
+            {labels.order.requiredLegend}
           </p>
 
-          <Row label="Order number" labelId="orderNumber-label">
+          <Row label={labels.order.orderNumber} labelId="orderNumber-label">
             <p aria-labelledby="orderNumber-label" className={current ? 'text-gray-900' : 'text-gray-500 italic'}>
-              {current ? current.orderNumber : 'Assigned on save'}
+              {current ? current.orderNumber : labels.order.assignedOnSave}
             </p>
           </Row>
 
-          <Row label="Status" htmlFor={mode === 'edit' ? 'status' : undefined} labelId="status-label">
+          <Row label={labels.order.status} htmlFor={mode === 'edit' ? 'status' : undefined} labelId="status-label">
             {mode === 'edit' ? (
               <select
                 id="status"
@@ -286,7 +285,7 @@ export function ProductionOrderForm({
             )}
           </Row>
 
-          <Row label="Product" htmlFor="productId" required>
+          <Row label={labels.order.product} htmlFor="productId" required>
             {locked ? (
               <input
                 id="productId"
@@ -311,7 +310,7 @@ export function ProductionOrderForm({
                 onBlur={() => handleBlur('productId')}
                 className={inputClass}
               >
-                <option value="">{products.length === 0 ? message('MSG-E014') : 'Select a product'}</option>
+                <option value="">{products.length === 0 ? message('MSG-E014') : labels.order.selectProduct}</option>
                 {products.map((product) => (
                   <option key={product.id} value={product.id}>
                     {product.sku} — {product.name}
@@ -324,7 +323,7 @@ export function ProductionOrderForm({
           </Row>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Row label="Quantity" htmlFor="quantity" required>
+            <Row label={labels.order.quantity} htmlFor="quantity" required>
               <input
                 id="quantity"
                 ref={quantityInput}
@@ -344,7 +343,7 @@ export function ProductionOrderForm({
               <FieldError field="quantity" error={errors.quantity} />
             </Row>
 
-            <Row label="Due date" htmlFor="dueDate" required>
+            <Row label={labels.order.dueDate} htmlFor="dueDate" required>
               <input
                 id="dueDate"
                 ref={dueDateInput}
@@ -361,12 +360,12 @@ export function ProductionOrderForm({
             </Row>
           </div>
 
-          <Row label="Notes" htmlFor="notes">
+          <Row label={labels.order.notes} htmlFor="notes">
             <textarea
               id="notes"
               ref={notesInput}
               rows={4}
-              placeholder="Optional"
+              placeholder={labels.order.notesPlaceholder}
               aria-invalid={errors.notes ? true : undefined}
               aria-describedby={describedBy('notes', 'notes-count')}
               value={values.notes}
@@ -386,8 +385,8 @@ export function ProductionOrderForm({
 
           {current && (
             <p className="flex flex-wrap gap-x-4 gap-y-1 border-t border-gray-100 pt-3 text-xs text-gray-500">
-              <span>Created {timestampFormat.format(new Date(current.createdAt))}</span>
-              <span>Last updated {timestampFormat.format(new Date(current.updatedAt))}</span>
+              <span>{labels.order.created(formatTimestamp(current.createdAt))}</span>
+              <span>{labels.order.updated(formatTimestamp(current.updatedAt))}</span>
             </p>
           )}
         </div>
@@ -399,14 +398,14 @@ export function ProductionOrderForm({
             onClick={handleCancel}
             className="rounded border border-gray-300 bg-white px-4 py-2 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
-            Cancel
+            {labels.order.cancel}
           </button>
           <button
             type="submit"
             disabled={saving}
             className="rounded bg-gray-900 px-4 py-2 text-white focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50"
           >
-            {saving ? 'Saving…' : 'Save'}
+            {saving ? labels.order.saving : labels.order.save}
           </button>
         </div>
       </form>
@@ -490,7 +489,7 @@ function FieldError({ field, error }: { field: Field; error: string | undefined 
 function LockHint({ id }: { id: string }) {
   return (
     <p id={id} className="text-xs text-gray-500">
-      Locked after the order leaves Draft.
+      {labels.order.lockHint}
     </p>
   )
 }

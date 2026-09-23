@@ -18,7 +18,7 @@
 | DEC-010 | 2026-09-16 | Screen B and Screen C scope | trannhatthanh31@gmail.com | decided | B = production-order list; C = dashboard (widgets/metrics still open) |
 | DEC-011 | 2026-09-16 | Execution mode for WI-001 | trannhatthanh31@gmail.com | decided | User runs scaffold/build/git commands personally; Claude authors docs/content on request |
 | DEC-012 | 2026-09-16 | Container registry / deploy host | unresolved | proposed | Not needed to unblock this plan; independent work continues per `ai/policies.md` |
-| DEC-013 | 2026-09-16 | Japanese-translation-sync policy | unresolved | proposed | Not needed to unblock this plan |
+| DEC-013 | 2026-09-16 | Japanese-translation-sync policy | ThanhTN (2026-09-23) | decided | `docs/en/` Markdown stays English only; every document is rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/` in the same change; existing documents get theirs on their next edit ([RFC 0008](../../ai/improvements/0008-english-and-japanese-pdfs.md)) |
 | DEC-014 | 2026-09-16 | How the four demo videos are produced | unresolved | proposed | Not needed to unblock this plan |
 | DEC-015 | 2026-09-16 | Exact role/permission matrix beyond placeholder `Admin`/`Operator` | unresolved | proposed | Placeholder seed roles used for bootstrap; must be confirmed before Screen A gates on any permission |
 
@@ -82,7 +82,7 @@ Add one row per decision as it is raised; keep IDs stable. Expand each decision 
 | Artifact | Change required |
 | --- | --- |
 | `ai/project.md` | Move "backend structure and ORM" from Open decisions to Confirmed |
-| ADR-0001 | Documents this structure formally |
+| 0001_ADR | Documents this structure formally |
 
 ## DEC-003: PostgreSQL version
 
@@ -344,7 +344,7 @@ After the plan was drafted, the user clarified they want to personally run the i
 
 ## Implementation note: `AppUser`/`AppRole` project placement (step 10)
 
-Neither ADR-0002 nor DB-001 states which project `AppUser`/`AppRole` live in. ADR-0001 requires Domain to have "no external dependencies," but `AppUser : IdentityUser<Guid>` and `AppRole : IdentityRole<Guid>` depend on the ASP.NET Core Identity package — an external dependency. Claude placed both classes in `ProductionManagementAI.Infrastructure/Identity/` (alongside `AppDbContext`) rather than Domain, to keep ADR-0001's dependency rule intact. Not logged as a numbered DEC — it is a direct application of an already-decided ADR, not a new choice — but recorded here for traceability.
+Neither 0002_ADR nor 000_DB states which project `AppUser`/`AppRole` live in. 0001_ADR requires Domain to have "no external dependencies," but `AppUser : IdentityUser<Guid>` and `AppRole : IdentityRole<Guid>` depend on the ASP.NET Core Identity package — an external dependency. Claude placed both classes in `ProductionManagementAI.Infrastructure/Identity/` (alongside `AppDbContext`) rather than Domain, to keep 0001_ADR's dependency rule intact. Not logged as a numbered DEC — it is a direct application of an already-decided ADR, not a new choice — but recorded here for traceability.
 
 ## Implementation note: `db` service host port (step 16)
 

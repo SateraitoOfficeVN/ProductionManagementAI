@@ -1,7 +1,7 @@
 import { maxOrderNumberFilterLength } from './listViewState'
 import type { ListFilters } from './types'
 
-// DD-002 module 5, client half. Only V-09 and V-10 live here — the two rules a user can type wrong. V-11 (status),
+// 002_DD module 5, client half. Only V-09 and V-10 live here — the two rules a user can type wrong. V-11 (status),
 // V-12 (product) and V-13 (sort/paging) cannot be violated through the UI, since those values come from the screen's
 // own controls, so the client doesn't re-implement them. The server still enforces all five and is authoritative.
 
