@@ -3,7 +3,7 @@
 - DD/api-design.md — per-endpoint request/response field catalogs, matching example/DD/API/70-00-02.API仕様設計_....xlsx. Always produced: every endpoint this DD's screen calls is catalogued there, including small screen-owned ones; this file's "APIs used" only lists the endpoints and links to their sections.
 - DD/function-design.md — per-method design of the backend service/Application-layer methods behind this DD's endpoints (shared across screens or not), matching example/DD/Functions/90-11-02.機能設計_....xlsx. Always produced: this file's "Module design" keeps the screen-owned domain entities/rules, UI components and controllers, and points to the companion for the service methods.
 - DD/screen-processing-design.md — step-by-step processing flow (branching, redirects, per-component breakdown), matching example/DD/画面処理設計/00-04-01.画面処理設計_....xlsx. Always produced: the step-by-step flows live there, one block per component; this file's "Processing and state transitions" keeps only the state-transition table and a flow → section pointer table.
-All four documents are always produced for every DD, as separate Markdown files side by side in docs/en/020_detailed-design/: `{###_DD}_{slug}.md` (this file), `{###_DD}-API_{slug}.md`, `{###_DD}-FN_{slug}.md` and `{###_DD}-SPD_{slug}.md`, with document IDs `{###_DD}`, `{###_DD}-API`, `{###_DD}-FN` and `{###_DD}-SPD`. Each piece of content has exactly one home among the four; the others point to it rather than repeating it. When a companion's subject genuinely doesn't exist for a DD (e.g. a backend-only DD with no screen), the companion is still produced, with each of its sections marked "Not applicable — {reason}" rather than the file being skipped.
+All four documents are always produced for every DD, as separate Markdown files side by side in docs/en/020_detailed-design/: `{###_DD}_{画面名}.md` (this file), `{###_DD}-API_{画面名}.md`, `{###_DD}-FN_{画面名}.md` and `{###_DD}-SPD_{画面名}.md` (`{画面名}` is the screen's Japanese name, the same as on its BD; RFC 0011), with document IDs `{###_DD}`, `{###_DD}-API`, `{###_DD}-FN` and `{###_DD}-SPD`. Each piece of content has exactly one home among the four; the others point to it rather than repeating it. When a companion's subject genuinely doesn't exist for a DD (e.g. a backend-only DD with no screen), the companion is still produced, with each of its sections marked "Not applicable — {reason}" rather than the file being skipped.
 List all three companion documents in "Companion design documents" below. This file's own "Module design" keeps the reference workbook's Rule-type/Rule-references/Condition-references/Check-parameters sub-block (from its Container/Rule sheets) for a module that is itself a business rule or validator owned by this screen. Where a legacy ASPX-specific concept (e.g. an XML rule engine, .aspx include paths) has no direct equivalent in this project's .NET 10 + EF Core / React stack, fill that field with "not applicable — {reason}" rather than deleting it.
 Copy into the relevant work item or docs/en/020_detailed-design area; replace {bracketed} prompts with task-specific facts, or "Not applicable" with a reason. Do not fabricate results or approval. -->
 
@@ -97,9 +97,9 @@ Copy into the relevant work item or docs/en/020_detailed-design area; replace {b
 
 | No | Document | Type | Covers |
 | --- | --- | --- | --- |
-| 1 | {###_DD}-API_{slug}.md | api-design | {endpoints} |
-| 2 | {###_DD}-FN_{slug}.md | function-design | {service methods} |
-| 3 | {###_DD}-SPD_{slug}.md | screen-processing-design | {per-component processing blocks} |
+| 1 | {###_DD}-API_{画面名}.md | api-design | {endpoints} |
+| 2 | {###_DD}-FN_{画面名}.md | function-design | {service methods} |
+| 3 | {###_DD}-SPD_{画面名}.md | screen-processing-design | {per-component processing blocks} |
 
 ### Task / design index
 

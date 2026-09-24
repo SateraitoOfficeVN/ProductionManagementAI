@@ -27,7 +27,7 @@ None required. Mermaid renders in GitHub and most Markdown viewers, so no tool i
 
 ## 5. Output artifacts, templates, ID conventions, and storage locations
 
-BD document `###_BD_{slug}.md` in its number folder `docs/en/010_basic-design/###/`, starting from the [template](../../templates/basic-design.md). Document ID `###_BD`; screens use stable `SCR-###` IDs and functions use `FN-###` IDs, both referenced (never restated) from detailed-design.md. Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
+BD document `###_BD_{画面名}.md`, where `{画面名}` is the screen's Japanese name as the UI shows it (RFC 0011), in its number folder `docs/en/010_basic-design/###/`, starting from the [template](../../templates/basic-design.md). Document ID `###_BD`; screens use stable `SCR-###` IDs and functions use `FN-###` IDs, both referenced (never restated) from detailed-design.md. Each document under `docs/en/` is also rendered to an English PDF under `docs/en/pdf/` and a Japanese PDF under `docs/ja/pdf/`, in the same change, per the [documentation rules](../../rules/documentation.md).
 
 ## 6. Checklist and repeatable verification method
 

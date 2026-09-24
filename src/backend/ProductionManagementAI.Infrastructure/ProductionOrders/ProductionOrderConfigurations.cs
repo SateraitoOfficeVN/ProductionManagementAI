@@ -4,7 +4,7 @@ using ProductionManagementAI.Domain.ProductionOrders;
 
 namespace ProductionManagementAI.Infrastructure.ProductionOrders;
 
-// Physical schema per docs/en/database/001/001_DB_production-order-schema.md (001_DB). Column names are snake-cased
+// Physical schema per docs/en/database/001/001_DB_製造指示登録・編集.md (001_DB). Column names are snake-cased
 // by EFCore.NamingConventions; constraint names are set explicitly to match the document.
 
 internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
