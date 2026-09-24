@@ -36,9 +36,9 @@ on to the implementation"). Step 14 was authorized separately ("yes push it and 
 | 2026-09-22 | Plan revision 2 steps 5–10: tests at every level (67 backend unit, 25 integration, 18 frontend, 8 E2E) and the five defects they found, all fixed | [evidence.md](evidence.md) |
 | 2026-09-22 | Plan revision 2 steps 2–4, 7–8: migrations applied locally, the list endpoint, the React screen, and Screen A's navigation target moved to the list (001_BD v5, 001_DD, 001_DD-SPD updated) | [evidence.md](evidence.md) |
 | 2026-09-22 | Plan revision 1 closed; revision 2 drafted and approved for local work | [plan.md](plan.md) |
-| 2026-09-22 | Plan revision 1 step 5: 002_DD, 002_DD-API, 002_DD-FN and 002_DD-SPD written, plus the 7-state mockup published privately; a message-ID collision with 001_DD's catalog found and fixed (002_BD v3) | [002_DD](../../docs/en/020_detailed-design/002/002_DD_production-order-list.md), [mockup](https://claude.ai/artifact/2XrZ9xnEfzQ6pCbUnZovL3) |
-| 2026-09-22 | 002_DB written and approved by the user ("the DB design is approved"); DEC-010, DEC-011 recorded | [002_DB](../../docs/en/database/002/002_DB_production-order-list-queries.md) |
-| 2026-09-22 | 002_BD written and approved by the user ("the BD look good"); DEC-008, DEC-009 recorded | [002_BD](../../docs/en/010_basic-design/002/002_BD_production-order-list.md) |
+| 2026-09-22 | Plan revision 1 step 5: 002_DD, 002_DD-API, 002_DD-FN and 002_DD-SPD written, plus the 7-state mockup published privately; a message-ID collision with 001_DD's catalog found and fixed (002_BD v3) | [002_DD](../../docs/en/020_detailed-design/002/002_DD_製造指示一覧.md), [mockup](https://claude.ai/artifact/2XrZ9xnEfzQ6pCbUnZovL3) |
+| 2026-09-22 | 002_DB written and approved by the user ("the DB design is approved"); DEC-010, DEC-011 recorded | [002_DB](../../docs/en/database/002/002_DB_製造指示一覧.md) |
+| 2026-09-22 | 002_BD written and approved by the user ("the BD look good"); DEC-008, DEC-009 recorded | [002_BD](../../docs/en/010_basic-design/002/002_BD_製造指示一覧.md) |
 | 2026-09-22 | WI-003 opened; brief revision 1 (REQ-020–REQ-027, UC-004–UC-007) and the decision log | [brief.md](brief.md), [decisions.md](decisions.md) |
 
 ## Planned for next period

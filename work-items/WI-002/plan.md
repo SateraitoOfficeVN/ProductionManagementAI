@@ -48,10 +48,10 @@ Produce the reconciled design set for Screen A (brief, 001_BD, 001_DB, and 001_D
 | # | Milestone / step | Depends on | Skill used | Deliverable | Verification method | Outcome |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Requirements brief + decision log | none | requirements | `work-items/WI-002/brief.md`, `decisions.md` | Every REQ has success + failure criteria | done 2026-09-18 — REQ-010–REQ-018 (REQ-019 added later via DEC-018) |
-| 2 | Basic design | 1 | basic-design, screen-design | `docs/en/010_basic-design/001/001_BD_production-order-create-edit.md` | Every REQ mapped to a BD section; design-consistency checklist | done 2026-09-18 — 001_BD revisions 1–4 |
+| 2 | Basic design | 1 | basic-design, screen-design | `docs/en/010_basic-design/001/001_BD_製造指示登録・編集.md` | Every REQ mapped to a BD section; design-consistency checklist | done 2026-09-18 — 001_BD revisions 1–4 |
 | 3 | Resolve DEC-009 | 2 | — | `decisions.md`, 001_BD V-04 | User answer recorded | done 2026-09-18 — DEC-009–DEC-012 answered together |
-| 4 | Database design | 2 | database-design | `docs/en/database/001/001_DB_production-order-schema.md` (001_DB) | Constraints/indexes justified; migration impact stated | done 2026-09-18 — reviewed by the user; DEC-013–DEC-016, DEC-019 |
-| 5 | Detailed design + rendered mockup | 3, 4 | detailed-design, screen-design | `docs/en/020_detailed-design/001/001_DD_production-order-create-edit.md` + mockup | DD agrees with BD and DB; test viewpoints cover every REQ | done 2026-09-18 — 001_DD, 001_DD-API, 001_DD-FN, 001_DD-SPD (FN/SPD added at the user's request) + mockup https://claude.ai/artifact/FEo1RG27UjZ6vxFCUjxoHq; DEC-021–DEC-024 |
+| 4 | Database design | 2 | database-design | `docs/en/database/001/001_DB_製造指示登録・編集.md` (001_DB) | Constraints/indexes justified; migration impact stated | done 2026-09-18 — reviewed by the user; DEC-013–DEC-016, DEC-019 |
+| 5 | Detailed design + rendered mockup | 3, 4 | detailed-design, screen-design | `docs/en/020_detailed-design/001/001_DD_製造指示登録・編集.md` + mockup | DD agrees with BD and DB; test viewpoints cover every REQ | done 2026-09-18 — 001_DD, 001_DD-API, 001_DD-FN, 001_DD-SPD (FN/SPD added at the user's request) + mockup https://claude.ai/artifact/FEo1RG27UjZ6vxFCUjxoHq; DEC-021–DEC-024 |
 | 6 | Reconcile and close design phase | 5 | — | `status.md`, `evidence.md` | design-consistency checklist passes; no open business decision | done 2026-09-18 — checklist passed; DD set approved by the user |
 
 ### Roles and responsibilities
