@@ -28,6 +28,9 @@ public class IntegrationTestFixture : WebApplicationFactory<Program>, IAsyncLife
     /// <summary>Owner connection: migrations and test-only setup SQL.</summary>
     public string OwnerConnectionString => _postgres.GetConnectionString();
 
+    /// <summary>Host port of this fixture's own container; tells its database traffic apart from other fixtures'.</summary>
+    public int DatabasePort => _postgres.GetMappedPublicPort(PostgreSqlBuilder.PostgreSqlPort);
+
     /// <summary>What the app uses at runtime, exactly as in Compose: the restricted pmai_app login.</summary>
     public string AppConnectionString => new NpgsqlConnectionStringBuilder(OwnerConnectionString)
     {

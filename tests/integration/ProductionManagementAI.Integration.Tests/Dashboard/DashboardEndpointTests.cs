@@ -278,13 +278,21 @@ public class DashboardEndpointTests(DashboardFixture fixture) : IClassFixture<Da
         await Insert("Draft", T.AddDays(70));
         using var client = await fixture.CreateClientAsAsync("Admin");
 
+        // The listener is process-wide, and other test classes run in parallel against their own containers, so keep
+        // only statements sent to this fixture's database; otherwise a concurrent list query inflates the count.
         var statements = new List<string>();
+        var port = fixture.DatabasePort;
         using var listener = new ActivityListener
         {
             ShouldListenTo = source => source.Name.StartsWith("Npgsql", StringComparison.Ordinal),
             Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
             ActivityStopped = activity =>
             {
+                if (!Equals(activity.GetTagItem("server.port")?.ToString(), port.ToString(CultureInfo.InvariantCulture)))
+                {
+                    return;
+                }
+
                 var text = activity.GetTagItem("db.query.text") ?? activity.GetTagItem("db.statement");
                 if (text is string sql)
                 {
@@ -301,7 +309,8 @@ public class DashboardEndpointTests(DashboardFixture fixture) : IClassFixture<Da
         var readOnly = seen.FindIndex(s => s.Contains("SET TRANSACTION READ ONLY", StringComparison.Ordinal));
         var dashboard = seen.Where(s => s.Contains("FROM production_orders", StringComparison.Ordinal)).ToList();
         Assert.True(readOnly >= 0, "the reader marks its transaction read-only");
-        Assert.Equal(7, dashboard.Count);
+        Assert.True(dashboard.Count == 7,
+            $"expected the 7 dashboard statements, captured {dashboard.Count}:\n{string.Join("\n---\n", dashboard)}");
         Assert.True(seen.FindIndex(s => s.Contains("FROM production_orders", StringComparison.Ordinal)) > readOnly,
             "SET TRANSACTION READ ONLY runs before every query");
 
