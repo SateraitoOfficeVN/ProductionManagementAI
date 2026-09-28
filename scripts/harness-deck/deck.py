@@ -410,7 +410,7 @@ tpl = [("brief.md", "PRD conventions", "REQ-### with success + failure criteria,
        ("architecture-decision.md", "MADR", "Drivers, options, outcome, consequences"),
        ("basic-design.md", "基本設計書", "Flows, screens, Mermaid diagrams, SVG wireframes"),
        ("detailed-design.md + DD/*", "詳細設計書 family", "Main DD + API · function · screen-processing"),
-       ("database-design.md", "テーブル定義書 + ER", "Tables, indexes, constraints, migration limits"),
+       ("database-design.md", "テーブル定義書 + ER", "Tables, columns, indexes, triggers, roles, migrations"),
        ("test-plan.md", "IEEE 829-1998", "Items, approach, cases, results, gaps"),
        ("review.md", "Google code-review categories", "Design, functionality, complexity, tests …"),
        ("improvement.md", "Rust-style RFC", "Motivation, alternatives, evaluation, adoption")]

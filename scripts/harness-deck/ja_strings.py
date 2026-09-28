@@ -195,7 +195,7 @@ J = {
     '詳細設計書 family': '詳細設計書 一式',
     'Main DD + API · function · screen-processing': 'メインの DD + API · 機能 · 画面処理',
     'テーブル定義書 + ER': 'テーブル定義書 + ER',
-    'Tables, indexes, constraints, migration limits': 'テーブル、インデックス、制約、マイグレーションの限界',
+    'Tables, columns, indexes, triggers, roles, migrations': 'テーブル、列、インデックス、トリガー、ロール、マイグレーション',
     'IEEE 829-1998': 'IEEE 829-1998',
     'Items, approach, cases, results, gaps': '対象、方針、ケース、結果、不足',
     'Google code-review categories': 'Google のコードレビューの観点',

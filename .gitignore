@@ -27,3 +27,6 @@ Thumbs.db
 demos/build/fonts/
 demos/build/clips_*/
 demos/build/txt_*/
+
+# Office lock files
+~$*
