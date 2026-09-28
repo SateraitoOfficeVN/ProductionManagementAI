@@ -1,0 +1,532 @@
+<!doctype html>
+<!-- Local-setup guide (EN / JA / VI). Open this file in any browser; it works offline (fonts fall back to
+     system fonts). Keep it in step with deploy/README.md and deploy/.env.example. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ProductionManagementAI Local Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+:root {
+  --bg: #f4f7f6;
+  --surface: #ffffff;
+  --ink: #15211e;
+  --muted: #56655f;
+  --line: #d6e0dc;
+  --accent: #0d6b5b;
+  --accent-soft: #e2f0ec;
+  --code-bg: #eef3f1;
+  --code-ink: #1d2c28;
+  --warn: #9a5b00;
+  --warn-soft: #fbf1df;
+  --focus: #1f8f79;
+  --sans: "IBM Plex Sans", "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1513; --surface: #152019; --ink: #e2ebe8; --muted: #9aaca6; --line: #26352f;
+    --accent: #5cc4ab; --accent-soft: #173029; --code-bg: #0b120f; --code-ink: #d7e4df;
+    --warn: #e7ae5a; --warn-soft: #2c2213; --focus: #5cc4ab;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1513; --surface: #152019; --ink: #e2ebe8; --muted: #9aaca6; --line: #26352f;
+  --accent: #5cc4ab; --accent-soft: #173029; --code-bg: #0b120f; --code-ink: #d7e4df;
+  --warn: #e7ae5a; --warn-soft: #2c2213; --focus: #5cc4ab;
+}
+:lang(ja) { --sans: "Noto Sans JP", "IBM Plex Sans", "Yu Gothic UI", "Meiryo", sans-serif; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15.5px; line-height: 1.65; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 6px; }
+h1 { font-size: clamp(26px, 4vw, 36px); line-height: 1.2; margin: 0; font-weight: 700; text-wrap: balance; }
+.lede { color: var(--muted); margin: 8px 0 0; max-width: 62ch; }
+
+.langs { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.langs button { font: 500 14px var(--sans); color: var(--muted); background: none; border: 0; padding: 8px 14px; cursor: pointer; }
+.langs button + button { border-left: 1px solid var(--line); }
+.langs button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+:root[data-theme="dark"] .langs button[aria-pressed="true"] { color: #0e1513; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 22px 0 8px; }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.fact dt { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.fact dd { margin: 2px 0 0; font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+.layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; margin-top: 28px; }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; font-size: 14px; }
+nav.toc p { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.toc a { display: flex; gap: 10px; color: var(--ink); text-decoration: none; padding: 5px 8px; border-radius: 6px; }
+nav.toc a:hover { background: var(--accent-soft); }
+nav.toc .n { font-family: var(--mono); color: var(--accent); min-width: 1.4em; }
+
+main section { padding-bottom: 30px; margin-bottom: 30px; border-bottom: 1px solid var(--line); scroll-margin-top: 16px; }
+main section:last-child { border-bottom: 0; }
+h2 { display: flex; align-items: baseline; gap: 12px; font-size: 21px; line-height: 1.3; margin: 0 0 12px; text-wrap: balance; }
+h2 .n { font-family: var(--mono); font-size: 15px; color: var(--surface); background: var(--accent); border-radius: 6px; padding: 1px 8px; flex: none; }
+:root[data-theme="dark"] h2 .n { color: #0e1513; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) h2 .n, :root:not([data-theme="light"]) .langs button[aria-pressed="true"] { color: #0e1513; } }
+h2 .opt { font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; }
+h3 { font-size: 16px; margin: 18px 0 6px; }
+p, ul, ol { margin: 0 0 12px; max-width: 72ch; }
+li + li { margin-top: 4px; }
+code { font-family: var(--mono); font-size: .9em; background: var(--code-bg); color: var(--code-ink); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+
+.cmd { position: relative; margin: 8px 0 16px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; }
+.cmd pre { margin: 0; padding: 14px 16px; padding-right: 84px; overflow-x: auto; font: 13.5px/1.6 var(--mono); color: var(--code-ink); }
+.cmd pre code { background: none; padding: 0; border-radius: 0; font-size: inherit; overflow-wrap: normal; }
+.cmd pre .c { color: var(--muted); }
+.cmd button { position: absolute; top: 8px; right: 8px; font: 500 12px var(--sans); color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.cmd button.done { color: var(--surface); background: var(--accent); border-color: var(--accent); }
+
+.tbl { overflow-x: auto; margin: 8px 0 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); }
+
+.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 8px 8px 0; padding: 10px 14px; margin: 10px 0 16px; max-width: 72ch; }
+.warn strong { color: var(--warn); }
+.ok { color: var(--muted); font-size: 14px; }
+footer { color: var(--muted); font-size: 13.5px; margin-top: 8px; max-width: 72ch; }
+
+@media (max-width: 820px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  nav.toc { position: static; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  nav.toc ol { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="eyebrow" data-i18n="eyebrow"></p>
+      <h1 data-i18n="title"></h1>
+      <p class="lede" data-i18n="lede"></p>
+    </div>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+      <button type="button" data-lang="vi" aria-pressed="false">Tiếng Việt</button>
+    </div>
+  </header>
+
+  <dl class="facts" id="facts"></dl>
+
+  <div class="layout">
+    <nav class="toc" aria-labelledby="toc-title">
+      <p id="toc-title" data-i18n="toc"></p>
+      <ol id="toc"></ol>
+    </nav>
+    <main id="content"></main>
+  </div>
+</div>
+
+<script>
+// Commands are written once and shared by every language.
+const CMD = {
+  toolEf: 'dotnet tool install --global dotnet-ef --version 10.0.12',
+  verify: 'git --version\ndocker --version\ndotnet --version        # 10.x\ndotnet ef --version     # 10.0.12\nnode --version          # v24.x',
+  clone: 'cd C:\\\ngit clone https://github.com/SateraitoOfficeVN/ProductionManagementAI.git\ncd ProductionManagementAI',
+  env: 'Copy-Item deploy\\.env.example deploy\\.env\nnotepad deploy\\.env',
+  envLines: 'POSTGRES_PASSWORD=<POSTGRES_PASSWORD>\nPMAI_APP_DB_PASSWORD=<PMAI_APP_DB_PASSWORD>\nSEED_ADMIN_PASSWORD=<SEED_ADMIN_PASSWORD, e.g. Admin#2026>',
+  db: 'docker compose -f deploy/compose.yaml up -d --build db\ndocker compose -f deploy/compose.yaml ps',
+  migrate: 'dotnet ef database update --project src/backend/ProductionManagementAI.Infrastructure --startup-project src/backend/ProductionManagementAI.Api --connection "Host=localhost;Port=5433;Database=production_management_ai;Username=postgres;Password=<POSTGRES_PASSWORD>"',
+  up: 'docker compose -f deploy/compose.yaml up -d --build',
+  macEnv: 'cp deploy/.env.example deploy/.env',
+  macPath: 'export PATH="$PATH:$HOME/.dotnet/tools"',
+  stop: 'docker compose -f deploy/compose.yaml down',
+  start: 'docker compose -f deploy/compose.yaml up -d',
+  reset: 'docker compose -f deploy/compose.yaml down -v',
+  logs: 'docker compose -f deploy/compose.yaml logs -f backend',
+  stopApp: 'docker compose -f deploy/compose.yaml stop backend frontend',
+  devBack: '$env:SEED_ADMIN_PASSWORD = "<SEED_ADMIN_PASSWORD>"\n$env:PGPASSWORD = "<PMAI_APP_DB_PASSWORD>"\ndotnet run --project src/backend/ProductionManagementAI.Api',
+  devFront: 'cd src/frontend\nnpm ci\nnpm run dev',
+  testBack: 'dotnet test src/backend/ProductionManagementAI.slnx',
+  testFront: 'cd src/frontend\nnpm ci\nnpm run lint\nnpm test\ncd ../..',
+  testE2e: 'cd tests/e2e\nnpm ci\nnpx playwright install chromium\n$env:E2E_ADMIN_PASSWORD = "<SEED_ADMIN_PASSWORD>"\n$env:E2E_BASE_URL = "http://localhost:3000"\nnpx playwright test'
+};
+
+const T = {
+en: {
+  eyebrow: 'Runbook · new computer',
+  title: 'Run ProductionManagementAI locally',
+  lede: 'Every step to go from a computer with nothing installed to the running app in your browser. Written for Windows (PowerShell); step 7 lists what changes on macOS and Linux.',
+  toc: 'Steps',
+  copy: 'Copy', copied: 'Copied', selected: 'Selected',
+  facts: [['Repository', 'github.com/SateraitoOfficeVN/ProductionManagementAI'], ['App in browser', 'http://localhost:3000'], ['Sign in as', 'admin'], ['Ports used', '3000 · 8081 · 5433']],
+  sections: [
+    { id: 'tools', n: '1', h: 'Install the tools', body: `
+<div class="tbl"><table><thead><tr><th>Tool</th><th>Version</th><th>Needed for</th><th>Download</th></tr></thead><tbody>
+<tr><td>Git</td><td>any recent</td><td>Getting the code — not needed if you receive it as a zip</td><td><a href="https://git-scm.com/downloads">git-scm.com</a></td></tr>
+<tr><td>Docker Desktop</td><td>current</td><td>Database, backend and frontend containers</td><td><a href="https://www.docker.com/products/docker-desktop">docker.com</a></td></tr>
+<tr><td>.NET SDK</td><td><strong>10.0.x</strong></td><td>Database migrations, and the backend in dev mode</td><td><a href="https://dotnet.microsoft.com/download/dotnet/10.0">dotnet.microsoft.com</a></td></tr>
+<tr><td>Node.js</td><td><strong>24</strong></td><td>Only for dev mode and tests</td><td><a href="https://nodejs.org">nodejs.org</a></td></tr>
+</tbody></table></div>
+<p>On Windows, Docker Desktop needs WSL 2; its installer offers to turn it on, which may need a restart. After installing, <strong>start Docker Desktop</strong> and wait until it says it is running.</p>
+<p>Open a <strong>new</strong> PowerShell window so it sees the new tools, then install the migration tool:</p>
+{{toolEf}}
+<p>Check everything is installed:</p>
+{{verify}}` },
+    { id: 'code', n: '2', h: 'Get the code', opt: 'optional', body: `
+<p>Skip this step if you already have the code, for example as a zip file. Choose one of the two ways below.</p>
+<h3>From a zip file</h3>
+<ol>
+<li>Unzip it to any folder, for example <code>C:\\ProductionManagementAI</code>.</li>
+<li>Open that folder and check it directly contains <code>deploy</code>, <code>src</code> and <code>README.md</code>. If they sit one level deeper, use the inner folder.</li>
+<li>If the zip already includes <code>deploy\\.env</code>, it holds the sender's passwords. Check its values in step 3 instead of creating a new file.</li>
+</ol>
+<h3>With Git</h3>
+<p>The repository is public, so no GitHub account is needed.</p>
+{{clone}}
+<p>Either way, run every command after this from the <code>ProductionManagementAI</code> folder.</p>` },
+    { id: 'env', n: '3', h: 'Create the settings file', body: `
+{{env}}
+<p>Change these three lines and save the file. Leave every other line as it is.</p>
+{{envLines}}
+<ul>
+<li><code>POSTGRES_PASSWORD</code> is the database owner's password. You need it again in step 5.</li>
+<li><code>PMAI_APP_DB_PASSWORD</code> is the password of the backend's database login. It has no default: the containers won't start if it is empty.</li>
+<li><code>SEED_ADMIN_PASSWORD</code> is the password you sign in with as <code>admin</code>.</li>
+</ul>
+<div class="warn"><strong>Use a strong admin password.</strong> At least 6 characters with an uppercase letter, a lowercase letter, a digit and a symbol, for example <code>Admin#2026</code>. A weaker one, such as <code>admin</code>, makes the backend stop at startup.</div>
+<p class="ok">Never commit <code>deploy/.env</code>; Git already ignores it.</p>` },
+    { id: 'db', n: '4', h: 'Start the database', body: `
+{{db}}
+<p>The first run downloads images and can take a few minutes. The <code>db</code> service should show as running.</p>` },
+    { id: 'migrate', n: '5', h: 'Create the tables and demo data', body: `
+<p>Replace <code>&lt;POSTGRES_PASSWORD&gt;</code> with the value from step 3. Keep it on one line.</p>
+{{migrate}}
+<p>The first time, this also downloads the .NET packages and builds the backend. It ends with <code>Done.</code>, after loading 30 products and 124 demo orders.</p>` },
+    { id: 'up', n: '6', h: 'Start the whole app', body: `
+{{up}}
+<p>Open <a href="http://localhost:3000">http://localhost:3000</a> and sign in with user name <code>admin</code> and your <code>SEED_ADMIN_PASSWORD</code>. You land on the dashboard; the menu leads to the order list and to a new order.</p>` },
+    { id: 'mac', n: '7', h: 'On macOS or Linux', body: `
+<p>The steps are the same, with three differences:</p>
+<ul>
+<li>On Linux, install Docker Engine with the Compose plugin instead of Docker Desktop.</li>
+<li>In step 3, copy the file with the command below and open it in any text editor.</li>
+<li>If <code>dotnet ef</code> is not found, add the .NET tools folder to your <code>PATH</code>.</li>
+</ul>
+{{macEnv}}
+{{macPath}}` },
+    { id: 'daily', h: 'Everyday use', body: `
+<div class="tbl"><table><thead><tr><th>To</th><th>Run</th></tr></thead><tbody>
+<tr><td>Stop the app (keeps data)</td><td><code>docker compose -f deploy/compose.yaml down</code></td></tr>
+<tr><td>Start it again</td><td><code>docker compose -f deploy/compose.yaml up -d</code></td></tr>
+<tr><td>Update after new code</td><td><code>git pull</code>, or unzip the new copy over the old folder keeping your <code>deploy\\.env</code>; then steps 5 and 6</td></tr>
+<tr><td>Reset everything (deletes data)</td><td><code>docker compose -f deploy/compose.yaml down -v</code>, then steps 4–6</td></tr>
+<tr><td>See backend logs</td><td><code>docker compose -f deploy/compose.yaml logs -f backend</code></td></tr>
+</tbody></table></div>
+<div class="warn"><strong>Changed a database password?</strong> The database reads <code>POSTGRES_PASSWORD</code> and <code>PMAI_APP_DB_PASSWORD</code> only when it is first created. After changing either one, reset everything.</div>` },
+    { id: 'dev', h: 'Dev mode with live reload', opt: 'optional', body: `
+<p>Needs Node.js 24. Do steps 1–5, then free the app ports:</p>
+{{stopApp}}
+<h3>Terminal 1 — backend (port 5033)</h3>
+{{devBack}}
+<h3>Terminal 2 — frontend</h3>
+{{devFront}}
+<p>Open the address Vite prints, normally <a href="http://localhost:5173">http://localhost:5173</a>. It forwards <code>/api</code> calls to the backend.</p>` },
+    { id: 'tests', h: 'Run the tests', opt: 'optional', body: `
+<h3>Backend</h3>
+<p>Docker must be running; the tests start their own throwaway database and don't touch yours.</p>
+{{testBack}}
+<h3>Frontend</h3>
+{{testFront}}
+<h3>End-to-end, against the app from step 6</h3>
+{{testE2e}}` },
+    { id: 'help', h: 'If something goes wrong', body: `
+<div class="tbl"><table><thead><tr><th>What you see</th><th>What to do</th></tr></thead><tbody>
+<tr><td>Docker errors about the daemon or engine</td><td>Start Docker Desktop and wait until it is running.</td></tr>
+<tr><td><code>dotnet ef</code> is not recognized</td><td>Open a new terminal; otherwise run the install command from step 1 again.</td></tr>
+<tr><td><code>PMAI_APP_DB_PASSWORD must be set</code> or <code>SEED_ADMIN_PASSWORD must be set</code></td><td>Fill in those values in <code>deploy/.env</code> (step 3).</td></tr>
+<tr><td>Backend stops with “Failed to seed admin user”</td><td>The admin password is too weak. Change <code>SEED_ADMIN_PASSWORD</code>, then run step 6 again.</td></tr>
+<tr><td>Step 5 can't connect</td><td>Run step 4 first. The port is <strong>5433</strong>, and the password is your <code>POSTGRES_PASSWORD</code>.</td></tr>
+<tr><td><code>password authentication failed for user "pmai_app"</code></td><td>A password changed after the first start. Reset everything (Everyday use).</td></tr>
+<tr><td>The site opens but shows no data or errors</td><td>Step 5 was skipped. Run it, then step 6.</td></tr>
+<tr><td>Port 3000, 5433 or 8081 already in use</td><td>Change <code>FRONTEND_PORT</code>, <code>POSTGRES_PORT</code> or <code>BACKEND_PORT</code> in <code>deploy/.env</code>. A new database port also goes into the step 5 command.</td></tr>
+</tbody></table></div>` }
+  ],
+  footer: 'Based on the commands verified in the repository (ai/project.md, deploy/README.md) and its CI setup. Not yet run on a fresh machine.'
+},
+ja: {
+  eyebrow: '手順書 · 新しいコンピューター',
+  title: 'ProductionManagementAI をローカルで動かす',
+  lede: '何もインストールされていないコンピューターから、ブラウザーでアプリが動くまでの全手順です。Windows（PowerShell）向けに書いています。macOS・Linux での違いは手順 7 にあります。',
+  toc: '手順',
+  copy: 'コピー', copied: 'コピーしました', selected: '選択しました',
+  facts: [['リポジトリ', 'github.com/SateraitoOfficeVN/ProductionManagementAI'], ['ブラウザーで開く', 'http://localhost:3000'], ['サインイン', 'admin'], ['使用ポート', '3000 · 8081 · 5433']],
+  sections: [
+    { id: 'tools', n: '1', h: 'ツールをインストールする', body: `
+<div class="tbl"><table><thead><tr><th>ツール</th><th>バージョン</th><th>用途</th><th>ダウンロード</th></tr></thead><tbody>
+<tr><td>Git</td><td>最近のもの</td><td>コードの取得 — zip で受け取る場合は不要</td><td><a href="https://git-scm.com/downloads">git-scm.com</a></td></tr>
+<tr><td>Docker Desktop</td><td>最新</td><td>データベース・バックエンド・フロントエンドのコンテナー</td><td><a href="https://www.docker.com/products/docker-desktop">docker.com</a></td></tr>
+<tr><td>.NET SDK</td><td><strong>10.0.x</strong></td><td>データベースのマイグレーション、開発モードのバックエンド</td><td><a href="https://dotnet.microsoft.com/download/dotnet/10.0">dotnet.microsoft.com</a></td></tr>
+<tr><td>Node.js</td><td><strong>24</strong></td><td>開発モードとテストのみ</td><td><a href="https://nodejs.org">nodejs.org</a></td></tr>
+</tbody></table></div>
+<p>Windows では Docker Desktop に WSL 2 が必要です。インストーラーが有効化を提案し、再起動が必要な場合があります。インストール後、<strong>Docker Desktop を起動</strong>し、実行中になるまで待ってください。</p>
+<p>新しいツールを認識させるため<strong>新しい</strong> PowerShell ウィンドウを開き、マイグレーション用ツールをインストールします：</p>
+{{toolEf}}
+<p>すべてインストールされたか確認します：</p>
+{{verify}}` },
+    { id: 'code', n: '2', h: 'コードを取得する', opt: '任意', body: `
+<p>zip ファイルなどで既にコードを持っている場合、この手順は不要です。次のどちらかの方法を選んでください。</p>
+<h3>zip ファイルから</h3>
+<ol>
+<li>任意のフォルダーに展開します（例：<code>C:\\ProductionManagementAI</code>）。</li>
+<li>そのフォルダーを開き、<code>deploy</code>・<code>src</code>・<code>README.md</code> が直下にあることを確認します。1 階層深い場合は、内側のフォルダーを使います。</li>
+<li>zip に <code>deploy\\.env</code> が含まれている場合、送信者のパスワードが入っています。新しく作らずに、手順 3 でその値を確認してください。</li>
+</ol>
+<h3>Git で</h3>
+<p>リポジトリは公開されているので、GitHub アカウントは不要です。</p>
+{{clone}}
+<p>どちらの場合も、以降のコマンドはすべて <code>ProductionManagementAI</code> フォルダーで実行します。</p>` },
+    { id: 'env', n: '3', h: '設定ファイルを作成する', body: `
+{{env}}
+<p>次の 3 行を変更して保存します。その他の行はそのままにしてください。</p>
+{{envLines}}
+<ul>
+<li><code>POSTGRES_PASSWORD</code> はデータベース所有者のパスワードです。手順 5 で再び使います。</li>
+<li><code>PMAI_APP_DB_PASSWORD</code> はバックエンドが使うデータベースログインのパスワードです。既定値はなく、空のままではコンテナーが起動しません。</li>
+<li><code>SEED_ADMIN_PASSWORD</code> は <code>admin</code> としてサインインするときのパスワードです。</li>
+</ul>
+<div class="warn"><strong>管理者パスワードは強力なものにしてください。</strong>6 文字以上で、大文字・小文字・数字・記号をそれぞれ含めます（例：<code>Admin#2026</code>）。<code>admin</code> のような弱いパスワードでは、バックエンドが起動時に停止します。</div>
+<p class="ok"><code>deploy/.env</code> は決してコミットしないでください。Git は既にこのファイルを無視します。</p>` },
+    { id: 'db', n: '4', h: 'データベースを起動する', body: `
+{{db}}
+<p>初回はイメージのダウンロードで数分かかることがあります。<code>db</code> サービスが実行中と表示されれば完了です。</p>` },
+    { id: 'migrate', n: '5', h: 'テーブルとデモデータを作成する', body: `
+<p><code>&lt;POSTGRES_PASSWORD&gt;</code> を手順 3 で決めた値に置き換えてください。コマンドは 1 行のまま実行します。</p>
+{{migrate}}
+<p>初回は .NET パッケージのダウンロードとバックエンドのビルドも行います。製品 30 件とデモ用製造指示 124 件を投入し、<code>Done.</code> で終わります。</p>` },
+    { id: 'up', n: '6', h: 'アプリ全体を起動する', body: `
+{{up}}
+<p><a href="http://localhost:3000">http://localhost:3000</a> を開き、ユーザー名 <code>admin</code> と <code>SEED_ADMIN_PASSWORD</code> でサインインします。ダッシュボードが表示され、メニューから製造指示一覧と新規登録に進めます。</p>` },
+    { id: 'mac', n: '7', h: 'macOS・Linux の場合', body: `
+<p>手順は同じで、違いは 3 点だけです：</p>
+<ul>
+<li>Linux では Docker Desktop の代わりに Docker Engine と Compose プラグインをインストールします。</li>
+<li>手順 3 では下のコマンドでファイルをコピーし、任意のテキストエディターで開きます。</li>
+<li><code>dotnet ef</code> が見つからない場合は、.NET ツールのフォルダーを <code>PATH</code> に追加します。</li>
+</ul>
+{{macEnv}}
+{{macPath}}` },
+    { id: 'daily', h: '日常の操作', body: `
+<div class="tbl"><table><thead><tr><th>目的</th><th>実行するもの</th></tr></thead><tbody>
+<tr><td>アプリを停止（データは保持）</td><td><code>docker compose -f deploy/compose.yaml down</code></td></tr>
+<tr><td>再び起動</td><td><code>docker compose -f deploy/compose.yaml up -d</code></td></tr>
+<tr><td>新しいコードに更新</td><td><code>git pull</code>、または新しい zip を古いフォルダーに上書き展開（<code>deploy\\.env</code> は残す）。その後、手順 5 と 6</td></tr>
+<tr><td>すべてリセット（データは削除）</td><td><code>docker compose -f deploy/compose.yaml down -v</code> の後、手順 4〜6</td></tr>
+<tr><td>バックエンドのログを見る</td><td><code>docker compose -f deploy/compose.yaml logs -f backend</code></td></tr>
+</tbody></table></div>
+<div class="warn"><strong>データベースのパスワードを変更した場合：</strong>データベースは <code>POSTGRES_PASSWORD</code> と <code>PMAI_APP_DB_PASSWORD</code> を最初の作成時にしか読みません。どちらかを変更したら、すべてリセットしてください。</div>` },
+    { id: 'dev', h: 'ライブリロードの開発モード', opt: '任意', body: `
+<p>Node.js 24 が必要です。手順 1〜5 を実行してから、アプリのポートを空けます：</p>
+{{stopApp}}
+<h3>ターミナル 1 — バックエンド（ポート 5033）</h3>
+{{devBack}}
+<h3>ターミナル 2 — フロントエンド</h3>
+{{devFront}}
+<p>Vite が表示するアドレス（通常は <a href="http://localhost:5173">http://localhost:5173</a>）を開きます。<code>/api</code> の呼び出しはバックエンドに転送されます。</p>` },
+    { id: 'tests', h: 'テストを実行する', opt: '任意', body: `
+<h3>バックエンド</h3>
+<p>Docker が起動している必要があります。テストは使い捨てのデータベースを自分で起動するので、手元のデータには影響しません。</p>
+{{testBack}}
+<h3>フロントエンド</h3>
+{{testFront}}
+<h3>E2E（手順 6 で起動したアプリに対して）</h3>
+{{testE2e}}` },
+    { id: 'help', h: 'うまくいかないとき', body: `
+<div class="tbl"><table><thead><tr><th>症状</th><th>対処</th></tr></thead><tbody>
+<tr><td>Docker のデーモン・エンジンに関するエラー</td><td>Docker Desktop を起動し、実行中になるまで待ちます。</td></tr>
+<tr><td><code>dotnet ef</code> が認識されない</td><td>新しいターミナルを開きます。それでも駄目なら手順 1 のインストールコマンドを再実行します。</td></tr>
+<tr><td><code>PMAI_APP_DB_PASSWORD must be set</code> または <code>SEED_ADMIN_PASSWORD must be set</code></td><td><code>deploy/.env</code> のその値を入力します（手順 3）。</td></tr>
+<tr><td>バックエンドが “Failed to seed admin user” で停止する</td><td>管理者パスワードが弱すぎます。<code>SEED_ADMIN_PASSWORD</code> を変更し、手順 6 を再実行します。</td></tr>
+<tr><td>手順 5 が接続できない</td><td>先に手順 4 を実行します。ポートは <strong>5433</strong>、パスワードは <code>POSTGRES_PASSWORD</code> です。</td></tr>
+<tr><td><code>password authentication failed for user "pmai_app"</code></td><td>初回起動後にパスワードが変更されています。すべてリセットします（日常の操作）。</td></tr>
+<tr><td>サイトは開くがデータが出ない・エラーになる</td><td>手順 5 が抜けています。実行してから手順 6 を行います。</td></tr>
+<tr><td>ポート 3000・5433・8081 が使用中</td><td><code>deploy/.env</code> の <code>FRONTEND_PORT</code>・<code>POSTGRES_PORT</code>・<code>BACKEND_PORT</code> を変更します。データベースのポートを変えた場合は、手順 5 のコマンドにも反映します。</td></tr>
+</tbody></table></div>` }
+  ],
+  footer: 'リポジトリで確認済みのコマンド（ai/project.md、deploy/README.md）と CI の設定に基づいています。新しいマシンではまだ実行していません。'
+},
+vi: {
+  eyebrow: 'Hướng dẫn · máy tính mới',
+  title: 'Chạy ProductionManagementAI trên máy cá nhân',
+  lede: 'Tất cả các bước từ một máy tính chưa cài gì cho đến khi ứng dụng chạy trong trình duyệt. Viết cho Windows (PowerShell); bước 7 ghi những điểm khác trên macOS và Linux.',
+  toc: 'Các bước',
+  copy: 'Sao chép', copied: 'Đã sao chép', selected: 'Đã chọn',
+  facts: [['Kho mã nguồn', 'github.com/SateraitoOfficeVN/ProductionManagementAI'], ['Mở trong trình duyệt', 'http://localhost:3000'], ['Đăng nhập bằng', 'admin'], ['Cổng sử dụng', '3000 · 8081 · 5433']],
+  sections: [
+    { id: 'tools', n: '1', h: 'Cài đặt công cụ', body: `
+<div class="tbl"><table><thead><tr><th>Công cụ</th><th>Phiên bản</th><th>Dùng để</th><th>Tải về</th></tr></thead><tbody>
+<tr><td>Git</td><td>bản gần đây</td><td>Lấy mã nguồn — không cần nếu bạn nhận mã dưới dạng tệp zip</td><td><a href="https://git-scm.com/downloads">git-scm.com</a></td></tr>
+<tr><td>Docker Desktop</td><td>mới nhất</td><td>Container cơ sở dữ liệu, backend và frontend</td><td><a href="https://www.docker.com/products/docker-desktop">docker.com</a></td></tr>
+<tr><td>.NET SDK</td><td><strong>10.0.x</strong></td><td>Migration cơ sở dữ liệu, và backend ở chế độ phát triển</td><td><a href="https://dotnet.microsoft.com/download/dotnet/10.0">dotnet.microsoft.com</a></td></tr>
+<tr><td>Node.js</td><td><strong>24</strong></td><td>Chỉ cho chế độ phát triển và kiểm thử</td><td><a href="https://nodejs.org">nodejs.org</a></td></tr>
+</tbody></table></div>
+<p>Trên Windows, Docker Desktop cần WSL 2; trình cài đặt sẽ đề nghị bật nó và có thể cần khởi động lại máy. Sau khi cài, hãy <strong>mở Docker Desktop</strong> và chờ đến khi nó báo đang chạy.</p>
+<p>Mở một cửa sổ PowerShell <strong>mới</strong> để nhận các công cụ vừa cài, rồi cài công cụ migration:</p>
+{{toolEf}}
+<p>Kiểm tra mọi thứ đã được cài:</p>
+{{verify}}` },
+    { id: 'code', n: '2', h: 'Lấy mã nguồn', opt: 'tùy chọn', body: `
+<p>Bỏ qua bước này nếu bạn đã có mã nguồn, ví dụ dưới dạng tệp zip. Chọn một trong hai cách dưới đây.</p>
+<h3>Từ tệp zip</h3>
+<ol>
+<li>Giải nén vào thư mục bất kỳ, ví dụ <code>C:\\ProductionManagementAI</code>.</li>
+<li>Mở thư mục đó và kiểm tra <code>deploy</code>, <code>src</code> và <code>README.md</code> nằm ngay bên trong. Nếu chúng nằm sâu hơn một cấp, hãy dùng thư mục bên trong.</li>
+<li>Nếu tệp zip đã có sẵn <code>deploy\\.env</code>, tệp đó chứa mật khẩu của người gửi. Hãy kiểm tra các giá trị của nó ở bước 3 thay vì tạo tệp mới.</li>
+</ol>
+<h3>Bằng Git</h3>
+<p>Kho mã nguồn là công khai nên không cần tài khoản GitHub.</p>
+{{clone}}
+<p>Dù dùng cách nào, hãy chạy mọi lệnh sau bước này từ thư mục <code>ProductionManagementAI</code>.</p>` },
+    { id: 'env', n: '3', h: 'Tạo tệp cấu hình', body: `
+{{env}}
+<p>Sửa ba dòng sau rồi lưu tệp. Giữ nguyên mọi dòng khác.</p>
+{{envLines}}
+<ul>
+<li><code>POSTGRES_PASSWORD</code> là mật khẩu của chủ sở hữu cơ sở dữ liệu. Bạn sẽ cần lại nó ở bước 5.</li>
+<li><code>PMAI_APP_DB_PASSWORD</code> là mật khẩu tài khoản cơ sở dữ liệu mà backend dùng. Không có giá trị mặc định: để trống thì container sẽ không khởi động.</li>
+<li><code>SEED_ADMIN_PASSWORD</code> là mật khẩu để đăng nhập với tên <code>admin</code>.</li>
+</ul>
+<div class="warn"><strong>Hãy dùng mật khẩu quản trị mạnh.</strong> Tối thiểu 6 ký tự, gồm chữ hoa, chữ thường, chữ số và ký hiệu, ví dụ <code>Admin#2026</code>. Mật khẩu yếu hơn, chẳng hạn <code>admin</code>, sẽ làm backend dừng khi khởi động.</div>
+<p class="ok">Không bao giờ commit <code>deploy/.env</code>; Git đã bỏ qua tệp này.</p>` },
+    { id: 'db', n: '4', h: 'Khởi động cơ sở dữ liệu', body: `
+{{db}}
+<p>Lần đầu cần tải image nên có thể mất vài phút. Dịch vụ <code>db</code> phải hiển thị trạng thái đang chạy.</p>` },
+    { id: 'migrate', n: '5', h: 'Tạo bảng và dữ liệu mẫu', body: `
+<p>Thay <code>&lt;POSTGRES_PASSWORD&gt;</code> bằng giá trị ở bước 3. Giữ lệnh trên một dòng.</p>
+{{migrate}}
+<p>Lần đầu, lệnh này còn tải các gói .NET và build backend. Nó kết thúc bằng <code>Done.</code> sau khi nạp 30 sản phẩm và 124 lệnh sản xuất mẫu.</p>` },
+    { id: 'up', n: '6', h: 'Khởi động toàn bộ ứng dụng', body: `
+{{up}}
+<p>Mở <a href="http://localhost:3000">http://localhost:3000</a> và đăng nhập với tên <code>admin</code> và mật khẩu <code>SEED_ADMIN_PASSWORD</code>. Bạn sẽ thấy trang tổng quan; menu dẫn đến danh sách lệnh sản xuất và màn hình tạo mới.</p>` },
+    { id: 'mac', n: '7', h: 'Trên macOS hoặc Linux', body: `
+<p>Các bước giống nhau, chỉ khác ba điểm:</p>
+<ul>
+<li>Trên Linux, cài Docker Engine kèm plugin Compose thay cho Docker Desktop.</li>
+<li>Ở bước 3, sao chép tệp bằng lệnh bên dưới và mở bằng trình soạn thảo bất kỳ.</li>
+<li>Nếu không tìm thấy <code>dotnet ef</code>, hãy thêm thư mục công cụ .NET vào <code>PATH</code>.</li>
+</ul>
+{{macEnv}}
+{{macPath}}` },
+    { id: 'daily', h: 'Sử dụng hằng ngày', body: `
+<div class="tbl"><table><thead><tr><th>Để</th><th>Chạy</th></tr></thead><tbody>
+<tr><td>Dừng ứng dụng (giữ dữ liệu)</td><td><code>docker compose -f deploy/compose.yaml down</code></td></tr>
+<tr><td>Khởi động lại</td><td><code>docker compose -f deploy/compose.yaml up -d</code></td></tr>
+<tr><td>Cập nhật khi có mã mới</td><td><code>git pull</code>, hoặc giải nén bản mới đè lên thư mục cũ và giữ lại <code>deploy\\.env</code>; rồi bước 5 và 6</td></tr>
+<tr><td>Đặt lại toàn bộ (xóa dữ liệu)</td><td><code>docker compose -f deploy/compose.yaml down -v</code>, rồi bước 4–6</td></tr>
+<tr><td>Xem log của backend</td><td><code>docker compose -f deploy/compose.yaml logs -f backend</code></td></tr>
+</tbody></table></div>
+<div class="warn"><strong>Đã đổi mật khẩu cơ sở dữ liệu?</strong> Cơ sở dữ liệu chỉ đọc <code>POSTGRES_PASSWORD</code> và <code>PMAI_APP_DB_PASSWORD</code> khi được tạo lần đầu. Sau khi đổi một trong hai, hãy đặt lại toàn bộ.</div>` },
+    { id: 'dev', h: 'Chế độ phát triển có tự tải lại', opt: 'tùy chọn', body: `
+<p>Cần Node.js 24. Làm bước 1–5, rồi giải phóng các cổng của ứng dụng:</p>
+{{stopApp}}
+<h3>Terminal 1 — backend (cổng 5033)</h3>
+{{devBack}}
+<h3>Terminal 2 — frontend</h3>
+{{devFront}}
+<p>Mở địa chỉ mà Vite in ra, thường là <a href="http://localhost:5173">http://localhost:5173</a>. Các lời gọi <code>/api</code> được chuyển tiếp đến backend.</p>` },
+    { id: 'tests', h: 'Chạy kiểm thử', opt: 'tùy chọn', body: `
+<h3>Backend</h3>
+<p>Docker phải đang chạy; kiểm thử tự khởi động một cơ sở dữ liệu tạm thời và không đụng đến dữ liệu của bạn.</p>
+{{testBack}}
+<h3>Frontend</h3>
+{{testFront}}
+<h3>End-to-end, trên ứng dụng đã chạy ở bước 6</h3>
+{{testE2e}}` },
+    { id: 'help', h: 'Khi gặp sự cố', body: `
+<div class="tbl"><table><thead><tr><th>Hiện tượng</th><th>Cách xử lý</th></tr></thead><tbody>
+<tr><td>Docker báo lỗi về daemon hoặc engine</td><td>Mở Docker Desktop và chờ đến khi nó đang chạy.</td></tr>
+<tr><td>Không nhận lệnh <code>dotnet ef</code></td><td>Mở terminal mới; nếu vẫn lỗi, chạy lại lệnh cài ở bước 1.</td></tr>
+<tr><td><code>PMAI_APP_DB_PASSWORD must be set</code> hoặc <code>SEED_ADMIN_PASSWORD must be set</code></td><td>Điền các giá trị đó trong <code>deploy/.env</code> (bước 3).</td></tr>
+<tr><td>Backend dừng với “Failed to seed admin user”</td><td>Mật khẩu quản trị quá yếu. Đổi <code>SEED_ADMIN_PASSWORD</code>, rồi chạy lại bước 6.</td></tr>
+<tr><td>Bước 5 không kết nối được</td><td>Chạy bước 4 trước. Cổng là <strong>5433</strong>, mật khẩu là <code>POSTGRES_PASSWORD</code>.</td></tr>
+<tr><td><code>password authentication failed for user "pmai_app"</code></td><td>Mật khẩu đã bị đổi sau lần khởi động đầu. Đặt lại toàn bộ (Sử dụng hằng ngày).</td></tr>
+<tr><td>Trang mở được nhưng không có dữ liệu hoặc báo lỗi</td><td>Đã bỏ qua bước 5. Chạy bước 5, rồi bước 6.</td></tr>
+<tr><td>Cổng 3000, 5433 hoặc 8081 đang bị dùng</td><td>Đổi <code>FRONTEND_PORT</code>, <code>POSTGRES_PORT</code> hoặc <code>BACKEND_PORT</code> trong <code>deploy/.env</code>. Nếu đổi cổng cơ sở dữ liệu, sửa cả lệnh ở bước 5.</td></tr>
+</tbody></table></div>` }
+  ],
+  footer: 'Dựa trên các lệnh đã được xác minh trong kho mã nguồn (ai/project.md, deploy/README.md) và cấu hình CI. Chưa chạy thử trên máy mới.'
+}
+};
+
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const codeBlock = key => {
+  const html = esc(CMD[key]).replace(/(#[^\n]*)$/gm, m => /^#\s/.test(m) || /#\s\d/.test(m) ? '<span class="c">' + m + '</span>' : m);
+  return '<div class="cmd"><pre><code>' + html + '</code></pre><button type="button" data-copy="' + key + '"></button></div>';
+};
+
+let current = 'en';
+function render(lang) {
+  const t = T[lang];
+  current = lang;
+  document.documentElement.lang = lang === 'vi' ? 'vi' : lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t[el.dataset.i18n]; });
+  document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  document.getElementById('facts').innerHTML = t.facts.map(([k, v]) => '<div class="fact"><dt>' + k + '</dt><dd>' + v + '</dd></div>').join('');
+  document.getElementById('toc').innerHTML = t.sections.map(s => '<li><a href="#' + s.id + '"><span class="n">' + (s.n || '·') + '</span><span>' + s.h + '</span></a></li>').join('');
+  document.getElementById('content').innerHTML = t.sections.map(s =>
+    '<section id="' + s.id + '"><h2>' + (s.n ? '<span class="n">' + s.n + '</span>' : '') + '<span>' + s.h + '</span>' + (s.opt ? '<span class="opt">' + s.opt + '</span>' : '') + '</h2>' +
+    s.body.replace(/\{\{(\w+)\}\}/g, (_, k) => codeBlock(k)) + '</section>'
+  ).join('') + '<footer>' + t.footer + '</footer>';
+  document.querySelectorAll('[data-copy]').forEach(b => { b.textContent = t.copy; });
+  document.title = t.title;
+  try { localStorage.setItem('pmai-setup-lang', lang); } catch (e) {}
+}
+
+document.querySelector('.langs').addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]');
+  if (b) render(b.dataset.lang);
+});
+
+document.getElementById('content').addEventListener('click', e => {
+  const b = e.target.closest('button[data-copy]');
+  if (!b) return;
+  const t = T[current];
+  const text = CMD[b.dataset.copy];
+  const flash = label => { b.textContent = label; b.classList.add('done'); setTimeout(() => { b.textContent = t.copy; b.classList.remove('done'); }, 1600); };
+  const selectIt = () => {
+    const range = document.createRange();
+    range.selectNodeContents(b.parentElement.querySelector('code'));
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e2) {}
+    flash(ok ? t.copied : t.selected);
+  };
+  try {
+    if (!navigator.clipboard) { selectIt(); return; }
+    navigator.clipboard.writeText(text).then(() => flash(t.copied), selectIt);
+  } catch (err) { selectIt(); }
+});
+
+let start = 'en';
+const fromHash = (location.hash || '').slice(1);
+if (T[fromHash]) start = fromHash;
+else {
+  try { const saved = localStorage.getItem('pmai-setup-lang'); if (T[saved]) start = saved; } catch (e) {}
+}
+render(start);
+</script>
+</body>
+</html>
