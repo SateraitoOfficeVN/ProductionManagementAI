@@ -37,7 +37,9 @@ Still open: registry/deployment host beyond local Compose, merge/deploy permissi
 
 ## Run it locally
 
-1. Copy `deploy/.env.example` to `deploy/.env` and fill it in. `PMAI_APP_DB_PASSWORD` is required and has no default.
+Setting up a new computer? Open the [local setup guide](deploy/local-setup.html) in a browser (download it or open it from your clone; GitHub shows its source). It covers every step from installing the tools to signing in, in English, Japanese and Vietnamese, and works offline. The short version, once the tools are installed:
+
+1. Copy `deploy/.env.example` to `deploy/.env` and fill it in. `PMAI_APP_DB_PASSWORD` and `SEED_ADMIN_PASSWORD` are required and have no default. The admin password must pass ASP.NET Core Identity's default rules: at least 6 characters, with an uppercase letter, a lowercase letter, a digit and a symbol.
 2. `docker compose -f deploy/compose.yaml up -d --build db`
 3. Apply migrations as the database owner (the exact command is in [`deploy/README.md`](deploy/README.md)).
 4. `docker compose -f deploy/compose.yaml up -d --build`, then open http://localhost:3000 and sign in as `admin` with your `SEED_ADMIN_PASSWORD`. You land on the dashboard; the navbar leads to the order list and to a new order.
@@ -50,7 +52,7 @@ Still open: registry/deployment host beyond local Compose, merge/deploy permissi
 - [src](src/README.md): backend (.NET 10) and frontend (Vite + React + TypeScript) application source.
 - [tests](tests/README.md): backend unit (`tests/backend/`) and integration (`tests/integration/`) tests, and Playwright E2E journeys (`tests/e2e/`).
 - Frontend unit tests are the one exception: they live inside the frontend package at `src/frontend/tests/unit/` (Vitest + React Testing Library), not in `tests/frontend/`. `src/frontend` is a standalone npm package, and Vite resolves package imports by walking up from the test file to a `node_modules` folder, which a file under `tests/` never reaches. Moving them would first need an npm-workspaces setup at the repository root; that is deliberately not done ([WI-001 step 19 note](work-items/WI-001/decisions.md), [tests/frontend/README.md](tests/frontend/README.md)).
-- [deploy](deploy/README.md): local Docker Compose environment and database logins.
+- [deploy](deploy/README.md): local Docker Compose environment, database logins, and the [local setup guide](deploy/local-setup.html).
 - `.github/`: the [CI workflow](.github/workflows/ci.yml) (backend, frontend and e2e jobs on every push/PR to `master`, except documentation-only changes) and the [pull request template](.github/pull_request_template.md).
 - [demos](demos/README.md): the four Screen A lifecycle walkthroughs (basic design, database design, detailed design, implementation), each with a transcript and a presentation deck (PDF). The video files are kept outside git.
 
