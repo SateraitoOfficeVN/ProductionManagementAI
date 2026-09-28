@@ -2,7 +2,9 @@
 
 Local Docker Compose environment: PostgreSQL 17 + backend + frontend (Nginx reverse proxy, same-origin per 0002_ADR).
 
-Setup: copy `.env.example` to `.env` and fill in real local values (never commit `.env`). `PMAI_APP_DB_PASSWORD` is required and has no default.
+Setting up a new computer from scratch: open [local-setup.html](local-setup.html) in a browser. It is a step-by-step guide in English, Japanese and Vietnamese that also works offline.
+
+Setup: copy `.env.example` to `.env` and fill in real local values (never commit `.env`). `PMAI_APP_DB_PASSWORD` and `SEED_ADMIN_PASSWORD` are required and have no default. `SEED_ADMIN_PASSWORD` must pass ASP.NET Core Identity's default password rules (at least 6 characters with an uppercase letter, a lowercase letter, a digit and a symbol), or the backend stops at startup.
 
 ## Database logins (DEC-016)
 
