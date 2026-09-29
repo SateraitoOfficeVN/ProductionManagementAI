@@ -7,6 +7,12 @@ Every plan revision — the first one and each one that follows a completed phas
 For an approved plan, continue through its steps without repeated approvals. Record approval source and plan revision; do not invent approval.
 Plan approval covers only its scope and permitted actions. Merge, publishing, deployment and destructive data actions need authorization in the request or plan.
 
+## Design Markdown review
+
+When a work item produces multiple design Markdown files (ADR, BD, DB, the main DD or a DD companion), create or revise them in the plan's order. Complete each design `.md` file and its required companion artifacts, present that design file for user review, and wait for an explicit instruction to continue before writing the next design `.md` file. Resolve feedback on the current design file first. This review stop applies within an approved plan; it does not replace plan-revision approval or authorize work outside the plan.
+
+Briefs, test plans, plans, work-item records, README files and shared AI guidance do not trigger this design-document review stop. A direct user request to produce design documents as a batch can override the sequence for that request. Keep required status and evidence records current while waiting.
+
 ## Pause conditions
 
 Ask when requirements conflict, a missing decision changes business behavior, scope/architecture materially changes, required access is absent, or an action exceeds authorization.
