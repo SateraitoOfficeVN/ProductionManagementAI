@@ -5,7 +5,8 @@ This work item adopts [RFC 0012](../../ai/improvements/0012-sequential-document-
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-29 | Adopt and evaluate RFC 0012 for all substantive documents | closed — superseded after scope correction | User message, 2026-09-29: “approved” |
-| 2 | 2026-09-29 | Apply RFC 0012 only to design Markdown documents | **current — complete locally** | User message, 2026-09-29: “approved hết” |
+| 2 | 2026-09-29 | Apply RFC 0012 only to design Markdown documents | closed — local scope complete | User message, 2026-09-29: “approved hết” |
+| 3 | 2026-09-29 | Close WI-007 after PR #29 merge | **current — complete locally; PR #30 open** | User message, 2026-09-29: “approved” |
 
 ## Revision 1 — Adopt and evaluate RFC 0012
 
@@ -148,3 +149,66 @@ Adopt a shared rule that presents each design Markdown document for user review 
 - **Approval source:** User message, 2026-09-29: “approved hết”, responding to revision 2.
 - **Approved revision:** revision 2, 2026-09-29.
 - **Closure:** Local scope completed on 2026-09-29. RFC 0012 is applied in the working tree and evaluated by static inspection; no commit, push, PR or merge occurred. A future design work item will provide behavioral evidence.
+
+## Revision 3 — Post-merge close-out
+
+Revision 3, 2026-09-29. **Approved by the user on 2026-09-29.** PR #29 was squash-merged into `master` as `e03246ad9d4359f54fab8049e0442ac27fd11bfc` on 2026-09-29. This revision updates records that still describe the pre-merge state.
+
+### Objective
+
+Close WI-007 with accurate merged status and evidence, and refresh the project entry points required by the feature-delivery close-out rule. Keep the next application work separate until its own plan is approved.
+
+### Scope
+
+#### In scope
+
+- Mark RFC 0012 adopted at the verified merge commit and move it from proposed to adopted in the improvement index.
+- Update WI-007 plan/status/decisions/evidence/review with the actual commit, PR and merge results; preserve the earlier revision history and the limit that agent behavior has not yet been tested in a later design work item.
+- Refresh `ai/project.md`, `CLAUDE.md` and root `README.md` to state that the design Markdown review rule is merged. Describe only tracked repository state; do not present local WI-006 drafts as merged or approved.
+- Verify links, the focused diff and the delivery checklist; create a short close-out commit and PR for review.
+
+#### Out of scope
+
+- Editing WI-006 product design or application code; changing the review rule; deployment; merging the close-out PR.
+- Re-running application tests for this documentation-only close-out.
+
+### Inputs and assumptions
+
+| Input | State | Limit |
+| --- | --- | --- |
+| PR #29 | Verified merged on 2026-09-29 as `e03246a` | Record the exact result; do not infer CI results from absent documentation-only jobs. |
+| Revision 2 and RFC 0012 | Guidance merged; static evaluation recorded | Preserve the distinction between guidance inspection and future agent behavior. |
+| Main workspace WI-006 drafts and local configuration change | Unrelated local work | Do not include them in the close-out branch or PR. |
+
+### Deliverables and milestones
+
+| # | Step | Depends on | Skill | Deliverable | Verification method | Outcome |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | Reconcile RFC and improvement index with merge | Approval of revision 3 | harness-improvement | `ai/improvements/0012-sequential-document-review.md`, `ai/improvements/README.md` | Status and merge commit agree with PR #29; link resolves | done 2026-09-29 — merged commit and adopted index recorded |
+| 2 | Close the WI-007 records | 1 | planning, harness-improvement | `plan.md`, `status.md`, `decisions.md`, `evidence.md`, `review.md` | Dates, authorization and verification reflect actual events; earlier revisions remain intact | done 2026-09-29 — records reflect PR #29 merge and revision 3 approval |
+| 3 | Refresh project entry points | 2 | harness-improvement | `ai/project.md`, `CLAUDE.md`, root `README.md` | All three name the merged rule and accurately describe the next tracked work | done 2026-09-29 — all three updated with tracked merged state |
+| 4 | Verify focused delivery | 3 | harness-improvement, pr-review | Evidence update | `git diff --check`, relative links, changed-file review and `ai/checklists/delivery.md`; record not-run checks with reasons | done 2026-09-29 — diff check passed; 58 relative links resolved; review found no blocker; app tests not run for docs-only change |
+| 5 | Prepare close-out PR | 4 | pr-review | One commit on `feature/WI-007-closeout` and PR to `master` | PR diff contains only close-out files; record PR URL and commit; do not merge it under this revision | done 2026-09-29 — PR #30 opened at `https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/30`; final commit is the PR branch HEAD |
+
+### Roles and permitted actions
+
+| Action | Permission if this revision is approved |
+| --- | --- |
+| Local close-out documentation and checks | Codex may perform within the listed files. |
+| Commit, push and create a close-out PR | Permitted for this bounded follow-up only; PR remains for review. |
+| Merge or deployment | Not included. |
+
+### Risks and stop conditions
+
+| Risk | Response |
+| --- | --- |
+| Old pre-merge statements remain in live status documents | Review the changed records and entry points together before committing. |
+| Main workspace changes leak into the PR | Work only in the isolated clean close-out worktree; inspect the staged file list. |
+| A required new action falls outside this revision | Stop and show an affected plan revision before that action. |
+
+### Approval / sign-off
+
+- **Review status:** approved.
+- **Approval source:** User message, 2026-09-29: “approved”, responding to revision 3.
+- **Approved revision:** revision 3, 2026-09-29.
+- **Closure:** Local close-out scope completed on 2026-09-29; PR #30 is open for review. Its merge is not included in this revision.

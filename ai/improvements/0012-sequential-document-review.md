@@ -1,8 +1,8 @@
-<!-- Based on ai/templates/improvement.md. The proposed rule is limited to design Markdown documents. -->
+<!-- Based on ai/templates/improvement.md. The adopted rule is limited to design Markdown documents. -->
 
 # RFC: Review each design Markdown document before writing the next
 
-**Status:** proposed for merge; implemented on `feature/WI-007-sequential-design-review`
+**Status:** adopted
 **Affected:** `AGENTS.md`, `ai/policies.md`, `ai/workflows/feature-delivery.md`, `ai/rules/documentation.md`, `ai/evaluations/baseline-cases.md`.
 
 ## Summary
@@ -60,7 +60,7 @@ On 2026-09-29, the cases below were manually traced through the changed `AGENTS.
 ## Risk and rollback
 
 - **Risk:** the review rule may conflict with a plan's existing permission to continue, or accidentally create stops for non-design files. Resolve this by stating its precedence and design `.md` boundary in the shared guidance. Work already approved under an earlier plan remains within scope, but future design Markdown creation follows the user's review sequence.
-- **Rollback plan:** revert the feature commit or a later adoption commit through version control. Keep the user's WI-006 instruction and any historical review record accurate.
+- **Rollback plan:** revert the squash merge commit `e03246a` through version control. Keep the user's WI-006 instruction and any historical review record accurate.
 
 ## Unresolved questions
 
@@ -69,4 +69,4 @@ On 2026-09-29, the cases below were manually traced through the changed `AGENTS.
 ## Adoption
 
 - **Reviewer:** user message on 2026-09-29: “aprroved” for the initial RFC, followed by “chỉ yêu cầu tôi review với các tài liệu thiết kế .md thôi” and “approved hết” for the narrowed plan revision 2.
-- **Adopted revision:** pending merge. The approved change is prepared on `feature/WI-007-sequential-design-review`; static evaluation results are recorded above.
+- **Adopted revision:** PR #29, squash-merged into `master` as `e03246ad9d4359f54fab8049e0442ac27fd11bfc` on 2026-09-29. Static evaluation results are recorded above; operational adherence remains unobserved.
