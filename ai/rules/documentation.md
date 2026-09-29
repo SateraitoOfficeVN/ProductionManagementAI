@@ -1,5 +1,6 @@
 # documentation rules
 
+- Review design Markdown files one at a time in the order stated in the approved work-item plan. This applies to ADR, BD, DB, the main DD and each DD Markdown companion. Present each design `.md` file with its current English/Japanese PDFs and relevant diagrams or mockups, then wait for user review and an explicit instruction to continue before writing the next design `.md` file. Handle feedback on the current file first. The PDFs, diagrams and mockups are part of that file's review package, not separate review stops. Other Markdown documents do not trigger this design-file review rule; plan-revision approval is still required. An explicit user request for a batch of design documents can override the sequence for that request.
 - Write new system artifacts in English unless another language is requested. English is the source of truth.
 - Markdown documents under `docs/en/` are English only; do not write Japanese `.md` files. Each document is also published as two PDFs (RFC 0008):
   - `docs/en/pdf/<path>.pdf`, rendered from the English Markdown, and `docs/ja/pdf/<path>.pdf`, rendered from a Japanese translation of it. `<path>` is the document's path under `docs/en/` (for example `010_basic-design/001/001_BD_製造指示登録・編集`).
