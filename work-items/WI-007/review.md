@@ -1,6 +1,6 @@
-# WI-007 — Pre-PR review
+# WI-007 — Review
 
-Reviewing `feature/WI-007-sequential-design-review` on 2026-09-29 against [plan revision 2](plan.md) and [RFC 0012](../../ai/improvements/0012-sequential-document-review.md).
+Reviewed `feature/WI-007-sequential-design-review` on 2026-09-29 against [plan revision 2](plan.md) and [RFC 0012](../../ai/improvements/0012-sequential-document-review.md). The branch became PR #29 and was squash-merged as `e03246a`.
 
 ## Change summary
 
@@ -31,4 +31,8 @@ No unresolved finding in the focused WI-007 diff. The earlier local records said
 
 ## Unresolved limits and disposition
 
-The first future multi-design work item should provide behavioral evidence that the agent actually waits between design `.md` files. This is a follow-up observation, not a blocker for the guidance PR. Merge remains unauthorized.
+The first future multi-design work item should provide behavioral evidence that the agent actually waits between design `.md` files. This remains a follow-up observation. The user authorized and completed the merge of PR #29; the close-out PR is a separate change.
+
+## Post-merge close-out review
+
+The follow-up diff updates RFC adoption status, WI-007 merge evidence, and the three project entry points required by the close-out workflow. It does not change the adopted rule or application code. No unresolved finding was found by focused diff inspection on 2026-09-29. `git diff --check` passed and 58 relative links resolved. Application tests were not run for this documentation-only update. [PR #30](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/30) is open for review; its merge remains a separate action.
