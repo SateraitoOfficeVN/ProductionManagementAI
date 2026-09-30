@@ -52,6 +52,7 @@ becomes necessary, create a new amendment under an explicitly reviewed plan.
 - [Product screen design](../../docs/en/020_detailed-design/004/004_DD-SPD_製品マスタ.md): native modal and focus behavior.
 - [Plan](plan.md), [decisions](decisions.md), [evidence](evidence.md).
 
-Plan revision 1 was approved on 2026-09-30. The Package glyph and dialog corrections
+Continuation of the existing revision 1 scope was authorized on 2026-09-30
+after the user corrected the agent's mistaken initial approval attribution. The Package glyph and dialog corrections
 are implemented and verified; see [evidence](evidence.md) and [review](review.md).
 Local delivery is complete; master, PR and deployment are unchanged.

@@ -37,7 +37,7 @@ Done and merged to `master`:
 
 ### Local delivery — not merged
 
-WI-008 (Product master UI bug fix) is locally completed on `feature/WI-008-product-ui-bugs`: both dialogs center within viewport bounds and Product master uses a distinct Package navbar icon. Frontend lint/build, 4 component and 15 targeted Chromium checks passed; see [work-item evidence](../work-items/WI-008/evidence.md). This is local delivery only: no push, PR, merge, remote CI or deployment has occurred.
+WI-008 (Product master UI bug fix) is locally completed on `feature/WI-008-product-ui-bugs`: both dialogs center within viewport bounds and Product master uses a distinct Package navbar icon. Frontend lint/build, 4 component and 15 targeted Chromium checks passed; see [work-item evidence](../work-items/WI-008/evidence.md). The initial implementation preceded plan approval; the user subsequently authorized continuation, and the approval history is corrected in the work-item records. This is local delivery only: no push, PR, merge, remote CI or deployment has occurred.
 
 Next planned application work: none approved. The original locked Screens A–C roadmap and Japanese localization are complete; WI-006 is the first completed master-data extension. Plant calendar, Production lines and Bill of materials remain candidates requiring separate scope and plan approval.
 

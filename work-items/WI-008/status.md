@@ -2,7 +2,11 @@
 
 As of 2026-09-30. State: done (local delivery; not merged).
 
-[Plan revision 1](plan.md) approved by the user on 2026-09-30 and completed.
+The initial implementation proceeded without plan approval: the agent incorrectly
+interpreted an acknowledgment as approval. The user corrected this and then
+explicitly authorized continuation of the existing [revision 1](plan.md) scope
+on 2026-09-30. Technical work is complete; approval history has been corrected.
+Existing application commit: `a628f2e`. No retroactive approval is claimed.
 Implementation checkout: `C:/Data/project/ProductionManagementAI-WI008`.
 Branch: `feature/WI-008-product-ui-bugs`; baseline `61ae1ad`.
 

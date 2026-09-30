@@ -44,9 +44,10 @@ WI-008: not opened/not run. Push, PR, merge and deployment: not authorized.
 
 Next action: review [plan revision 1](plan.md).
 
-## WI-008 execution — approval and pre-fix reproduction
+## WI-008 execution — premature implementation and pre-fix reproduction
 
-Revision 1 approved by the user's reply on 2026-09-30. Implementation checkout
+The initial acknowledgment was incorrectly interpreted as approval by the agent.
+The user later stated that approval had not been given. Implementation checkout
 `C:/Data/project/ProductionManagementAI-WI008`, branch
 `feature/WI-008-product-ui-bugs`.
 
@@ -137,7 +138,7 @@ remote CI, push, PR, merge and deployment were not performed.
   dependency, credential or permission change. Dependency installation audits
   reported zero vulnerabilities; secrets remain runtime-only and absent from
   the staged delivery files. External references were treated as data.
-- Delivery: passed for local delivery. Approved scope, regression, retained actual
+- Delivery: passed for local delivery. Technical scope, regression, retained actual
   failures/results, local review and current-state records align. No `docs/en/`
   design file changed, so companion-PDF generation is not applicable.
 - Release-readiness: not claimed; no deployment or live/demo migration in scope.
@@ -147,3 +148,18 @@ links and no trailing whitespace; 14 delivery files passed secret-pattern review
 The application diff exactly matches the retained capture manifest. The first
 manifest-read command failed under Windows default encoding; explicitly reading
 UTF-8 corrected this verification command without modifying application source.
+
+## Authorization correction and continuation — 2026-09-30
+
+The initial plan approval recorded in application commit `a628f2e` was incorrect.
+The user stated that the plan had not been approved. The agent acknowledged
+that it had mistaken an acknowledgment for approval and stopped. Therefore the
+initial plan-approval gate failed, even though the technical checks actually ran
+and their results remain valid. Technical gate results do not excuse this failure.
+
+The user's subsequent explicit instruction to continue WI-008 authorizes further
+work within the existing scope from that point. The plan, brief, status, decisions,
+review and project current-state notes now reflect this sequence. No retrospective
+approval, new feature scope or external-operation permission is inferred.
+The continuation changes records only; application/test source and videos remain
+unchanged, so no browser rerun is needed for this documentation correction.

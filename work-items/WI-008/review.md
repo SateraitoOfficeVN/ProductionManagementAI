@@ -1,6 +1,6 @@
 # WI-008 — Code review
 
-Local review of approved revision 1 against baseline `61ae1ad`, 2026-09-30.
+Local technical review of revision 1 against baseline `61ae1ad`, 2026-09-30.
 Author and local reviewer: agent; this is not independent user/PR approval.
 
 ## Change summary
@@ -24,7 +24,7 @@ test now waits for the form's mount focus before inserting its first field.
 
 ## Findings
 
-No unresolved blocker, major or minor finding in the approved change. Initial
+No unresolved blocker, major or minor finding in the technical change. Initial
 regression assumptions about browser chrome focus and background zoom overflow
 were corrected after direct browser diagnosis. The existing creation test's mount
 focus race was resolved by waiting for the heading; no business assertion removed.
@@ -51,4 +51,12 @@ gates passed. Scoped diff/whitespace, local links and credential review passed.
 No independent reviewer, remote CI, physical-device test, continuous manual video
 playback or deployment is claimed. Backend/full-suite rerun is outside this bounded
 UI regression verification. Push/PR/merge need separate authorization; local
-reviewed commit is the approved delivery boundary. No remaining in-scope defect.
+reviewed commit is the local delivery boundary. No remaining in-scope defect.
+
+## Approval process finding
+
+The original implementation and commit `a628f2e` preceded actual plan approval.
+The agent incorrectly attributed approval to an acknowledgment. The user
+challenged this and subsequently authorized continuation. Records are corrected;
+technical review is not retrospective approval. No code changed during this
+continuation; existing actual test/media results are retained.
