@@ -9,8 +9,9 @@ An AI-assisted development harness, and the production-management demo app built
 - **WI-004 (Screen C, production dashboard):** designed, implemented, tested and merged. The dashboard is the landing page at `/`: status and delivery figures, overdue and due-soon orders, top products, and workload and completion-trend charts that can be maximized, with a server/database health indicator. It also adds completion tracking on orders, a navbar with icons on every screen, and demo history (124 seeded orders).
 - **WI-005 (Japanese UI and automobile-parts domain):** done and merged. Every screen is Japanese and the demo is production management for automobile parts, with 30 Japanese part names. The design documents quote the Japanese UI with an English gloss, and every design document is also published as an English and a Japanese PDF under `docs/en/pdf/` and `docs/ja/pdf/`.
 - **WI-007 (design Markdown review):** merged through PR #29. The agent presents each ADR, BD, DB and DD Markdown file with its required companion artifacts, then waits for review before writing the next design file ([RFC 0012](ai/improvements/0012-sequential-document-review.md)).
+- **WI-006 (Product master):** done and merged via [PR #31](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/31). Admin and Operator can maintain products at `/products`; SKU is immutable, referenced units are locked and retired products remain on historical orders. Orders support exact kg/m decimals; dashboard cross-unit metrics use order counts with per-unit quantities. Live/demo migration and deployment have not been performed.
 - **CI:** runs the backend, frontend and end-to-end jobs on every PR to `master` and passes. Changes that touch only documentation, work items, demos or `ai/` skip CI (RFC 0005).
-- **Next:** Screens A, B and C — the whole locked demo roadmap — and their Japanese localization are done. No further tracked application work item has an approved plan yet.
+- **Next:** The original Screens A–C roadmap, Japanese localization and WI-006 Product master are complete. No next application work item is approved; remaining master-data candidates are Plant calendar, Production lines and Bill of materials.
 
 [`ai/project.md`](ai/project.md) has the verified commands and what's still open.
 
@@ -43,7 +44,7 @@ Setting up a new computer? Open the [local setup guide](deploy/local-setup.html)
 1. Copy `deploy/.env.example` to `deploy/.env` and fill it in. `PMAI_APP_DB_PASSWORD` and `SEED_ADMIN_PASSWORD` are required and have no default. The admin password must pass ASP.NET Core Identity's default rules: at least 6 characters, with an uppercase letter, a lowercase letter, a digit and a symbol.
 2. `docker compose -f deploy/compose.yaml up -d --build db`
 3. Apply migrations as the database owner (the exact command is in [`deploy/README.md`](deploy/README.md)).
-4. `docker compose -f deploy/compose.yaml up -d --build`, then open http://localhost:3000 and sign in as `admin` with your `SEED_ADMIN_PASSWORD`. You land on the dashboard; the navbar leads to the order list and to a new order.
+4. `docker compose -f deploy/compose.yaml up -d --build`, then open http://localhost:3000 and sign in as `admin` with your `SEED_ADMIN_PASSWORD`. You land on the dashboard; the navbar leads to the order list, a new order and Product master. Existing databases need the coordinated WI-006 cutover described in deploy/README.md before running the new application.
 
 ## Layout
 

@@ -85,3 +85,21 @@ Implementation commit `3251ebf` was pushed to `feature/WI-006-product-master`. [
 ### GitHub CI verification
 
 [Run 36682579899](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36682579899), head `8a43a76`, completed successfully on 2026-09-30. Backend build: zero warnings/errors; 148 unit and 111 integration tests passed, no skips. Frontend clean locked install/build/lint/tests passed. Fresh Compose migration/build and all 26 Playwright tests passed, including the additional uncertain-create scenario. This verifies the checked-in source against the dependency lockfile on Linux. The disposable local Compose stack/volumes and ignored credential file were removed; the feature worktree remains clean and retained for PR review. Merge/deploy remain unperformed.
+
+
+### User review — 2026-09-30
+
+The user replied “approved” to the PR #31 delivery summary. GitHub recheck confirmed OPEN, CLEAN/MERGEABLE, head ee21a97 and all three successful jobs in run 36683178701. This approves PR review; merge was excluded from revision 4. Revision 5 is proposed for explicit approval before its merge/closeout steps. No new revision approval or merge is inferred.
+
+
+### Revision 5 merge and closeout — 2026-09-30
+
+The user explicitly approved revision 5 after it was presented. Immediately before merge, PR #31 remained OPEN, CLEAN/MERGEABLE at exact reviewed head ee21a976934bde6d2fb9294cb42723b384900b0c; all three jobs in run 36683178701 succeeded. Guarded squash merge completed at 2026-09-30 07:44:07 UTC as b806b1ca8d216364876147215daff710e302d81e. GitHub confirmed MERGED.
+
+The closeout branch docs/WI-006-closeout was created from that merged origin/master in a separate worktree. This focused change updates WI-006 status, evidence, plan/brief and README, ai/project.md and CLAUDE.md current state. No application, design Markdown/PDF, dependency or CI configuration changed. The main worktree has staged/unstaged unrelated edits and is neither reset nor fast-forwarded. Application CI was already successful; documentation checks use scope, links, diff hygiene and delivery consistency. Documentation PR creation/merge and clean worktree cleanup are authorized by revision 5; exact final delivery details are retained on the closeout PR.
+
+
+Closeout delivery checks: exactly seven Markdown files changed; no source/test/design/PDF/dependency/CI diff. Initial local-link validation found two pre-existing references to the untracked FUTURE_DEVELOPMENT_FUNCTIONS.md summary. They now link to the tracked English development-opportunities source PDF; the untracked summary and all main-worktree edits remain untouched. Diff whitespace checks passed. No new design PDF companion is needed because no docs/en document changed. Application regression was not rerun for this documentation-only change; the final-head implementation CI remains its verification basis.
+
+
+Closeout [PR #32](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/32) was created and inspected: exactly the seven approved Markdown paths, CLEAN/MERGEABLE, no CI jobs (expected under existing documentation paths-ignore). No skipped application check is presented as a new run. Revision 5 authorizes its guarded squash merge and clean worktree removal. Actual final merge commit/state is available on that PR. The first closeout push stalled and was stopped; retrying explicitly to docs/WI-006-closeout succeeded. No direct master push was used.
