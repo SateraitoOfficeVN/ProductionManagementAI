@@ -4,11 +4,11 @@
 
 | Work item | Author | Status | Target release |
 | --- | --- | --- | --- |
-| WI-006 | Codex | requirements reconciled with DEC-007–DEC-010; approved plan revision 3 in design review | unscheduled |
+| WI-006 | Codex | done — implemented, verified and merged in PR #31 | unscheduled |
 
 ## Overview
 
-Product reference data consists of 30 seeded automobile parts. Users can select products on production orders, but they cannot maintain the catalog in the application. This proposed feature adds a Japanese Product master screen and write API for maintaining products while keeping existing orders readable.
+WI-006 adds a Japanese Product master screen and write API for maintaining automobile-part reference data while keeping historical orders readable. The 30 original seeded products retain their identities and receive reviewed units. The feature is implemented, verified and merged in PR #31; deployment is not part of this completed scope.
 
 ## Objective
 
