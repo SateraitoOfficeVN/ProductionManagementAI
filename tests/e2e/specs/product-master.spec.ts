@@ -10,6 +10,8 @@ test('create, search, reference, edit and retire a product with accessible contr
   await expectNoAxeViolations(page)
 
   await page.getByRole('link', { name: '新規製品' }).click()
+  // Wait for the form's mount focus effect before inserting text in its first field.
+  await expect(page.getByRole('heading', { level: 1, name: '新規製品' })).toBeFocused()
   await page.getByLabel(/製品コード/).fill(` ${sku} `)
   await page.getByLabel(/製品名/).fill('試作部品')
   await page.getByLabel(/単位/).selectOption('kg')
