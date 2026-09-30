@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">SCR-004 PC grey-box wireframe</title><desc id="desc">Shared header, catalog search and table, pagination, product form mode, and retire confirmation.</desc>
+  <style>text{font:19px sans-serif;fill:#333}.small{font-size:15px}.box{fill:#f1f1f1;stroke:#888;stroke-width:2}.call{fill:#fff;stroke:#333;stroke-width:2}.num{font:bold 18px sans-serif;text-anchor:middle}</style>
+  <rect x="20" y="18" width="1160" height="74" class="box"/><text x="55" y="63">ProductionManagementAI　 ダッシュボード　製造指示一覧　新規製造指示　製品マスタ</text><circle cx="34" cy="25" r="16" class="call"/><text x="34" y="31" class="num">1</text>
+  <rect x="20" y="110" width="1160" height="75" class="box"/><text x="55" y="157">製品マスタ</text><rect x="945" y="125" width="210" height="45" class="box"/><text x="966" y="154">製品を登録</text><circle cx="34" cy="117" r="16" class="call"/><text x="34" y="123" class="num">2</text>
+  <rect x="20" y="204" width="1160" height="80" class="box"/><text x="55" y="254">製品コード・製品名で検索　　状態：すべて　　検索　　クリア</text><circle cx="34" cy="211" r="16" class="call"/><text x="34" y="217" class="num">3</text>
+  <rect x="20" y="303" width="1160" height="210" class="box"/><text x="55" y="349">製品コード　　　　　製品名　　　　　　　 単位　　 図面番号　　 状態　　 操作</text><line x1="40" x2="1160" y1="367" y2="367" stroke="#888"/><text x="55" y="408" class="small">P-1001　　　　　 ブレーキキャリパー　　　　 個　　　 —　　　　 使用中　 編集　使用停止</text><text x="55" y="460" class="small">P-1002　　　　　 ブレーキディスクローター　 枚　　　 —　　　　 使用停止　編集</text><circle cx="34" cy="310" r="16" class="call"/><text x="34" y="316" class="num">4</text>
+  <rect x="20" y="530" width="1160" height="60" class="box"/><text x="55" y="569">30件　　前へ　　 1 / 2　　 次へ　　　読み込み・エラー・結果通知</text><circle cx="34" cy="537" r="16" class="call"/><text x="34" y="543" class="num">5</text>
+  <rect x="20" y="607" width="560" height="70" class="box"/><text x="55" y="646" class="small">別モード：製品登録・編集フォーム　 製品コード / 製品名 / 単位 / 図面番号</text><circle cx="34" cy="614" r="16" class="call"/><text x="34" y="620" class="num">6</text>
+  <rect x="600" y="607" width="580" height="70" class="box"/><text x="635" y="646" class="small">一覧上の確認ダイアログ：製品名　キャンセル / 使用停止</text><circle cx="614" cy="614" r="16" class="call"/><text x="614" y="620" class="num">7</text>
+</svg>

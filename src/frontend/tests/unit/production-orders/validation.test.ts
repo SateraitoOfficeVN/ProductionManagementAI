@@ -19,14 +19,23 @@ describe('production order validation (001_BD V-01–V-05)', () => {
     ['250', null],
     [' 42 ', null],
     ['999999999', null],
-    ['', 'MSG-E003'],
-    ['0', 'MSG-E003'],
-    ['-5', 'MSG-E003'],
-    ['2.5', 'MSG-E003'],
-    ['abc', 'MSG-E003'],
-    ['1000000000', 'MSG-E010'],
+    ['', 'MSG-E023'],
+    ['0', 'MSG-E023'],
+    ['-5', 'MSG-E023'],
+    ['2.5', 'MSG-E023'],
+    ['abc', 'MSG-E023'],
+    ['1000000000', 'MSG-E023'],
   ])('quantity %j → %s', (input, expected) => {
     expect(validateQuantity(input)).toBe(expected)
+  })
+
+  it('accepts up to three decimal places for measured units and whole amounts for discrete units', () => {
+    expect(validateQuantity('1.234', 'kg')).toBeNull()
+    expect(validateQuantity('0.001', 'm')).toBeNull()
+    expect(validateQuantity('1.2340', 'kg')).toBe('MSG-E023')
+    expect(validateQuantity('1e2', 'kg')).toBe('MSG-E023')
+    expect(validateQuantity('1.25', '個')).toBe('MSG-E023')
+    expect(validateQuantity('1.000', '個')).toBeNull()
   })
 
   it('requires a due date of today or later on create', () => {

@@ -32,6 +32,7 @@ public sealed partial class DashboardService(
             var raw = await reader.ReadAsync(window, cancellationToken);
             var response = DashboardMapper.ToResponse(window, raw, utcNow);
 
+            activity?.SetTag("unit_aggregation", "success");
             activity?.SetTag("dashboard.today", today.ToString("yyyy-MM-dd"));
             activity?.SetTag("dashboard.active_orders", response.StatusCounts.Draft + response.StatusCounts.InProgress);
             activity?.SetTag("dashboard.window_completed", response.OnTime.CompletedCount);
@@ -41,6 +42,7 @@ public sealed partial class DashboardService(
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             DashboardLoaded.Add(1, new KeyValuePair<string, object?>("outcome", Outcomes.Error));
+            activity?.SetTag("unit_aggregation", "error");
             activity?.SetStatus(ActivityStatusCode.Error);
             LogSnapshotFailed(logger, ex);
             throw;

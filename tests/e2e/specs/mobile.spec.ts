@@ -1,6 +1,17 @@
 import { expect, test } from '@playwright/test'
 import { expectNoAxeViolations, openCreateForm, signIn } from './helpers'
 
+test('SP Product master shows cards and remains usable at 200% zoom', async ({ page }) => {
+  await signIn(page)
+  await page.goto('/products')
+  await expect(page.getByRole('heading', { level: 1, name: '製品マスタ' })).toBeVisible()
+  await expect(page.getByRole('table')).toBeHidden()
+  await expect(page.getByRole('listitem').filter({ hasText: 'P-1001' }).first()).toBeVisible()
+  await page.evaluate(() => { document.documentElement.style.zoom = '2' })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  await expectNoAxeViolations(page)
+})
+
 
 // 001_BD §1 SP layout (< 640px): single column, full-width buttons with Save above Cancel, back link breadcrumb.
 

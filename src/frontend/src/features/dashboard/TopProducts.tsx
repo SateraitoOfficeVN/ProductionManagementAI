@@ -5,7 +5,7 @@ import type { DashboardSnapshot } from './types'
 
 /** Item 22 (003_BD D-04). The rank comes from the <ol>; the bar behind each figure is decorative. */
 export function TopProducts({ products }: { products: DashboardSnapshot['topProducts'] }) {
-  const max = products[0]?.openQuantity ?? 0
+  const max = products[0]?.activeOrderCount ?? 0
   return (
     <section aria-labelledby="top-products-title" className="grid content-start gap-2.5 rounded-lg border border-gray-200 bg-white p-3.5">
       <h2 id="top-products-title" className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
@@ -26,8 +26,8 @@ export function TopProducts({ products }: { products: DashboardSnapshot['topProd
               </span>
               <span className="relative min-w-32 px-1 text-right tabular-nums">
                 <span aria-hidden="true" className="absolute inset-y-0 right-0 rounded bg-gray-100"
-                  style={{ width: `${max === 0 ? 0 : Math.round((100 * p.openQuantity) / max)}%` }} />
-                <span className="relative font-medium">{formatNumber(p.openQuantity)}</span>{' '}
+                  style={{ width: `${max === 0 ? 0 : Math.round((100 * p.activeOrderCount) / max)}%` }} />
+                <span className="relative font-medium">{formatNumber(p.openQuantity)} {p.product.unit}</span>{' '}
                 {/* gray-600, not 500: over the bar's gray-100, 500 is 4.39:1 and fails WCAG 1.4.3 (caught by axe in E2E). */}
                 <span className="relative text-gray-600">({formatOrders(p.activeOrderCount)})</span>
               </span>

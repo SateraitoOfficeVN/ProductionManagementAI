@@ -104,7 +104,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
                 <td className="px-3.5 py-2.5">
                   <span className="text-gray-500 tabular-nums">{item.product.sku}</span> {item.product.name}
                 </td>
-                <td className="px-3.5 py-2.5 text-right tabular-nums">{formatNumber(item.quantity)}</td>
+                <td className="px-3.5 py-2.5 text-right tabular-nums">{formatNumber(item.quantity)} {item.product.unit}</td>
                 <td className="px-3.5 py-2.5 whitespace-nowrap tabular-nums">
                   {formatDate(item.dueDate)}
                   {item.isOverdue && <OverdueMarker />}
@@ -137,7 +137,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
                 <span className="text-gray-500 tabular-nums">{item.product.sku}</span> {item.product.name}
               </span>
               <span className="flex flex-wrap gap-x-3.5 gap-y-1 text-sm text-gray-500 tabular-nums">
-                <span>{labels.list.cardQuantity(formatNumber(item.quantity))}</span>
+                <span>{labels.list.cardQuantity(`${formatNumber(item.quantity)} ${item.product.unit}`)}</span>
                 <span>
                   {labels.list.cardDue(formatDate(item.dueDate))}
                   {item.isOverdue && <OverdueMarker />}

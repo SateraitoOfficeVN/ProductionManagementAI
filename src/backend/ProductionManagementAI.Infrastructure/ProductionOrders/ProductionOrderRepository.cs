@@ -11,11 +11,30 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
         await db.Products
             .AsNoTracking()
             .OrderBy(p => p.Sku)
-            .Select(p => new ProductResponse(p.Id, p.Sku, p.Name))
+            .Select(p => new ProductResponse(p.Id, p.Sku, p.Name, p.Unit, p.IsActive))
             .ToListAsync(cancellationToken);
 
     public Task<bool> ProductExistsAsync(Guid productId, CancellationToken cancellationToken) =>
         db.Products.AnyAsync(p => p.Id == productId, cancellationToken);
+
+    public Task<ProductResponse?> FindProductAsync(Guid productId, CancellationToken cancellationToken) =>
+        db.Products.AsNoTracking().Where(p => p.Id == productId)
+            .Select(p => new ProductResponse(p.Id, p.Sku, p.Name, p.Unit, p.IsActive))
+            .FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<ProductResponse?> LockProductAsync(Guid productId, CancellationToken cancellationToken)
+    {
+        if (db.Database.CurrentTransaction is null)
+        {
+            throw new InvalidOperationException("A product row lock requires the order-write transaction.");
+        }
+
+        // ToList avoids wrapping FOR SHARE in a compositional subquery.
+        var rows = await db.Products.FromSqlInterpolated(
+            $"SELECT p.*, p.xmin FROM products p WHERE p.id = {productId} FOR SHARE").AsNoTracking().ToListAsync(cancellationToken);
+        var product = rows.SingleOrDefault();
+        return product is null ? null : new ProductResponse(product.Id, product.Sku, product.Name, product.Unit, product.IsActive);
+    }
 
     public Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken)
     {
@@ -48,6 +67,7 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
                 join.Product.Id,
                 join.Product.Sku,
                 join.Product.Name,
+                join.Product.Unit,
                 join.Order.Quantity,
                 join.Order.DueDate,
                 join.Order.Status,

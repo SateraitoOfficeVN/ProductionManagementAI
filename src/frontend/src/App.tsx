@@ -5,6 +5,7 @@ import { ProtectedRoute } from './features/auth/ProtectedRoute'
 import { DashboardPage } from './features/dashboard/DashboardPage'
 import { ProductionOrderListPage } from './features/production-orders/ProductionOrderListPage'
 import { ProductionOrderPage } from './features/production-orders/ProductionOrderPage'
+import { ProductFormPage, ProductMasterPage } from './features/products/ProductMasterPage'
 
 function App() {
   // The navigation guard lets an edited Screen A form intercept in-app links (WI-004 DEC-022).
@@ -44,6 +45,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/products" element={<ProtectedRoute><ProductMasterPage /></ProtectedRoute>} />
+        <Route path="/products/new" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
+        <Route path="/products/:id" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
       </Routes>
     </NavigationGuardProvider>
   )

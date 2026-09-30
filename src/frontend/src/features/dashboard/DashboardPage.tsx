@@ -141,7 +141,7 @@ function Widgets({ snapshot }: { snapshot: DashboardSnapshot }) {
                 ? labels.dashboard.after(formatDate(snapshot.workload[i - 1]?.weekEnd ?? ''))
                 : weekRange(b.weekStart ?? '', b.weekEnd ?? ''),
             formatNumber(b.orderCount),
-            formatNumber(b.quantity),
+            b.unitQuantities.map((u) => `${formatNumber(u.quantity)} ${u.unit}`).join('、'),
           ])}
         />
         <BarChart

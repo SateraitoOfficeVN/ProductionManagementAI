@@ -72,7 +72,7 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
             row.Select(pair => pair.Key).Order().ToArray());
         Assert.Matches(@"^PO-\d{4}-\d{5}$", row["orderNumber"]!.GetValue<string>());
         Assert.Equal(
-            ["id", "name", "sku"],
+            ["id", "name", "sku", "unit"],
             row["product"]!.AsObject().Select(pair => pair.Key).Order().ToArray());
     }
 

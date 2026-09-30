@@ -9,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductionManagementAI.Application.ProductionOrders;
+using ProductionManagementAI.Application.Products;
 using ProductionManagementAI.Infrastructure.Identity;
 using ProductionManagementAI.Infrastructure.ProductionOrders;
+using ProductionManagementAI.Infrastructure.Products;
 
 namespace ProductionManagementAI.Infrastructure;
 
@@ -98,6 +100,7 @@ public static class DependencyInjection
         services.AddSingleton<IPlantClock, PlantClock>();
         services.AddScoped<IProductionOrderRepository, ProductionOrderRepository>();
         services.AddScoped<IOrderNumberIssuer, OrderNumberIssuer>();
+        services.AddScoped<IProductMasterRepository, ProductMasterRepository>();
 
         // Dashboard and health (003_DD-FN).
         services.AddScoped<IDashboardReader, DashboardReader>();

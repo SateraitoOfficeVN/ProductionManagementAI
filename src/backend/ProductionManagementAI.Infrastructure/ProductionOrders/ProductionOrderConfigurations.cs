@@ -16,9 +16,19 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Id).HasDefaultValueSql("gen_random_uuid()");
         builder.Property(p => p.Sku).HasMaxLength(50);
         builder.Property(p => p.Name).HasMaxLength(200);
+        builder.Property(p => p.Unit).HasMaxLength(20).IsRequired();
+        builder.Property(p => p.DrawingNumber).HasMaxLength(100);
+        builder.Property(p => p.IsActive).HasDefaultValue(true);
         builder.Property(p => p.CreatedAtUtc).HasDefaultValueSql("now()");
+        builder.Property(p => p.UpdatedAtUtc).HasDefaultValueSql("now()");
+        builder.Property(p => p.RowVersion).IsRowVersion();
         builder.HasIndex(p => p.Sku).IsUnique().HasDatabaseName("ix_products_sku");
-        builder.HasData(ProductSeed.All);
+        builder.ToTable("products", table =>
+        {
+            table.HasCheckConstraint("ck_products_sku_trimmed", "sku = btrim(sku) AND length(sku) > 0");
+            table.HasCheckConstraint("ck_products_name_not_blank", "length(btrim(name)) > 0");
+            table.HasCheckConstraint("ck_products_unit", "unit IN ('個', '本', '枚', '台', 'セット', 'kg', 'm')");
+        });
     }
 }
 
@@ -29,6 +39,8 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
         builder.ToTable("production_orders", table =>
         {
             table.HasCheckConstraint("ck_production_orders_quantity_positive", "quantity > 0");
+            table.HasCheckConstraint("ck_production_orders_quantity_max", "quantity <= 999999999");
+            table.HasCheckConstraint("ck_production_orders_quantity_scale", "scale(quantity) <= 3");
             table.HasCheckConstraint(
                 "ck_production_orders_status", "status IN ('Draft', 'InProgress', 'Completed', 'Cancelled')");
             table.HasCheckConstraint("ck_production_orders_order_seq_range", "order_seq BETWEEN 1 AND 99999");

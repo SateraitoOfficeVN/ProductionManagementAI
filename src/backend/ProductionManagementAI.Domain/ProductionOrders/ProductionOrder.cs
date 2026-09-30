@@ -24,7 +24,7 @@ public sealed class ProductionOrder
     public string OrderNumber { get; private set; } = string.Empty;
 
     public Guid ProductId { get; private set; }
-    public int Quantity { get; private set; }
+    public decimal Quantity { get; private set; }
     public DateOnly DueDate { get; private set; }
     public ProductionOrderStatus Status { get; private set; }
     public string? Notes { get; private set; }
@@ -43,7 +43,7 @@ public sealed class ProductionOrder
     public bool IsProductQuantityEditable => Status == ProductionOrderStatus.Draft;
 
     public static ProductionOrder Create(
-        Guid productId, int quantity, DateOnly dueDate, string? notes, short orderYear, int orderSeq, DateTimeOffset utcNow)
+        Guid productId, decimal quantity, DateOnly dueDate, string? notes, short orderYear, int orderSeq, DateTimeOffset utcNow)
     {
         ThrowIfInvalid(quantity, notes);
 
@@ -67,7 +67,7 @@ public sealed class ProductionOrder
     /// when either fails, so a rejected request never partially applies (DEC-007).
     /// </summary>
     public void Update(
-        Guid productId, int quantity, DateOnly dueDate, string? notes, ProductionOrderStatus status, DateTimeOffset utcNow)
+        Guid productId, decimal quantity, DateOnly dueDate, string? notes, ProductionOrderStatus status, DateTimeOffset utcNow)
     {
         ThrowIfInvalid(quantity, notes);
 
@@ -97,10 +97,11 @@ public sealed class ProductionOrder
     }
 
     /// <returns>A message ID, or <c>null</c> when valid (V-02).</returns>
-    public static string? ValidateQuantity(int quantity) => quantity switch
+    public static string? ValidateQuantity(decimal quantity) => quantity switch
     {
-        < 1 => ProductionOrderMessages.QuantityInvalid,
+        <= 0 => ProductionOrderMessages.QuantityInvalid,
         > MaxQuantity => ProductionOrderMessages.QuantityTooLarge,
+        _ when (decimal.GetBits(quantity)[3] >> 16 & 0xff) > 3 => ProductionOrderMessages.QuantityInvalid,
         _ => null,
     };
 
@@ -131,7 +132,7 @@ public sealed class ProductionOrder
         return count;
     }
 
-    private static void ThrowIfInvalid(int quantity, string? notes)
+    private static void ThrowIfInvalid(decimal quantity, string? notes)
     {
         // The service validates first and reports field errors; reaching here with bad values is a programming error.
         if (ValidateQuantity(quantity) is not null || ValidateNotes(notes) is not null)

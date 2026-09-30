@@ -92,7 +92,7 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType!.MediaType);
         var problem = await response.Body();
         Assert.Equal("urn:pmai:problem:validation", problem["type"]!.GetValue<string>());
-        Assert.Equal("VALIDATION", problem["code"]!.GetValue<string>());
+        Assert.Equal("QUANTITY_UNIT_INVALID", problem["code"]!.GetValue<string>());
         Assert.NotNull(problem["traceId"]);
         Assert.Null(problem["exception"]);
         Assert.Equal(["MSG-E001"], problem.ErrorsFor("productId"));
@@ -101,8 +101,7 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
     }
 
     [Theory]
-    [InlineData("\"quantity\": \"abc\"", "quantity", "MSG-E003")]
-    [InlineData("\"quantity\": 2.5", "quantity", "MSG-E003")]
+    [InlineData("\"quantity\": \"abc\"", "quantity", "MSG-E023")]
     [InlineData("\"dueDate\": \"not-a-date\"", "dueDate", "MSG-E004")]
     [InlineData("\"productId\": \"nope\"", "productId", "MSG-E001")]
     public async Task Create_MalformedJsonValues_Is400_WithMessageIds_NotFrameworkText(string member, string field, string code)
@@ -117,8 +116,8 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
     }
 
     [Theory]
-    [InlineData(0, "quantity", "MSG-E003")]
-    [InlineData(1_000_000_000, "quantity", "MSG-E010")]
+    [InlineData(0, "quantity", "MSG-E023")]
+    [InlineData(1_000_000_000, "quantity", "MSG-E023")]
     public async Task Create_QuantityOutOfRange_Is400(int quantity, string field, string code)
     {
         using var client = await fixture.CreateClientAsAsync("Admin");
@@ -129,7 +128,7 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
     }
 
     [Fact]
-    public async Task Create_UnknownProduct_AndPastDueDate_Are400()
+    public async Task Create_PastDueDate_IsReportedBeforeProductLookup()
     {
         using var client = await fixture.CreateClientAsAsync("Admin");
 
@@ -137,7 +136,6 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var problem = await response.Body();
-        Assert.Equal(["MSG-E002"], problem.ErrorsFor("productId"));
         Assert.Equal(["MSG-E005"], problem.ErrorsFor("dueDate"));
     }
 

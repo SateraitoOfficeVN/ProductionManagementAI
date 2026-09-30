@@ -32,7 +32,7 @@ public class DashboardServiceTests
         public Task<DashboardRaw> ReadAsync(DashboardWindow window, CancellationToken cancellationToken)
         {
             Window = window;
-            return Task.FromResult(new DashboardRaw([], [], [], [], [], new DeliveryRow(0, 0, 0, 0, 0, 0, null), []));
+            return Task.FromResult(new DashboardRaw([], [], [], [], [], new DeliveryRow(0, 0, 0, 0, null), []));
         }
     }
 }

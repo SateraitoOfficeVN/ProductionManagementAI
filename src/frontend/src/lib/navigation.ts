@@ -3,5 +3,6 @@ export function currentEntry(pathname: string): string | null {
   if (pathname === '/') return '/'
   if (pathname === '/production-orders/new') return '/production-orders/new'
   if (pathname === '/production-orders' || pathname.startsWith('/production-orders/')) return '/production-orders'
+  if (pathname === '/products' || pathname.startsWith('/products/')) return '/products'
   return null
 }

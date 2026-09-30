@@ -9,8 +9,8 @@ import type { ProductionOrder } from '../../../src/features/production-orders/ty
 import { localToday } from '../../../src/features/production-orders/validation'
 
 const products = [
-  { id: 'p1', sku: 'P-1001', name: 'ブレーキキャリパー' },
-  { id: 'p4', sku: 'P-1004', name: 'ドライブシャフト' },
+  { id: 'p1', sku: 'P-1001', name: 'ブレーキキャリパー', unit: '個', isActive: true },
+  { id: 'p4', sku: 'P-1004', name: 'ドライブシャフト', unit: '本', isActive: true },
 ]
 
 const future = '2099-10-01'
@@ -21,6 +21,7 @@ function order(overrides: Partial<ProductionOrder> = {}): ProductionOrder {
     orderNumber: 'PO-2026-00042',
     productId: 'p4',
     quantity: 250,
+    unit: '本',
     dueDate: future,
     status: 'Draft',
     allowedNextStatuses: ['InProgress', 'Cancelled'],
@@ -113,7 +114,7 @@ describe('ProductionOrderPage — create mode', () => {
     await user.click(saveButton())
 
     expect(screen.getByText('製品を選択してください。')).toBeInTheDocument()
-    expect(screen.getByText('1以上の整数を入力してください。')).toBeInTheDocument()
+    expect(screen.getByText('数量は単位に合わせて入力してください。kg・mは小数第3位まで入力できます。')).toBeInTheDocument()
     expect(screen.getByText('納期を入力してください。')).toBeInTheDocument()
     expect(screen.getByLabelText(/製品/)).toHaveFocus()
     expect(screen.getByLabelText(/製品/)).toHaveAttribute('aria-invalid', 'true')

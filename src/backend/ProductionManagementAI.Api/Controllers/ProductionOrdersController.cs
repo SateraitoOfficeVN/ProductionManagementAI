@@ -8,6 +8,7 @@ namespace ProductionManagementAI.Api.Controllers;
 /// <summary>001_DD-API §2–§4. Business checks live in <see cref="ProductionOrderService"/> (001_DD-FN).</summary>
 [ApiController]
 [Route("api/production-orders")]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 [Authorize(Policy = AuthorizationPolicies.ProductionOrderEditor)]
 public class ProductionOrdersController(ProductionOrderService service) : ControllerBase
 {
@@ -48,6 +49,7 @@ public class ProductionOrdersController(ProductionOrderService service) : Contro
 /// <summary>001_DD-API §1.</summary>
 [ApiController]
 [Route("api/products")]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 [Authorize(Policy = AuthorizationPolicies.ProductionOrderEditor)]
 public class ProductsController(ProductionOrderService service) : ControllerBase
 {

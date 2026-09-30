@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="520" viewBox="0 0 440 520" role="img" aria-labelledby="title desc">
+  <title id="title">SCR-001 SP impact wireframe</title><desc id="desc">Stacked product and unit-aware quantity fields with error message.</desc>
+  <style>text{font:16px 'Yu Gothic UI',Meiryo,sans-serif;fill:#333}.small{font-size:13px}.box{fill:#f1f1f1;stroke:#888;stroke-width:2}.call{fill:#fff;stroke:#333;stroke-width:2}.num{font:bold 15px sans-serif;text-anchor:middle}</style>
+  <rect class="box" x="14" y="14" width="412" height="63"/><text x="50" y="52">ProductionManagementAI　メニュー</text><circle class="call" cx="28" cy="24" r="14"/><text class="num" x="28" y="30">1</text>
+  <text x="33" y="119">新規製造指示</text>
+  <rect class="box" x="14" y="143" width="412" height="121"/><text x="48" y="178">製品 *</text><text class="small" x="48" y="211">［P-1001 — ブレーキキャリパー ▼］</text><text class="small" x="48" y="244">編集時：使用停止の製品も表示</text><circle class="call" cx="28" cy="153" r="14"/><text class="num" x="28" y="159">2</text>
+  <rect class="box" x="14" y="281" width="412" height="105"/><text x="48" y="317">数量 *　［12　　　　］ 個</text><text class="small" x="48" y="357">kg/m は小数3桁まで。他は整数</text><circle class="call" cx="28" cy="291" r="14"/><text class="num" x="28" y="297">3</text>
+  <rect class="box" x="14" y="403" width="412" height="91"/><text class="small" x="48" y="439">エラー：数量と単位を確認してください。</text><text class="small" x="48" y="470">入力値は保持されます。</text><circle class="call" cx="28" cy="413" r="14"/><text class="num" x="28" y="419">4</text>
+</svg>

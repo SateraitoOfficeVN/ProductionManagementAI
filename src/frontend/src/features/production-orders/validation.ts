@@ -21,12 +21,17 @@ export function validateProduct(productId: string): string | null {
   return productId === '' ? 'MSG-E001' : null
 }
 
-export function validateQuantity(quantity: string): string | null {
+export function validateQuantity(quantity: string, unit = '個'): string | null {
   const trimmed = quantity.trim()
-  if (!/^\d+$/.test(trimmed) || Number(trimmed) < 1) {
-    return 'MSG-E003'
+  if (!/^(?:0|[1-9]\d*)(?:\.\d{1,3})?$/.test(trimmed) ||
+      !/[1-9]/.test(trimmed) ||
+      (unit !== 'kg' && unit !== 'm' && trimmed.includes('.') && !/^0*$/.test(trimmed.split('.')[1]))) {
+    return 'MSG-E023'
   }
-  return Number(trimmed) > MAX_QUANTITY ? 'MSG-E010' : null
+  const [integer] = trimmed.split('.')
+  return integer.length > 9 || Number(integer) > MAX_QUANTITY ||
+    (integer === String(MAX_QUANTITY) && /[1-9]/.test(trimmed.split('.')[1] ?? ''))
+    ? 'MSG-E023' : null
 }
 
 /**

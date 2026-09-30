@@ -122,9 +122,10 @@ export function ProductionOrderForm({
   function validateField(field: Field): string | null {
     switch (field) {
       case 'productId':
-        return locked ? null : validateProduct(values.productId)
+        return locked ? null : selectedProduct && !selectedProduct.isActive && values.productId !== current?.productId
+          ? 'MSG-E022' : validateProduct(values.productId)
       case 'quantity':
-        return locked ? null : validateQuantity(values.quantity)
+        return locked ? null : validateQuantity(values.quantity, selectedProduct?.unit)
       case 'dueDate':
         return validateDueDate(values.dueDate, mode === 'edit' ? initial.dueDate : null, localToday())
       case 'notes':
@@ -211,7 +212,7 @@ export function ProductionOrderForm({
     setSaving(true)
     const body = {
       productId: values.productId,
-      quantity: Number(values.quantity.trim()),
+      quantity: values.quantity.trim(),
       dueDate: values.dueDate,
       notes: values.notes.trim() === '' ? null : values.notes.trim(),
     }
@@ -311,7 +312,7 @@ export function ProductionOrderForm({
                 className={inputClass}
               >
                 <option value="">{products.length === 0 ? message('MSG-E014') : labels.order.selectProduct}</option>
-                {products.map((product) => (
+                {products.filter((product) => product.isActive || product.id === current?.productId).map((product) => (
                   <option key={product.id} value={product.id}>
                     {product.sku} — {product.name}
                   </option>
@@ -323,13 +324,13 @@ export function ProductionOrderForm({
           </Row>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Row label={labels.order.quantity} htmlFor="quantity" required>
+            <Row label={`${labels.order.quantity}${selectedProduct ? `（${selectedProduct.unit}）` : ''}`} htmlFor="quantity" required>
               <input
                 id="quantity"
                 ref={quantityInput}
                 type="text"
-                inputMode="numeric"
-                maxLength={9}
+                inputMode="decimal"
+                maxLength={13}
                 readOnly={locked}
                 aria-required="true"
                 aria-readonly={locked ? 'true' : undefined}

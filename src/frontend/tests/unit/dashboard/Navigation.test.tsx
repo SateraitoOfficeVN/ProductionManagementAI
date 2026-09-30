@@ -20,7 +20,7 @@ describe('AppNavbar (003_BD H-1–H-5, TC-222)', () => {
 
     const nav = screen.getByRole('navigation', { name: 'メインメニュー' })
     const links = within(nav).getAllByRole('link')
-    expect(links.map((l) => l.textContent)).toEqual(['ダッシュボード', '製造指示一覧', '新規製造指示'])
+    expect(links.map((l) => l.textContent)).toEqual(['ダッシュボード', '製造指示一覧', '製品マスタ', '新規製造指示'])
     expect(within(nav).getByRole('link', { name: current })).toHaveAttribute('aria-current', 'page')
     expect(links.filter((l) => l.getAttribute('aria-current') === 'page')).toHaveLength(1)
   })

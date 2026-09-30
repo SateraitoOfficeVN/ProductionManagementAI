@@ -33,10 +33,10 @@ public static class DashboardMapper
             ToGroup(raw.DueSoon),
             ToWorkload(window, raw.Workload),
             raw.TopProducts
-                .Select(r => new TopProduct(new ProductSummary(r.ProductId, r.Sku, r.Name), r.OpenQuantity, r.ActiveOrders))
+                .Select(r => new TopProduct(new ProductSummary(r.ProductId, r.Sku, r.Name, r.Unit), r.OpenQuantity, r.ActiveOrders))
                 .ToArray(),
-            new CompletedInPeriod(delivery.WeekCount, delivery.WeekQuantity, window.Week0),
-            new CompletedInPeriod(delivery.MonthCount, delivery.MonthQuantity, window.MonthStart),
+            new CompletedInPeriod(delivery.WeekCount, window.Week0),
+            new CompletedInPeriod(delivery.MonthCount, window.MonthStart),
             new OnTimeFigure(delivery.WindowOnTime, delivery.WindowCount, window.WindowStart),
             new LeadTimeFigure(averageDays, delivery.WindowCount, window.WindowStart),
             window.TrendWeeks
@@ -53,7 +53,7 @@ public static class DashboardMapper
             rows.Select(r => new DashboardOrder(
                     r.Id,
                     r.OrderNumber,
-                    new ProductSummary(r.ProductId, r.Sku, r.Name),
+                    new ProductSummary(r.ProductId, r.Sku, r.Name, r.Unit),
                     r.Quantity,
                     r.DueDate,
                     Enum.Parse<ProductionOrderStatus>(r.Status)))
@@ -62,26 +62,29 @@ public static class DashboardMapper
     /// <summary>Exactly ten buckets in display order: overdue, eight weeks, later (003_BD D-03, DEC-009).</summary>
     private static WorkloadBucket[] ToWorkload(DashboardWindow window, IReadOnlyList<WorkloadRow> rows)
     {
-        (int Count, long Quantity) Of(int bucket)
+        (int Count, IReadOnlyList<UnitQuantity> Quantities) Of(int bucket)
         {
-            var row = rows.FirstOrDefault(r => r.Bucket == bucket);
-            return row is null ? (0, 0) : (row.Count, row.Quantity);
+            var inBucket = rows.Where(r => r.Bucket == bucket).ToArray();
+            var ordered = new[] { "個", "本", "枚", "台", "セット", "kg", "m" };
+            var quantities = inBucket.OrderBy(r => Array.IndexOf(ordered, r.Unit))
+                .Select(r => new UnitQuantity(r.Unit, r.Quantity)).ToArray();
+            return (inBucket.Sum(r => r.Count), quantities);
         }
 
         var buckets = new List<WorkloadBucket>(DashboardWindow.LookAheadWeeks + 2);
         var overdue = Of(-1);
-        buckets.Add(new WorkloadBucket("overdue", null, null, overdue.Count, overdue.Quantity));
+        buckets.Add(new WorkloadBucket("overdue", null, null, overdue.Count, overdue.Quantities));
         for (var k = 0; k < DashboardWindow.LookAheadWeeks; k++)
         {
             var monday = window.Week0.AddDays(7 * k);
             var week = Of(k);
 
             // The current week starts today: its earlier days are already overdue (D-03).
-            buckets.Add(new WorkloadBucket("week", k == 0 ? window.Today : monday, monday.AddDays(6), week.Count, week.Quantity));
+            buckets.Add(new WorkloadBucket("week", k == 0 ? window.Today : monday, monday.AddDays(6), week.Count, week.Quantities));
         }
 
         var later = Of(DashboardWindow.LookAheadWeeks);
-        buckets.Add(new WorkloadBucket("later", null, null, later.Count, later.Quantity));
+        buckets.Add(new WorkloadBucket("later", null, null, later.Count, later.Quantities));
         return buckets.ToArray();
     }
 }
