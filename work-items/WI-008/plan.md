@@ -63,7 +63,8 @@ only pinned repository dependencies where missing.
 | Create bug-fix planning records | Explicit latest user request | WI-008 planning only |
 | Implement/test/local commit | Latest explicit WI-008 continuation instruction | Isolated branch; the two defects and their regression checks |
 | Disposable Compose start/migrations/teardown and visible local recordings | Latest explicit WI-008 continuation instruction | Only newly created task-owned stack/database/volumes; retain evidence and avoid credentials in files |
-| Push / PR / merge / publish / live or demo migration/deployment | Not authorized | Obtain task-specific authorization later |
+| Push / PR | Explicit user request on 2026-09-30 after local handover | WI-008 branch and PR into master only |
+| Merge / publish / live or demo migration/deployment | Not authorized | Obtain task-specific authorization later |
 
 ### Risks, gates and stop conditions
 
@@ -91,4 +92,4 @@ only pinned repository dependencies where missing.
 - Initial plan approval: not granted; the agent incorrectly treated an acknowledgment as approval.
 - Current authorization source: the subsequent user instruction on 2026-09-30 (English rendering: "Okay, acceptable for now; continue the work item").
 - Authorization applies to continuing the existing revision 1 scope from that instruction onward; it is not retroactive approval of implementation or commit `a628f2e`.
-- Closure: existing code and verification retained; corrected authorization records and local handover completed. Push, PR, merge and deployment remain outside authorization.
+- Closure: existing code and verification retained; corrected authorization records and local handover completed. Push and PR were subsequently authorized by the explicit user request; merge and deployment remain outside authorization.

@@ -60,3 +60,9 @@ The agent incorrectly attributed approval to an acknowledgment. The user
 challenged this and subsequently authorized continuation. Records are corrected;
 technical review is not retrospective approval. No code changed during this
 continuation; existing actual test/media results are retained.
+
+## Subsequent external delivery
+
+The user explicitly authorized push/PR after local handover. PR #33 is open
+into master; remote CI is not yet complete. Local review is not independent
+PR approval and does not authorize merge or deployment.

@@ -163,3 +163,17 @@ review and project current-state notes now reflect this sequence. No retrospecti
 approval, new feature scope or external-operation permission is inferred.
 The continuation changes records only; application/test source and videos remain
 unchanged, so no browser rerun is needed for this documentation correction.
+
+## External delivery — 2026-09-30
+
+Following the explicit user request, branch `feature/WI-008-product-ui-bugs`
+was pushed and [PR #33](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/33) opened into `master`.
+The remote master matched baseline `61ae1ad`; no pre-existing WI-008 PR was found.
+Sandboxed GitHub access initially failed; the authorized network-enabled check
+succeeded using the existing keyring login. No credential was written to records.
+The branch and PR operations succeeded; remote CI is not yet complete.
+Merge, publishing and deployment remain unauthorized and were not performed.
+
+PR check snapshot at opening: Frontend (build, lint, test) succeeded; Backend
+(build, test) was in progress. This is an opening snapshot, not a final-green
+claim for all checks or the subsequent records commit.

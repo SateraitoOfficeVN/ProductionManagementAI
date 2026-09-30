@@ -22,3 +22,9 @@ acknowledged the mistaken approval interpretation and stopped. The user then
 explicitly instructed continuation of WI-008. Retain actual code, test results
 and local commit `a628f2e`; correct the records without inventing earlier approval.
 No external operation or new scope is authorized by this continuation.
+
+## DEC-006 — Push and PR authorization
+
+On 2026-09-30, the user explicitly requested pushing WI-008 and creating its PR.
+The existing branch was pushed and PR #33 opened into master. This request does
+not authorize merge, publishing or deployment.
