@@ -1,6 +1,6 @@
 # Product master — Status Report
 
-As of 2026-09-30. State: implementation and local verification complete; preparing the authorized feature commit and PR.
+As of 2026-09-30. State: implementation committed and pushed; PR #31 open, CI and user review pending.
 
 ## Approved scope
 
@@ -20,7 +20,7 @@ See [evidence](evidence.md) and [review](review.md) for executed commands, resol
 
 ## Next action
 
-Complete the staged diff audit, commit and push the focused branch, open a PR to master, and inspect actual CI results. Keep the worktree until merge or abandonment. Post-merge closeout of README, ai/project.md and CLAUDE.md belongs to the separately authorized merge stage.
+Inspect CI for [PR #31](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/31), address any concrete failure, then await user review. Implementation commit: `3251ebf`. Keep the worktree until merge or abandonment. Post-merge closeout of README, ai/project.md and CLAUDE.md belongs to the separately authorized merge stage.
 
 ## Historical design-stage record
 
