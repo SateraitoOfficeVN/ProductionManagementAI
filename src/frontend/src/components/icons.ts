@@ -7,6 +7,7 @@ export {
   Database as DatabaseIcon,
   LayoutDashboard as NavDashboardIcon,
   ClipboardList as NavOrdersIcon,
+  Package as NavProductsIcon,
   Plus as NavNewOrderIcon,
   LogOut as SignOutIcon,
   Menu as MenuIcon,

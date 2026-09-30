@@ -35,6 +35,10 @@ Done and merged to `master`:
 
 - WI-006 (`work-items/WI-006/`): Japanese Product master at `/products`, role-gated maintenance API, immutable case-insensitive SKU, referenced-unit lock and retirement preserving order history; exact kg/m decimals and unit-bearing order responses; count-based cross-unit dashboard metrics with per-unit subtotals. Merged via PR #31 as `b806b1c`. Final CI passed 148 backend unit, 111 integration, 139 frontend and 26 Playwright tests. Fresh/upgrade migrations were rehearsed only on isolated databases; no live/demo cutover or deployment was performed. See `deploy/README.md` for backup/write-pause/owner migration limits.
 
+### Local delivery — not merged
+
+WI-008 (Product master UI bug fix) is locally completed on `feature/WI-008-product-ui-bugs`: both dialogs center within viewport bounds and Product master uses a distinct Package navbar icon. Frontend lint/build, 4 component and 15 targeted Chromium checks passed; see [work-item evidence](../work-items/WI-008/evidence.md). This is local delivery only: no push, PR, merge, remote CI or deployment has occurred.
+
 Next planned application work: none approved. The original locked Screens A–C roadmap and Japanese localization are complete; WI-006 is the first completed master-data extension. Plant calendar, Production lines and Bill of materials remain candidates requiring separate scope and plan approval.
 
 Verified commands, run from the repo root unless noted:

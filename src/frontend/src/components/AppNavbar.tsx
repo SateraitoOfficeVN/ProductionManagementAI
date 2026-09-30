@@ -10,6 +10,7 @@ import {
   NavDashboardIcon,
   NavNewOrderIcon,
   NavOrdersIcon,
+  NavProductsIcon,
   SignOutIcon,
 } from './icons'
 import { labels } from '../features/production-orders/messages'
@@ -19,7 +20,7 @@ type Entry = { label: string; to: string; Icon: ComponentType<typeof iconProps>;
 const entries: Entry[] = [
   { label: labels.nav.dashboard, to: '/', Icon: NavDashboardIcon },
   { label: labels.nav.orders, to: '/production-orders', Icon: NavOrdersIcon },
-  { label: labels.nav.products, to: '/products', Icon: NavOrdersIcon },
+  { label: labels.nav.products, to: '/products', Icon: NavProductsIcon },
   { label: labels.nav.newOrder, to: '/production-orders/new', Icon: NavNewOrderIcon, primary: true },
 ]
 
