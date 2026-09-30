@@ -8,7 +8,7 @@ This is the first proposed work item in the Master data group. The remaining fun
 | 2 | 2026-09-29 | Reconcile Product master with order quantities and mixed-unit dashboard | closed — superseded after brief and `004_BD` draft | User message, 2026-09-29: “approved” |
 | 3 | 2026-09-29 | Document cross-screen impacts in new WI-006 artifacts without changing approved prior work-item designs | closed — design-consistency passed 2026-09-30 | User message, 2026-09-29: “approved” (reply to revision 3) |
 | 4 | 2026-09-30 | Implement Product master and unit-aware order/dashboard behavior | closed — delivered and reviewed | User message, 2026-09-30: “approved” (reply to revision 4) |
-| 5 | 2026-09-30 | Merge approved PR and close out WI-006 | **current — approved** | User message, 2026-09-30: “approved” (reply to revision 5) |
+| 5 | 2026-09-30 | Merge approved PR and close out WI-006 | closed by the authorized closeout change | User message, 2026-09-30: “approved” (reply to revision 5) |
 
 ## Revision 1 — Requirements and design
 
@@ -309,7 +309,7 @@ PR #31 targets master at reviewed head `ee21a976934bde6d2fb9294cb42723b384900b0c
 | 1 | Recheck PR head, diff, CI and merge readiness; retain review approval evidence | pr-review/security-review/delivery evidence remains valid; stop if head changes or a required check fails | Done — reviewed head ee21a97 unchanged; all three CI jobs passed, CLEAN/MERGEABLE |
 | 2 | Squash-merge PR #31 to master using the reviewed head as an exact guard | Confirm GitHub merged state and actual squash SHA; no direct push to master | Done — PR #31 squash-merged as b806b1ca8d216364876147215daff710e302d81e |
 | 3 | Create a separate closeout worktree/branch from the merged master; update WI-006 status, evidence, plan closure and brief state, root README, ai/project.md and CLAUDE.md current state in one focused change | feature-delivery step 8; accurately state implemented/merged versus undeployed; no old design changes or new feature scope | Done — closeout branch from merged master; WI-006 records and all three root current-state documents updated |
-| 4 | Commit/push the closeout branch and open a documentation PR to master; inspect diff and applicable checks, then squash-merge that focused closeout PR | Delivery gate; no missing required check or unexpected path; document-only CI may be excluded by existing filters | Prepared — documentation diff/gates verified; commit/push/PR and squash merge authorized by this revision |
+| 4 | Commit/push the closeout branch and open a documentation PR to master; inspect diff and applicable checks, then squash-merge that focused closeout PR | Delivery gate; no missing required check or unexpected path; document-only CI may be excluded by existing filters | PR #32 — seven Markdown files, valid links, clean diff; CLEAN/MERGEABLE and no required CI run under documentation filters; guarded squash merge authorized |
 | 5 | Remove only merged WI-006/closeout worktrees and branches when clean, retaining unrelated main-worktree edits | Verify resolved paths and clean worktree state; stop cleanup if user changes are present | Scheduled — remove only clean merged worktrees after closeout merge; main worktree remains untouched |
 
 ### Proposed permitted actions
@@ -327,4 +327,4 @@ Approval authorizes squash-merging PR #31, the isolated closeout branch/worktree
 
 - **Review status:** approved.
 - **Approval source:** User message, 2026-09-30: “approved” (reply to revision 5).
-- **Closure:** Implementation merge verified 2026-09-30; this approved documentation change completes durable record closeout when merged. Clean merged-worktree cleanup follows verified merge.
+- **Closure:** Implementation merge verified 2026-09-30; this approved closeout PR #32 completes durable record closeout when merged. Clean merged-worktree cleanup follows verified merge.

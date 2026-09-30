@@ -4,7 +4,7 @@ As of 2026-09-30. WI-006 implementation: done and merged to master in [PR #31](h
 
 ## Approval and delivery
 
-The user approved implementation revision 4, reviewed PR #31, then explicitly approved merge/closeout revision 5. Final reviewed head ee21a97 passed backend/frontend/E2E [CI run 36683178701](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36683178701) before guarded squash merge. The documentation closeout is prepared in a separate docs/WI-006-closeout branch from the merged master and will be delivered through its own authorized PR.
+The user approved implementation revision 4, reviewed PR #31, then explicitly approved merge/closeout revision 5. Final reviewed head ee21a97 passed backend/frontend/E2E [CI run 36683178701](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36683178701) before guarded squash merge. The post-merge documentation closeout is delivered through [PR #32](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/32), from the separate docs/WI-006-closeout branch. Its merge is explicitly authorized by revision 5; final merge state is recorded on GitHub.
 
 ## Implemented and verified
 
