@@ -38,7 +38,7 @@ Define a reviewable Product master feature that lets authorized users maintain a
 | Input | Revision / state | Assumption or limit |
 | --- | --- | --- |
 | User request, 2026-09-29 | “let start with master data group” | Begin with Product master because Production lines and Bill of materials depend on it. |
-| [Future development functions](../../FUTURE_DEVELOPMENT_FUNCTIONS.md) and its source PDF | Proposal, not approved requirements | Candidate fields and retirement behavior require confirmation in the brief and decisions. |
+| [Development opportunities source PDF](../../docs/en/pdf/project-development-opportunities.pdf) and the untracked future-functions summary in the main worktree | Proposal, not approved requirements | Candidate fields and retirement behavior require confirmation in the brief and decisions. |
 | [Project context](../../ai/project.md), WI-001 DEC-015, WI-005 DEC-001–DEC-005 | Current | Japanese-only UI; exact role matrix remains open. |
 | Existing `Product`, `products` table, `GET /api/products`, SCR-001 picker | Implemented | Design must preserve order references and existing product IDs. |
 | [Decision log](decisions.md) | Open | Do not settle business behavior by assumption. |

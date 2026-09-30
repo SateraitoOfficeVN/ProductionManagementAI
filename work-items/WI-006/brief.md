@@ -12,7 +12,7 @@ WI-006 adds a Japanese Product master screen and write API for maintaining autom
 
 ## Objective
 
-Start the Master data group requested by the user on 2026-09-29. The candidate scope comes from [Future development functions](../../FUTURE_DEVELOPMENT_FUNCTIONS.md) and its source PDF; that proposal is not, by itself, an approved business specification. Product master is the prerequisite for the later Production lines and Bill of materials work items.
+Start the Master data group requested by the user on 2026-09-29. The candidate scope comes from [Development opportunities source PDF](../../docs/en/pdf/project-development-opportunities.pdf) and the untracked future-functions summary in the main worktree; that proposal is not, by itself, an approved business specification. Product master is the prerequisite for the later Production lines and Bill of materials work items.
 
 ## Success metrics
 
