@@ -80,3 +80,8 @@ Final staged audit: 122 WI-006 files, no unexpected path, env file or dependency
 ### Authorized delivery
 
 Implementation commit `3251ebf` was pushed to `feature/WI-006-product-master`. [PR #31](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/31) was opened to `master` with verification and cutover limits. `git diff --cached --no-textconv --check` passed before commit. CI/user review are pending; the PR is not merged. GitHub authentication succeeded outside the restricted network sandbox; the earlier sandbox-only invalid-token report was not a credential failure.
+
+
+### GitHub CI verification
+
+[Run 36682579899](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36682579899), head `8a43a76`, completed successfully on 2026-09-30. Backend build: zero warnings/errors; 148 unit and 111 integration tests passed, no skips. Frontend clean locked install/build/lint/tests passed. Fresh Compose migration/build and all 26 Playwright tests passed, including the additional uncertain-create scenario. This verifies the checked-in source against the dependency lockfile on Linux. The disposable local Compose stack/volumes and ignored credential file were removed; the feature worktree remains clean and retained for PR review. Merge/deploy remain unperformed.

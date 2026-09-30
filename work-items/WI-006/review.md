@@ -36,3 +36,6 @@ Scope and approval are identifiable; actual test commands and limits are in evid
 ## Limitations
 
 Manual live screen-reader and cross-browser checks have not run. CSS 200% mobile zoom and automated axe passed; full WCAG conformance is not claimed. Real cutover requires backup, write pause, owner migration and coordinated binaries; neither live migration nor deployment was performed. See evidence.md for focused tests added after full-suite counts.
+
+
+CI follow-up: GitHub run 36682579899 passed backend (148 unit + 111 integration), frontend and 26 Playwright cases. No CI finding remains. PR #31 awaits user review; no merge/deploy permission is inferred.
