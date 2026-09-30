@@ -13,7 +13,7 @@ import {
 } from '../../components/icons'
 import { formatDate } from '../../lib/format'
 import { labels, message, statusLabels } from '../production-orders/messages'
-import { formatLeadTime, formatNumber, formatOrders, formatRate, formatUnits } from './dashboardFormat'
+import { formatLeadTime, formatNumber, formatOrders, formatRate } from './dashboardFormat'
 import type { DashboardSnapshot } from './types'
 
 type IconType = ComponentType<typeof iconProps>
@@ -60,9 +60,9 @@ export function DeliveryTiles({ snapshot }: { snapshot: DashboardSnapshot }) {
   return (
     <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-4" aria-label={labels.dashboard.delivery}>
       <Tile Icon={CompletedWeekIcon} label={labels.dashboard.completedThisWeek} window={labels.dashboard.sinceMonday(formatDate(week.from))}
-        value={formatOrders(week.orderCount)} caption={formatUnits(week.quantity)} />
+        value={formatOrders(week.orderCount)} />
       <Tile Icon={CompletedMonthIcon} label={labels.dashboard.completedThisMonth} window={labels.dashboard.since(formatDate(month.from))}
-        value={formatOrders(month.orderCount)} caption={formatUnits(month.quantity)} />
+        value={formatOrders(month.orderCount)} />
       <Tile Icon={OnTimeIcon} label={labels.dashboard.onTime} window={labels.dashboard.last30Days}
         value={formatRate(onTime.onTimeCount, onTime.completedCount)}
         caption={onTime.completedCount === 0 ? none : labels.dashboard.onTimeCaption(onTime.onTimeCount, onTime.completedCount)} />

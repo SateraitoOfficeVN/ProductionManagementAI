@@ -21,6 +21,17 @@ public static class ProductionOrderTelemetry
     public static readonly Counter<long> StatusTransitions =
         Meter.CreateCounter<long>("pmai.production_orders.status_transitions", description: "Successful status changes.");
 
+    /// <summary>Counts bounded unit-validation outcomes for WI-006 order writes.</summary>
+    public static readonly Counter<long> UnitValidation = Meter.CreateCounter<long>(
+        "pmai.orders.unit_validation", description: "Unit-aware order validation by outcome.");
+
+    /// <summary>Records a bounded outcome without product identity or submitted quantity.</summary>
+    public static void RecordUnitValidation(Activity? activity, string outcome)
+    {
+        activity?.SetTag("unit_validation", outcome);
+        UnitValidation.Add(1, new KeyValuePair<string, object?>("outcome", outcome));
+    }
+
     // 002_DD-FN "Observability".
     public static readonly Counter<long> Listed =
         Meter.CreateCounter<long>("pmai.production_orders.listed", description: "Production order list queries by outcome.");

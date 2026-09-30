@@ -10,6 +10,7 @@ using OpenTelemetry.Trace;
 using ProductionManagementAI.Api.Controllers;
 using ProductionManagementAI.Api.ProductionOrders;
 using ProductionManagementAI.Application.ProductionOrders;
+using ProductionManagementAI.Application.Products;
 using ProductionManagementAI.Infrastructure;
 using ProductionManagementAI.Infrastructure.Identity;
 
@@ -19,7 +20,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     // Enums as names only ("InProgress"); an unknown or numeric value is a binding error (001_DD-API).
-    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false)))
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
+        o.JsonSerializerOptions.Converters.Add(new ExactQuantityConverter());
+    })
     .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = ProductionOrderProblems.FromModelState);
 
 // RFC 9457 for unhandled errors (ai/rules/backend.md): generic body, never exception detail.
@@ -40,6 +45,7 @@ builder.Services.AddProblemDetails(o => o.CustomizeProblemDetails = context =>
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ProductionOrderService>();
+builder.Services.AddScoped<ProductMasterService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<SystemHealthService>();
 
@@ -50,7 +56,8 @@ builder.Services.AddOpenTelemetry()
     .ConfigureResource(r => r.AddService("ProductionManagementAI.Api"))
     .WithTracing(t =>
     {
-        t.AddAspNetCoreInstrumentation().AddNpgsql().AddSource(ProductionOrderTelemetry.Name);
+        t.AddAspNetCoreInstrumentation().AddNpgsql().AddSource(ProductionOrderTelemetry.Name)
+            .AddSource(ProductMasterService.TelemetryName);
         if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         {
             t.AddOtlpExporter();
@@ -58,7 +65,8 @@ builder.Services.AddOpenTelemetry()
     })
     .WithMetrics(m =>
     {
-        m.AddAspNetCoreInstrumentation().AddMeter(ProductionOrderTelemetry.Name);
+        m.AddAspNetCoreInstrumentation().AddMeter(ProductionOrderTelemetry.Name)
+            .AddMeter(ProductMasterService.TelemetryName);
         if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         {
             m.AddOtlpExporter();

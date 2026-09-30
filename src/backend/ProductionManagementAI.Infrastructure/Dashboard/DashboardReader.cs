@@ -38,13 +38,14 @@ internal sealed class DashboardReader(AppDbContext db) : IDashboardReader
                      WHEN due_date >= @week0 + 56  THEN 8
                      ELSE (due_date - @week0) / 7
                    END AS bucket,
-                   count(*)::int, sum(quantity)::bigint
-            FROM production_orders
-            WHERE status IN {ActiveStatuses}
-            GROUP BY bucket
+                   p.unit, count(*)::int, sum(o.quantity)
+            FROM production_orders o
+            JOIN products p ON p.id = o.product_id
+            WHERE o.status IN {ActiveStatuses}
+            GROUP BY bucket, p.unit
             """,
             [Param("today", window.Today), Param("week0", window.Week0)],
-            r => new WorkloadRow(r.GetInt32(0), r.GetInt32(1), r.GetInt64(2)),
+            r => new WorkloadRow(r.GetInt32(0), r.GetString(1), r.GetInt32(2), r.GetDecimal(3)),
             cancellationToken);
 
         var overdue = await QueryAsync(connection, tx, GroupSql("o.due_date < @today"),
@@ -56,25 +57,23 @@ internal sealed class DashboardReader(AppDbContext db) : IDashboardReader
 
         var topProducts = await QueryAsync(connection, tx,
             $"""
-            SELECT p.id, p.sku, p.name, sum(o.quantity)::bigint AS open_quantity, count(*)::int
+            SELECT p.id, p.sku, p.name, p.unit, sum(o.quantity) AS open_quantity, count(*)::int
             FROM production_orders o
             JOIN products p ON p.id = o.product_id
             WHERE o.status IN {ActiveStatuses}
-            GROUP BY p.id, p.sku, p.name
-            ORDER BY open_quantity DESC, p.sku
+            GROUP BY p.id, p.sku, p.name, p.unit
+            ORDER BY count(*) DESC, p.sku
             LIMIT @limit
             """,
             [Param("limit", DashboardWindow.TopProductLimit)],
-            r => new TopProductRow(r.GetGuid(0), r.GetString(1), r.GetString(2), r.GetInt64(3), r.GetInt32(4)),
+            r => new TopProductRow(r.GetGuid(0), r.GetString(1), r.GetString(2), r.GetString(3), r.GetDecimal(4), r.GetInt32(5)),
             cancellationToken);
 
         var delivery = (await QueryAsync(connection, tx,
             """
             SELECT
               count(*)      FILTER (WHERE completed_at_utc >= @weekStart)::int,
-              coalesce(sum(quantity) FILTER (WHERE completed_at_utc >= @weekStart), 0)::bigint,
               count(*)      FILTER (WHERE completed_at_utc >= @monthStart)::int,
-              coalesce(sum(quantity) FILTER (WHERE completed_at_utc >= @monthStart), 0)::bigint,
               count(*)      FILTER (WHERE completed_at_utc >= @windowStart)::int,
               count(*)      FILTER (WHERE completed_at_utc >= @windowStart
                                       AND (completed_at_utc AT TIME ZONE @zone)::date <= due_date)::int,
@@ -90,8 +89,8 @@ internal sealed class DashboardReader(AppDbContext db) : IDashboardReader
                 Param("end", window.EndUtc), Param("zone", window.TimeZoneId),
             ],
             r => new DeliveryRow(
-                r.GetInt32(0), r.GetInt64(1), r.GetInt32(2), r.GetInt64(3), r.GetInt32(4), r.GetInt32(5),
-                r.IsDBNull(6) ? null : r.GetDouble(6)),
+                r.GetInt32(0), r.GetInt32(1), r.GetInt32(2), r.GetInt32(3),
+                r.IsDBNull(4) ? null : r.GetDouble(4)),
             cancellationToken)).Single();
 
         var trend = await QueryAsync(connection, tx,
@@ -113,7 +112,7 @@ internal sealed class DashboardReader(AppDbContext db) : IDashboardReader
 
     private static string GroupSql(string predicate) =>
         $"""
-        SELECT o.id, o.order_number, o.quantity, o.due_date, o.status, p.id, p.sku, p.name,
+        SELECT o.id, o.order_number, o.quantity, o.due_date, o.status, p.id, p.sku, p.name, p.unit,
                (count(*) OVER ())::int AS total
         FROM production_orders o
         JOIN products p ON p.id = o.product_id
@@ -127,13 +126,14 @@ internal sealed class DashboardReader(AppDbContext db) : IDashboardReader
         new(
             r.GetGuid(0),
             r.GetString(1),
-            r.GetInt32(2),
+            r.GetDecimal(2),
             DateOnly.FromDateTime(r.GetDateTime(3)),
             r.GetString(4),
             r.GetGuid(5),
             r.GetString(6),
             r.GetString(7),
-            r.GetInt32(8));
+            r.GetString(8),
+            r.GetInt32(9));
 
     private static NpgsqlParameter Param(string name, object value) => new(name, value);
 

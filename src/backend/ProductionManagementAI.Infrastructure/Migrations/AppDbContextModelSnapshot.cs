@@ -167,17 +167,46 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .HasColumnName("created_at_utc")
                         .HasDefaultValueSql("now()");
 
+                    b.Property<string>("DrawingNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("drawing_number");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
 
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.Property<string>("Sku")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("sku");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("unit");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at_utc")
+                        .HasDefaultValueSql("now()");
 
                     b.HasKey("Id")
                         .HasName("pk_products");
@@ -186,218 +215,13 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_products_sku");
 
-                    b.ToTable("products", (string)null);
+                    b.ToTable("products", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_products_name_not_blank", "length(btrim(name)) > 0");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001001"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ブレーキキャリパー",
-                            Sku = "P-1001"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001002"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ブレーキディスクローター",
-                            Sku = "P-1002"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001003"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ブレーキパッド",
-                            Sku = "P-1003"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001004"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ドライブシャフト",
-                            Sku = "P-1004"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001005"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "等速ジョイント",
-                            Sku = "P-1005"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001006"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "トランスミッションケース",
-                            Sku = "P-1006"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001007"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ハブベアリング",
-                            Sku = "P-1007"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001008"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ウォーターポンプ",
-                            Sku = "P-1008"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001009"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "エンジンマウント",
-                            Sku = "P-1009"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001010"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ラジエーター",
-                            Sku = "P-1010"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001011"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "タイミングギア",
-                            Sku = "P-1011"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001012"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "クラッチディスク",
-                            Sku = "P-1012"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001013"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ショックアブソーバー",
-                            Sku = "P-1013"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001014"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "コイルスプリング",
-                            Sku = "P-1014"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001015"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "エンジンワイヤーハーネス",
-                            Sku = "P-1015"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001016"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ボディワイヤーハーネス",
-                            Sku = "P-1016"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001017"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ヘッドランプユニット",
-                            Sku = "P-1017"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001018"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "リレーボックス",
-                            Sku = "P-1018"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001019"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "オルタネーター",
-                            Sku = "P-1019"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001020"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ECU ケース",
-                            Sku = "P-1020"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001021"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "インタークーラー",
-                            Sku = "P-1021"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001022"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "電動ファン",
-                            Sku = "P-1022"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001023"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "オイルフィルター",
-                            Sku = "P-1023"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001024"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "スロットルボディ",
-                            Sku = "P-1024"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001025"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ピストン",
-                            Sku = "P-1025"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001026"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "コネクティングロッド",
-                            Sku = "P-1026"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001027"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "サブフレーム",
-                            Sku = "P-1027"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001028"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ドアパネル",
-                            Sku = "P-1028"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001029"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ドアヒンジ",
-                            Sku = "P-1029"
-                        },
-                        new
-                        {
-                            Id = new Guid("0197e4a0-0000-7000-8000-000000001030"),
-                            CreatedAtUtc = new DateTimeOffset(new DateTime(2026, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Name = "ボルト・ナットキット",
-                            Sku = "P-1030"
+                            t.HasCheckConstraint("ck_products_sku_trimmed", "sku = btrim(sku) AND length(sku) > 0");
+
+                            t.HasCheckConstraint("ck_products_unit", "unit IN ('個', '本', '枚', '台', 'セット', 'kg', 'm')");
                         });
                 });
 
@@ -448,8 +272,8 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer")
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric")
                         .HasColumnName("quantity");
 
                     b.Property<uint>("RowVersion")
@@ -509,7 +333,11 @@ namespace ProductionManagementAI.Infrastructure.Migrations
 
                             t.HasCheckConstraint("ck_production_orders_order_year_range", "order_year BETWEEN 2000 AND 9999");
 
+                            t.HasCheckConstraint("ck_production_orders_quantity_max", "quantity <= 999999999");
+
                             t.HasCheckConstraint("ck_production_orders_quantity_positive", "quantity > 0");
+
+                            t.HasCheckConstraint("ck_production_orders_quantity_scale", "scale(quantity) <= 3");
 
                             t.HasCheckConstraint("ck_production_orders_status", "status IN ('Draft', 'InProgress', 'Completed', 'Cancelled')");
                         });

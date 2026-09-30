@@ -51,7 +51,35 @@ async function request<T>(method: string, url: string, body?: unknown, signal?: 
     throw new ApiError(response.status, await readProblem(response))
   }
 
-  return (await response.json()) as T
+  return parseQuantityJson<T>(await response.text())
+}
+
+/** Sends a prevalidated JSON body whose decimal number token must retain its exact written spelling. */
+export async function sendRawJson<T>(method: 'POST' | 'PUT', url: string, json: string): Promise<T> {
+  const response = await fetch(url, {
+    method,
+    credentials: 'same-origin',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    body: json,
+  })
+  if (!response.ok) {
+    if (response.status === 401) unauthorizedHandler?.()
+    throw new ApiError(response.status, await readProblem(response))
+  }
+  return parseQuantityJson<T>(await response.text())
+}
+
+/** Preserve quantity tokens as text before parsing can round large decimal subtotals. */
+export function parseQuantityJson<T>(json: string): T {
+  let key = ''
+  let previous = ''
+  const exact = json.replace(/"(?:[^"\\]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[^\s]/g, (token) => {
+    const quantity = previous === ':' && (key === 'quantity' || key === 'openQuantity')
+    if (token.startsWith('"') && previous !== ':') key = JSON.parse(token) as string
+    previous = token
+    return quantity && /^-?\d/.test(token) ? JSON.stringify(token) : token
+  })
+  return JSON.parse(exact) as T
 }
 
 async function readProblem(response: Response): Promise<ProblemDetails | null> {

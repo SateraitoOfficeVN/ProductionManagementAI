@@ -141,7 +141,7 @@ public class DashboardEndpointTests(DashboardFixture fixture) : IClassFixture<Da
 
     // TC-206
     [Fact]
-    public async Task TopProducts_RanksTenByOpenQuantity_TiesBySku_ActiveOnly()
+    public async Task TopProducts_RanksTenByActiveOrderCount_TiesBySku()
     {
         for (var i = 1; i <= 12; i++)
         {
@@ -155,9 +155,9 @@ public class DashboardEndpointTests(DashboardFixture fixture) : IClassFixture<Da
 
         Assert.Equal(10, top.Count);
         Assert.Equal(
-            ["P-1012", "P-1011", "P-1010", "P-1009", "P-1008", "P-1007", "P-1005", "P-1006", "P-1004", "P-1003"],
+            ["P-1001", "P-1002", "P-1003", "P-1004", "P-1005", "P-1006", "P-1007", "P-1008", "P-1009", "P-1010"],
             top.Select(t => t!["product"]!["sku"]!.GetValue<string>()));
-        Assert.Equal(1200, top[0]!["openQuantity"]!.GetValue<long>());
+        Assert.Equal(100, top[0]!["openQuantity"]!.GetValue<long>());
         Assert.Equal(1, top[0]!["activeOrderCount"]!.GetValue<int>());
         Assert.DoesNotContain(top, t => t!["product"]!["sku"]!.GetValue<string>() == "P-1020");
     }
@@ -175,10 +175,10 @@ public class DashboardEndpointTests(DashboardFixture fixture) : IClassFixture<Da
         var body = await Dashboard(client);
 
         Assert.Equal(1, body["completedThisWeek"]!["orderCount"]!.GetValue<int>());
-        Assert.Equal(10, body["completedThisWeek"]!["quantity"]!.GetValue<long>());
+        Assert.Null(body["completedThisWeek"]!["quantity"]);
         Assert.Equal(Date(Monday), body["completedThisWeek"]!["from"]!.GetValue<string>());
         Assert.Equal(3, body["completedThisMonth"]!["orderCount"]!.GetValue<int>());
-        Assert.Equal(60, body["completedThisMonth"]!["quantity"]!.GetValue<long>());
+        Assert.Null(body["completedThisMonth"]!["quantity"]);
     }
 
     // TC-210

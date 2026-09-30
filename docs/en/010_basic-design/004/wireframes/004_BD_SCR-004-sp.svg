@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="900" viewBox="0 0 440 900" role="img" aria-labelledby="title desc">
+  <title id="title">SCR-004 SP grey-box wireframe</title><desc id="desc">Stacked header, heading, search filters, product cards, pagination, alternate form and confirmation modes.</desc>
+  <style>text{font:17px sans-serif;fill:#333}.small{font-size:14px}.box{fill:#f1f1f1;stroke:#888;stroke-width:2}.call{fill:#fff;stroke:#333;stroke-width:2}.num{font:bold 16px sans-serif;text-anchor:middle}</style>
+  <rect x="14" y="15" width="412" height="66" class="box"/><text x="50" y="55">ProductionManagementAI　 メニュー</text><circle cx="28" cy="23" r="14" class="call"/><text x="28" y="29" class="num">1</text>
+  <rect x="14" y="94" width="412" height="104" class="box"/><text x="50" y="134">製品マスタ</text><text x="50" y="174">［製品を登録］</text><circle cx="28" cy="102" r="14" class="call"/><text x="28" y="108" class="num">2</text>
+  <rect x="14" y="211" width="412" height="144" class="box"/><text x="50" y="251" class="small">製品コード・製品名で検索</text><text x="50" y="287" class="small">状態：すべて</text><text x="50" y="326" class="small">［検索］　［クリア］</text><circle cx="28" cy="219" r="14" class="call"/><text x="28" y="225" class="num">3</text>
+  <rect x="14" y="369" width="412" height="166" class="box"/><text x="50" y="411">P-1001　ブレーキキャリパー</text><text x="50" y="446" class="small">単位：個　図面番号：—　使用中</text><text x="50" y="492" class="small">［編集］　［使用停止］</text><circle cx="28" cy="377" r="14" class="call"/><text x="28" y="383" class="num">4</text>
+  <rect x="14" y="548" width="412" height="76" class="box"/><text x="50" y="589" class="small">30件　 前へ　 1 / 2　 次へ</text><circle cx="28" cy="556" r="14" class="call"/><text x="28" y="562" class="num">5</text>
+  <rect x="14" y="639" width="412" height="112" class="box"/><text x="50" y="681" class="small">別モード：製品登録・編集</text><text x="50" y="715" class="small">項目は1列に配置　 保存 / キャンセル</text><circle cx="28" cy="647" r="14" class="call"/><text x="28" y="653" class="num">6</text>
+  <rect x="14" y="766" width="412" height="112" class="box"/><text x="50" y="808" class="small">確認ダイアログ：製品名</text><text x="50" y="843" class="small">キャンセル / 使用停止</text><circle cx="28" cy="774" r="14" class="call"/><text x="28" y="780" class="num">7</text>
+</svg>

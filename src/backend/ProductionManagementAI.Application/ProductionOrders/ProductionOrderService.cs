@@ -23,9 +23,14 @@ public sealed partial class ProductionOrderService(
     public async Task<Result<ProductionOrderResponse>> GetAsync(Guid id, CancellationToken cancellationToken)
     {
         var order = await repository.FindAsync(id, tracked: false, cancellationToken);
-        return order is null
-            ? new Result<ProductionOrderResponse>.NotFound()
-            : new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order));
+        if (order is null)
+        {
+            return new Result<ProductionOrderResponse>.NotFound();
+        }
+
+        var product = await repository.FindProductAsync(order.ProductId, cancellationToken)
+            ?? throw new InvalidOperationException("An order references a missing product.");
+        return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, product.Unit));
     }
 
     /// <summary>
@@ -82,12 +87,6 @@ public sealed partial class ProductionOrderService(
             var errors = new FieldErrors();
             ValidateCommonFields(errors, request.ProductId, request.Quantity, request.DueDate, request.Notes);
 
-            if (request.ProductId is { } productId && !errors.Has("productId")
-                && !await repository.ProductExistsAsync(productId, cancellationToken))
-            {
-                errors.Add("productId", Msg.ProductNotFound);
-            }
-
             if (request.DueDate is { } dueDate && dueDate < plantClock.Today)
             {
                 errors.Add("dueDate", Msg.DueDateInPast);
@@ -99,8 +98,29 @@ public sealed partial class ProductionOrderService(
             }
 
             await using var transaction = await repository.BeginTransactionAsync(cancellationToken);
+            var product = await repository.LockProductAsync(validProductId, cancellationToken);
+            if (product is null)
+            {
+                RecordUnitValidation(activity, "not_found");
+                errors.Add("productId", Msg.ProductNotFound);
+                return Invalid(activity, Created, errors, orderId: null);
+            }
+            if (!product.IsActive)
+            {
+                RecordUnitValidation(activity, "inactive");
+                Complete(activity, Created, Outcomes.ValidationFailed);
+                return ProductInactive(validProductId);
+            }
+            if (!QuantityMatchesUnit(quantity, product.Unit))
+            {
+                RecordUnitValidation(activity, "quantity_invalid");
+                errors.Add("quantity", Msg.QuantityUnitInvalid);
+                return Invalid(activity, Created, errors, orderId: null);
+            }
+
             var year = plantClock.CurrentYear;
             var sequence = await orderNumberIssuer.NextAsync(year, cancellationToken);
+            RecordUnitValidation(activity, "valid");
             var order = ProductionOrder.Create(
                 validProductId, quantity, validDueDate, request.Notes, year, sequence, timeProvider.GetUtcNow());
 
@@ -111,7 +131,7 @@ public sealed partial class ProductionOrderService(
             activity?.SetTag("production_order.id", order.Id);
             activity?.SetTag("production_order.number", order.OrderNumber);
             Complete(activity, Created, Outcomes.Success);
-            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order));
+            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, product.Unit));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -149,6 +169,7 @@ public sealed partial class ProductionOrderService(
                 return Invalid(activity, Updated, errors, id);
             }
 
+            await using var transaction = await repository.BeginTransactionAsync(cancellationToken);
             var order = await repository.FindAsync(id, tracked: true, cancellationToken);
             if (order is null)
             {
@@ -164,6 +185,30 @@ public sealed partial class ProductionOrderService(
             var fromStatus = order.Status;
             var productChanged = productId != order.ProductId;
             var dueDateChanged = dueDate != order.DueDate;
+            ProductResponse? selectedProduct = null;
+            if (order.IsProductQuantityEditable)
+            {
+                selectedProduct = await repository.LockProductAsync(productId, cancellationToken);
+                if (selectedProduct is null)
+                {
+                    RecordUnitValidation(activity, "not_found");
+                    errors.Add("productId", Msg.ProductNotFound);
+                    return Invalid(activity, Updated, errors, id);
+                }
+                if (productChanged && !selectedProduct.IsActive)
+                {
+                    RecordUnitValidation(activity, "inactive");
+                    Complete(activity, Updated, Outcomes.ValidationFailed);
+                    return ProductInactive(productId);
+                }
+                if (!QuantityMatchesUnit(quantity, selectedProduct.Unit))
+                {
+                    RecordUnitValidation(activity, "quantity_invalid");
+                    errors.Add("quantity", Msg.QuantityUnitInvalid);
+                    return Invalid(activity, Updated, errors, id);
+                }
+            }
+            RecordUnitValidation(activity, "valid");
             activity?.SetTag("status.from", fromStatus.ToString());
             activity?.SetTag("status.to", status.ToString());
 
@@ -180,11 +225,6 @@ public sealed partial class ProductionOrderService(
 
             // Data-dependent checks, only for values the user actually changed (DEC-009). On failure nothing is saved:
             // the tracked changes are discarded with the request-scoped context.
-            if (productChanged && !await repository.ProductExistsAsync(productId, cancellationToken))
-            {
-                errors.Add("productId", Msg.ProductNotFound);
-            }
-
             if (dueDateChanged && dueDate < plantClock.Today)
             {
                 errors.Add("dueDate", Msg.DueDateInPast);
@@ -198,6 +238,7 @@ public sealed partial class ProductionOrderService(
             try
             {
                 await repository.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
             }
             catch (ConcurrencyConflictException)
             {
@@ -212,7 +253,9 @@ public sealed partial class ProductionOrderService(
             }
 
             Complete(activity, Updated, Outcomes.Success);
-            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order));
+            selectedProduct ??= await repository.FindProductAsync(order.ProductId, cancellationToken)
+                ?? throw new InvalidOperationException("An order references a missing product.");
+            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, selectedProduct.Unit));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -223,7 +266,7 @@ public sealed partial class ProductionOrderService(
     }
 
     private static void ValidateCommonFields(
-        FieldErrors errors, Guid? productId, int? quantity, DateOnly? dueDate, string? notes)
+        FieldErrors errors, Guid? productId, decimal? quantity, DateOnly? dueDate, string? notes)
     {
         if (productId is null)
         {
@@ -256,8 +299,20 @@ public sealed partial class ProductionOrderService(
         Complete(activity, counter, Outcomes.ValidationFailed);
         // Field names only — never values (notes are free text).
         LogValidationFailed(logger, orderId, string.Join(",", errors.FieldNames));
-        return new Result<ProductionOrderResponse>.Invalid(errors.ToDictionary());
+        return errors.Has("quantity")
+            ? new Result<ProductionOrderResponse>.FieldProblem("QUANTITY_UNIT_INVALID", errors.ToDictionary())
+            : new Result<ProductionOrderResponse>.Invalid(errors.ToDictionary());
     }
+
+    private static bool QuantityMatchesUnit(decimal quantity, string unit) =>
+        unit is "kg" or "m" || quantity == decimal.Truncate(quantity);
+
+    private static Result<ProductionOrderResponse> ProductInactive(Guid productId) =>
+        new Result<ProductionOrderResponse>.FieldProblem("PRODUCT_INACTIVE",
+            new Dictionary<string, string[]>(StringComparer.Ordinal)
+            {
+                ["productId"] = [Msg.ProductInactive],
+            });
 
     private Result<ProductionOrderResponse> Conflict(Activity? activity, Guid id)
     {

@@ -23,7 +23,7 @@ test('login lands on the dashboard with every widget, healthy status and no axe 
   await expect(page.getByText(/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2} 時点（Asia\/Tokyo）$/)).toBeVisible()
   await expect(nav(page).getByRole('link', { name: 'ダッシュボード' })).toHaveAttribute('aria-current', 'page')
 
-  for (const heading of ['要注意', '未完了数量の多い製品', '納期週別の未完了作業量', '週別の完了件数（直近12週）']) {
+  for (const heading of ['要注意', '未完了指示件数の多い製品', '納期週別の未完了作業量', '週別の完了件数（直近12週）']) {
     await expect(page.getByRole('heading', { name: heading })).toBeVisible()
   }
   await expect(page.getByRole('status').filter({ hasText: 'データベース：正常' })).toBeVisible()

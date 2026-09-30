@@ -21,7 +21,7 @@ public class DashboardMapperTests
             overdue ?? [],
             [],
             [],
-            delivery ?? new DeliveryRow(0, 0, 0, 0, 0, 0, null),
+            delivery ?? new DeliveryRow(0, 0, 0, 0, null),
             trend ?? []);
 
     [Fact]
@@ -36,12 +36,12 @@ public class DashboardMapperTests
     public void Workload_has_exactly_ten_buckets_in_order_with_zeros_filled()
     {
         var response = DashboardMapper.ToResponse(
-            Window, Raw(workload: [new(-1, 4, 400), new(2, 1, 10), new(8, 2, 20)]), AsOf);
+            Window, Raw(workload: [new(-1, "個", 4, 400), new(2, "枚", 1, 10), new(8, "個", 2, 20)]), AsOf);
 
         var kinds = response.Workload.Select(b => b.Kind).ToArray();
         Assert.Equal(["overdue", "week", "week", "week", "week", "week", "week", "week", "week", "later"], kinds);
         Assert.Equal([4, 0, 0, 1, 0, 0, 0, 0, 0, 2], response.Workload.Select(b => b.OrderCount));
-        Assert.Equal(400, response.Workload[0].Quantity);
+        Assert.Equal(new UnitQuantity("個", 400), Assert.Single(response.Workload[0].UnitQuantities));
         Assert.Null(response.Workload[0].WeekStart);
         Assert.Null(response.Workload[^1].WeekStart);
     }
@@ -75,7 +75,7 @@ public class DashboardMapperTests
     [InlineData(13.7, 13.7)]
     public void Lead_time_is_rounded_half_away_from_zero_to_one_decimal(double mean, double expected)
     {
-        var response = DashboardMapper.ToResponse(Window, Raw(delivery: new DeliveryRow(0, 0, 0, 0, 3, 2, mean)), AsOf);
+        var response = DashboardMapper.ToResponse(Window, Raw(delivery: new DeliveryRow(0, 0, 3, 2, mean)), AsOf);
 
         Assert.Equal(expected, response.LeadTime.AverageDays);
         Assert.Equal(3, response.LeadTime.OrderCount);
@@ -97,7 +97,7 @@ public class DashboardMapperTests
     public void Group_total_comes_from_the_window_count_and_empty_is_zero()
     {
         var row = new DashboardOrderRow(Guid.NewGuid(), "PO-2026-00001", 5, new DateOnly(2026, 9, 1), "InProgress",
-            Guid.NewGuid(), "P-1001", "ブレーキキャリパー", 12);
+            Guid.NewGuid(), "P-1001", "ブレーキキャリパー", "個", 12);
 
         var response = DashboardMapper.ToResponse(Window, Raw(overdue: [row]), AsOf);
 

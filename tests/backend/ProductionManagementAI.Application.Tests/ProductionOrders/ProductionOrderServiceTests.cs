@@ -51,7 +51,8 @@ public class ProductionOrderServiceTests
     {
         var result = await _service.CreateAsync(new CreateProductionOrderRequest(null, null, null, null), CancellationToken.None);
 
-        var invalid = Assert.IsType<Result<ProductionOrderResponse>.Invalid>(result);
+        var invalid = Assert.IsType<Result<ProductionOrderResponse>.FieldProblem>(result);
+        Assert.Equal("QUANTITY_UNIT_INVALID", invalid.Code);
         Assert.Equal(["MSG-E001"], invalid.Errors["productId"]);
         Assert.Equal(["MSG-E003"], invalid.Errors["quantity"]);
         Assert.Equal(["MSG-E004"], invalid.Errors["dueDate"]);
@@ -59,13 +60,13 @@ public class ProductionOrderServiceTests
     }
 
     [Fact]
-    public async Task Create_UnknownProduct_PastDueDate_AndLongNotes_AreFieldErrors()
+    public async Task Create_InvalidFields_AreReportedBeforeProductLookup()
     {
         var request = new CreateProductionOrderRequest(Guid.NewGuid(), 1_000_000_000, Today.AddDays(-1), new string('x', 501));
 
-        var invalid = Assert.IsType<Result<ProductionOrderResponse>.Invalid>(await _service.CreateAsync(request, CancellationToken.None));
+        var invalid = Assert.IsType<Result<ProductionOrderResponse>.FieldProblem>(await _service.CreateAsync(request, CancellationToken.None));
 
-        Assert.Equal(["MSG-E002"], invalid.Errors["productId"]);
+        Assert.Equal("QUANTITY_UNIT_INVALID", invalid.Code);
         Assert.Equal(["MSG-E010"], invalid.Errors["quantity"]);
         Assert.Equal(["MSG-E005"], invalid.Errors["dueDate"]);
         Assert.Equal(["MSG-E006"], invalid.Errors["notes"]);
@@ -212,7 +213,7 @@ public class ProductionOrderServiceTests
         new([], productId, null, null, null, ProductionOrderSort.DueDate, SortDirection.Asc, page, pageSize);
 
     private ProductionOrderListRow ListRow(DateOnly dueDate, ProductionOrderStatus status, string orderNumber) => new(
-        Guid.NewGuid(), orderNumber, KnownProduct, "P-1001", "ブレーキキャリパー", 5, dueDate, status,
+        Guid.NewGuid(), orderNumber, KnownProduct, "P-1001", "ブレーキキャリパー", "個", 5, dueDate, status,
         new DateTimeOffset(2026, 9, 17, 0, 0, 0, TimeSpan.Zero));
 
     private async Task<PagedResult<ProductionOrderListItem>> ListedAsync(ProductionOrderListQuery? query = null)
@@ -319,7 +320,14 @@ public class ProductionOrderServiceTests
         public bool FailNextSaveWithConflict { get; set; }
 
         public Task<IReadOnlyList<ProductResponse>> ListProductsAsync(CancellationToken cancellationToken) =>
-            Task.FromResult<IReadOnlyList<ProductResponse>>([.. _products.Select(id => new ProductResponse(id, "P", "N"))]);
+            Task.FromResult<IReadOnlyList<ProductResponse>>([.. _products.Select(id => new ProductResponse(id, "P", "N", "個", true))]);
+
+        public Task<ProductResponse?> FindProductAsync(Guid productId, CancellationToken cancellationToken) =>
+            Task.FromResult(_products.Contains(productId)
+                ? new ProductResponse(productId, "P", "N", "個", true) : null);
+
+        public Task<ProductResponse?> LockProductAsync(Guid productId, CancellationToken cancellationToken) =>
+            FindProductAsync(productId, cancellationToken);
 
         public Task<bool> ProductExistsAsync(Guid productId, CancellationToken cancellationToken) =>
             Task.FromResult(_products.Contains(productId));

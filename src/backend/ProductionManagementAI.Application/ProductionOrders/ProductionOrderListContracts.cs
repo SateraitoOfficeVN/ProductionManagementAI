@@ -262,18 +262,19 @@ public sealed record ProductionOrderListRow(
     Guid ProductId,
     string ProductSku,
     string ProductName,
-    int Quantity,
+    string ProductUnit,
+    decimal Quantity,
     DateOnly DueDate,
     ProductionOrderStatus Status,
     DateTimeOffset UpdatedAt);
 
-public sealed record ProductSummary(Guid Id, string Sku, string Name);
+public sealed record ProductSummary(Guid Id, string Sku, string Name, string Unit);
 
 public sealed record ProductionOrderListItem(
     Guid Id,
     string OrderNumber,
     ProductSummary Product,
-    int Quantity,
+    decimal Quantity,
     DateOnly DueDate,
     ProductionOrderStatus Status,
     bool IsOverdue,
@@ -297,7 +298,7 @@ public static class ProductionOrderListMapper
     public static ProductionOrderListItem ToListItem(ProductionOrderListRow row, DateOnly plantToday) => new(
         row.Id,
         row.OrderNumber,
-        new ProductSummary(row.ProductId, row.ProductSku, row.ProductName),
+        new ProductSummary(row.ProductId, row.ProductSku, row.ProductName, row.ProductUnit),
         row.Quantity,
         row.DueDate,
         row.Status,

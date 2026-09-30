@@ -27,3 +27,14 @@ Validate config without building: `docker compose -f compose.yaml config`
 Running the backend outside Docker (`dotnet run`): `appsettings.Development.json` connects as `pmai_app` without a password, so set the `PGPASSWORD` environment variable to your `PMAI_APP_DB_PASSWORD` first (Npgsql reads it).
 
 Registry/deploy host beyond local Compose remain open decisions (see `work-items/WI-001/decisions.md` DEC-012) — not needed to run this locally.
+
+
+## WI-006 Product master cutover
+
+The WI-006 migrations were rehearsed only against disposable databases. A live or mutable demo cutover needs separate authorization, a verified backup, and a coordinated write pause. Stop old application writers, migrate as the owner in the order `AddProductMasterFields` then `ConvertOrderQuantityToNumeric`, validate, and start the new API/UI together. Do not overlap old and new binaries.
+
+Preflight checks reject duplicate case-folded SKUs, blank/untrimmed product fields, unexpected seed identities, unknown products without reviewed units, and out-of-range order quantities. The reviewed unit map applies to exactly the 30 original seed IDs; an unreviewed product is never assigned a guessed unit. Preserve edited names, product IDs, and all order references.
+
+The unique SKU index is built concurrently outside the migration transaction. If the build fails, inspect `pg_index.indisvalid`, the migration history, and the already applied schema changes before retrying. An invalid index blocks the migration; an owner must repair/drop that invalid index and reconcile partially applied schema with the approved DB recovery procedure. Never assume `IF NOT EXISTS` repairs an invalid index. Both WI-006 `Down` methods refuse automatic rollback; recover from a verified backup or a reviewed forward fix.
+
+After migration, verify 30 reviewed seed units, unchanged historical quantities/IDs/FKs, a valid unique `ux_products_sku_lower`, and `numeric` range/scale checks. The runtime login has product SELECT/INSERT and UPDATE only for mutable fields; SKU updates, product DELETE and DDL remain denied. Product master writes require Admin or Operator.

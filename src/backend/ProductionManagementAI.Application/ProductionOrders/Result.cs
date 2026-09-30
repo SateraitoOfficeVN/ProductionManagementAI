@@ -15,6 +15,12 @@ public abstract record Result<T>
     /// <param name="Errors">Field name (camelCase, as in the API) → message IDs.</param>
     public sealed record Invalid(IReadOnlyDictionary<string, string[]> Errors) : Result<T>;
 
+    /// <summary>Reports a field validation failure with a stable WI-006 problem code.</summary>
+    public sealed record FieldProblem(string Code, IReadOnlyDictionary<string, string[]> Errors) : Result<T>;
+
+    /// <summary>Reports a version or uniqueness conflict with a stable code and field.</summary>
+    public sealed record FieldConflict(string Code, IReadOnlyDictionary<string, string[]> Errors) : Result<T>;
+
     public sealed record NotFound : Result<T>;
 
     public sealed record Conflict : Result<T>;

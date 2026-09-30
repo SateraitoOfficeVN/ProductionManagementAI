@@ -47,7 +47,7 @@ test('empty Save shows inline errors, focuses Product, and is accessible', async
   await page.getByRole('button', { name: '保存' }).click()
 
   await expect(page.getByText('製品を選択してください。')).toBeVisible()
-  await expect(page.getByText('1以上の整数を入力してください。')).toBeVisible()
+  await expect(page.getByText('数量は単位に合わせて入力してください。kg・mは小数第3位まで入力できます。')).toBeVisible()
   await expect(page.getByText('納期を入力してください。')).toBeVisible()
   await expect(productField(page)).toBeFocused()
   await expectNoAxeViolations(page)
@@ -114,10 +114,12 @@ test('unknown order shows the not-found panel', async ({ page }) => {
   await expect(page.getByRole('button', { name: '保存' })).toHaveCount(0)
 })
 
-test('the product list shows all 30 seeded products', async ({ page }) => {
+test('the product picker includes all 30 seeded products', async ({ page }) => {
   await openCreateForm(page)
-  // 30 products + the "Select a product" placeholder.
-  await expect(productField(page).locator('option')).toHaveCount(31)
+  // Other E2E journeys may create additional products in the same isolated stack.
+  expect(await productField(page).locator('option').count()).toBeGreaterThanOrEqual(31)
+  await expect(productField(page).locator('option', { hasText: 'P-1001' })).toHaveCount(1)
+  await expect(productField(page).locator('option', { hasText: 'P-1030' })).toHaveCount(1)
   await expect(page.getByLabel('納期')).toBeEditable()
   expect(futureDate()).toMatch(/^\d{4}-\d{2}-\d{2}$/)
 })

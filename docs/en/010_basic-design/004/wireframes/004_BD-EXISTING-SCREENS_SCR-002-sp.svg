@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="500" viewBox="0 0 440 500" role="img" aria-labelledby="title desc">
+  <title id="title">SCR-002 SP impact wireframe</title><desc id="desc">Retired product filter, order cards with unit, and count-based result summary.</desc>
+  <style>text{font:16px 'Yu Gothic UI',Meiryo,sans-serif;fill:#333}.small{font-size:13px}.box{fill:#f1f1f1;stroke:#888;stroke-width:2}.call{fill:#fff;stroke:#333;stroke-width:2}.num{font:bold 15px sans-serif;text-anchor:middle}</style>
+  <text x="25" y="36">製造指示一覧</text>
+  <rect class="box" x="14" y="53" width="412" height="100"/><text x="48" y="88">製品 ［すべての製品 ▼］</text><text class="small" x="48" y="121">選択肢に P-1002（使用停止）も含む</text><circle class="call" cx="28" cy="63" r="14"/><text class="num" x="28" y="69">5</text>
+  <rect class="box" x="14" y="169" width="412" height="207"/><text x="48" y="205">PO-2026-00001</text><text class="small" x="48" y="238">ブレーキキャリパー　12 個</text><text class="small" x="48" y="268">納期 2026/10/01　下書き</text><line x1="35" x2="405" y1="285" y2="285" stroke="#888"/><text x="48" y="322">PO-2026-00002</text><text class="small" x="48" y="350">ブレーキディスク　2 枚</text><circle class="call" cx="28" cy="179" r="14"/><text class="num" x="28" y="185">6</text>
+  <rect class="box" x="14" y="393" width="412" height="82"/><text class="small" x="48" y="428">20件中 1〜20件</text><text class="small" x="48" y="455">数量順　前へ　次へ</text><circle class="call" cx="28" cy="403" r="14"/><text class="num" x="28" y="409">7</text>
+</svg>

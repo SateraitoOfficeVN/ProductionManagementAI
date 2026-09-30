@@ -3,7 +3,12 @@
 
 const numberFormat = new Intl.NumberFormat('ja-JP')
 
-export const formatNumber = (n: number) => numberFormat.format(n)
+export const formatNumber = (n: number | string) => {
+  if (typeof n === 'number') return numberFormat.format(n)
+  const [whole, fraction = ''] = n.split('.')
+  const digits = fraction.replace(/0+$/, '')
+  return `${whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${digits ? `.${digits}` : ''}`
+}
 
 /** A plant-local date "2026-09-30" → "2026/09/30"; anything unparseable is returned unchanged. */
 export const formatDate = (isoDate: string) =>

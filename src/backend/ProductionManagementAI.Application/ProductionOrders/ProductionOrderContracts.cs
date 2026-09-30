@@ -5,23 +5,23 @@ namespace ProductionManagementAI.Application.ProductionOrders;
 // Request/response shapes for 001_DD-API. Request fields are nullable so a missing field is reported as
 // "required" with its message ID instead of failing model binding.
 
-public sealed record CreateProductionOrderRequest(Guid? ProductId, int? Quantity, DateOnly? DueDate, string? Notes);
+public sealed record CreateProductionOrderRequest(Guid? ProductId, decimal? Quantity, DateOnly? DueDate, string? Notes);
 
 public sealed record UpdateProductionOrderRequest(
     Guid? ProductId,
-    int? Quantity,
+    decimal? Quantity,
     DateOnly? DueDate,
     ProductionOrderStatus? Status,
     string? Notes,
     uint? Version);
 
-public sealed record ProductResponse(Guid Id, string Sku, string Name);
+public sealed record ProductResponse(Guid Id, string Sku, string Name, string Unit, bool IsActive);
 
 public sealed record ProductionOrderResponse(
     Guid Id,
     string OrderNumber,
     Guid ProductId,
-    int Quantity,
+    decimal Quantity,
     DateOnly DueDate,
     ProductionOrderStatus Status,
     IReadOnlyList<ProductionOrderStatus> AllowedNextStatuses,
@@ -29,11 +29,12 @@ public sealed record ProductionOrderResponse(
     string? Notes,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt,
-    uint Version);
+    uint Version,
+    string Unit);
 
 public static class ProductionOrderMapper
 {
-    public static ProductionOrderResponse ToResponse(ProductionOrder order) => new(
+    public static ProductionOrderResponse ToResponse(ProductionOrder order, string unit) => new(
         order.Id,
         order.OrderNumber,
         order.ProductId,
@@ -45,5 +46,6 @@ public static class ProductionOrderMapper
         order.Notes,
         order.CreatedAtUtc,
         order.UpdatedAtUtc,
-        order.RowVersion);
+        order.RowVersion,
+        unit);
 }

@@ -14,6 +14,7 @@ public class ProductionOrderListMapperTests
         Guid.NewGuid(),
         "P-1004",
         "ドライブシャフト",
+        "本",
         250,
         dueDate,
         status,
@@ -50,7 +51,7 @@ public class ProductionOrderListMapperTests
 
         Assert.Equal(row.Id, item.Id);
         Assert.Equal(row.OrderNumber, item.OrderNumber);
-        Assert.Equal(new ProductSummary(row.ProductId, "P-1004", "ドライブシャフト"), item.Product);
+        Assert.Equal(new ProductSummary(row.ProductId, "P-1004", "ドライブシャフト", "本"), item.Product);
         Assert.Equal(250, item.Quantity);
         Assert.Equal(row.DueDate, item.DueDate);
         Assert.Equal(ProductionOrderStatus.InProgress, item.Status);

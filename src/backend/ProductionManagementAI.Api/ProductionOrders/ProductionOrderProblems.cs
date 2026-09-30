@@ -18,7 +18,7 @@ public static class ProductionOrderProblems
     private static readonly Dictionary<string, string> BindingErrorMessage = new(StringComparer.OrdinalIgnoreCase)
     {
         ["productId"] = Msg.ProductRequired,
-        ["quantity"] = Msg.QuantityInvalid,
+        ["quantity"] = Msg.QuantityUnitInvalid,
         ["dueDate"] = Msg.DueDateRequired,
         ["status"] = Msg.StatusTransitionNotAllowed,
         ["notes"] = Msg.NotesTooLong,
@@ -30,6 +30,8 @@ public static class ProductionOrderProblems
     {
         Result<T>.Ok ok => onOk(ok.Value),
         Result<T>.Invalid invalid => Validation(controller.HttpContext, invalid.Errors),
+        Result<T>.FieldProblem field => Validation(controller.HttpContext, field.Errors, field.Code),
+        Result<T>.FieldConflict field => Conflict(controller.HttpContext, field.Errors, field.Code),
         Result<T>.NotFound => Problem(controller.HttpContext, StatusCodes.Status404NotFound, "not-found",
             "Production order not found.", Msg.OrderNotFound),
         Result<T>.Conflict => Problem(controller.HttpContext, StatusCodes.Status409Conflict, "conflict",
@@ -54,7 +56,8 @@ public static class ProductionOrderProblems
             errors[field] = [BindingErrorMessage.GetValueOrDefault(field, Msg.Unexpected)];
         }
 
-        return Validation(context.HttpContext, errors);
+        return Validation(context.HttpContext, errors,
+            errors.ContainsKey("quantity") ? "QUANTITY_UNIT_INVALID" : ValidationCode);
     }
 
     private static string NormalizeKey(string key)
@@ -75,10 +78,19 @@ public static class ProductionOrderProblems
         return char.ToLowerInvariant(name[0]) + name[1..];
     }
 
-    private static ObjectResult Validation(HttpContext http, IReadOnlyDictionary<string, string[]> errors)
+    private static ObjectResult Validation(
+        HttpContext http, IReadOnlyDictionary<string, string[]> errors, string code = ValidationCode)
     {
         var result = Problem(http, StatusCodes.Status400BadRequest, "validation",
-            "One or more fields are invalid.", ValidationCode);
+            "One or more fields are invalid.", code);
+        ((ProblemDetails)result.Value!).Extensions["errors"] = errors;
+        return result;
+    }
+
+    private static ObjectResult Conflict(HttpContext http, IReadOnlyDictionary<string, string[]> errors, string code)
+    {
+        var result = Problem(http, StatusCodes.Status409Conflict, "conflict",
+            "The requested change conflicts with current data.", code);
         ((ProblemDetails)result.Value!).Extensions["errors"] = errors;
         return result;
     }

@@ -6,13 +6,16 @@ export interface Product {
   id: string
   sku: string
   name: string
+  unit: string
+  isActive: boolean
 }
 
 export interface ProductionOrder {
   id: string
   orderNumber: string
   productId: string
-  quantity: number
+  quantity: number | string
+  unit: string
   dueDate: string
   status: ProductionOrderStatus
   allowedNextStatuses: ProductionOrderStatus[]
@@ -25,7 +28,7 @@ export interface ProductionOrder {
 
 export interface CreateProductionOrderRequest {
   productId: string
-  quantity: number
+  quantity: string
   dueDate: string
   notes: string | null
 }
@@ -41,8 +44,8 @@ export interface UpdateProductionOrderRequest extends CreateProductionOrderReque
 export interface ProductionOrderListItem {
   id: string
   orderNumber: string
-  product: Product
-  quantity: number
+  product: Pick<Product, 'id' | 'sku' | 'name' | 'unit'>
+  quantity: number | string
   dueDate: string
   status: ProductionOrderStatus
   isOverdue: boolean

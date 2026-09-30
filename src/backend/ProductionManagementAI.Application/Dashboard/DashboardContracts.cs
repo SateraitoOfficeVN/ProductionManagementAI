@@ -29,17 +29,23 @@ public sealed record DashboardOrder(
     Guid Id,
     string OrderNumber,
     ProductSummary Product,
-    int Quantity,
+    decimal Quantity,
     DateOnly DueDate,
     ProductionOrderStatus Status);
 
 /// <param name="Kind"><c>overdue</c>, <c>week</c> or <c>later</c> (003_BD D-03, DEC-009).</param>
 /// <param name="WeekStart">First date the bucket covers — <c>today</c> for the current week; null for overdue/later.</param>
-public sealed record WorkloadBucket(string Kind, DateOnly? WeekStart, DateOnly? WeekEnd, int OrderCount, long Quantity);
+/// <summary>Holds a quantity subtotal for exactly one product unit.</summary>
+public sealed record UnitQuantity(string Unit, decimal Quantity);
 
-public sealed record TopProduct(ProductSummary Product, long OpenQuantity, int ActiveOrderCount);
+/// <summary>Holds an order-count bucket and separate quantity subtotals by unit.</summary>
+public sealed record WorkloadBucket(
+    string Kind, DateOnly? WeekStart, DateOnly? WeekEnd, int OrderCount,
+    IReadOnlyList<UnitQuantity> UnitQuantities);
 
-public sealed record CompletedInPeriod(int OrderCount, long Quantity, DateOnly From);
+public sealed record TopProduct(ProductSummary Product, decimal OpenQuantity, int ActiveOrderCount);
+
+public sealed record CompletedInPeriod(int OrderCount, DateOnly From);
 
 /// <remarks>The rate itself is derived by the client (003_BD M-13), so one rounding rule lives in one place.</remarks>
 public sealed record OnTimeFigure(int OnTimeCount, int CompletedCount, DateOnly WindowStart);
@@ -63,27 +69,26 @@ public sealed record DashboardRaw(
 public sealed record StatusCountRow(string Status, int Count);
 
 /// <param name="Bucket">−1 overdue, 0–7 week k, 8 later (003_DB Q2).</param>
-public sealed record WorkloadRow(int Bucket, int Count, long Quantity);
+public sealed record WorkloadRow(int Bucket, string Unit, int Count, decimal Quantity);
 
 /// <param name="Total">The group's window count, repeated on every row (003_DB Q3).</param>
 public sealed record DashboardOrderRow(
     Guid Id,
     string OrderNumber,
-    int Quantity,
+    decimal Quantity,
     DateOnly DueDate,
     string Status,
     Guid ProductId,
     string Sku,
     string Name,
+    string Unit,
     int Total);
 
-public sealed record TopProductRow(Guid ProductId, string Sku, string Name, long OpenQuantity, int ActiveOrders);
+public sealed record TopProductRow(Guid ProductId, string Sku, string Name, string Unit, decimal OpenQuantity, int ActiveOrders);
 
 public sealed record DeliveryRow(
     int WeekCount,
-    long WeekQuantity,
     int MonthCount,
-    long MonthQuantity,
     int WindowCount,
     int WindowOnTime,
     double? WindowLeadDays);

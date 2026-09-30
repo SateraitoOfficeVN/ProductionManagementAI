@@ -36,6 +36,12 @@ public interface IProductionOrderRepository
 
     Task<bool> ProductExistsAsync(Guid productId, CancellationToken cancellationToken);
 
+    /// <summary>Reads the product identity, state and unit for order display.</summary>
+    Task<ProductResponse?> FindProductAsync(Guid productId, CancellationToken cancellationToken);
+
+    /// <summary>Locks a product row through the current write transaction before eligibility validation.</summary>
+    Task<ProductResponse?> LockProductAsync(Guid productId, CancellationToken cancellationToken);
+
     Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken);
 
     /// <summary>Exact number of orders matching the query's filters, ignoring sort and paging (002_DD-FN §2).</summary>

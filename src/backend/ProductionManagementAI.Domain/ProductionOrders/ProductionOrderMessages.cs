@@ -26,4 +26,6 @@ public static class ProductionOrderMessages
     public const string DueDateRangeInverted = "MSG-E017";
     public const string StatusFilterUnknown = "MSG-E018";
     public const string SortOrPagingUnsupported = "MSG-E019";
+    public const string ProductInactive = "MSG-E022";
+    public const string QuantityUnitInvalid = "MSG-E023";
 }

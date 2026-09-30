@@ -48,7 +48,7 @@ function Group({ id, title, Icon, group, emptyMessageId }: {
                     <td className="px-3 py-1.5">
                       <span className="text-gray-500 tabular-nums">{o.product.sku}</span> — {o.product.name}
                     </td>
-                    <td className="px-3 py-1.5 text-right tabular-nums">{formatNumber(o.quantity)}</td>
+                    <td className="px-3 py-1.5 text-right tabular-nums">{formatNumber(o.quantity)} {o.product.unit}</td>
                     <td className="px-3 py-1.5 whitespace-nowrap tabular-nums">{formatDate(o.dueDate)}</td>
                     <td className="px-3 py-1.5"><StatusBadge status={o.status} /></td>
                   </tr>
@@ -64,7 +64,7 @@ function Group({ id, title, Icon, group, emptyMessageId }: {
                   <StatusBadge status={o.status} />
                 </div>
                 <span className="text-gray-700">{o.product.sku} — {o.product.name}</span>
-                <span className="text-xs text-gray-500 tabular-nums">{labels.dashboard.cardLine(formatNumber(o.quantity), formatDate(o.dueDate))}</span>
+                <span className="text-xs text-gray-500 tabular-nums">{labels.dashboard.cardLine(`${formatNumber(o.quantity)} ${o.product.unit}`, formatDate(o.dueDate))}</span>
               </li>
             ))}
           </ul>
