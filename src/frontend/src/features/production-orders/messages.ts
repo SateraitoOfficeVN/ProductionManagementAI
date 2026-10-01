@@ -3,6 +3,9 @@ import type { ProductionOrderStatus } from './types'
 // The single UI text catalog (001_DD, extended by 002_DD and 003_DD; Japanese since WI-005 DEC-001/DEC-007).
 // The API returns message IDs only; every word the user sees lives here, so no component carries inline text.
 const messages: Record<string, string> = {
+  'LINE_REQUIRED': '生産開始には生産ラインの選択が必要です。',
+  'LINE_INELIGIBLE': '選択した生産ラインは利用できません。',
+  'LINE_LOCKED': '下書き以外では生産ラインを変更できません。',
   'MSG-E001': '製品を選択してください。',
   'MSG-E002': '選択した製品は存在しません。',
   'MSG-E003': '1以上の整数を入力してください。',
@@ -53,6 +56,31 @@ export const statusLabels: Record<ProductionOrderStatus, string> = {
 
 /** Every other UI string (WI-005 DEC-007). Grouped by where it appears; functions take the values they interpolate. */
 export const labels = {
+  lines: {
+    heading: '生産ライン・工程', new: '生産ラインを登録', edit: '生産ラインを編集', code: 'ラインコード', name: 'ライン名',
+    hours: '稼働時間／日', hoursUnit: '時間', timing: '生産時間', minutes: '分／1単位', unit: '単位', state: '状態',
+    active: '使用中', retired: '使用停止', all: 'すべて', search: 'コード・名称で検索', apply: '検索', clear: 'クリア',
+    save: '保存', saving: '保存中…', cancel: 'キャンセル', keep: '編集を続ける', discard: '変更を破棄',
+    discardQuestion: '変更を破棄しますか？', discardDescription: '保存していない変更は失われます。',
+    retire: '使用停止', retireQuestion: '生産ラインを使用停止にしますか？', pairQuestion: '製品との関連を使用停止にしますか？',
+    editAction: '編集', actions: '操作', add: '製品を追加', remove: '削除', products: '製造可能な製品',
+    productSearch: '製品を検索', noProducts: '製品は登録されていません。', noChoices: '選択できる製品はありません。',
+    confirmUnit: '表示単位で生産時間を確認しました', needsConfirmation: '単位の再確認が必要です。',
+    saved: '生産ラインを保存しました。', retiredDone: '生産ラインを使用停止にしました。',
+    conflict: '変更が競合しています。', unknown: '保存結果を確認できません。再送信せず、現在の状態を確認してください。',
+    verify: '現在の状態を確認', reload: '再読み込み', invalid: '入力内容を確認してください。', failed: '読み込みに失敗しました。',
+    notFound: '指定した生産ラインは存在しません。', forbidden: 'この機能を利用する権限がありません。',
+    loading: '読み込み中…', empty: '一致する生産ラインはありません。', previous: '前へ', next: '次へ',
+    pagination: '生産ラインのページ切替', pairPagination: '製品のページ切替', choicePagination: '製品候補のページ切替',
+    results: (total: number) => `検索結果：${total}件`, page: (number: number) => `${number}ページ`,
+    editNamed: (code: string) => `${code}を編集`, retireNamed: (code: string) => `${code}を使用停止`,
+    codeConflict: 'このラインコードは既に登録されています。', busy: '処理が混み合っています。少し待ってからお試しください。',
+    unassigned: '未設定', assigned: '生産ライン', eligible: '選択できる生産ライン', select: '選択', selected: '選択中',
+    lineRequired: '生産開始には生産ラインの選択が必要です。', lineIneligible: '選択した生産ラインは利用できません。',
+    lineLocked: '下書き以外では生産ラインを変更できません。', noEligible: '選択できる生産ラインはありません。',
+    retained: '現在の割当は履歴として保持されます。生産開始時に利用条件を再確認します。',
+    verified: '現在の内容を表示しました。保存結果を確認し、変更を破棄する場合は再読み込みしてください。',
+  },
   app: {
     name: 'ProductionManagementAI',
     shortName: 'PMAI',
@@ -64,6 +92,7 @@ export const labels = {
     orders: '製造指示一覧',
     newOrder: '新規製造指示',
     products: '製品マスタ',
+    lines: '生産ライン・工程',
     menu: 'メニュー',
     close: '閉じる',
     signOut: 'ログアウト',

@@ -8,6 +8,7 @@ export {
   LayoutDashboard as NavDashboardIcon,
   ClipboardList as NavOrdersIcon,
   Package as NavProductsIcon,
+  Factory as NavLinesIcon,
   Plus as NavNewOrderIcon,
   LogOut as SignOutIcon,
   Menu as MenuIcon,

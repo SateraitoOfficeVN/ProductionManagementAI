@@ -18,6 +18,17 @@ test('create → edit → In progress (locked) → Completed (terminal), accessi
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(`製造指示 ${orderNumber}`)
   await expect(page).toHaveTitle(`製造指示 ${orderNumber} — ProductionManagementAI`)
 
+  // WI-009: starting a Draft requires a currently eligible line.
+  const productId = await productField(page).inputValue()
+  const observation = await (await page.request.get(`/api/production-lines/eligible?productId=${productId}`)).json()
+  const lineResponse = await page.request.post('/api/production-lines', { data: {
+    code: `E2E-START-${Date.now()}`, name: '試験ライン', workingHoursPerDay: '8', products: [{
+      productId, minutesPerUnit: '1', expectedUnit: observation.product.unit, expectedUnitRevision: observation.product.unitRevision, confirmUnit: true,
+    }],
+  } })
+  expect(lineResponse.status()).toBe(201)
+  await page.reload()
+  await page.getByRole('button', { name: '選択', exact: true }).first().click()
   // Draft → In progress: product/quantity become read-only but stay focusable.
   await page.getByLabel('ステータス').selectOption({ label: '進行中' })
   await page.getByRole('button', { name: '保存' }).click()
@@ -104,6 +115,7 @@ test('two users editing the same order: the second save is rejected and Reload s
   await expect(page.getByLabel('備考')).toHaveValue('古い画面からの編集')
 
   await alert.getByRole('button', { name: '再読み込み' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: '破棄', exact: true }).click()
   await expect(page.getByLabel('備考')).toHaveValue('他のユーザーが保存')
   await otherContext.close()
 })

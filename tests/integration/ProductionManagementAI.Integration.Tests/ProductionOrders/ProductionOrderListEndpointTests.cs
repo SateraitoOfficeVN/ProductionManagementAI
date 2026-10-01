@@ -68,7 +68,7 @@ public class ProductionOrderListEndpointTests(IntegrationTestFixture fixture) : 
         var row = Items(await ListAsync(client, "pageSize=10"))[0]!.AsObject();
 
         Assert.Equal(
-            ["dueDate", "id", "isOverdue", "orderNumber", "product", "quantity", "status", "updatedAt"],
+            ["dueDate", "id", "isOverdue", "line", "orderNumber", "product", "quantity", "status", "updatedAt"],
             row.Select(pair => pair.Key).Order().ToArray());
         Assert.Matches(@"^PO-\d{4}-\d{5}$", row["orderNumber"]!.GetValue<string>());
         Assert.Equal(

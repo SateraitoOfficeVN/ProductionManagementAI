@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="412" height="1330" viewBox="0 0 412 1330" role="img" aria-label="生産ライン・工程 画面設計">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Meiryo, sans-serif" font-size="16" fill="#222">
+<rect x="16" y="16" width="380" height="70" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="36" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="41" text-anchor="middle">1</text>
+<text x="56" y="41" font-weight="bold">PMAI</text>
+<text x="31" y="71">メニュー</text>
+<rect x="16" y="100" width="380" height="80" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="120" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="125" text-anchor="middle">2</text>
+<text x="56" y="125" font-weight="bold">生産ライン・工程</text>
+<text x="31" y="155">新規ライン</text>
+<rect x="16" y="195" width="380" height="125" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="215" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="220" text-anchor="middle">3</text>
+<text x="56" y="220" font-weight="bold">検索</text>
+<text x="31" y="250">ラインコード・ライン名</text>
+<text x="31" y="278">状態　検索　クリア</text>
+<rect x="16" y="335" width="380" height="165" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="355" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="360" text-anchor="middle">4</text>
+<text x="56" y="360" font-weight="bold">一覧カード</text>
+<text x="31" y="390">L-001　第１ライン</text>
+<text x="31" y="418">稼働時間／日：8 時間　使用中</text>
+<text x="31" y="446">編集　使用停止</text>
+<rect x="16" y="515" width="380" height="85" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="535" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="540" text-anchor="middle">5</text>
+<text x="56" y="540" font-weight="bold">ページ・状態</text>
+<text x="31" y="570">全件数　前へ　1　次へ</text>
+<rect x="16" y="635" width="380" height="180" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="655" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="660" text-anchor="middle">6</text>
+<text x="56" y="660" font-weight="bold">生産ライン編集</text>
+<text x="31" y="690">ラインコード：L-001（変更不可）</text>
+<text x="31" y="718">ライン名：第１ライン</text>
+<text x="31" y="746">稼働時間／日：8　保存　キャンセル</text>
+<rect x="16" y="830" width="380" height="165" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="850" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="855" text-anchor="middle">7</text>
+<text x="56" y="855" font-weight="bold">生産可能な製品</text>
+<text x="31" y="885">P-1001　単位：個</text>
+<text x="31" y="913">製造時間／単位：2.5 分／個</text>
+<text x="31" y="941">製品を追加　使用停止</text>
+<rect x="16" y="1010" width="380" height="125" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="1030" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="1035" text-anchor="middle">8</text>
+<text x="56" y="1035" font-weight="bold">単位の確認が必要です</text>
+<text x="31" y="1065">前の単位：個　現在：kg</text>
+<text x="31" y="1093">現在の単位で確認</text>
+<rect x="16" y="1170" width="380" height="130" fill="#f4f4f4" stroke="#999"/>
+<circle cx="34" cy="1190" r="12" fill="#fff" stroke="#555"/>
+<text x="34" y="1195" text-anchor="middle">9</text>
+<text x="56" y="1195" font-weight="bold">確認ダイアログ</text>
+<text x="31" y="1225">使用停止しますか？</text>
+<text x="31" y="1253">キャンセル　使用停止</text>
+</g></svg>

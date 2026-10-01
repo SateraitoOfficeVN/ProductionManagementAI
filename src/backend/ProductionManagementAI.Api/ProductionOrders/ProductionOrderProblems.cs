@@ -23,6 +23,7 @@ public static class ProductionOrderProblems
         ["status"] = Msg.StatusTransitionNotAllowed,
         ["notes"] = Msg.NotesTooLong,
         ["version"] = Msg.ConcurrencyConflict,
+        ["lineId"] = "VALIDATION",
     };
 
     public static ActionResult ToActionResult<T>(

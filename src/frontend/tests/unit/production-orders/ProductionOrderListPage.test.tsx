@@ -17,6 +17,7 @@ const products = [
 function item(overrides: Partial<ProductionOrderListItem> = {}): ProductionOrderListItem {
   return {
     id: 'o1',
+    line: null,
     orderNumber: 'PO-2026-00042',
     product: products[1],
     quantity: 250,

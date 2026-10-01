@@ -368,6 +368,7 @@ public class DashboardEndpointTests(DashboardFixture fixture) : IClassFixture<Da
 
         var start = UpdateFrom(created);
         start["status"] = "InProgress";
+        start["lineId"] = await client.CreateEligibleLine(created["productId"]?.GetValue<string>() ?? throw new InvalidOperationException());
         start["completedAtUtc"] = "2000-01-01T00:00:00Z"; // not a request field: must be ignored
         var started = await client.PutJson($"/api/production-orders/{id}", start);
         Assert.Equal(HttpStatusCode.OK, started.StatusCode);

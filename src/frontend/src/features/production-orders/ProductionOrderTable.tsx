@@ -84,6 +84,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
                   </button>
                 </th>
               ))}
+              <th scope="col" className="border-b border-gray-200 bg-gray-50 px-3.5 py-2.5 text-left font-medium text-gray-700">{labels.lines.assigned}</th>
             </tr>
           </thead>
           <tbody>
@@ -115,6 +116,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
                 <td className="px-3.5 py-2.5 whitespace-nowrap text-gray-500 tabular-nums">
                   {formatUpdated(item.updatedAt)}
                 </td>
+                <td className="px-3.5 py-2.5">{item.line ? `${item.line.code} — ${item.line.name}${item.line.isActive ? '' : ` (${labels.lines.retired})`}` : labels.lines.unassigned}</td>
               </tr>
             ))}
           </tbody>
@@ -143,6 +145,7 @@ export function ProductionOrderTable({ items, sort, dir, onSort }: Props) {
                   {item.isOverdue && <OverdueMarker />}
                 </span>
               </span>
+              <span className="text-sm text-gray-700">{labels.lines.assigned}: {item.line ? `${item.line.code} — ${item.line.name}${item.line.isActive ? '' : ` (${labels.lines.retired})`}` : labels.lines.unassigned}</span>
               <span className="text-xs text-gray-500 tabular-nums">{labels.list.cardUpdated(formatUpdated(item.updatedAt))}</span>
             </Link>
           </li>

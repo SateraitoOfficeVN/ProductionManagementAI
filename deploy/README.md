@@ -38,3 +38,52 @@ Preflight checks reject duplicate case-folded SKUs, blank/untrimmed product fiel
 The unique SKU index is built concurrently outside the migration transaction. If the build fails, inspect `pg_index.indisvalid`, the migration history, and the already applied schema changes before retrying. An invalid index blocks the migration; an owner must repair/drop that invalid index and reconcile partially applied schema with the approved DB recovery procedure. Never assume `IF NOT EXISTS` repairs an invalid index. Both WI-006 `Down` methods refuse automatic rollback; recover from a verified backup or a reviewed forward fix.
 
 After migration, verify 30 reviewed seed units, unchanged historical quantities/IDs/FKs, a valid unique `ux_products_sku_lower`, and `numeric` range/scale checks. The runtime login has product SELECT/INSERT and UPDATE only for mutable fields; SKU updates, product DELETE and DDL remain denied. Product master writes require Admin or Operator.
+
+
+## WI-009 Production lines migration and recovery
+
+WI-009 is local implementation work. Its migrations run as the owner only on
+isolated rehearsal databases; no live/demo cutover is authorized. A later cutover
+requires an approved write pause, a verified restorable backup and coordinated
+API/UI rollout. Stop all old writers before applying the two stages:
+`20261001042810_ExpandProductionLines`, then
+`20261001042938_IndexProductionLineAssignments`. Keep the original product IDs,
+order quantities, statuses and historical references. Existing orders retain null
+line assignments; no line/pair seed or historical timing backfill is introduced.
+
+The first stage adds line/pair tables, generated product unit revision, nullable
+order line, restricted column grants and unvalidated legacy-table constraints.
+The second builds the partial `(line_id, product_id)` order index **concurrently**
+outside the migration transaction, then validates the constraints. It uses
+5-second lock and 10-second statement budgets. Inspect migration history,
+`pg_index.indisvalid/indisready`, `pg_get_indexdef` and constraint validation state
+before declaring success. An existing invalid, unready or differently defined
+`ix_orders_line_product` aborts the stage; `IF NOT EXISTS` does not repair it.
+
+After an interrupted build, keep writers paused and have the owner review the
+actual catalog and partial migration history. On an authorized isolated rehearsal,
+drop only the reviewed invalid index concurrently, rerun the second stage, then
+confirm a valid/ready index with the approved definition and validated FK/checks.
+Do not rerun the expand stage blindly or remove either master table. Both `Down`
+methods refuse destructive rollback; recovery requires a reviewed forward fix
+or separately authorized restore from the verified backup.
+
+Runtime `pmai_app` has SELECT/INSERT on the new tables, UPDATE only for line
+name/hours/state/audit and pair timing/confirmation/state/audit. It cannot change
+line codes or pair keys, delete masters, run DDL or directly set product revisions.
+The invoker trigger increments revision only on actual product unit changes,
+including A→B→A. Verify these grants and trigger behavior as part of cutover.
+
+Feature writes have a linked 15-second use-case deadline, transaction-local
+5-second lock / 10-second statement budgets and fresh bounded 2-second cleanup.
+`LINE_BUSY` (503, Retry-After 1) is safe for explicit retry only after precommit
+provider failure and confirmed rollback. Commit acknowledgement loss or failed
+postcommit refresh remains unknown: verify through reads and never replay the
+mutation automatically. Order assignment keeps the existing order transaction;
+no additional transaction or scheduling reservation is created.
+
+The WI-009 test topology is `pmai-wi009-isolated`, database `pmai_wi009_test`,
+host ports 5499/8099/3099. Its random credentials live in a temporary environment
+file outside git. Never use this topology's cleanup command against an existing
+application project; inspect the exact Compose project labels before removing
+only its disposable containers/volumes.

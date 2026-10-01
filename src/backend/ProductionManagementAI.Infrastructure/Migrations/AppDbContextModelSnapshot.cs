@@ -153,6 +153,129 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                     b.ToTable("user_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProductionManagementAI.Domain.ProductionLines.ProductionLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<decimal>("WorkingHoursPerDay")
+                        .HasColumnType("numeric")
+                        .HasColumnName("working_hours_per_day");
+
+                    b.HasKey("Id")
+                        .HasName("pk_production_lines");
+
+                    b.ToTable("production_lines", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_production_lines_code_trimmed", "code = btrim(code) AND length(code) > 0");
+
+                            t.HasCheckConstraint("ck_production_lines_hours_range", "working_hours_per_day > 0 AND working_hours_per_day <= 24");
+
+                            t.HasCheckConstraint("ck_production_lines_hours_scale", "scale(working_hours_per_day) <= 3");
+
+                            t.HasCheckConstraint("ck_production_lines_name_trimmed", "name = btrim(name) AND length(name) > 0");
+                        });
+                });
+
+            modelBuilder.Entity("ProductionManagementAI.Domain.ProductionLines.ProductionLineProduct", b =>
+                {
+                    b.Property<Guid>("LineId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("line_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<string>("ConfirmedUnit")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("confirmed_unit");
+
+                    b.Property<long>("ConfirmedUnitRevision")
+                        .HasColumnType("bigint")
+                        .HasColumnName("confirmed_unit_revision");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<decimal>("MinutesPerUnit")
+                        .HasColumnType("numeric")
+                        .HasColumnName("minutes_per_unit");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("LineId", "ProductId")
+                        .HasName("pk_production_line_products");
+
+                    b.HasIndex("ProductId", "LineId")
+                        .HasDatabaseName("ix_line_products_product_line");
+
+                    b.ToTable("production_line_products", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_line_products_confirmed_revision", "confirmed_unit_revision >= 0");
+
+                            t.HasCheckConstraint("ck_line_products_confirmed_unit", "confirmed_unit IN ('個','本','枚','台','セット','kg','m')");
+
+                            t.HasCheckConstraint("ck_line_products_minutes_range", "minutes_per_unit > 0 AND minutes_per_unit <= 999999999.999");
+
+                            t.HasCheckConstraint("ck_line_products_minutes_scale", "scale(minutes_per_unit) <= 3");
+                        });
+                });
+
             modelBuilder.Entity("ProductionManagementAI.Domain.ProductionOrders.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -202,6 +325,12 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("unit");
 
+                    b.Property<long>("UnitRevision")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(0L)
+                        .HasColumnName("unit_revision");
+
                     b.Property<DateTimeOffset>("UpdatedAtUtc")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -222,6 +351,8 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                             t.HasCheckConstraint("ck_products_sku_trimmed", "sku = btrim(sku) AND length(sku) > 0");
 
                             t.HasCheckConstraint("ck_products_unit", "unit IN ('個', '本', '枚', '台', 'セット', 'kg', 'm')");
+
+                            t.HasCheckConstraint("ck_products_unit_revision", "unit_revision >= 0");
                         });
                 });
 
@@ -246,6 +377,10 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                     b.Property<DateOnly>("DueDate")
                         .HasColumnType("date")
                         .HasColumnName("due_date");
+
+                    b.Property<Guid?>("LineId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("line_id");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
@@ -310,6 +445,10 @@ namespace ProductionManagementAI.Infrastructure.Migrations
 
                     b.HasIndex("DueDate", "OrderNumber")
                         .HasDatabaseName("ix_production_orders_due_date_order_number");
+
+                    b.HasIndex("LineId", "ProductId")
+                        .HasDatabaseName("ix_orders_line_product")
+                        .HasFilter("line_id IS NOT NULL");
 
                     b.HasIndex("OrderYear", "OrderSeq")
                         .IsUnique()
@@ -550,6 +689,23 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .HasConstraintName("fk_user_tokens_users_user_id");
                 });
 
+            modelBuilder.Entity("ProductionManagementAI.Domain.ProductionLines.ProductionLineProduct", b =>
+                {
+                    b.HasOne("ProductionManagementAI.Domain.ProductionLines.ProductionLine", null)
+                        .WithMany()
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_line_products_line");
+
+                    b.HasOne("ProductionManagementAI.Domain.ProductionOrders.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_line_products_product");
+                });
+
             modelBuilder.Entity("ProductionManagementAI.Domain.ProductionOrders.ProductionOrder", b =>
                 {
                     b.HasOne("ProductionManagementAI.Domain.ProductionOrders.Product", null)
@@ -558,6 +714,12 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_production_orders_products_product_id");
+
+                    b.HasOne("ProductionManagementAI.Domain.ProductionLines.ProductionLineProduct", null)
+                        .WithMany()
+                        .HasForeignKey("LineId", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_orders_line_product");
                 });
 #pragma warning restore 612, 618
         }

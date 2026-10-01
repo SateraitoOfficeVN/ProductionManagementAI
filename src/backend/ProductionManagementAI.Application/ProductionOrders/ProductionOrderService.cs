@@ -30,7 +30,7 @@ public sealed partial class ProductionOrderService(
 
         var product = await repository.FindProductAsync(order.ProductId, cancellationToken)
             ?? throw new InvalidOperationException("An order references a missing product.");
-        return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, product.Unit));
+        return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, product.Unit, await ReadLine(order.LineId, cancellationToken)));
     }
 
     /// <summary>
@@ -118,12 +118,16 @@ public sealed partial class ProductionOrderService(
                 return Invalid(activity, Created, errors, orderId: null);
             }
 
+            if (request.LineId is { } selectedLine && !await ValidateLine(validProductId, selectedLine, cancellationToken))
+                return LineFailure(activity, Created, "LINE_INELIGIBLE");
+
             var year = plantClock.CurrentYear;
             var sequence = await orderNumberIssuer.NextAsync(year, cancellationToken);
             RecordUnitValidation(activity, "valid");
             var order = ProductionOrder.Create(
                 validProductId, quantity, validDueDate, request.Notes, year, sequence, timeProvider.GetUtcNow());
 
+            order.AssignLine(request.LineId);
             repository.Add(order);
             await repository.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
@@ -131,7 +135,7 @@ public sealed partial class ProductionOrderService(
             activity?.SetTag("production_order.id", order.Id);
             activity?.SetTag("production_order.number", order.OrderNumber);
             Complete(activity, Created, Outcomes.Success);
-            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, product.Unit));
+            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, product.Unit, await ReadLine(order.LineId, cancellationToken)));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -214,7 +218,7 @@ public sealed partial class ProductionOrderService(
 
             try
             {
-                order.Update(productId, quantity, dueDate, request.Notes, status, timeProvider.GetUtcNow());
+                order.ValidateUpdate(productId, quantity, request.Notes, status);
             }
             catch (DomainRuleViolation violation)
             {
@@ -223,6 +227,14 @@ public sealed partial class ProductionOrderService(
                 return new Result<ProductionOrderResponse>.RuleViolation(violation.Code);
             }
 
+            var requestedLine = request.HasLineId ? request.LineId : order.LineId;
+            if (fromStatus != ProductionOrderStatus.Draft && requestedLine != order.LineId)
+                return LineFailure(activity, Updated, "LINE_LOCKED");
+            var starting = fromStatus == ProductionOrderStatus.Draft && status == ProductionOrderStatus.InProgress;
+            if (starting && requestedLine is null) return LineFailure(activity, Updated, "LINE_REQUIRED");
+            if (requestedLine is { } selectedLine && (starting || productChanged || requestedLine != order.LineId) &&
+                !await ValidateLine(productId, selectedLine, cancellationToken))
+                return LineFailure(activity, Updated, "LINE_INELIGIBLE");
             // Data-dependent checks, only for values the user actually changed (DEC-009). On failure nothing is saved:
             // the tracked changes are discarded with the request-scoped context.
             if (dueDateChanged && dueDate < plantClock.Today)
@@ -235,6 +247,8 @@ public sealed partial class ProductionOrderService(
                 return Invalid(activity, Updated, errors, id);
             }
 
+            order.AssignLine(requestedLine);
+            order.Update(productId, quantity, dueDate, request.Notes, status, timeProvider.GetUtcNow());
             try
             {
                 await repository.SaveChangesAsync(cancellationToken);
@@ -255,7 +269,7 @@ public sealed partial class ProductionOrderService(
             Complete(activity, Updated, Outcomes.Success);
             selectedProduct ??= await repository.FindProductAsync(order.ProductId, cancellationToken)
                 ?? throw new InvalidOperationException("An order references a missing product.");
-            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, selectedProduct.Unit));
+            return new Result<ProductionOrderResponse>.Ok(ProductionOrderMapper.ToResponse(order, selectedProduct.Unit, await ReadLine(order.LineId, cancellationToken)));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -263,6 +277,23 @@ public sealed partial class ProductionOrderService(
             LogUnexpectedFailure(logger, ex, "update");
             throw;
         }
+    }
+
+    private async Task<OrderLineResponse?> ReadLine(Guid? id, CancellationToken ct) => id is { } lineId
+        ? await repository.FindLineAsync(lineId, ct) ?? throw new InvalidOperationException("An order references a missing line.") : null;
+
+    private async Task<bool> ValidateLine(Guid productId, Guid lineId, CancellationToken ct)
+    {
+        using var activity = LineValidationSource.StartActivity("ProductionLine.ValidateOrder");
+        var eligible = lineId != Guid.Empty && await repository.LockEligibleLineAsync(productId, lineId, ct);
+        activity?.SetTag("outcome", eligible ? "success" : "validation");
+        return eligible;
+    }
+    private static readonly ActivitySource LineValidationSource = new(ProductionLines.ProductionLineService.TelemetryName);
+    private static Result<ProductionOrderResponse> LineFailure(Activity? activity, System.Diagnostics.Metrics.Counter<long> counter, string code)
+    {
+        Complete(activity, counter, Outcomes.ValidationFailed);
+        return new Result<ProductionOrderResponse>.FieldProblem(code, new Dictionary<string, string[]> { ["lineId"] = [code] });
     }
 
     private static void ValidateCommonFields(

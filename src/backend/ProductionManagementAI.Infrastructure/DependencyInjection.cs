@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductionManagementAI.Application.ProductionOrders;
 using ProductionManagementAI.Application.Products;
+using ProductionManagementAI.Application.ProductionLines;
+using ProductionManagementAI.Infrastructure.ProductionLines;
 using ProductionManagementAI.Infrastructure.Identity;
 using ProductionManagementAI.Infrastructure.ProductionOrders;
 using ProductionManagementAI.Infrastructure.Products;
@@ -101,6 +103,7 @@ public static class DependencyInjection
         services.AddScoped<IProductionOrderRepository, ProductionOrderRepository>();
         services.AddScoped<IOrderNumberIssuer, OrderNumberIssuer>();
         services.AddScoped<IProductMasterRepository, ProductMasterRepository>();
+        services.AddScoped<IProductionLineRepository, ProductionLineRepository>();
 
         // Dashboard and health (003_DD-FN).
         services.AddScoped<IDashboardReader, DashboardReader>();

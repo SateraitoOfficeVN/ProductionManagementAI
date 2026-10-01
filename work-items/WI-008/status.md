@@ -1,6 +1,6 @@
 # WI-008 — Status report
 
-As of 2026-09-30. State: implementation complete; PR open; not merged.
+As of 2026-10-01. State: done — merged and cleaned up.
 
 The initial implementation proceeded without plan approval: the agent incorrectly
 interpreted an acknowledgment as approval. The user corrected this and then
@@ -20,12 +20,18 @@ lint/build and E2E TypeScript passed. Headed slow web/mobile recordings passed
 14 steps each. Four EN/JA MP4 exports fully decoded; 16 sampled frames were
 visually inspected. See [evidence](evidence.md) and [local review](review.md).
 
-The user explicitly authorized push and PR creation after local handover.
-Branch pushed; [PR #33](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/33) opened into `master`.
-Remote CI is not yet complete; no merge or live/demo deployment performed. Only task-owned disposable stacks were
-removed. Main checkout application and earlier captures remain unchanged;
-main checkout retains the original WI-008 draft records. The finalized records
-are on this implementation branch.
+The user explicitly authorized push/PR, then merge and cleanup.
+[PR #33](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/33)
+was squash merged on 2026-09-30 at 10:09:34 UTC as
+`20c8d61f1eb6a36e8b59877457e3fc4beb80f6aa`. All three CI jobs succeeded on
+tested head `e08208d` in run 36699874595. Master was synchronized and the
+feature worktree and local/remote feature branch were removed. No deployment.
 
-Next action: PR review and required CI checks; merge requires task-specific
-authorization. No next application work item is approved.
+At the user's subsequent request, generated evidence output was reduced to
+exactly four final web/mobile EN/JA MP4 videos; raw recordings, manifests,
+screenshots, old output and cleanup drafts were removed. Historical references
+in evidence describe artifacts that existed during verification; those extras
+are no longer retained. The separate recording utility checkout remains.
+
+Next application work: WI-009 Production lines requirements/design revision 1
+approved on 2026-10-01; implementation is not authorized yet.

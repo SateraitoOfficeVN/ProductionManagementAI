@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProductionManagementAI.Domain.ProductionOrders;
+using ProductionManagementAI.Domain.ProductionLines;
 using ProductionManagementAI.Infrastructure.Identity;
 
 namespace ProductionManagementAI.Infrastructure;
@@ -11,6 +12,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options)
 {
     public DbSet<Product> Products => Set<Product>();
+
+    /// <summary>Gets the durable line masters.</summary>
+    public DbSet<ProductionLine> ProductionLines => Set<ProductionLine>();
+
+    /// <summary>Gets the durable supported-product timings.</summary>
+    public DbSet<ProductionLineProduct> ProductionLineProducts => Set<ProductionLineProduct>();
 
     public DbSet<ProductionOrder> ProductionOrders => Set<ProductionOrder>();
 

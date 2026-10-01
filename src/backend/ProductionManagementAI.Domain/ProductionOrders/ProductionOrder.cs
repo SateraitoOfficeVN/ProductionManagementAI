@@ -24,6 +24,8 @@ public sealed class ProductionOrder
     public string OrderNumber { get; private set; } = string.Empty;
 
     public Guid ProductId { get; private set; }
+    /// <summary>Gets the nullable historical production-line assignment.</summary>
+    public Guid? LineId { get; private set; }
     public decimal Quantity { get; private set; }
     public DateOnly DueDate { get; private set; }
     public ProductionOrderStatus Status { get; private set; }
@@ -69,17 +71,7 @@ public sealed class ProductionOrder
     public void Update(
         Guid productId, decimal quantity, DateOnly dueDate, string? notes, ProductionOrderStatus status, DateTimeOffset utcNow)
     {
-        ThrowIfInvalid(quantity, notes);
-
-        if (!IsProductQuantityEditable && (productId != ProductId || quantity != Quantity))
-        {
-            throw new DomainRuleViolation(ProductionOrderMessages.LockedFieldChanged);
-        }
-
-        if (!Status.CanTransitionTo(status))
-        {
-            throw new DomainRuleViolation(ProductionOrderMessages.StatusTransitionNotAllowed);
-        }
+        ValidateUpdate(productId, quantity, notes, status);
 
         var fromStatus = Status;
         ProductId = productId;
@@ -94,6 +86,38 @@ public sealed class ProductionOrder
         {
             CompletedAtUtc = utcNow;
         }
+    }
+
+    /// <summary>Checks existing quantity, field-lock and status rules without changing the order.</summary>
+    /// <param name="productId">The submitted product identity.</param>
+    /// <param name="quantity">The submitted exact quantity.</param>
+    /// <param name="notes">The submitted optional notes.</param>
+    /// <param name="status">The requested resulting status.</param>
+    /// <exception cref="DomainRuleViolation">An existing order invariant rejects the edit.</exception>
+    public void ValidateUpdate(Guid productId, decimal quantity, string? notes, ProductionOrderStatus status)
+    {
+        ThrowIfInvalid(quantity, notes);
+
+        if (!IsProductQuantityEditable && (productId != ProductId || quantity != Quantity))
+        {
+            throw new DomainRuleViolation(ProductionOrderMessages.LockedFieldChanged);
+        }
+
+        if (!Status.CanTransitionTo(status))
+        {
+            throw new DomainRuleViolation(ProductionOrderMessages.StatusTransitionNotAllowed);
+        }
+
+    }
+
+    /// <summary>Applies a validated assignment while preserving the non-Draft lock.</summary>
+    /// <param name="lineId">The resulting assignment, including an explicit unassigned value.</param>
+    /// <exception cref="DomainRuleViolation">A non-Draft assignment is changed.</exception>
+    public void AssignLine(Guid? lineId)
+    {
+        if (Status != ProductionOrderStatus.Draft && LineId != lineId)
+            throw new DomainRuleViolation("LINE_LOCKED");
+        LineId = lineId;
     }
 
     /// <returns>A message ID, or <c>null</c> when valid (V-02).</returns>

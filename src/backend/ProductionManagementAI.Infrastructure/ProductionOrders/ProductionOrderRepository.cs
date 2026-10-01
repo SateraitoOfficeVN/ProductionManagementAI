@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ProductionManagementAI.Application.ProductionOrders;
 using ProductionManagementAI.Domain.ProductionOrders;
+using ProductionManagementAI.Domain.ProductionLines;
 
 namespace ProductionManagementAI.Infrastructure.ProductionOrders;
 
@@ -34,6 +35,23 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
             $"SELECT p.*, p.xmin FROM products p WHERE p.id = {productId} FOR SHARE").AsNoTracking().ToListAsync(cancellationToken);
         var product = rows.SingleOrDefault();
         return product is null ? null : new ProductResponse(product.Id, product.Sku, product.Name, product.Unit, product.IsActive);
+    }
+
+    public Task<OrderLineResponse?> FindLineAsync(Guid lineId, CancellationToken cancellationToken) =>
+        db.ProductionLines.AsNoTracking().Where(l => l.Id == lineId)
+            .Select(l => new OrderLineResponse(l.Id, l.Code, l.Name, l.IsActive)).SingleOrDefaultAsync(cancellationToken);
+
+    public async Task<bool> LockEligibleLineAsync(Guid productId, Guid lineId, CancellationToken cancellationToken)
+    {
+        if (db.Database.CurrentTransaction is null) throw new InvalidOperationException("Line validation requires the existing order transaction.");
+        var products = await db.Products.FromSqlInterpolated(
+            $"SELECT p.*, p.xmin FROM products p WHERE p.id = {productId} FOR SHARE").AsNoTracking().ToListAsync(cancellationToken);
+        var lines = await db.ProductionLines.FromSqlInterpolated(
+            $"SELECT l.*, l.xmin FROM production_lines l WHERE l.id = {lineId} FOR SHARE").AsNoTracking().ToListAsync(cancellationToken);
+        var pairs = await db.ProductionLineProducts.FromSqlInterpolated(
+            $"SELECT p.* FROM production_line_products p WHERE p.line_id = {lineId} AND p.product_id = {productId} FOR SHARE").AsNoTracking().ToListAsync(cancellationToken);
+        return products.SingleOrDefault() is { IsActive: true } product && lines.SingleOrDefault() is { IsActive: true } &&
+            pairs.SingleOrDefault() is { IsActive: true } pair && pair.ConfirmedUnit == product.Unit && pair.ConfirmedUnitRevision == product.UnitRevision;
     }
 
     public Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken)
@@ -71,7 +89,9 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
                 join.Order.Quantity,
                 join.Order.DueDate,
                 join.Order.Status,
-                join.Order.UpdatedAtUtc))
+                join.Order.UpdatedAtUtc,
+                db.ProductionLines.Where(l => l.Id == join.Order.LineId)
+                    .Select(l => new OrderLineResponse(l.Id, l.Code, l.Name, l.IsActive)).FirstOrDefault()))
             .ToListAsync(cancellationToken);
 
     public void Add(ProductionOrder order) => db.ProductionOrders.Add(order);

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" role="img" aria-label="生産ライン・工程 画面設計">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Meiryo, sans-serif" font-size="16" fill="#222">
+<rect x="20" y="20" width="1160" height="65" fill="#f4f4f4" stroke="#999"/>
+<circle cx="38" cy="40" r="12" fill="#fff" stroke="#555"/>
+<text x="38" y="45" text-anchor="middle">1</text>
+<text x="60" y="45" font-weight="bold">ProductionManagementAI</text>
+<text x="35" y="75">ダッシュボード　製造指示一覧　製品マスタ　生産ライン・工程</text>
+<rect x="20" y="100" width="550" height="65" fill="#f4f4f4" stroke="#999"/>
+<circle cx="38" cy="120" r="12" fill="#fff" stroke="#555"/>
+<text x="38" y="125" text-anchor="middle">2</text>
+<text x="60" y="125" font-weight="bold">生産ライン・工程</text>
+<text x="35" y="155">新規ライン</text>
+<rect x="20" y="180" width="550" height="100" fill="#f4f4f4" stroke="#999"/>
+<circle cx="38" cy="200" r="12" fill="#fff" stroke="#555"/>
+<text x="38" y="205" text-anchor="middle">3</text>
+<text x="60" y="205" font-weight="bold">検索</text>
+<text x="35" y="235">ラインコード・ライン名　状態　検索　クリア</text>
+<rect x="20" y="295" width="550" height="190" fill="#f4f4f4" stroke="#999"/>
+<circle cx="38" cy="315" r="12" fill="#fff" stroke="#555"/>
+<text x="38" y="320" text-anchor="middle">4</text>
+<text x="60" y="320" font-weight="bold">一覧</text>
+<text x="35" y="350">コード　ライン名　稼働時間／日　状態</text>
+<text x="35" y="378">L-001　第１ライン　8 時間　使用中</text>
+<text x="35" y="406">編集　使用停止</text>
+<rect x="20" y="500" width="550" height="80" fill="#f4f4f4" stroke="#999"/>
+<circle cx="38" cy="520" r="12" fill="#fff" stroke="#555"/>
+<text x="38" y="525" text-anchor="middle">5</text>
+<text x="60" y="525" font-weight="bold">ページ・状態</text>
+<text x="35" y="555">全件数　前へ　1　次へ</text>
+<rect x="600" y="100" width="580" height="180" fill="#f4f4f4" stroke="#999"/>
+<circle cx="618" cy="120" r="12" fill="#fff" stroke="#555"/>
+<text x="618" y="125" text-anchor="middle">6</text>
+<text x="640" y="125" font-weight="bold">生産ライン編集</text>
+<text x="615" y="155">ラインコード：L-001（変更不可）</text>
+<text x="615" y="183">ライン名：第１ライン　稼働時間／日：8</text>
+<text x="615" y="211">保存　キャンセル</text>
+<rect x="600" y="295" width="580" height="150" fill="#f4f4f4" stroke="#999"/>
+<circle cx="618" cy="315" r="12" fill="#fff" stroke="#555"/>
+<text x="618" y="320" text-anchor="middle">7</text>
+<text x="640" y="320" font-weight="bold">生産可能な製品</text>
+<text x="615" y="350">製品　単位　製造時間／単位（分）</text>
+<text x="615" y="378">P-1001　個　2.5　使用中</text>
+<text x="615" y="406">製品を追加　使用停止</text>
+<rect x="600" y="460" width="580" height="125" fill="#f4f4f4" stroke="#999"/>
+<circle cx="618" cy="480" r="12" fill="#fff" stroke="#555"/>
+<text x="618" y="485" text-anchor="middle">8</text>
+<text x="640" y="485" font-weight="bold">単位の確認が必要です</text>
+<text x="615" y="515">前の単位：個　現在の単位：kg</text>
+<text x="615" y="543">現在の単位で確認</text>
+<rect x="330" y="620" width="540" height="130" fill="#f4f4f4" stroke="#999"/>
+<circle cx="348" cy="640" r="12" fill="#fff" stroke="#555"/>
+<text x="348" y="645" text-anchor="middle">9</text>
+<text x="370" y="645" font-weight="bold">確認ダイアログ</text>
+<text x="345" y="675">このラインを使用停止にしますか？</text>
+<text x="345" y="703">キャンセル　使用停止</text>
+</g></svg>

@@ -42,6 +42,12 @@ public interface IProductionOrderRepository
     /// <summary>Locks a product row through the current write transaction before eligibility validation.</summary>
     Task<ProductResponse?> LockProductAsync(Guid productId, CancellationToken cancellationToken);
 
+    /// <summary>Reads assigned current line identity without treating history as an eligible candidate.</summary>
+    Task<OrderLineResponse?> FindLineAsync(Guid lineId, CancellationToken cancellationToken);
+
+    /// <summary>Checks exact pair eligibility under shared product, line and pair locks in the current transaction.</summary>
+    Task<bool> LockEligibleLineAsync(Guid productId, Guid lineId, CancellationToken cancellationToken);
+
     Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken);
 
     /// <summary>Exact number of orders matching the query's filters, ignoring sort and paging (002_DD-FN §2).</summary>

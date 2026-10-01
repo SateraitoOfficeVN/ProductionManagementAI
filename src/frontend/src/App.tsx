@@ -5,6 +5,8 @@ import { ProtectedRoute } from './features/auth/ProtectedRoute'
 import { DashboardPage } from './features/dashboard/DashboardPage'
 import { ProductionOrderListPage } from './features/production-orders/ProductionOrderListPage'
 import { ProductionOrderPage } from './features/production-orders/ProductionOrderPage'
+import { ProductionLineListPage } from './features/production-lines/ProductionLineListPage'
+import { ProductionLineFormPage } from './features/production-lines/ProductionLineFormPage'
 import { ProductFormPage, ProductMasterPage } from './features/products/ProductMasterPage'
 
 function App() {
@@ -48,6 +50,9 @@ function App() {
         <Route path="/products" element={<ProtectedRoute><ProductMasterPage /></ProtectedRoute>} />
         <Route path="/products/new" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
         <Route path="/products/:id" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
+        <Route path="/production-lines" element={<ProtectedRoute><ProductionLineListPage /></ProtectedRoute>} />
+        <Route path="/production-lines/new" element={<ProtectedRoute><ProductionLineFormPage /></ProtectedRoute>} />
+        <Route path="/production-lines/:id/edit" element={<ProtectedRoute><ProductionLineFormPage /></ProtectedRoute>} />
       </Routes>
     </NavigationGuardProvider>
   )

@@ -7,7 +7,7 @@ it('sends the validated decimal text as an unquoted JSON number token', async ()
   let sent = ''
   vi.stubGlobal('fetch', vi.fn(async (_url: string, init: RequestInit) => {
     sent = init.body as string
-    return new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } })
+    return new Response('{"line":null}', { status: 200, headers: { 'Content-Type': 'application/json' } })
   }))
   await createOrder({ productId: 'p1', quantity: '0.001', dueDate: '2099-01-01', notes: null })
   expect(sent).toContain('"quantity":0.001')

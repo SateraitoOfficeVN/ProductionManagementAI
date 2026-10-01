@@ -10,9 +10,12 @@ export interface Product {
   isActive: boolean
 }
 
+export interface OrderLine { id: string; code: string; name: string; isActive: boolean }
+
 export interface ProductionOrder {
   id: string
   orderNumber: string
+  line: OrderLine | null
   productId: string
   quantity: number | string
   unit: string
@@ -27,6 +30,7 @@ export interface ProductionOrder {
 }
 
 export interface CreateProductionOrderRequest {
+  lineId?: string | null
   productId: string
   quantity: string
   dueDate: string
@@ -44,6 +48,7 @@ export interface UpdateProductionOrderRequest extends CreateProductionOrderReque
 export interface ProductionOrderListItem {
   id: string
   orderNumber: string
+  line: OrderLine | null
   product: Pick<Product, 'id' | 'sku' | 'name' | 'unit'>
   quantity: number | string
   dueDate: string
