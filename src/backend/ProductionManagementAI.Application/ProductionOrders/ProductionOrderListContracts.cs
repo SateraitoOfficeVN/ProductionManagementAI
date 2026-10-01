@@ -266,7 +266,8 @@ public sealed record ProductionOrderListRow(
     decimal Quantity,
     DateOnly DueDate,
     ProductionOrderStatus Status,
-    DateTimeOffset UpdatedAt);
+    DateTimeOffset UpdatedAt,
+    OrderLineResponse? Line = null);
 
 public sealed record ProductSummary(Guid Id, string Sku, string Name, string Unit);
 
@@ -278,7 +279,8 @@ public sealed record ProductionOrderListItem(
     DateOnly DueDate,
     ProductionOrderStatus Status,
     bool IsOverdue,
-    DateTimeOffset UpdatedAt);
+    DateTimeOffset UpdatedAt,
+    OrderLineResponse? Line = null);
 
 /// <param name="Total">Exact number of matches, independent of the page (REQ-024).</param>
 public sealed record PagedResult<T>(
@@ -304,7 +306,8 @@ public static class ProductionOrderListMapper
         row.Status,
         row.DueDate < plantToday
             && row.Status is ProductionOrderStatus.Draft or ProductionOrderStatus.InProgress,
-        row.UpdatedAt);
+        row.UpdatedAt,
+        row.Line);
 
     /// <summary>camelCase API spelling of a sort key, echoed in the response so the client renders what it got.</summary>
     public static string ToApiValue(this ProductionOrderSort sort) => sort switch

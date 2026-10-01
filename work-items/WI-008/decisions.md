@@ -28,3 +28,9 @@ No external operation or new scope is authorized by this continuation.
 On 2026-09-30, the user explicitly requested pushing WI-008 and creating its PR.
 The existing branch was pushed and PR #33 opened into master. This request does
 not authorize merge, publishing or deployment.
+
+## DEC-007 — Merge and cleanup
+
+The user explicitly authorized PR #33 merge and branch/worktree cleanup after
+CI success, then requested output retain only four final videos. Both actions
+completed on 2026-09-30; no deployment authorization is inferred.

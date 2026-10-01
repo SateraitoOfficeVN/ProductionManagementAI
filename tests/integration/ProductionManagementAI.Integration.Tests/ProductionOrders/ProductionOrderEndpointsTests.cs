@@ -196,6 +196,7 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
 
         var startBody = UpdateFrom(order);
         startBody["status"] = "InProgress";
+        startBody["lineId"] = await client.CreateEligibleLine(DriveShaft.ToString());
         startBody["productId"] = DriveShaft.ToString(); // allowed: still Draft when this request is evaluated
         var started = await (await client.PutJson($"{Orders}/{order["id"]}", startBody)).Body();
 
@@ -274,6 +275,7 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
 
         var keep = UpdateFrom(current);
         keep["status"] = "InProgress";
+        keep["lineId"] = await client.CreateEligibleLine(current["productId"]?.GetValue<string>() ?? throw new InvalidOperationException());
         var saved = await client.PutJson($"{Orders}/{order["id"]}", keep);
         Assert.Equal(HttpStatusCode.OK, saved.StatusCode); // DEC-009
 

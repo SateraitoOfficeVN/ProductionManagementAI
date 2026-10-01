@@ -11,6 +11,7 @@ import {
   NavNewOrderIcon,
   NavOrdersIcon,
   NavProductsIcon,
+  NavLinesIcon,
   SignOutIcon,
 } from './icons'
 import { labels } from '../features/production-orders/messages'
@@ -21,6 +22,7 @@ const entries: Entry[] = [
   { label: labels.nav.dashboard, to: '/', Icon: NavDashboardIcon },
   { label: labels.nav.orders, to: '/production-orders', Icon: NavOrdersIcon },
   { label: labels.nav.products, to: '/products', Icon: NavProductsIcon },
+  { label: labels.nav.lines, to: '/production-lines', Icon: NavLinesIcon },
   { label: labels.nav.newOrder, to: '/production-orders/new', Icon: NavNewOrderIcon, primary: true },
 ]
 
@@ -59,7 +61,7 @@ export function AppNavbar() {
 
   return (
     <>
-      <nav aria-label={labels.nav.main} className="hidden items-center gap-1 text-sm sm:flex">
+      <nav aria-label={labels.nav.main} className="hidden min-w-0 flex-wrap items-center gap-1 text-sm sm:flex">
         {entries.map((entry) => (
           <GuardedLink
             key={entry.to}

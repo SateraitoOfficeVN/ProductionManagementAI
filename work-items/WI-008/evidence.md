@@ -177,3 +177,21 @@ Merge, publishing and deployment remain unauthorized and were not performed.
 PR check snapshot at opening: Frontend (build, lint, test) succeeded; Backend
 (build, test) was in progress. This is an opening snapshot, not a final-green
 claim for all checks or the subsequent records commit.
+
+## Merge, CI and retained-output reconciliation — 2026-10-01
+
+GitHub recheck: PR #33 MERGED at 2026-09-30 10:09:34 UTC, squash commit
+`20c8d61f1eb6a36e8b59877457e3fc4beb80f6aa`; run 36699874595 succeeded
+for Backend, Frontend and E2E on head `e08208d`. The user explicitly authorized
+merge/cleanup. Master was synchronized and WI-008 feature branches/worktree
+removed. No live/demo deployment or migration was performed.
+
+The user then explicitly requested exactly four output videos and no extras.
+The four final MP4s were SHA-256 verified before/after moving to the output root;
+all seven generated output directories, including raw videos, review frames,
+manifests, reports and cleanup archives, were removed. Earlier artifact paths
+in this history are no longer retained; actual recorded verification results
+remain documented, not a claim that those files can still be opened.
+Current local output: `C:/Data/project/ProductionManagementAI-evidence/demos/evidence/output/`,
+containing product-master-web-en.mp4, product-master-web-ja.mp4,
+product-master-mobile-en.mp4 and product-master-mobile-ja.mp4 only.

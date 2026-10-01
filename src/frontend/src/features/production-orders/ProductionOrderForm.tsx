@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useNavigationGuard } from '../../lib/navigationGuard'
 import { ApiError } from '../../lib/apiClient'
+import { OrderLinePicker } from '../production-lines/OrderLinePicker'
 import { createOrder, updateOrder } from './api'
 import { DiscardChangesDialog } from './DiscardChangesDialog'
 import { MessageBanner, type Banner } from './MessageBanner'
@@ -18,10 +19,11 @@ import {
 } from './validation'
 import { formatTimestamp } from '../../lib/format'
 
-type Field = 'productId' | 'quantity' | 'dueDate' | 'notes'
-const FIELDS: Field[] = ['productId', 'quantity', 'dueDate', 'notes']
+type Field = 'lineId' | 'productId' | 'quantity' | 'dueDate' | 'notes'
+const FIELDS: Field[] = ['productId', 'lineId', 'quantity', 'dueDate', 'notes']
 
 interface FormValues {
+  lineId: string | null
   productId: string
   quantity: string
   dueDate: string
@@ -44,17 +46,19 @@ function toValues(order: ProductionOrder | null): FormValues {
   return order
     ? {
         productId: order.productId,
+        lineId: order.line?.id ?? null,
         quantity: String(order.quantity),
         dueDate: order.dueDate,
         status: order.status,
         notes: order.notes ?? '',
       }
-    : { productId: '', quantity: '', dueDate: '', status: 'Draft', notes: '' }
+    : { productId: '', lineId: null, quantity: '', dueDate: '', status: 'Draft', notes: '' }
 }
 
 function isSame(a: FormValues, b: FormValues): boolean {
   return (
     a.productId === b.productId &&
+    a.lineId === b.lineId &&
     a.quantity.trim() === b.quantity.trim() &&
     a.dueDate === b.dueDate &&
     a.status === b.status &&
@@ -80,6 +84,9 @@ export function ProductionOrderForm({
 }: Props) {
   const navigate = useNavigate()
   const [current, setCurrent] = useState(order)
+  const [selectedLine, setSelectedLine] = useState(order?.line ?? null)
+  const [saveBlocked, setSaveBlocked] = useState(false)
+  const pendingReload = useRef(false)
   const [initial, setInitial] = useState(() => toValues(order))
   const [values, setValues] = useState(initial)
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({})
@@ -106,6 +113,7 @@ export function ProductionOrderForm({
   useEffect(
     () =>
       guard.register((to) => {
+        if (saving) return true
         if (!isDirty) {
           return false
         }
@@ -114,8 +122,14 @@ export function ProductionOrderForm({
         setConfirmingDiscard(true)
         return true
       }),
-    [guard, isDirty],
+    [guard, isDirty, saving],
   )
+  useEffect(() => {
+    if (!isDirty && !saving) return
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = '' }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [isDirty, saving])
   const notesLength = codePointLength(values.notes)
   const selectedProduct = products.find((p) => p.id === values.productId)
 
@@ -124,6 +138,8 @@ export function ProductionOrderForm({
       case 'productId':
         return locked ? null : selectedProduct && !selectedProduct.isActive && values.productId !== current?.productId
           ? 'MSG-E022' : validateProduct(values.productId)
+      case 'lineId':
+        return current?.status === 'Draft' && values.status === 'InProgress' && !values.lineId ? 'LINE_REQUIRED' : null
       case 'quantity':
         return locked ? null : validateQuantity(values.quantity, selectedProduct?.unit)
       case 'dueDate':
@@ -134,7 +150,8 @@ export function ProductionOrderForm({
   }
 
   function setField<K extends keyof FormValues>(field: K, value: FormValues[K]) {
-    setValues((previous) => ({ ...previous, [field]: value }))
+    setValues((previous) => ({ ...previous, [field]: value, ...(field === 'productId' && value !== previous.productId ? { lineId: null } : {}) }))
+    if (field === 'productId' && value !== values.productId) setSelectedLine(null)
   }
 
   function handleBlur(field: Field) {
@@ -147,13 +164,15 @@ export function ProductionOrderForm({
     const first = FIELDS.find((field) => next[field])
     const target = { productId: productInput, quantity: quantityInput, dueDate: dueDateInput, notes: notesInput }
     if (first) {
-      target[first].current?.focus()
+      if (first === 'lineId') document.getElementById('lineId')?.focus()
+      else target[first].current?.focus()
     }
   }
 
   function handleError(error: unknown) {
     if (!(error instanceof ApiError)) {
-      setBanner({ kind: 'error', text: message('MSG-E013') })
+      setSaveBlocked(true)
+      setBanner({ kind: 'error', text: labels.lines.unknown, onReload: requestReload })
       return
     }
 
@@ -183,18 +202,21 @@ export function ProductionOrderForm({
         onNotFound()
         return
       case 409:
-        setBanner({ kind: 'error', text: message('MSG-E009'), onReload })
+        setSaveBlocked(true)
+        setBanner({ kind: 'error', text: message('MSG-E009'), onReload: requestReload })
         return
       case 422:
         setBanner({ kind: 'error', text: message(error.problem?.code ?? 'MSG-E013') })
         return
       default:
-        setBanner({ kind: 'error', text: message('MSG-E013') })
+        setSaveBlocked(true)
+        setBanner({ kind: 'error', text: labels.lines.unknown, onReload: requestReload })
     }
   }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
+    if (saving || saveBlocked) return
 
     const next: Partial<Record<Field, string>> = {}
     for (const field of FIELDS) {
@@ -212,6 +234,7 @@ export function ProductionOrderForm({
     setSaving(true)
     const body = {
       productId: values.productId,
+      lineId: values.lineId,
       quantity: values.quantity.trim(),
       dueDate: values.dueDate,
       notes: values.notes.trim() === '' ? null : values.notes.trim(),
@@ -226,6 +249,7 @@ export function ProductionOrderForm({
       const saved = await updateOrder(current.id, { ...body, status: values.status, version: current.version })
       const savedValues = toValues(saved)
       setCurrent(saved)
+      setSelectedLine(saved.line ?? null)
       setInitial(savedValues)
       setValues(savedValues)
       setErrors({})
@@ -237,7 +261,13 @@ export function ProductionOrderForm({
     }
   }
 
+  function requestReload() {
+    pendingReload.current = true
+    setConfirmingDiscard(true)
+  }
+
   function handleCancel() {
+    if (saving) return
     if (isDirty) {
       setConfirmingDiscard(true)
     } else {
@@ -323,6 +353,11 @@ export function ProductionOrderForm({
             <FieldError field="productId" error={errors.productId} />
           </Row>
 
+          <OrderLinePicker productId={values.productId} selected={selectedLine} locked={current !== null && current.status !== 'Draft'} pending={saving}
+            error={errors.lineId ? message(errors.lineId) : undefined} onForbidden={onForbidden} onChange={line => {
+              setSelectedLine(line); setField('lineId', line?.id ?? null); setErrors(previous => ({ ...previous, lineId: undefined }))
+            }} />
+
           <div className="grid gap-4 sm:grid-cols-2">
             <Row label={`${labels.order.quantity}${selectedProduct ? `（${selectedProduct.unit}）` : ''}`} htmlFor="quantity" required>
               <input
@@ -403,7 +438,7 @@ export function ProductionOrderForm({
           </button>
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || saveBlocked}
             className="rounded bg-gray-900 px-4 py-2 text-white focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50"
           >
             {saving ? labels.order.saving : labels.order.save}
@@ -414,6 +449,7 @@ export function ProductionOrderForm({
       <DiscardChangesDialog
         open={confirmingDiscard}
         onDiscard={() => {
+          if (pendingReload.current) { pendingReload.current = false; setConfirmingDiscard(false); onReload(); return }
           const to = pendingTo.current ?? '/production-orders'
           pendingTo.current = null
           setConfirmingDiscard(false)
@@ -426,6 +462,7 @@ export function ProductionOrderForm({
           }
         }}
         onKeepEditing={() => {
+          pendingReload.current = false
           const focusTarget = pendingTo.current ? returnFocus.current : cancelButton.current
           pendingTo.current = null
           setConfirmingDiscard(false)

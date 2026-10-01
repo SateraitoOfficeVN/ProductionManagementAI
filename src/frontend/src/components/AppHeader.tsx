@@ -9,8 +9,8 @@ export function AppHeader() {
   const { user, logout } = useAuth()
 
   return (
-    <header className="relative flex items-center justify-between gap-4 border-b border-gray-200 px-4 py-3 sm:px-6">
-      <div className="flex flex-1 items-center justify-between gap-6 sm:flex-none sm:justify-start">
+    <header className="relative flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 px-4 py-3 sm:px-6">
+      <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-6 sm:justify-start">
         <GuardedLink
           to="/"
           className="font-medium text-gray-900 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none"

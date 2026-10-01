@@ -98,6 +98,6 @@ export function getJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   return request<T>('GET', url, undefined, signal)
 }
 
-export function sendJson<T>(method: 'POST' | 'PUT', url: string, body: unknown): Promise<T> {
-  return request<T>(method, url, body)
+export function sendJson<T>(method: 'POST' | 'PUT', url: string, body: unknown, signal?: AbortSignal): Promise<T> {
+  return request<T>(method, url, body, signal)
 }

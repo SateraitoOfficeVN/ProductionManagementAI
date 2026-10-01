@@ -93,3 +93,11 @@ only pinned repository dependencies where missing.
 - Current authorization source: the subsequent user instruction on 2026-09-30 (English rendering: "Okay, acceptable for now; continue the work item").
 - Authorization applies to continuing the existing revision 1 scope from that instruction onward; it is not retroactive approval of implementation or commit `a628f2e`.
 - Closure: existing code and verification retained; corrected authorization records and local handover completed. Push and PR were subsequently authorized by the explicit user request; merge and deployment remain outside authorization.
+
+## Post-plan merge authorization and closure
+
+The user explicitly requested merge and cleanup on 2026-09-30 after final CI.
+PR #33 squash merged as `20c8d61`; master synchronized and feature branches/
+worktree removed. Output later reduced to four MP4s at the user's request.
+This records actual external authorization separately from the initial approval
+error. No deployment was authorized or performed.

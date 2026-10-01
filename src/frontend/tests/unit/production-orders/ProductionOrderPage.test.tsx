@@ -19,6 +19,7 @@ function order(overrides: Partial<ProductionOrder> = {}): ProductionOrder {
   return {
     id: 'o1',
     orderNumber: 'PO-2026-00042',
+    line: null,
     productId: 'p4',
     quantity: 250,
     unit: '本',
@@ -54,6 +55,10 @@ beforeEach(() => {
     vi.fn(async (url: string, init: RequestInit = {}) => {
       const method = init.method ?? 'GET'
       calls.push({ method, url, body: init.body ? JSON.parse(init.body as string) : undefined })
+      if (url.startsWith('/api/production-lines/eligible?')) return json({ status: 200, body: {
+        product: { id: '0197e4a0-0000-7000-8000-000000001004', sku: 'P-1004', name: '製品', unit: '本', unitRevision: '0', isActive: true },
+        items: [], total: 0, page: 1, pageSize: 50,
+      } })
       const entry = routes[`${method} ${url}`]
       const reply = Array.isArray(entry) ? (entry.length > 1 ? entry.shift()! : entry[0]) : entry
       return json(reply ?? { status: 500 })
@@ -148,6 +153,7 @@ describe('ProductionOrderPage — create mode', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/production-orders/o1')
     expect(calls.find((c) => c.method === 'POST')?.body).toEqual({
       productId: 'p4',
+      lineId: null,
       quantity: 250,
       dueDate: future,
       notes: null,
@@ -245,6 +251,8 @@ describe('ProductionOrderPage — edit mode', () => {
     expect(screen.getByLabelText('備考')).toHaveValue('note mine') // values kept
 
     await user.click(within(alert).getByRole('button', { name: '再読み込み' }))
+    const discard = await screen.findByRole('dialog')
+    await user.click(within(discard).getByRole('button', { name: '破棄' }))
 
     await waitFor(() => expect(screen.getByLabelText('備考')).toHaveValue('someone else'))
   })

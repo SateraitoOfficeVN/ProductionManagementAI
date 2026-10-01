@@ -8,6 +8,8 @@ public sealed class Product
     public required string Name { get; set; }
     /// <summary>Gets or sets the approved unit used by all orders that reference this product.</summary>
     public string Unit { get; set; } = string.Empty;
+    /// <summary>Gets the database-generated generation that invalidates changed-back units.</summary>
+    public long UnitRevision { get; private set; }
     /// <summary>Gets or sets the optional drawing reference.</summary>
     public string? DrawingNumber { get; set; }
     /// <summary>Gets or sets a value that indicates whether new orders may select this product.</summary>

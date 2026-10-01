@@ -134,7 +134,7 @@ public class ProductionOrderServiceTests
     {
         var order = await CreatedOrder();
         var started = Assert.IsType<Result<ProductionOrderResponse>.Ok>(await _service.UpdateAsync(
-            order.Id, UpdateFrom(order) with { Status = ProductionOrderStatus.InProgress }, CancellationToken.None)).Value;
+            order.Id, UpdateFrom(order) with { Status = ProductionOrderStatus.InProgress, LineId = Guid.Parse("0197e4a0-0000-7000-8000-000000009001") }, CancellationToken.None)).Value;
 
         var result = await _service.UpdateAsync(
             order.Id, UpdateFrom(started) with { ProductId = Guid.NewGuid(), Quantity = 1 }, CancellationToken.None);
@@ -149,7 +149,7 @@ public class ProductionOrderServiceTests
         _repository.ForceDueDate(order.Id, Today.AddDays(-5)); // became overdue since creation
 
         var result = await _service.UpdateAsync(
-            order.Id, UpdateFrom(order) with { DueDate = Today.AddDays(-5), Status = ProductionOrderStatus.InProgress },
+            order.Id, UpdateFrom(order) with { DueDate = Today.AddDays(-5), Status = ProductionOrderStatus.InProgress, LineId = Guid.Parse("0197e4a0-0000-7000-8000-000000009001") },
             CancellationToken.None);
 
         Assert.IsType<Result<ProductionOrderResponse>.Ok>(result);
@@ -183,13 +183,24 @@ public class ProductionOrderServiceTests
         var order = await CreatedOrder();
 
         var updated = Assert.IsType<Result<ProductionOrderResponse>.Ok>(await _service.UpdateAsync(
-            order.Id, UpdateFrom(order) with { Status = ProductionOrderStatus.InProgress, ProductId = OtherProduct },
+            order.Id, UpdateFrom(order) with { Status = ProductionOrderStatus.InProgress, LineId = Guid.Parse("0197e4a0-0000-7000-8000-000000009001"), ProductId = OtherProduct },
             CancellationToken.None)).Value;
 
         Assert.Equal(ProductionOrderStatus.InProgress, updated.Status);
         Assert.Equal(OtherProduct, updated.ProductId);
         Assert.False(updated.IsProductQuantityEditable);
         Assert.Equal([ProductionOrderStatus.Completed, ProductionOrderStatus.Cancelled], updated.AllowedNextStatuses);
+    }
+
+    [Fact]
+    public async Task Update_StartWithoutLineIsRejectedWithoutMutatingOrigin()
+    {
+        var order = await CreatedOrder();
+        var result = await _service.UpdateAsync(order.Id, UpdateFrom(order) with { Status = ProductionOrderStatus.InProgress }, CancellationToken.None);
+        Assert.Equal("LINE_REQUIRED", Assert.IsType<Result<ProductionOrderResponse>.FieldProblem>(result).Code);
+        var reloaded = Assert.IsType<Result<ProductionOrderResponse>.Ok>(await _service.GetAsync(order.Id, CancellationToken.None)).Value;
+        Assert.Equal(ProductionOrderStatus.Draft, reloaded.Status);
+        Assert.Null(reloaded.Line);
     }
 
     private sealed class FixedPlantClock(DateOnly today) : IPlantClock
@@ -330,6 +341,11 @@ public class ProductionOrderServiceTests
             FindProductAsync(productId, cancellationToken);
 
         public Task<bool> ProductExistsAsync(Guid productId, CancellationToken cancellationToken) =>
+            Task.FromResult(_products.Contains(productId));
+
+        public Task<OrderLineResponse?> FindLineAsync(Guid lineId, CancellationToken ct) =>
+            Task.FromResult<OrderLineResponse?>(new(lineId, "TEST-LINE", "Test line", true));
+        public Task<bool> LockEligibleLineAsync(Guid productId, Guid lineId, CancellationToken ct) =>
             Task.FromResult(_products.Contains(productId));
 
         public Task<ProductionOrder?> FindAsync(Guid id, bool tracked, CancellationToken cancellationToken) =>

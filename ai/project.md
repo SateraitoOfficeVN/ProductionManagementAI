@@ -35,11 +35,26 @@ Done and merged to `master`:
 
 - WI-006 (`work-items/WI-006/`): Japanese Product master at `/products`, role-gated maintenance API, immutable case-insensitive SKU, referenced-unit lock and retirement preserving order history; exact kg/m decimals and unit-bearing order responses; count-based cross-unit dashboard metrics with per-unit subtotals. Merged via PR #31 as `b806b1c`. Final CI passed 148 backend unit, 111 integration, 139 frontend and 26 Playwright tests. Fresh/upgrade migrations were rehearsed only on isolated databases; no live/demo cutover or deployment was performed. See `deploy/README.md` for backup/write-pause/owner migration limits.
 
-### Local delivery — not merged
+- WI-008: Product master dialog centering and distinct Package navigation glyph
+  merged via [PR #33](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/33)
+  as `20c8d61`. Backend/Frontend/E2E CI passed on tested head `e08208d`.
+  Feature branches/worktree cleaned up. Initial approval-history correction
+  remains documented; no live/demo deployment performed.
 
-WI-008 (Product master UI bug fix) is locally completed on `feature/WI-008-product-ui-bugs`: both dialogs center within viewport bounds and Product master uses a distinct Package navbar icon. Frontend lint/build, 4 component and 15 targeted Chromium checks passed; see [work-item evidence](../work-items/WI-008/evidence.md). The initial implementation preceded plan approval; the user subsequently authorized continuation, and the approval history is corrected in the work-item records. The user subsequently authorized push/PR: [PR #33](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/33) is open into `master`, with remote CI not yet complete. No merge or deployment has occurred.
+### Local WI-009 working-tree delivery
 
-Next planned application work: none approved. The original locked Screens A–C roadmap and Japanese localization are complete; WI-006 is the first completed master-data extension. Plant calendar, Production lines and Bill of materials remain candidates requiring separate scope and plan approval.
+Production lines implementation and all eight approved revision 2 local steps
+are verified on feature/WI-009-production-lines in the separate WI009 checkout.
+Master maintenance, exact timing/unit generations, durable retirement and
+presence-aware order assignment/history are implemented. Final local checks
+passed 192 unit, 157 integration, 196 frontend and 42 E2E; clean build/lint and
+native 200% zoom verification. See [status](../work-items/WI-009/status.md) and
+[evidence](../work-items/WI-009/evidence.md). Implementation committed as 810ea06;
+[PR #34](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/34) open, CI verification in progress; no merge or live/demo deployment. Approved designs remain immutable.
+
+Next action: PR #34 CI/review handoff; merge requires separate authorization. No next feature approved; Plant
+calendar and BOM remain candidates. No release-readiness or external OTLP export
+is claimed by local verification.
 
 Verified commands, run from the repo root unless noted:
 

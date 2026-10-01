@@ -34,6 +34,20 @@ internal static class ProductionOrderApi
         ["version"] = order["version"]!.GetValue<uint>(),
     };
 
+    /// <summary>Creates an isolated eligible line for a test that starts a Draft order.</summary>
+    public static async Task<string> CreateEligibleLine(this HttpClient client, string productId)
+    {
+        var eligibility = await (await client.GetAsync($"/api/production-lines/eligible?productId={productId}")).Body();
+        var product = eligibility["product"] ?? throw new InvalidOperationException("Product observation missing.");
+        var created = await client.PostJson("/api/production-lines", new JsonObject {
+            ["code"] = $"TEST-{Guid.NewGuid():N}", ["name"] = "テストライン", ["workingHoursPerDay"] = "8",
+            ["products"] = new JsonArray(new JsonObject {
+                ["productId"] = productId, ["minutesPerUnit"] = "1", ["expectedUnit"] = product["unit"]?.DeepClone(),
+                ["expectedUnitRevision"] = product["unitRevision"]?.DeepClone(), ["confirmUnit"] = true }) });
+        created.EnsureSuccessStatusCode();
+        return (await created.Body())["id"]?.GetValue<string>() ?? throw new InvalidOperationException("Line identity missing.");
+    }
+
     public static Task<HttpResponseMessage> PostJson(this HttpClient client, string url, JsonNode body) =>
         client.PostAsync(url, Json(body));
 

@@ -11,6 +11,7 @@ using ProductionManagementAI.Api.Controllers;
 using ProductionManagementAI.Api.ProductionOrders;
 using ProductionManagementAI.Application.ProductionOrders;
 using ProductionManagementAI.Application.Products;
+using ProductionManagementAI.Application.ProductionLines;
 using ProductionManagementAI.Infrastructure;
 using ProductionManagementAI.Infrastructure.Identity;
 
@@ -46,6 +47,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ProductionOrderService>();
 builder.Services.AddScoped<ProductMasterService>();
+builder.Services.AddScoped<ProductionLineService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<SystemHealthService>();
 
@@ -56,8 +58,15 @@ builder.Services.AddOpenTelemetry()
     .ConfigureResource(r => r.AddService("ProductionManagementAI.Api"))
     .WithTracing(t =>
     {
-        t.AddAspNetCoreInstrumentation().AddNpgsql().AddSource(ProductionOrderTelemetry.Name)
-            .AddSource(ProductMasterService.TelemetryName);
+        t.AddAspNetCoreInstrumentation(options => options.EnrichWithHttpRequest = (activity, request) =>
+        {
+            if (request.Path.StartsWithSegments("/api/production-lines"))
+            {
+                activity.SetTag("url.query", null);
+                activity.SetTag("http.url", null);
+            }
+        }).AddNpgsql().AddSource(ProductionOrderTelemetry.Name)
+            .AddSource(ProductMasterService.TelemetryName).AddSource(ProductionLineService.TelemetryName);
         if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         {
             t.AddOtlpExporter();
@@ -66,7 +75,7 @@ builder.Services.AddOpenTelemetry()
     .WithMetrics(m =>
     {
         m.AddAspNetCoreInstrumentation().AddMeter(ProductionOrderTelemetry.Name)
-            .AddMeter(ProductMasterService.TelemetryName);
+            .AddMeter(ProductMasterService.TelemetryName).AddMeter(ProductionLineService.TelemetryName);
         if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         {
             m.AddOtlpExporter();
@@ -99,6 +108,28 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    if (!context.Request.Path.StartsWithSegments("/api/production-lines")) { await next(context); return; }
+    context.Response.Headers.CacheControl = "no-store";
+    var started = Stopwatch.GetTimestamp();
+    await next(context);
+    Activity.Current?.SetTag("url.query", null);
+    Activity.Current?.SetTag("http.url", null);
+    if (!context.Items.ContainsKey("production-lines-counted"))
+    {
+        var segments = context.Request.Path.Value?.Split('/', StringSplitOptions.RemoveEmptyEntries) ?? [];
+        var operation = segments.Length > 2 && segments[2] == "product-choices" ? "product_choices"
+            : segments.Length > 2 && segments[2] == "eligible" ? "eligible"
+            : segments.Length > 3 && segments[3] == "retire" ? "retire"
+            : context.Request.Method == "PUT" ? "update"
+            : context.Request.Method == "POST" ? "create"
+            : segments.Length > 2 ? "get" : "list";
+        var outcome = context.Response.StatusCode switch { 401 or 403 => "forbidden", 400 or 413 or 415 => "validation", _ => "error" };
+        ProductionLineService.RecordBoundary(operation, outcome, Stopwatch.GetElapsedTime(started).TotalSeconds);
+    }
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

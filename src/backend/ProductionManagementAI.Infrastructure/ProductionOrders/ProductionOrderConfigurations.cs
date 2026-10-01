@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProductionManagementAI.Domain.ProductionOrders;
+using ProductionManagementAI.Domain.ProductionLines;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ProductionManagementAI.Infrastructure.ProductionOrders;
 
@@ -17,6 +19,9 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Sku).HasMaxLength(50);
         builder.Property(p => p.Name).HasMaxLength(200);
         builder.Property(p => p.Unit).HasMaxLength(20).IsRequired();
+        var revision = builder.Property(p => p.UnitRevision).HasDefaultValue(0L).ValueGeneratedOnAddOrUpdate();
+        revision.Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+        revision.Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
         builder.Property(p => p.DrawingNumber).HasMaxLength(100);
         builder.Property(p => p.IsActive).HasDefaultValue(true);
         builder.Property(p => p.CreatedAtUtc).HasDefaultValueSql("now()");
@@ -27,6 +32,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         {
             table.HasCheckConstraint("ck_products_sku_trimmed", "sku = btrim(sku) AND length(sku) > 0");
             table.HasCheckConstraint("ck_products_name_not_blank", "length(btrim(name)) > 0");
+            table.HasCheckConstraint("ck_products_unit_revision", "unit_revision >= 0");
             table.HasCheckConstraint("ck_products_unit", "unit IN ('個', '本', '枚', '台', 'セット', 'kg', 'm')");
         });
     }
@@ -74,6 +80,11 @@ internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<Pr
         builder.Property(o => o.RowVersion).IsRowVersion();
 
         builder.Ignore(o => o.IsProductQuantityEditable);
+        builder.HasOne<ProductionLineProduct>().WithMany()
+            .HasForeignKey(o => new { o.LineId, o.ProductId })
+            .OnDelete(DeleteBehavior.Restrict).HasConstraintName("fk_orders_line_product");
+        builder.HasIndex(o => new { o.LineId, o.ProductId }).HasDatabaseName("ix_orders_line_product")
+            .HasFilter("line_id IS NOT NULL");
 
         builder.HasOne<Product>()
             .WithMany()
