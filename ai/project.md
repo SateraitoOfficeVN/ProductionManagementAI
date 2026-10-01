@@ -49,10 +49,10 @@ Master maintenance, exact timing/unit generations, durable retirement and
 presence-aware order assignment/history are implemented. Final local checks
 passed 192 unit, 157 integration, 196 frontend and 42 E2E; clean build/lint and
 native 200% zoom verification. See [status](../work-items/WI-009/status.md) and
-[evidence](../work-items/WI-009/evidence.md). Revision 3 commit/push/PR/CI delivery is approved;
-remote CI pending, no merge or live/demo deployment. Approved designs remain immutable.
+[evidence](../work-items/WI-009/evidence.md). Implementation committed as 810ea06;
+[PR #34](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/34) open, CI verification in progress; no merge or live/demo deployment. Approved designs remain immutable.
 
-Next action: user-authorized commit/PR work. No next feature approved; Plant
+Next action: PR #34 CI/review handoff; merge requires separate authorization. No next feature approved; Plant
 calendar and BOM remain candidates. No release-readiness or external OTLP export
 is claimed by local verification.
 

@@ -621,3 +621,16 @@ applicable. Staged diff --check passes. No application source changed during thi
 delivery stage; final local 192/157/196/42 verification remains applicable.
 Initial hash audit script failed on Windows default text encoding; corrected to
 explicit UTF-8 and reran successfully before committing. Remote CI not yet run.
+
+
+## Revision 3 publication and CI handoff — 2026-10-01
+
+Committed 123 audited files as 810ea066763b8855cfbb8c289d9873813c5c5902.
+Post-commit working tree clean; scoped feature push succeeded. Created
+[PR #34](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/34) against master; no direct master push or merge.
+Initial [CI run](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36832509363) passed Backend (2m55s) and Frontend (35s); E2E
+in progress at this record update. No code/design change after the verified source.
+This routine record-only commit triggers another CI run; final exact-head results
+and run links are recorded in the PR description after actual checks complete.
+Do not interpret these initial results as passing checks on a later SHA.
+Merge, branch/worktree removal, deployment and video changes remain excluded.

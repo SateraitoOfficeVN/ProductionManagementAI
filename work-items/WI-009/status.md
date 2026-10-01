@@ -1,24 +1,26 @@
 # WI-009 — Status
 
-As of 2026-10-01. State: delivering (approved revision 3); local delivery complete.
+As of 2026-10-01. State: PR-open; revision 3 delivery authorized.
 
 ## Current delivery
 
-Approved plan revision 2 steps 1–8 completed locally. Production lines master,
-strict Admin/Operator API, exact timing/unit generations, durable retirement and
-order assignment/history are implemented in this feature working tree.
-Final checks passed: backend build (zero warnings/errors), 192 unit, 157
-integration, 196 frontend and 42 Playwright tests; frontend lint/build clean.
-Security/design/delivery agent review and TC-326–365 results are recorded in
-[review](review.md), [test plan](test-plan.md) and [evidence](evidence.md).
-Approved sources/PDFs remain unchanged; native 200% zoom and mobile checks run.
+Local revision 2 implementation and verification are complete: 192 unit, 157
+integration, 196 frontend and 42 Playwright pass; frontend lint/build and backend
+build clean. Approved designs preserved; isolated resources cleaned up.
 
-Checkout: C:/Data/project/ProductionManagementAI-WI009.
-Branch: feature/WI-009-production-lines; baseline 20c8d61. Local changes are
-uncommitted. No push, PR, remote CI, merge or deployment performed/authorized
-under revision 2. Main/demo resources and four final videos preserved.
-Next action: scoped commit/push/PR/CI delivery under approved revision 3. No new
-feature implementation or design revision is inferred from this delivery.
+Implementation commit: 810ea066763b8855cfbb8c289d9873813c5c5902, published on
+feature/WI-009-production-lines. [PR #34](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/34) targets master at 20c8d61.
+[Initial CI](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36832509363) has passed Backend and Frontend; E2E is in progress at this
+record update. This record-only follow-up will trigger checks again. Final
+exact-head results are recorded in the PR description/checks after verification;
+no final CI success is claimed by this earlier snapshot.
+
+Security/design/delivery assessment: [review](review.md), [evidence](evidence.md),
+[test dispositions](test-plan.md). Checkout retained at
+C:/Data/project/ProductionManagementAI-WI009. Main/demo resources and the four
+final videos preserved. No merge, deployment or live migration performed.
+Next: complete CI review and present PR; merge requires separate authorization.
+No new feature or design revision approved.
 
 ## Execution history
 
