@@ -1,0 +1,296 @@
+[
+  {
+    "width": 1440,
+    "controls": [
+      {
+        "text": "表示",
+        "height": 48,
+        "parent": "FORM"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前月",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "翌月",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "再読込",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "日付例外",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "履歴",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "週間規則",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "能力を表示",
+        "height": 48,
+        "parent": "SECTION"
+      }
+    ],
+    "gaps": [
+      {
+        "gap": 8
+      },
+      {
+        "gap": 8
+      }
+    ]
+  },
+  {
+    "width": 540,
+    "controls": [
+      {
+        "text": "表示",
+        "height": 48,
+        "parent": "FORM"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前月",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "翌月",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "再読込",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "日付例外",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "履歴",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "週間規則",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "能力を表示",
+        "height": 48,
+        "parent": "SECTION"
+      }
+    ],
+    "gaps": [
+      {
+        "gap": 8
+      },
+      {
+        "gap": 8
+      }
+    ]
+  },
+  {
+    "width": 320,
+    "controls": [
+      {
+        "text": "表示",
+        "height": 48,
+        "parent": "FORM"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前月",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "翌月",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "再読込",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "日付例外",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "履歴",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "週間規則",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "検索",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "前へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "次へ",
+        "height": 48,
+        "parent": "DIV"
+      },
+      {
+        "text": "能力を表示",
+        "height": 48,
+        "parent": "SECTION"
+      }
+    ],
+    "gaps": [
+      {
+        "gap": 8
+      },
+      {
+        "gap": 8
+      }
+    ]
+  }
+]
