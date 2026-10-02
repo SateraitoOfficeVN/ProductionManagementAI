@@ -315,3 +315,12 @@ Delivery gate passes for the approved revision 3 PR scope, subject to verifying
 the final routine-record head in GitHub before handoff. Actual final head checks
 are linked in PR #36. Screen-reader speech/mobile device IME remain Not run with
 explicitly accepted local handoff limits. Merge and release remain unauthorized.
+
+## Merge gate and closeout review — 2026-10-02
+
+Final reviewed head c9430e7: run36975730228 Backend/Frontend/E2E all pass, actual
+counts 239/195/253/48. No new application change or unresolved finding. User
+explicitly authorized squash merge/cleanup after PR approval; merged d4dd976.
+Routine closeout diff is Markdown only, with existing security review intact, no
+new endpoint/permission/dependency/secret. Delivery checklist passes for completed
+WI-010 with documented accepted manual limits. No release-readiness/deploy claim.

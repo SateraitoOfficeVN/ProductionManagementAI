@@ -4,7 +4,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-01 | Requirements and sequential design | Complete — superseded by revision 2 | Explicit user "approved" after revision 1 presentation, 2026-10-01 |
 | 2 | 2026-10-02 | Local implementation and verification | Complete — local handoff approved | Explicit user "approved" after revision 2 presentation, 2026-10-02 |
-| 3 | 2026-10-02 | CI fixture preparation and PR delivery | Implementation and publication complete; final record-head checks tracked in PR36 | Explicit user "approved" after revision3 presentation,2026-10-02 |
+| 3 | 2026-10-02 | CI fixture preparation and PR delivery | Complete — final head CI passed; PR36 subsequently merged under separate authorization | Explicit user "approved" after revision3 presentation,2026-10-02 |
 
 ## Revision 1 — Requirements and sequential design
 
@@ -249,7 +249,7 @@ workflow permissions, repository secrets or live database access.
 | 2 | Rehearse migration/activation and E2E using fresh task-owned Compose fixtures; run final affected build/test gates | Same setup order as CI; actual full backend/frontend/E2E counts recorded; no hidden retry/skip. Preserve manual Not run with accepted local limits; clean only verified task-owned fixtures | Done: full Release239/195, frontend253, E2E48; owned fixtures cleaned |
 | 3 | Review/security/delivery audit of complete WI-010 package and immutable209 artifacts; commit only intended files | Include authorized WI-009 merge-record reconciliation, approved006 designs/companions, code/tests/ops/CI and WI-010 records; exclude credentials/videos/unrelated files | Done: reviewed commit f2a1d82 after conflict-free rebase; protected artifacts verified |
 | 4 | Synchronize feature branch with current master including merged RFC0013; push and create a focused PR to master | Commit before rebase, verify rebase preserves feature and immutable artifacts; resolve only in-scope conflicts. Use English PR summary and exact evidence/limitations | Done: pushed feature branch, PR36 opened against master f44283c |
-| 5 | Inspect actual GitHub CI results and resolve concrete failures within scope; hand off PR for review | Never claim unrun CI. Fixes that change approved behavior/design require a new revision/additive design. Final PR head/check results recorded | Done: run36975008859 passed all three jobs on implementation f2a1d82; final publication-record head checks tracked in PR36 |
+| 5 | Inspect actual GitHub CI results and resolve concrete failures within scope; hand off PR for review | Never claim unrun CI. Fixes that change approved behavior/design require a new revision/additive design. Final PR head/check results recorded | Done: implementation run36975008859 and final c9430e7 run36975730228 passed all three jobs; PR36 handed off and separately authorized for merge |
 
 ### Authorization if this revision is approved
 
@@ -280,3 +280,17 @@ within existing approved behavior and future authorized design work.
 
 Revision3 explicitly approved by the user after presentation on2026-10-02.
 Execution authorized for its five steps; merge remains a separate instruction.
+
+## Merge and cleanup closure — 2026-10-02
+
+After revision 3 completed, user approved PR #36 and explicitly replied "ok"
+to the concrete request to merge PR #36 and clean its branch/worktree. This is
+separate task-specific merge/cleanup authorization, not a retrospective change
+to revision 3 scope. Squash merge d4dd976 confirmed at 07:09:46 UTC.
+Final reviewed head c9430e7 passed run36975730228, all three jobs. Main checkout
+fast-forwarded; clean feature worktree and local/remote feature branch removed.
+
+Workflow step 8 closeout reconciles status, evidence, plan and root current-state
+records in one routine Markdown PR on a dedicated chore worktree. No direct master
+push, old approved design edit, new work item/feature, deployment or live activation.
+Two accepted manual Not run checks remain recorded.

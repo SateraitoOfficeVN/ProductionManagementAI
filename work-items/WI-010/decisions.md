@@ -194,3 +194,11 @@ PR #36 opened under revision 3 authorization. Implementation head f2a1d82 passed
 GitHub run 36975008859 (Backend/Frontend/E2E). Final routine publication records
 will receive their own head verification in PR #36 before handoff. This adds no
 business/design decision and does not authorize merge, deployment or videos.
+
+## Separate merge/cleanup authorization — 2026-10-02
+
+User approved the completed PR handoff, then replied "ok" to the specific request
+to merge PR #36 and clean its branch/worktree. This authorizes that merge/cleanup;
+no deployment/live activation/video or next feature is inferred. PR #36 squash
+merged as d4dd976 after all final-head CI checks passed. Workflow step 8 routine
+closure is recorded through a separate documentation PR, preserving approved designs.

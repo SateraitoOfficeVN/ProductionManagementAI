@@ -1,14 +1,18 @@
 # WI-010 — Status
 
-As of 2026-10-02: revision 3 implementation and PR publication complete;
-[PR #36](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/36) open.
+As of 2026-10-02: WI-010 complete and
+[PR #36](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/36) squash-merged
+to master as d4dd976cd8fdcefa5f3eb7ad31fe8f0a4ba01c48 at 07:09:46 UTC.
 Implementation head f2a1d82 passed all three GitHub CI jobs in
 [run 36975008859](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36975008859).
-The final publication-record commit changes routine Markdown only; its actual head
-checks and handoff are tracked in PR #36. Merge remains a separate user instruction.
+Final reviewed head c9430e7 passed all three jobs in
+[run 36975730228](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36975730228):
+239 unit, 195 integration, 253 frontend and 48 E2E cases.
+User approved PR review, then explicitly replied "ok" to the merge/cleanup request.
 
-Checkout: C:/Data/project/ProductionManagementAI-WI010;
-branch: feature/WI-010-plant-calendar; initial baseline 42e8932.
+Former checkout C:/Data/project/ProductionManagementAI-WI010 and local/remote
+feature/WI-010-plant-calendar removed after confirmed merge and clean status.
+Initial baseline 42e8932; main checkout fast-forwarded to the merge commit.
 Reviewed implementation f2a1d82 rebased without conflicts onto master f44283c.
 All seven approved version 1 designs and their companions remain immutable.
 
@@ -28,5 +32,7 @@ Screen-reader speech and physical mobile keyboard/IME remain Not run because the
 required tools/device are unavailable. The user explicitly accepted local handoff
 with these limitations; no accessibility certification is claimed.
 
-Next: review PR #36 and its final head checks. Retain the feature worktree/branch.
-No merge, live activation, deployment or new video action was performed or authorized.
+Next: review the routine closeout-record PR. No next feature approved; BOM remains
+a candidate. No live activation, deployment or new video action performed. Prior
+evidence checkout and final videos preserved. Closeout records use a separate
+chore branch/PR; no direct push to master.

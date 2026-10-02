@@ -41,27 +41,27 @@ Done and merged to `master`:
   Feature branches/worktree cleaned up. Initial approval-history correction
   remains documented; no live/demo deployment performed.
 
-### WI-009 completed / WI-010 current
+### WI-009 and WI-010 completed
 
-Production lines and presence-aware order assignment/history merged by PR #34
-as 42e8932. Final CI run 36832958896 passed Backend/Frontend/E2E on reviewed head
-6f49c31. Local checks: 192 unit, 157 integration, 196 frontend, 42 E2E; clean
-build/lint and mobile/native 200% zoom reviewed. Merged branches/worktree removed,
-original drafts/config backed up; final evidence videos preserved. No live/demo
-deployment or external OTLP export claimed. Approved designs remain immutable.
+Production lines merged by PR #34 as 42e8932; final CI run 36832958896 passed all
+three jobs on reviewed head 6f49c31. Prior videos preserved; no live deployment.
 
-WI-010 Plant calendar (稼働カレンダー): all seven 006 designs approved and immutable;
-implementation plan 2 explicitly approved and executed locally in
-C:/Data/project/ProductionManagementAI-WI010, feature/WI-010-plant-calendar,
-initial baseline 42e8932; implementation f2a1d82 rebased onto master f44283c, PR #36 open. Japanese month/mobile agenda, retained
-weekly/date rules/history, exact current capacity, eleven role-gated APIs, restricted
-three-table migration/owner activation and scoped telemetry implemented. Local checks
-pass 239 unit/195 integration/253 frontend/48 full E2E plus six final affected journeys;
-build/lint, native 200%, fresh/upgrade/activation rehearsals pass. Fixtures cleaned.
-Screen-reader and physical mobile keyboard/IME not run without configured tools/device;
-user explicitly permits local handoff with these limits; local delivery complete. See work-items/WI-010/status.md,
-evidence.md, review.md and test-plan.md for actual coverage/limits. GitHub CI passed; no merge/live activation/deployment/new videos claimed. Revision 3 approved for CI fixture setup/commit/push/PR/CI verification, PR #36 open; GitHub CI passed on implementation f2a1d82 (run 36975008859); final publication-record head checks are tracked in PR #36; merge/live deployment remain excluded. BOM remains
-an unapproved candidate. Earlier WI-009 reconciliation belonged to revision 1 step1.
+WI-010 Plant calendar (稼働カレンダー) merged by
+[PR #36](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/36) as
+d4dd976 on 2026-10-02 after explicit merge/cleanup authorization. Final reviewed
+head c9430e7 passed [run 36975730228](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36975730228):
+239 unit/195 integration/253 frontend/48 E2E. Japanese month/mobile agenda,
+weekly/date rules and history, exact current capacity, eleven Admin/Operator APIs,
+three restricted tables, owner activation and scoped telemetry implemented.
+Existing orders/dashboard behavior preserved. CI activates only its disposable
+calendar fixture. All seven approved 006 designs/companions remain immutable.
+
+Main checkout synchronized; local/remote feature branch and clean feature worktree
+removed. Prior evidence checkout/videos preserved. Screen-reader speech/physical
+mobile keyboard/IME remain Not run; user accepted local handoff with these limits.
+No live activation/deployment or new videos. Workflow closeout records in a routine
+chore PR; no next feature approved, BOM remains a candidate. See WI-010 status,
+evidence, review and test-plan for precise proof boundaries.
 
 Verified commands, run from the repo root unless noted:
 
