@@ -1,0 +1,23 @@
+{
+  "before": {
+    "dpr": 1,
+    "width": 1384,
+    "height": 905,
+    "layoutWidth": 1369,
+    "scrollWidth": 1369
+  },
+  "after": {
+    "dpr": 2,
+    "width": 692,
+    "height": 452,
+    "layoutWidth": 684,
+    "scrollWidth": 684
+  },
+  "dialog": {
+    "x": 342.25,
+    "y": 226.25,
+    "layoutWidth": 684,
+    "height": 452
+  },
+  "keyboard": "Cancel focus, Tab cycle, Escape and retained draft passed"
+}

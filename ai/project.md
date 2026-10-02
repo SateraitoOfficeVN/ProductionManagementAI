@@ -89,6 +89,17 @@ Verified commands, run from the repo root unless noted:
 
 **CI**: `.github/workflows/ci.yml` has three jobs on push/PR to `master`: backend (build + unit/integration tests), frontend (lint + build + tests), and e2e (Compose stack + Playwright, after the other two; throwaway credentials generated per run; added by RFC 0003). A push or PR that changes only Markdown, `docs/`, `work-items/`, `demos/`, `ai/` or `LICENSE` starts no run at all (RFC 0005); `.github/`, `deploy/`, `src/` and `tests/` always do. Because GitHub evaluates the filter against a PR's whole diff, a PR that also changes code still runs everything. First executed on 2026-09-18 on PR #5, after the repository moved to the `SateraitoOfficeVN` organization (the earlier account billing lock blocked PRs #2–#4): backend, frontend and e2e all passed (https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226).
 
+### WI-011 local verification complete; PR delivery authorized
+
+WI-011 BUG-003/004 fixes in four calendar components restore consistent 48 px
+single-line actions and at least 8 px separate-control gaps. 11 layout regressions
+plus six existing calendar journeys pass against a production build; frontend
+lint/build/253 unit tests and native 200% keyboard/dialog checks pass. Completed
+approved designs remain unchanged. Revision 2 approved for commit/push/PR and CI
+handoff; not merged or deployed. Four separately requested English/Japanese
+web/mobile videos verified locally and kept outside git. Screen-reader speech and
+physical mobile keyboard/IME remain Not run. See work-items/WI-011/status.md.
+
 ## Candidate demo
 
 Roadmap locked (DEC-008, DEC-010) and complete: Screen A = production-order create/edit (WI-002), Screen B = production-order list (WI-003), Screen C = dashboard (WI-004; its widgets and metrics were settled in WI-004 DEC-001–DEC-009). The earlier "product catalog" candidate was dropped.

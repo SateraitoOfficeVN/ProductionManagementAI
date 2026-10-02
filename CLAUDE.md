@@ -20,8 +20,15 @@ head c9430e7 passed GitHub run 36975730228: Backend/Frontend/E2E, 239 unit/195 i
 Approved designs immutable; local/remote feature branch and clean worktree removed,
 main synchronized. Prior evidence checkout/videos preserved. Screen-reader speech
 and physical mobile keyboard/IME remain Not run with accepted local handoff limits.
-No live activation/deployment/new videos. Routine closeout-record PR is next;
+No live activation/deployment. WI-010 closeout merged via PR #37 as c227acc;
 no next feature approved. See work-items/WI-010/status.md. BOM remains a candidate.
+
+WI-011 calendar button height/spacing fix is locally verified and awaiting PR
+handoff under approved revision 2: frontend lint/build/253 tests, 17 production
+Playwright cases and native 200%/keyboard checks pass. Four new local evidence
+videos verified outside git; approved designs preserved. Not merged or deployed.
+Next: commit/push/PR and exact-head CI review; merge/cleanup needs separate user
+instruction. See work-items/WI-011/status.md.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 
