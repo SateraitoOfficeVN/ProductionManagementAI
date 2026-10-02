@@ -153,6 +153,205 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                     b.ToTable("user_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProductionManagementAI.Domain.PlantCalendar.CalendarState", b =>
+                {
+                    b.Property<short>("Id")
+                        .HasColumnType("smallint")
+                        .HasColumnName("id");
+
+                    b.Property<DateOnly>("ActivatedOn")
+                        .HasColumnType("date")
+                        .HasColumnName("activated_on");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<long>("Revision")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("revision");
+
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("time_zone_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("Id")
+                        .HasName("pk_plant_calendar_state");
+
+                    b.ToTable("plant_calendar_state", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_calendar_state_date", "activated_on BETWEEN DATE '0001-01-01' AND DATE '9999-12-31'");
+
+                            t.HasCheckConstraint("ck_calendar_state_revision", "revision >= 1");
+
+                            t.HasCheckConstraint("ck_calendar_state_singleton", "id = 1");
+
+                            t.HasCheckConstraint("ck_calendar_state_zone", "time_zone_id = btrim(time_zone_id) AND length(time_zone_id) > 0");
+                        });
+                });
+
+            modelBuilder.Entity("ProductionManagementAI.Domain.PlantCalendar.ExceptionRevision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateOnly>("CalendarDate")
+                        .HasColumnType("date")
+                        .HasColumnName("calendar_date");
+
+                    b.Property<short>("CalendarId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("calendar_id");
+
+                    b.Property<long>("CommitRevision")
+                        .HasColumnType("bigint")
+                        .HasColumnName("commit_revision");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("IsCurrent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_current");
+
+                    b.Property<bool>("IsRemoved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_removed");
+
+                    b.Property<bool?>("IsWorking")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_working");
+
+                    b.Property<Guid?>("LineId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("line_id");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("reason");
+
+                    b.Property<decimal?>("WorkingHours")
+                        .HasColumnType("numeric")
+                        .HasColumnName("working_hours");
+
+                    b.HasKey("Id")
+                        .HasName("pk_calendar_exception_revisions");
+
+                    b.HasIndex("LineId")
+                        .HasDatabaseName("ix_calendar_exception_line")
+                        .HasFilter("line_id IS NOT NULL");
+
+                    b.HasIndex("CalendarId", "CommitRevision")
+                        .IsUnique()
+                        .HasDatabaseName("ux_calendar_exception_commit");
+
+                    b.HasIndex("CalendarId", "LineId", "CalendarDate")
+                        .IsUnique()
+                        .HasDatabaseName("ux_calendar_exception_current")
+                        .HasFilter("is_current");
+
+                    NpgsqlIndexBuilderExtensions.AreNullsDistinct(b.HasIndex("CalendarId", "LineId", "CalendarDate"), false);
+
+                    b.ToTable("plant_calendar_exception_revisions", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_calendar_exception_date", "calendar_date BETWEEN DATE '0001-01-01' AND DATE '9999-12-31'");
+
+                            t.HasCheckConstraint("ck_calendar_exception_hours", "working_hours IS NULL OR (working_hours > 0 AND working_hours <= 24 AND scale(working_hours) <= 3)");
+
+                            t.HasCheckConstraint("ck_calendar_exception_payload", "(is_removed AND is_working IS NULL AND working_hours IS NULL AND reason IS NULL) OR (NOT is_removed AND is_working IS NOT NULL AND (is_working OR working_hours IS NULL))");
+
+                            t.HasCheckConstraint("ck_calendar_exception_revision", "commit_revision >= 1");
+                        });
+                });
+
+            modelBuilder.Entity("ProductionManagementAI.Domain.PlantCalendar.WeeklyRevision", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<short>("CalendarId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("calendar_id");
+
+                    b.Property<long>("CommitRevision")
+                        .HasColumnType("bigint")
+                        .HasColumnName("commit_revision");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateOnly>("EffectiveFrom")
+                        .HasColumnType("date")
+                        .HasColumnName("effective_from");
+
+                    b.Property<bool>("IsCurrent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_current");
+
+                    b.Property<bool>("IsWithdrawn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_withdrawn");
+
+                    b.Property<short?>("WorkingWeekdays")
+                        .HasColumnType("smallint")
+                        .HasColumnName("working_weekdays");
+
+                    b.HasKey("Id")
+                        .HasName("pk_calendar_weekly_revisions");
+
+                    b.HasIndex("CalendarId", "CommitRevision")
+                        .IsUnique()
+                        .HasDatabaseName("ux_calendar_weekly_commit");
+
+                    b.HasIndex("CalendarId", "EffectiveFrom")
+                        .IsUnique()
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ux_calendar_weekly_current")
+                        .HasFilter("is_current");
+
+                    b.ToTable("plant_calendar_weekly_revisions", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_calendar_weekly_date", "effective_from BETWEEN DATE '0001-01-01' AND DATE '9999-12-31'");
+
+                            t.HasCheckConstraint("ck_calendar_weekly_payload", "(is_withdrawn AND working_weekdays IS NULL) OR (NOT is_withdrawn AND working_weekdays IS NOT NULL AND working_weekdays BETWEEN 0 AND 127)");
+
+                            t.HasCheckConstraint("ck_calendar_weekly_revision", "commit_revision >= 1");
+                        });
+                });
+
             modelBuilder.Entity("ProductionManagementAI.Domain.ProductionLines.ProductionLine", b =>
                 {
                     b.Property<Guid>("Id")
@@ -687,6 +886,32 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_tokens_users_user_id");
+                });
+
+            modelBuilder.Entity("ProductionManagementAI.Domain.PlantCalendar.ExceptionRevision", b =>
+                {
+                    b.HasOne("ProductionManagementAI.Domain.PlantCalendar.CalendarState", null)
+                        .WithMany()
+                        .HasForeignKey("CalendarId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_calendar_exception_state");
+
+                    b.HasOne("ProductionManagementAI.Domain.ProductionLines.ProductionLine", null)
+                        .WithMany()
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_calendar_exception_line");
+                });
+
+            modelBuilder.Entity("ProductionManagementAI.Domain.PlantCalendar.WeeklyRevision", b =>
+                {
+                    b.HasOne("ProductionManagementAI.Domain.PlantCalendar.CalendarState", null)
+                        .WithMany()
+                        .HasForeignKey("CalendarId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_calendar_weekly_state");
                 });
 
             modelBuilder.Entity("ProductionManagementAI.Domain.ProductionLines.ProductionLineProduct", b =>

@@ -9,6 +9,7 @@ export {
   ClipboardList as NavOrdersIcon,
   Package as NavProductsIcon,
   Factory as NavLinesIcon,
+  CalendarRange as NavCalendarIcon,
   Plus as NavNewOrderIcon,
   LogOut as SignOutIcon,
   Menu as MenuIcon,

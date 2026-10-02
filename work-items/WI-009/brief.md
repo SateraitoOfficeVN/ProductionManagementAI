@@ -2,7 +2,7 @@
 
 | Work item | Workflow | State |
 | --- | --- | --- |
-| WI-009 | [feature-delivery](../../ai/workflows/feature-delivery.md) | local-delivery-ready |
+| WI-009 | [feature-delivery](../../ai/workflows/feature-delivery.md) | done — merged |
 
 ## Objective and sources
 
@@ -79,3 +79,8 @@ All sequential designs are approved. Final design/security assessment is in
 [review.md](review.md), with planned TC-326–365 in [test-plan.md](test-plan.md).
 Implementation plan revision 2 is explicitly approved. Local implementation and
 isolated verification are complete; revision 3 commit/PR delivery is approved.
+
+
+Current-state reconciliation: PR #34 merged as 42e8932; final exact-head CI
+passed; branch/worktree cleanup complete. No deployment. WI-010 revision 1
+step 1 updates these routine records; approved design documents remain unchanged.

@@ -1,3 +1,5 @@
+using ProductionManagementAI.Application.PlantCalendar;
+using ProductionManagementAI.Infrastructure.PlantCalendar;
 using ProductionManagementAI.Application.Dashboard;
 using ProductionManagementAI.Application.Health;
 using ProductionManagementAI.Infrastructure.Dashboard;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ProductionManagementAI.Application.ProductionOrders;
 using ProductionManagementAI.Application.Products;
 using ProductionManagementAI.Application.ProductionLines;
@@ -26,11 +29,13 @@ public static class DependencyInjection
         // that outer reference is read at registration time, before host-building customizations like
         // WebApplicationFactory's ConfigureAppConfiguration overrides (used by integration tests) are
         // guaranteed to have been merged in.
+        services.AddHttpContextAccessor();
         services.AddDbContext<AppDbContext>((sp, options) =>
         {
             var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
             options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
+            options.UseLoggerFactory(new CalendarLoggerFactory(sp.GetRequiredService<ILoggerFactory>(), sp.GetRequiredService<IHttpContextAccessor>()));
         });
 
         // Lockout thresholds mitigate credential-stuffing (0002_ADR STRIDE: Spoofing);
@@ -104,6 +109,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderNumberIssuer, OrderNumberIssuer>();
         services.AddScoped<IProductMasterRepository, ProductMasterRepository>();
         services.AddScoped<IProductionLineRepository, ProductionLineRepository>();
+        services.AddScoped<ICalendarRepository, CalendarRepository>();
 
         // Dashboard and health (003_DD-FN).
         services.AddScoped<IDashboardReader, DashboardReader>();

@@ -171,3 +171,13 @@ change, new business decision or scope expansion authorized.
 Explicit user "approved" received after revision 3 presentation. Scoped commit,
 feature-branch push, PR creation/update and CI review are authorized. Merge,
 branch/worktree deletion, deployment and video changes remain excluded.
+
+
+## Merge and cleanup authorization — current-state reconciliation
+
+After completed revision 3 delivery and final-head CI success, user explicitly
+requested merging PR #34. Squash merge completed at 2026-10-01 08:13:58 UTC as
+42e8932. Subsequent continuation requested cleanup: merged branches/worktree
+removed; unrelated drafts/configuration preserved. This task-specific instruction
+supersedes the earlier exclusions only for this completed merge/cleanup. No
+deployment permission inferred. Reconciled under WI-010 revision 1 step 1.

@@ -12,6 +12,7 @@ import {
   NavOrdersIcon,
   NavProductsIcon,
   NavLinesIcon,
+  NavCalendarIcon,
   SignOutIcon,
 } from './icons'
 import { labels } from '../features/production-orders/messages'
@@ -23,6 +24,7 @@ const entries: Entry[] = [
   { label: labels.nav.orders, to: '/production-orders', Icon: NavOrdersIcon },
   { label: labels.nav.products, to: '/products', Icon: NavProductsIcon },
   { label: labels.nav.lines, to: '/production-lines', Icon: NavLinesIcon },
+  { label: labels.calendar.title, to: '/plant-calendar', Icon: NavCalendarIcon },
   { label: labels.nav.newOrder, to: '/production-orders/new', Icon: NavNewOrderIcon, primary: true },
 ]
 
