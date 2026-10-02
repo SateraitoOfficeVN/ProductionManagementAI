@@ -96,7 +96,7 @@ single-line actions and at least 8 px separate-control gaps. 11 layout regressio
 plus six existing calendar journeys pass against a production build; frontend
 lint/build/253 unit tests and native 200% keyboard/dialog checks pass. Completed
 approved designs remain unchanged. Revision 2 approved for commit/push/PR and CI
-handoff; not merged or deployed. Four separately requested English/Japanese
+handoff; PR #38 opened, final-head CI pending, not merged or deployed. Four separately requested English/Japanese
 web/mobile videos verified locally and kept outside git. Screen-reader speech and
 physical mobile keyboard/IME remain Not run. See work-items/WI-011/status.md.
 

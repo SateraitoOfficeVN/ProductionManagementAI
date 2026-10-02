@@ -44,3 +44,9 @@ revision 2 approval. No actionable scoped finding; event handlers/business rules
 unchanged. Source/protected/video hashes match recorded evidence. Current-state
 entries describe pending PR delivery. Ignored videos and temporary assets excluded.
 CI pending; merge/worktree cleanup/deployment remain unauthorized.
+
+## Published review package — 2026-10-02
+
+[PR #38](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/38) contains reviewed correction commit 7c55605519931d4d866e37a568cb6b0ebf920fce. Only scoped
+source/test/records and required current-state entries included; 22 files,
+no dependency/API/design change. Final CI pending. No merge authority inferred.
