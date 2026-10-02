@@ -3,7 +3,7 @@
 | Revision | Date | Purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-02 | Calendar action height and spacing correction | Complete — local scope | Explicit user "approved" after revision 1 presentation, 2026-10-02 |
-| 2 | 2026-10-02 | Commit, PR and CI handoff | Current — approved | Explicit user "approved" after revision 2 presentation, 2026-10-02 |
+| 2 | 2026-10-02 | Commit, PR and CI handoff | Complete — PR handoff | Explicit user "approved" after revision 2 presentation, 2026-10-02 |
 
 ## Revision 1 — Local diagnosis, correction and verification
 
@@ -89,7 +89,7 @@ MP4s or intermediary assets. Completed approved design files remain immutable.
 | --- | --- | --- | --- |
 | 1 | Reconcile local review, evidence and current-state records for PR delivery; inspect complete candidate diff and selected files | Preserve unrelated changes and historical approvals. README.md, ai/project.md and CLAUDE.md describe only tracked/current PR state, not a merged release. Recheck source hashes against recorded evidence, approved artifact protection, whitespace and proportional delivery/security gates. Reuse unchanged-source test results; rerun affected checks only if code changes. | Complete: diff reviewed, four source/video hashes and 209 protected hashes unchanged; gates pass |
 | 2 | Commit only WI-011 source/test/records and necessary current-state updates on feature/WI-011-calendar-button-layout; push that branch and create a PR targeting master | Inspect staged diff/file list; no secrets, old design edits, ignored MP4s, dependency or unrelated changes. PR English summary identifies BUG-003/004, actual checks, local evidence paths and manual limits. Record exact commit and PR URL. | Complete: reviewed commit 7c55605 pushed; PR #38 opened |
-| 3 | Observe GitHub CI and reconcile results/review on the exact PR head | Report real job outcomes and counts, never substitute local results for CI. Diagnose failures; fix only defects within existing calendar layout/test scope, rerun affected checks and update PR. Material scope/design or external-access problems stop affected work. Record handoff when required CI and review pass. | In progress: final PR head CI under observation |
+| 3 | Observe GitHub CI and reconcile results/review on the exact PR head | Report real job outcomes and counts, never substitute local results for CI. Diagnose failures; fix only defects within existing calendar layout/test scope, rerun affected checks and update PR. Material scope/design or external-access problems stop affected work. Record handoff when required CI and review pass. | Complete: run36988844579 on d383d41 passed all three jobs; record-only follow-up checked separately on PR |
 
 ### Permissions requested by approval of revision 2
 
@@ -120,3 +120,11 @@ Review status: approved.
 Approval source: explicit user "approved" after revision 2 presentation, 2026-10-02.
 Current and approved revision: 2. Commit/push/PR and CI handoff authorized.
 Merge, branch/worktree deletion and deployment remain excluded.
+
+### Revision 2 verified handoff — 2026-10-02
+
+PR #38 reviewed head d383d41 passed all three CI jobs in run36988844579:
+239 backend unit, 195 integration, 253 frontend and 59 E2E; no failures/skips.
+This record-only closeout commit preserves source/test bytes and starts fresh
+PR checks. Their final-head outcome is also recorded in the PR description before
+user handoff. No merge, branch/worktree deletion or deployment authorization.

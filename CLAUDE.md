@@ -27,7 +27,9 @@ WI-011 calendar button height/spacing fix is locally verified and submitted as P
 under approved revision 2: frontend lint/build/253 tests, 17 production
 Playwright cases and native 200%/keyboard checks pass. Four new local evidence
 videos verified outside git; approved designs preserved. Not merged or deployed.
-Next: exact-head PR #38 CI review; merge/cleanup needs separate user
+PR #38 reviewed head d383d41 passed run36988844579: 239 unit/195 integration/
+253 frontend/59 E2E. Record-only follow-up checks tracked in the PR description.
+Next: user PR review; merge/cleanup needs separate user
 instruction. See work-items/WI-011/status.md.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.

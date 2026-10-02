@@ -184,3 +184,18 @@ scan of WI-011 records/spec found no match. Ignored MP4s excluded from git.
 Branch pushed; [PR #38](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/38) targets master. GitHub CI triggered by PR code/test
 diff; final record-only follow-up will have its own exact-head checks. No remote
 CI outcome assumed, no merge or worktree cleanup performed.
+
+## Remote CI and delivery result — 2026-10-02
+
+[CI run36988844579](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36988844579), head d383d412649d69e936993c3414ef69a362e1517e, completed successfully.
+All three jobs passed. Actual logs: 239 backend unit, 195 integration (zero failed/
+skipped), 21 frontend files/253 tests passed, 59 Playwright passed in1.5 minutes.
+Eleven new layout regressions increase prior48 E2E cases to59. No flaky/failure
+reported in the successful run. CI fixtures/migrations execute only on disposable
+runner infrastructure. Earlier run36988679841 on7c55605 is not used as final proof.
+
+Post-CI diff is routine records/current-state only, with no application/test/design/
+workflow/dependency change. Final record-commit checks and exact head/run outcome
+are captured in PR #38 description to avoid an endless record-only commit cycle.
+Delivery review passes; manual screen-reader/physical keyboard/IME still Not run.
+Merge/worktree deletion/deployment excluded and not performed.
