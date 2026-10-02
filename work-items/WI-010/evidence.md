@@ -831,3 +831,23 @@ Publication reconciliation changes routine Markdown only. Final record-head CI i
 verified separately and linked in PR #36 before handoff; this entry certifies the
 implementation run above, not an unrun subsequent head. No merge/live activation/
 deployment/videos. Manual checks remain Not run under accepted local limits.
+
+## Final-head CI, merge and cleanup — 2026-10-02
+
+[Final run 36975730228](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36975730228)
+on c9430e784808a29752d55a391cd276ae7338da6d passed Backend/Frontend/E2E. Actual logs:
+239 unit and 195 integration (zero failures/skips), 253 frontend across 21 files,
+48 Playwright cases in 50.7 seconds. Disposable owner activation succeeded.
+PR #36 was CLEAN/MERGEABLE with all three checks successful before merge.
+
+User explicitly replied "ok" after being asked to merge PR #36 and clean its
+branch/worktree. gh pr merge used --squash and --match-head-commit c9430e7...;
+GitHub confirms MERGED at 2026-10-02 07:09:46 UTC, squash commit
+d4dd976cd8fdcefa5f3eb7ad31fe8f0a4ba01c48. Main fast-forwarded to that commit.
+Verified resolved absolute feature path and clean worktree before git worktree
+remove; local and remote feature/WI-010-plant-calendar deleted. No force removal
+or unrelated checkout/video deletion. Routine closeout records isolated on
+chore/WI-010-closeout for a documentation PR; no direct master push.
+
+Delivery complete with previously accepted screen-reader/device IME Not run
+limits. No live migration/activation, deployment, new videos or next feature.
