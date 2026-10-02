@@ -4,7 +4,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-01 | Requirements and sequential design | Complete — superseded by revision 2 | Explicit user "approved" after revision 1 presentation, 2026-10-01 |
 | 2 | 2026-10-02 | Local implementation and verification | Complete — local handoff approved | Explicit user "approved" after revision 2 presentation, 2026-10-02 |
-| 3 | 2026-10-02 | CI fixture preparation and PR delivery | Current — approved | Explicit user "approved" after revision3 presentation,2026-10-02 |
+| 3 | 2026-10-02 | CI fixture preparation and PR delivery | Implementation and publication complete; final record-head checks tracked in PR36 | Explicit user "approved" after revision3 presentation,2026-10-02 |
 
 ## Revision 1 — Requirements and sequential design
 
@@ -247,9 +247,9 @@ workflow permissions, repository secrets or live database access.
 | --- | --- | --- | --- |
 | 1 | Update the existing E2E CI job with explicit disposable calendar activation; reconcile operational/verification records | Review owner SQL invocation, plant date/timezone and failure propagation; keep pinned actions/permissions unchanged | Done: one fixture step authored and actual extracted owner shell rehearsed |
 | 2 | Rehearse migration/activation and E2E using fresh task-owned Compose fixtures; run final affected build/test gates | Same setup order as CI; actual full backend/frontend/E2E counts recorded; no hidden retry/skip. Preserve manual Not run with accepted local limits; clean only verified task-owned fixtures | Done: full Release239/195, frontend253, E2E48; owned fixtures cleaned |
-| 3 | Review/security/delivery audit of complete WI-010 package and immutable209 artifacts; commit only intended files | Include authorized WI-009 merge-record reconciliation, approved006 designs/companions, code/tests/ops/CI and WI-010 records; exclude credentials/videos/unrelated files | Review/audit passed; commit next |
-| 4 | Synchronize feature branch with current master including merged RFC0013; push and create a focused PR to master | Commit before rebase, verify rebase preserves feature and immutable artifacts; resolve only in-scope conflicts. Use English PR summary and exact evidence/limitations | Not started |
-| 5 | Inspect actual GitHub CI results and resolve concrete failures within scope; hand off PR for review | Never claim unrun CI. Fixes that change approved behavior/design require a new revision/additive design. Final PR head/check results recorded | Not started |
+| 3 | Review/security/delivery audit of complete WI-010 package and immutable209 artifacts; commit only intended files | Include authorized WI-009 merge-record reconciliation, approved006 designs/companions, code/tests/ops/CI and WI-010 records; exclude credentials/videos/unrelated files | Done: reviewed commit f2a1d82 after conflict-free rebase; protected artifacts verified |
+| 4 | Synchronize feature branch with current master including merged RFC0013; push and create a focused PR to master | Commit before rebase, verify rebase preserves feature and immutable artifacts; resolve only in-scope conflicts. Use English PR summary and exact evidence/limitations | Done: pushed feature branch, PR36 opened against master f44283c |
+| 5 | Inspect actual GitHub CI results and resolve concrete failures within scope; hand off PR for review | Never claim unrun CI. Fixes that change approved behavior/design require a new revision/additive design. Final PR head/check results recorded | Done: run36975008859 passed all three jobs on implementation f2a1d82; final publication-record head checks tracked in PR36 |
 
 ### Authorization if this revision is approved
 

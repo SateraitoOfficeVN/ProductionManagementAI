@@ -1,26 +1,32 @@
 # WI-010 — Status
 
-As of2026-10-02: revision3 approved; PR delivery in progress.
-Revision2 local handoff approved with screen-reader/physical mobile keyboard/IME
-checks explicitly accepted as Not run. All seven approved version1 designs and
-companions remain immutable; no merge/deployment/live activation claimed.
+As of 2026-10-02: revision 3 implementation and PR publication complete;
+[PR #36](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/36) open.
+Implementation head f2a1d82 passed all three GitHub CI jobs in
+[run 36975008859](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36975008859).
+The final publication-record commit changes routine Markdown only; its actual head
+checks and handoff are tracked in PR #36. Merge remains a separate user instruction.
 
-Checkout C:/Data/project/ProductionManagementAI-WI010;
-feature/WI-010-plant-calendar, initial baseline42e8932. Complete intended feature
-package reviewed and ready for commit/rebase/push/PR under approved revision3.
+Checkout: C:/Data/project/ProductionManagementAI-WI010;
+branch: feature/WI-010-plant-calendar; initial baseline 42e8932.
+Reviewed implementation f2a1d82 rebased without conflicts onto master f44283c.
+All seven approved version 1 designs and their companions remain immutable.
 
 Implemented Japanese month/mobile agenda, weekly definitions, plant/line exceptions,
 retained history, exact current capacity, honest Unknown/no replay and eleven
 Admin/Operator APIs. Coherent reads/atomic writes, strict parser, restricted schema,
-explicit owner activation and safe scoped telemetry. Existing order/dashboard rules
-preserved. Existing CI E2E job now explicitly activates only its disposable fixture.
+explicit owner activation and scoped telemetry. Existing order/dashboard rules
+preserved. CI explicitly activates only its disposable calendar fixture.
 
-Final local gates: Release build0warnings/errors;239unit/195integration;253frontend;
-48full E2E on a fresh CI-style fixture,0failed/skipped/retries. Actual extracted CI
-activation shell succeeds. Security/delivery review and209immutable-artifact audit
-pass; package/lockfiles unchanged,0generated credential matches. Owned fixture/
-images/temp credentials cleaned. Prior main checkout/videos preserved.
+Local gates: Release build with zero warnings/errors; 239 unit / 195 integration /
+253 frontend / 48 E2E passed, zero failures/skips/retries. GitHub reports the same
+counts; owner fixture activation committed successfully. Security/delivery review
+and 209-artifact hash audit pass. Package/lockfiles unchanged; owned fixtures,
+images and temporary credentials cleaned. Main checkout/prior videos preserved.
 
-Next: commit intended package, synchronize with current master (RFC0013), push and
-create PR, then inspect actual CI. Commit/push/PR and in-scope CI fixes authorized
-by revision3; merge/live activation/deployment/videos still require separate request.
+Screen-reader speech and physical mobile keyboard/IME remain Not run because the
+required tools/device are unavailable. The user explicitly accepted local handoff
+with these limitations; no accessibility certification is claimed.
+
+Next: review PR #36 and its final head checks. Retain the feature worktree/branch.
+No merge, live activation, deployment or new video action was performed or authorized.

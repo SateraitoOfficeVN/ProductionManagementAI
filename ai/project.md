@@ -53,15 +53,14 @@ deployment or external OTLP export claimed. Approved designs remain immutable.
 WI-010 Plant calendar (稼働カレンダー): all seven 006 designs approved and immutable;
 implementation plan 2 explicitly approved and executed locally in
 C:/Data/project/ProductionManagementAI-WI010, feature/WI-010-plant-calendar,
-baseline 42e8932; changes remain uncommitted. Japanese month/mobile agenda, retained
+initial baseline 42e8932; implementation f2a1d82 rebased onto master f44283c, PR #36 open. Japanese month/mobile agenda, retained
 weekly/date rules/history, exact current capacity, eleven role-gated APIs, restricted
 three-table migration/owner activation and scoped telemetry implemented. Local checks
-pass239 unit/195 integration/253 frontend/48 full E2E plus six final affected journeys;
+pass 239 unit/195 integration/253 frontend/48 full E2E plus six final affected journeys;
 build/lint, native 200%, fresh/upgrade/activation rehearsals pass. Fixtures cleaned.
 Screen-reader and physical mobile keyboard/IME not run without configured tools/device;
 user explicitly permits local handoff with these limits; local delivery complete. See work-items/WI-010/status.md,
-evidence.md, review.md and test-plan.md for actual coverage/limits. No GitHub CI,
-merge/live activation/deployment/new videos claimed. Revision3 approved for CI fixture setup/commit/push/PR/CI verification, publication in progress; merge/live deployment remain excluded. BOM remains
+evidence.md, review.md and test-plan.md for actual coverage/limits. GitHub CI passed; no merge/live activation/deployment/new videos claimed. Revision 3 approved for CI fixture setup/commit/push/PR/CI verification, PR #36 open; GitHub CI passed on implementation f2a1d82 (run 36975008859); final publication-record head checks are tracked in PR #36; merge/live deployment remain excluded. BOM remains
 an unapproved candidate. Earlier WI-009 reconciliation belonged to revision 1 step1.
 
 Verified commands, run from the repo root unless noted:

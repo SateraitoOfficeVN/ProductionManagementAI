@@ -71,3 +71,11 @@ orders. Existing due-date checks, due-soon dashboard windows and start rules
 remain unchanged. DEC-005–007 default/effective-history rules are explicitly approved. The
 requirements and all sequential design sources/PDFs are approved. TP-WI-010
 records executed coverage and unrun manual variations; revision 2 local implementation is verified, with manual limits explicitly accepted for local handoff.
+
+## Current delivery checkpoint — 2026-10-02
+
+Revision 3 explicitly approved and executed: disposable CI calendar activation,
+full local gates, commit/rebase/push and PR #36. Implementation-head GitHub run
+36975008859 passed all three jobs; final publication-record head checks tracked
+in PR #36. Requirements/designs unchanged; manual local handoff limits retained.
+Merge, deployment, live activation and videos remain outside this revision.

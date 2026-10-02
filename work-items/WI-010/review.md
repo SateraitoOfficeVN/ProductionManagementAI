@@ -303,3 +303,15 @@ retries.209approved artifacts unchanged. All EN/JA companions included. Main/vid
 preserved, task fixtures cleaned. Delivery checklist passes for local publication
 preparation within approved revision3; remote PR/CI not yet claimed. No merge/live
 activation/deployment/videos authorized. Remaining manual limits explicitly accepted.
+
+## PR delivery review — 2026-10-02
+
+Actual implementation-head CI run 36975008859 passed Backend, Frontend and E2E
+with 239 unit / 195 integration / 253 frontend / 48 E2E cases. Owner disposable
+calendar activation succeeded before API startup. No unresolved CI finding.
+Final publication records contain no application/design/permission/dependency
+changes; implementation review remains valid. Approved artifacts stay immutable.
+Delivery gate passes for the approved revision 3 PR scope, subject to verifying
+the final routine-record head in GitHub before handoff. Actual final head checks
+are linked in PR #36. Screen-reader speech/mobile device IME remain Not run with
+explicitly accepted local handoff limits. Merge and release remain unauthorized.

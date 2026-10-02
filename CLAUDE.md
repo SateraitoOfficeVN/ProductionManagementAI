@@ -15,14 +15,14 @@ WI-001 (application skeleton and auth foundation: a .NET 10 + EF Core backend in
 
 WI-009 Production lines is merged via PR #34 as 42e8932. Final-head CI passed
 Backend/Frontend/E2E; local checks passed 192 unit, 157 integration, 196 frontend
-and42E2E. Branch/worktree cleanup complete; no deployment. WI-010 Plant calendar
+and 42 E2E. Branch/worktree cleanup complete; no deployment. WI-010 Plant calendar
 is locally implemented on feature/WI-010-plant-calendar in its isolated checkout;
-all changes uncommitted, all approved designs immutable. Local239 unit/195 integration/
+implementation committed as f2a1d82; PR #36 open, all approved designs immutable. Local 239 unit/195 integration/
 253 frontend/48 full E2E plus six final affected journeys pass; build/lint/native 200%
 pass and disposable migration/activation fixtures cleaned. Screen-reader and physical
 mobile keyboard/IME not run; local delivery complete with explicit user acceptance of these limits. See
-work-items/WI-010/status.md. Revision3 explicitly approved for CI fixture setup/commit/push/PR and actual CI
-verification; publication in progress. Merge/deploy/live activation/videos still
+work-items/WI-010/status.md. Revision 3 explicitly approved for CI fixture setup/commit/push/PR and actual CI
+verification; PR #36 open; GitHub CI passed on implementation f2a1d82 (run 36975008859); final publication-record head checks are tracked in PR #36. Merge/deploy/live activation/videos still
 need separate authorization.
 BOM remains an unapproved future candidate.
 

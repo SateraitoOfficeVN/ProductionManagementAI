@@ -802,3 +802,32 @@ containers/network/two volumes and explicitly named three project images. Delete
 only the two verified temporary environment/shell files. No shared image pruning,
 old checkout/video/approved design or live/demo writes. Manual screen-reader/device
 checks remain Not run with explicit user acceptance for local handoff.
+
+## Publication checkpoint — PR36
+
+Reviewed105intended files committed as88101c7, then rebased without conflicts onto
+current master f44283c. Resulting implementation commit:
+f2a1d82d3932a71fd3f311272fbd5132807bf4b5. Old/new commit tree comparison adds only the
+two merged RFC0013 files; application, CI step, tests and approved documents identical.
+209protected hashes rechecked after rebase. Feature branch pushed and
+[PR36](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/36) opened to
+master. No direct master push, merge/deploy/live activation/video action.
+
+Actual GitHub run36975008859 started on that head for pull_request. Backend and
+Frontend initially in progress; E2E depends on them. Source local verification does
+not establish remote success; final observed results recorded separately below.
+
+## Actual GitHub CI — implementation head, 2026-10-02
+
+[Run 36975008859](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36975008859)
+completed successfully for PR #36 / head f2a1d82d3932a71fd3f311272fbd5132807bf4b5.
+GitHub checks execute the generated PR merge ref; the recorded head is the feature
+commit. Backend build/test passed: 239 unit and 195 integration, zero failures/skips.
+Frontend lint/build/test passed: 253 tests across 21 files. E2E Compose/Playwright
+passed all 48 cases in 53.8 seconds. The explicit owner activation step completed
+COMMIT for 2026-10-02 / Asia/Tokyo before stack startup. No CI fix or retry needed.
+
+Publication reconciliation changes routine Markdown only. Final record-head CI is
+verified separately and linked in PR #36 before handoff; this entry certifies the
+implementation run above, not an unrun subsequent head. No merge/live activation/
+deployment/videos. Manual checks remain Not run under accepted local limits.

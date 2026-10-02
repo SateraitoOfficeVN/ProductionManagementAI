@@ -187,3 +187,10 @@ actual CI verification. Revision3 not approved or executed yet. No design change
 Explicit user "approved" after revision3 presentation authorizes the existing CI
 fixture activation step, isolated rehearsal, local commit/rebase, branch push/PR
 and actual CI verification/fixes within scope. Merge/deploy/videos remain excluded.
+
+## Revision 3 PR publication result — 2026-10-02
+
+PR #36 opened under revision 3 authorization. Implementation head f2a1d82 passed
+GitHub run 36975008859 (Backend/Frontend/E2E). Final routine publication records
+will receive their own head verification in PR #36 before handoff. This adds no
+business/design decision and does not authorize merge, deployment or videos.
