@@ -41,20 +41,28 @@ Done and merged to `master`:
   Feature branches/worktree cleaned up. Initial approval-history correction
   remains documented; no live/demo deployment performed.
 
-### Local WI-009 working-tree delivery
+### WI-009 completed / WI-010 current
 
-Production lines implementation and all eight approved revision 2 local steps
-are verified on feature/WI-009-production-lines in the separate WI009 checkout.
-Master maintenance, exact timing/unit generations, durable retirement and
-presence-aware order assignment/history are implemented. Final local checks
-passed 192 unit, 157 integration, 196 frontend and 42 E2E; clean build/lint and
-native 200% zoom verification. See [status](../work-items/WI-009/status.md) and
-[evidence](../work-items/WI-009/evidence.md). Implementation committed as 810ea06;
-[PR #34](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/34) open, CI verification in progress; no merge or live/demo deployment. Approved designs remain immutable.
+Production lines and presence-aware order assignment/history merged by PR #34
+as 42e8932. Final CI run 36832958896 passed Backend/Frontend/E2E on reviewed head
+6f49c31. Local checks: 192 unit, 157 integration, 196 frontend, 42 E2E; clean
+build/lint and mobile/native 200% zoom reviewed. Merged branches/worktree removed,
+original drafts/config backed up; final evidence videos preserved. No live/demo
+deployment or external OTLP export claimed. Approved designs remain immutable.
 
-Next action: PR #34 CI/review handoff; merge requires separate authorization. No next feature approved; Plant
-calendar and BOM remain candidates. No release-readiness or external OTLP export
-is claimed by local verification.
+WI-010 Plant calendar (稼働カレンダー): all seven 006 designs approved and immutable;
+implementation plan 2 explicitly approved and executed locally in
+C:/Data/project/ProductionManagementAI-WI010, feature/WI-010-plant-calendar,
+baseline 42e8932; changes remain uncommitted. Japanese month/mobile agenda, retained
+weekly/date rules/history, exact current capacity, eleven role-gated APIs, restricted
+three-table migration/owner activation and scoped telemetry implemented. Local checks
+pass239 unit/195 integration/253 frontend/48 full E2E plus six final affected journeys;
+build/lint, native 200%, fresh/upgrade/activation rehearsals pass. Fixtures cleaned.
+Screen-reader and physical mobile keyboard/IME not run without configured tools/device;
+user explicitly permits local handoff with these limits; local delivery complete. See work-items/WI-010/status.md,
+evidence.md, review.md and test-plan.md for actual coverage/limits. No GitHub CI,
+merge/live activation/deployment/new videos claimed. Revision3 approved for CI fixture setup/commit/push/PR/CI verification, publication in progress; merge/live deployment remain excluded. BOM remains
+an unapproved candidate. Earlier WI-009 reconciliation belonged to revision 1 step1.
 
 Verified commands, run from the repo root unless noted:
 

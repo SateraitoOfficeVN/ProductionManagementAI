@@ -4,7 +4,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | 2026-09-30 | Requirements and design for Production lines | complete; followed by revision 2 | Explicit user reply "approved" after revision 1 presentation, 2026-10-01 |
 | 2 | 2026-10-01 | Implement and verify Production lines | complete — local only | Explicit user "approved" after revision 2 presentation, 2026-10-01 |
-| 3 | 2026-10-01 | Commit, publish feature branch and open PR | approved — current | Explicit user "approved" after revision 3 presentation, 2026-10-01 |
+| 3 | 2026-10-01 | Commit, publish feature branch and open PR | complete | Explicit user "approved" after revision 3 presentation, 2026-10-01 |
 
 ## Revision 1 — Requirements and sequential design
 
@@ -229,7 +229,7 @@ No new feature, design revision, dependency, deployment or video output is in sc
 | 1 | Audit tracked/untracked files, branch/base and staged diff; reconcile only routine current-state records for commit | Explicit authorized staging set; current records | Confirm no secrets, generated test outputs, unrelated files or protected-design edits; diff --check; stop for unexpected base divergence or unrelated changes | Done: baseline unchanged, 123-file scope, hashes and staged diff verified |
 | 2 | Commit the reviewed delivery as feat(WI-009): Production lines and order assignment | One local feature commit | Inspect commit file list and staged scope; retain recorded 192/157/196/42 test evidence; rerun affected checks only if application changes become necessary | Done: implementation commit 810ea06, scope verified |
 | 3 | Push the feature branch and create the WI-009 PR targeting master | Remote feature branch and PR URL | No direct master push or force push; inspect existing PR first to avoid duplicates; PR describes behavior, migrations, actual verification and limits | Done: feature branch pushed, PR #34 targets master |
-| 4 | Monitor required CI checks and reconcile delivery records | Actual CI result and review handoff | Record passed/failed/pending checks on the exact head SHA; if an in-scope CI fix is necessary, use a follow-up commit and rerun affected gates; stop if it requires design/business/scope changes | In progress: Backend/Frontend pass on 810ea06; final exact-head checks and results recorded in PR #34 after completion |
+| 4 | Monitor required CI checks and reconcile delivery records | Actual CI result and review handoff | Record passed/failed/pending checks on the exact head SHA; if an in-scope CI fix is necessary, use a follow-up commit and rerun affected gates; stop if it requires design/business/scope changes | Done: all three jobs passed on final head 6f49c31, CI run 36832958896; PR #34 handoff recorded |
 
 Steps are sequential and require explicit approval of revision 3 before step 1.
 Apply pr-review plus security-review/delivery checklists before publishing. Record
@@ -257,4 +257,6 @@ actual evidence; no forced history rewrite or inferred merge authorization.
 After final CI results, present the PR and remaining limitations for user review.
 
 Approval source: explicit user "approved" after revision 3 presentation,
-2026-10-01. Closure: pending.
+2026-10-01. Closure: complete; scoped delivery and exact-head CI verified. Later
+explicit user instruction authorized squash merge and subsequent cleanup,
+recorded in decisions/evidence/status. No deployment.

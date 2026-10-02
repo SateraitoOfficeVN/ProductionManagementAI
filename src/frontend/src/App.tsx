@@ -1,3 +1,4 @@
+import { PlantCalendarPage } from './features/plant-calendar/PlantCalendarPage'
 import { Route, Routes } from 'react-router-dom'
 import { NavigationGuardProvider } from './components/NavigationGuardProvider'
 import { LoginPage } from './features/auth/LoginPage'
@@ -50,6 +51,7 @@ function App() {
         <Route path="/products" element={<ProtectedRoute><ProductMasterPage /></ProtectedRoute>} />
         <Route path="/products/new" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
         <Route path="/products/:id" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
+        <Route path="/plant-calendar" element={<ProtectedRoute><PlantCalendarPage /></ProtectedRoute>} />
         <Route path="/production-lines" element={<ProtectedRoute><ProductionLineListPage /></ProtectedRoute>} />
         <Route path="/production-lines/new" element={<ProtectedRoute><ProductionLineFormPage /></ProtectedRoute>} />
         <Route path="/production-lines/:id/edit" element={<ProtectedRoute><ProductionLineFormPage /></ProtectedRoute>} />

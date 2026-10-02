@@ -1,3 +1,4 @@
+using ProductionManagementAI.Domain.PlantCalendar;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     : IdentityDbContext<AppUser, AppRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>,
         IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options)
 {
+    /// <summary>Gets the owner-activated plant calendar singleton.</summary>
+    public DbSet<CalendarState> CalendarStates => Set<CalendarState>();
+    /// <summary>Gets retained weekly snapshots.</summary>
+    public DbSet<WeeklyRevision> CalendarWeeklyRevisions => Set<WeeklyRevision>();
+    /// <summary>Gets retained date exception snapshots.</summary>
+    public DbSet<ExceptionRevision> CalendarExceptionRevisions => Set<ExceptionRevision>();
+
     public DbSet<Product> Products => Set<Product>();
 
     /// <summary>Gets the durable line masters.</summary>

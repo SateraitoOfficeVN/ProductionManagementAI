@@ -204,7 +204,7 @@ describe('ProductionOrderPage — edit mode', () => {
         .getAllByRole('option')
         .map((o) => o.textContent),
     ).toEqual(['進行中', '完了', '取消'])
-    expect(document.title).toBe('製造指示 PO-2026-00042 — ProductionManagementAI')
+    await waitFor(() => expect(document.title).toBe('製造指示 PO-2026-00042 — ProductionManagementAI'))
     expect(await axe(container)).toHaveNoViolations()
   })
 

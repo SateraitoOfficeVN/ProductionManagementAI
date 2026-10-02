@@ -1,26 +1,24 @@
 # WI-009 — Status
 
-As of 2026-10-01. State: PR-open; revision 3 delivery authorized.
+As of 2026-10-01. State: done — merged and cleaned up.
 
 ## Current delivery
 
-Local revision 2 implementation and verification are complete: 192 unit, 157
-integration, 196 frontend and 42 Playwright pass; frontend lint/build and backend
-build clean. Approved designs preserved; isolated resources cleaned up.
+PR #34 squash-merged into master as 42e89326151b1ebb68c8ae30494a621589f5c7dc
+following explicit user merge authorization. Final CI run 36832958896 succeeded
+on reviewed head 6f49c3166367f4908430e222a0e2ae5f0a5184d9: Backend, Frontend and
+E2E all passed. Local evidence: 192 unit, 157 integration, 196 frontend, 42 E2E.
+No live/demo migration or deployment performed.
 
-Implementation commit: 810ea066763b8855cfbb8c289d9873813c5c5902, published on
-feature/WI-009-production-lines. [PR #34](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/34) targets master at 20c8d61.
-[Initial CI](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/36832509363) has passed Backend and Frontend; E2E is in progress at this
-record update. This record-only follow-up will trigger checks again. Final
-exact-head results are recorded in the PR description/checks after verification;
-no final CI success is claimed by this earlier snapshot.
+Feature branch (local/remote) and WI009 worktree removed after the user requested
+continuation. Original draft records and IDE configuration preserved in the main
+repository .git/agent-backups/WI-009-pre-merge-20261001. Main master fast-forwarded
+to 42e8932; evidence checkout and final videos preserved. PR #34 records merge,
+actual CI and cleanup details. WI-010 Plant calendar is the next selected feature;
+only its revision 1 requirements/design phase is approved.
 
-Security/design/delivery assessment: [review](review.md), [evidence](evidence.md),
-[test dispositions](test-plan.md). Checkout retained at
-C:/Data/project/ProductionManagementAI-WI009. Main/demo resources and the four
-final videos preserved. No merge, deployment or live migration performed.
-Next: complete CI review and present PR; merge requires separate authorization.
-No new feature or design revision approved.
+This current-state reconciliation is performed in the isolated WI010 checkout
+under approved revision 1 step 1. Earlier milestone records remain below.
 
 ## Execution history
 

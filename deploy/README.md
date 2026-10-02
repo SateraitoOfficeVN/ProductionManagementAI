@@ -87,3 +87,64 @@ host ports 5499/8099/3099. Its random credentials live in a temporary environmen
 file outside git. Never use this topology's cleanup command against an existing
 application project; inspect the exact Compose project labels before removing
 only its disposable containers/volumes.
+
+
+## WI-010 Plant calendar activation and recovery
+
+WI-010 rehearsal uses disposable fixtures only. Live/demo migration or activation
+requires separate authorization, a verified restorable backup, a write pause and
+coordinated API/UI rollout. Record the actual target database/owner, migration
+history, configured Plant:TimeZone and chosen explicit plant-local activation date.
+Stop old writers before owner migration20261002030411_ExpandPlantCalendar.
+The additive migration creates three new tables/indexes and column grants only;
+it does not seed/activate the calendar, rewrite old tables or backfill order data.
+DDL uses transaction-local5s lock/15s statement budgets. Inspect the catalog and
+migration history after interruption before any retry; never guess partial state.
+
+Unactivated reads return unavailable coverage/nullable context version; writes are
+rejected. There is no startup/API/read activation. After verifying schema/grants and
+the plant date/timezone, run scripts/calendar/activate.ps1 as the owner using
+explicit PGHOST, PGPORT, PGDATABASE and PGUSER plus credentials in PGPASSWORD or a
+protected .pgpass; never commit/print credentials. Example from the repository root:
+
+```powershell
+./scripts/calendar/activate.ps1 -ActivationDate '2026-10-02' -TimeZone 'Asia/Tokyo'
+```
+
+Those values are an example, not an automatic production date choice. Use the
+exact timezone configured in every app instance; changing it later causes calendar
+503 TIMEZONE_MISMATCH. The wrapper validates explicit dates and target variables;
+activate.sql validates date/timezone/owner inside a bounded transaction, then locks
+the singleton table and inserts state revision1 plus initial Mon–Fri mask31 as one
+commit. An existing activation always refuses reset. After any uncertainty inspect
+state and initial weekly record through a separate owner connection; do not blindly
+replay. Verify activated_on/time_zone_id/revision and matching initial current head.
+
+Runtime pmai_app can SELECT the three tables, UPDATE only state revision/audit,
+INSERT revision snapshots and UPDATE only is_current. Activation/date/timezone
+changes, payload UPDATE, DELETE and DDL are denied. Old snapshots/markers remain;
+weekly/date mutations validate exact latest ID and global opaque version. Existing
+order starts, due dates and dashboard windows remain calendar-independent.
+
+Calendar operations use a20s request deadline,15s command/statement,5s lock and
+at most5s cleanup budget; client deadline25s. Known rollback BUSY permits explicit
+retry after Retry-After1. Lost commit/response confirmation is Unknown: preserve
+input, inspect current/history and explicitly discard/accept a fresh baseline;
+observed equality never proves the earlier client committed. No automated replay.
+
+Down refuses after activation. Prefer an approved forward repair. A coordinated
+backup restore must restore state and all revisions together, maintain old product/
+line/order integrity and reset all client drafts/snapshot tokens; never reset only
+the aggregate version, delete markers or combine versions from different backups.
+Rehearse restore and validate constraints/grants before resuming writers. No live
+cutover, deployment or externally exported telemetry is claimed by local tests.
+
+The WI010 test project is pmai-wi010-check-20261002, database wi010_fixture,
+ports54410/18110/30110, generated credentials outside git. Verify exact Docker
+Compose labels before removing only these task-owned containers/volumes. Preserve
+all existing demo/evidence stacks and final videos.
+
+CI E2E explicitly activates its newly migrated disposable calendar as the owner
+before API startup, using activate.sql with the current date in its fixed plant
+timezone. This fixture step is separate from production deployment; startup and
+migrations remain unactivated, and live activation needs separate authorization.

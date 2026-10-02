@@ -5,5 +5,6 @@ export function currentEntry(pathname: string): string | null {
   if (pathname === '/production-orders' || pathname.startsWith('/production-orders/')) return '/production-orders'
   if (pathname === '/products' || pathname.startsWith('/products/')) return '/products'
   if (pathname === '/production-lines' || pathname.startsWith('/production-lines/')) return '/production-lines'
+  if (pathname === '/plant-calendar') return '/plant-calendar'
   return null
 }

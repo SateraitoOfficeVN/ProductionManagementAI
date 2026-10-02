@@ -1,5 +1,7 @@
 using ProductionManagementAI.Application.Dashboard;
 using ProductionManagementAI.Application.Health;
+using ProductionManagementAI.Application.PlantCalendar;
+using ProductionManagementAI.Api.PlantCalendar;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
@@ -48,6 +50,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ProductionOrderService>();
 builder.Services.AddScoped<ProductMasterService>();
 builder.Services.AddScoped<ProductionLineService>();
+builder.Services.AddScoped<PlantCalendarService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<SystemHealthService>();
 
@@ -60,13 +63,13 @@ builder.Services.AddOpenTelemetry()
     {
         t.AddAspNetCoreInstrumentation(options => options.EnrichWithHttpRequest = (activity, request) =>
         {
-            if (request.Path.StartsWithSegments("/api/production-lines"))
+            if (request.Path.StartsWithSegments("/api/production-lines") || request.Path.StartsWithSegments("/api/plant-calendar"))
             {
                 activity.SetTag("url.query", null);
                 activity.SetTag("http.url", null);
             }
         }).AddNpgsql().AddSource(ProductionOrderTelemetry.Name)
-            .AddSource(ProductMasterService.TelemetryName).AddSource(ProductionLineService.TelemetryName);
+            .AddSource(ProductMasterService.TelemetryName).AddSource(ProductionLineService.TelemetryName).AddSource(CalendarTelemetry.Name).AddProcessor(new CalendarTraceProcessor());
         if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         {
             t.AddOtlpExporter();
@@ -75,7 +78,7 @@ builder.Services.AddOpenTelemetry()
     .WithMetrics(m =>
     {
         m.AddAspNetCoreInstrumentation().AddMeter(ProductionOrderTelemetry.Name)
-            .AddMeter(ProductMasterService.TelemetryName).AddMeter(ProductionLineService.TelemetryName);
+            .AddMeter(ProductMasterService.TelemetryName).AddMeter(ProductionLineService.TelemetryName).AddMeter(CalendarTelemetry.Name);
         if (!string.IsNullOrWhiteSpace(otlpEndpoint))
         {
             m.AddOtlpExporter();
@@ -130,6 +133,8 @@ app.Use(async (context, next) =>
         ProductionLineService.RecordBoundary(operation, outcome, Stopwatch.GetElapsedTime(started).TotalSeconds);
     }
 });
+
+app.UseMiddleware<CalendarRequestTelemetry>();
 
 app.UseAuthentication();
 app.UseAuthorization();

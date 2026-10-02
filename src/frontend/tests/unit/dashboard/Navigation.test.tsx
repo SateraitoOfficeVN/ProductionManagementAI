@@ -15,12 +15,13 @@ describe('AppNavbar (003_BD H-1–H-5, TC-222)', () => {
     ['/production-orders', '製造指示一覧'],
     ['/production-orders/o1', '製造指示一覧'],
     ['/production-orders/new', '新規製造指示'],
+    ['/plant-calendar', '稼働カレンダー'],
   ])('on %s marks %s as the current page', (path, current) => {
     renderWithAuth(<AppHeader />, path)
 
     const nav = screen.getByRole('navigation', { name: 'メインメニュー' })
     const links = within(nav).getAllByRole('link')
-    expect(links.map((l) => l.textContent)).toEqual(['ダッシュボード', '製造指示一覧', '製品マスタ', '生産ライン・工程', '新規製造指示'])
+    expect(links.map((l) => l.textContent)).toEqual(['ダッシュボード', '製造指示一覧', '製品マスタ', '生産ライン・工程', '稼働カレンダー', '新規製造指示'])
     expect(within(nav).getByRole('link', { name: current })).toHaveAttribute('aria-current', 'page')
     expect(links.filter((l) => l.getAttribute('aria-current') === 'page')).toHaveLength(1)
   })
