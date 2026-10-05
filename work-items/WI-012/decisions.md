@@ -105,3 +105,21 @@ Markdown verification records suffice. Existing approved designs remain immutabl
 Explicit user "approved" after revision4 presentation authorizes scoped delivery: final
 checks, feature-branch commit/push, PR creation and CI follow-up. Merge/live deployment
 and unrelated production-order fix remain excluded. No test screenshot capture.
+
+
+## PR review accepted — 2026-10-05
+
+User "approved" after final PR/CI handoff accepts PR #39 review. Revision4 excludes
+merge; propose revision5 for merge and verified scoped cleanup before execution.
+
+
+## Revision5 approved and PR merged — 2026-10-05
+
+Explicit user "approved" after revision5 presentation authorizes PR #39 squash merge
+and verified cleanup. Reviewed head e3a1909 had all3 required checks SUCCESS in
+run37286646826. PR #39 merged as31b65f9fb9da6ad3385257ca523c7f7633c09ffc.
+Separate closeout documentation PR authorized; its merge needs later approval.
+
+
+Closeout PR #40 created within revision5 scope. Its merge remains pending separate
+user approval; implementation PR #39 and its cleanup are complete.

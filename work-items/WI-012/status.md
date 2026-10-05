@@ -1,19 +1,22 @@
 # WI-012 — Status
 
-2026-10-05: revision4 delivery complete for verified application head60b4f2a.
-PR #39 open, awaiting user merge instruction:
-https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/39
-CI run37285875312 PASS:239 backend unit,195 integration,258 frontend,62 E2E.
-https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37285875312
-Record-only delivery follow-up preserves the tested application/test tree; required
-checks for the latest PR head can be verified directly on the PR.
+2026-10-05: application fix completed and squash-merged via
+[PR #39](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/39)
+as 31b65f9fb9da6ad3385257ca523c7f7633c09ffc under explicit revision5 approval.
+Final reviewed head e3a1909 passed all3 required jobs in
+[run37286646826](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37286646826):
+239 backend unit,195 integration,258 frontend,62 E2E. Local responsive/axe/native200%
+checks and user inspection complete. Manual speech/physical mobile keyboard/IME Not run.
 
-User local inspection complete. Six widths, browser axe and native200% keyboard
-verified. Screen-reader speech and physical mobile keyboard/IME Not run.
-Initial full CI failure from TC414 fixture leakage corrected with checked finally
-cleanup; mobile order-list journey and all62 E2E now pass. Pre-existing production-order
-layout gap remains separate scope, not an application fix in this PR.
+Main synchronized at31b65f9 and clean. Local/remote feature branch and clean WI-012
+implementation worktree removed. Task-owned review browser/helper, Compose services,
+network, two volumes and temporary credentials/resources removed. Existing demo stack
+on3000/8081/5433, prior videos and other worktrees preserved. No live deployment.
 
-No test images/generated JSON retained. Approved WI-012 design PNG companions accepted;
-future designs use wireframe SVG. Historical approved designs unchanged.
-No merge/live deployment/video performed. Branch/worktree/local13012 runtime retained.
+Approved historical designs unchanged; current approved WI-012 PNG companions accepted.
+Future designs use wireframe SVG. No test images or generated JSON retained in this WI.
+TC414 owned-fixture leak corrected; final full CI passes. Production-order intrinsic-size
+layout gap reproduced on baseline remains a separate bug candidate, not fixed here.
+
+Separate documentation closeout [PR #40](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/40) is open on chore/WI-012-closeout;
+its merge is not authorized by revision5. No next implementation work item approved.

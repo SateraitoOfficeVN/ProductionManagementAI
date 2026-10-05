@@ -89,7 +89,7 @@ Verified commands, run from the repo root unless noted:
 
 **CI**: `.github/workflows/ci.yml` has three jobs on push/PR to `master`: backend (build + unit/integration tests), frontend (lint + build + tests), and e2e (Compose stack + Playwright, after the other two; throwaway credentials generated per run; added by RFC 0003). A push or PR that changes only Markdown, `docs/`, `work-items/`, `demos/`, `ai/` or `LICENSE` starts no run at all (RFC 0005); `.github/`, `deploy/`, `src/` and `tests/` always do. Because GitHub evaluates the filter against a PR's whole diff, a PR that also changes code still runs everything. First executed on 2026-09-18 on PR #5, after the repository moved to the `SateraitoOfficeVN` organization (the earlier account billing lock blocked PRs #2–#4): backend, frontend and e2e all passed (https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/35318583226).
 
-### WI-011 PR delivery verified; awaiting user merge instruction
+### WI-011 merged
 
 WI-011 BUG-003/004 fixes in four calendar components restore consistent 48 px
 single-line actions and at least 8 px separate-control gaps. 11 layout regressions
@@ -98,9 +98,28 @@ lint/build/253 unit tests and native 200% keyboard/dialog checks pass. Completed
 approved designs remain unchanged. Revision 2 approved for commit/push/PR and CI
 handoff complete: PR #38 head d383d41 passed run36988844579 (239 unit/195
 integration/253 frontend/59 E2E). Record-only follow-up checks tracked on PR;
-not merged or deployed. Four separately requested English/Japanese
+merged as `de130ab`; not deployed. Four separately requested English/Japanese
 web/mobile videos verified locally and kept outside git. Screen-reader speech and
 physical mobile keyboard/IME remain Not run. See work-items/WI-011/status.md.
+
+### WI-012 completed and merged
+
+Plant calendar full-screen alignment merged via [PR #39](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/39)
+as `31b65f9` on 2026-10-05 under approved revision5. Final reviewed head `e3a1909`
+passed [run37286646826](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37286646826):
+239 backend unit/195 integration/258 frontend/62 E2E. Desktop calendar/day composition,
+mobile agenda, grouped paged choices, cached business names, capacity basis, radios,
+read-only history and mode headings follow the approved additive region-mapped design.
+Existing API/business/auth/concurrency/Unknown behavior retained; approved historical
+artifacts unchanged. Current design PNG companions explicitly accepted for this WI;
+future work uses wireframe SVG. No test images/generated JSON stored in WI-012.
+
+Main synchronized; implementation feature branch/worktree and task-owned review runtime,
+volumes/browser/temp credentials removed. Existing demo stack and prior videos preserved.
+Manual screen-reader speech/physical mobile keyboard/IME Not run; no live deployment.
+Next: separate documentation closeout PR review. Production-order intrinsic-size layout
+bug reproduced on the unchanged baseline is a separate candidate; no fix/feature approved.
+See work-items/WI-012/status.md, evidence.md and review.md.
 
 ## Candidate demo
 
