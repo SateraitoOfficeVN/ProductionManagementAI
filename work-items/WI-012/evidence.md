@@ -306,3 +306,10 @@ User local inspection complete; explicit revision4 approval permits commit/push/
 Final diff limited to calendar controls/styles/helpers, catalog, corresponding tests,
 approved additive design/companions and required work-item records. No lock/config,
 backend/API/schema/shared-header or production-order application edits.
+
+
+## Revision4 PR created — 2026-10-05
+
+Commit47d6dac created and feature branch pushed. PR #39 targets master:
+https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/39
+Required CI pending. No merge or deployment. No unrelated changes included.

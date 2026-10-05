@@ -250,3 +250,9 @@ cross-screen regressions; correct only causes attributable to this approved scop
 ### Review and approval
 
 Approved by explicit user message "approved" after revision4 presentation, 2026-10-05. Commit/push/PR and CI handoff authorized; merge and live deployment excluded.
+
+
+### Revision4 progress — 2026-10-05
+
+Steps1–4 complete: focused diff/gates, final20 E2E/typecheck without image capture,
+commit47d6dac, feature push and PR #39. Step5 CI observation in progress.

@@ -12,5 +12,7 @@ Approved design PNG companions retained by explicit user acceptance for this WI;
 future work uses wireframe SVG. Production-order layout defect reproduced on unchanged
 baseline, recorded separately, and excluded from this fix.
 
-Branch feature/WI-012-calendar-mockup-alignment. Next: scoped commit/push/PR and CI.
+PR #39: https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/39
+Implementation commit47d6dac pushed on feature/WI-012-calendar-mockup-alignment.
+Required CI pending; next: observe results and record tested head.
 No merge, live deployment or video authorized. Local review runtime at13012 retained.
