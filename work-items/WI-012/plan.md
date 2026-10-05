@@ -5,7 +5,7 @@
 | 1 | 2026-10-02 | Additive capacity design and mockup review | Superseded by user; artifacts discarded | Explicit user "approved" after revision1 presentation, 2026-10-02 |
 | 2 | 2026-10-02 | Full SCR-006 alignment audit and replacement mockups | Complete — design reviewed | Explicit user "approved" after revision2 presentation, 2026-10-05 |
 | 3 | 2026-10-05 | Frontend correction and actual-browser verification | Complete — local inspection finished | Explicit user approval of revision3, 2026-10-05 |
-| 4 | 2026-10-05 | Commit, PR and CI handoff | In progress — approved | Explicit user approval after revision4 presentation, 2026-10-05 |
+| 4 | 2026-10-05 | Commit, PR and CI handoff | Complete — PR/CI handoff | Explicit user approval after revision4 presentation, 2026-10-05 |
 
 ## Revision 1 — Design/mockup alignment
 
@@ -256,3 +256,10 @@ Approved by explicit user message "approved" after revision4 presentation, 2026-
 
 Steps1–4 complete: focused diff/gates, final20 E2E/typecheck without image capture,
 commit47d6dac, feature push and PR #39. Step5 CI observation in progress.
+
+
+### Revision4 completion — 2026-10-05
+
+Step5 complete: scoped fixture-isolation failure corrected; PR #39 tested application
+head60b4f2a passed run37285875312 (239/195/258/62). Final record-only follow-up
+preserves all tested code/design; no merge/live deployment. Await user merge instruction.
