@@ -9,7 +9,7 @@ test('TC-403/405/406: mobile agenda, keyboard dialog and reflow',async({page})=>
  const days=page.getByRole('button',{name:/^\d{4}-\d{2}-\d{2} /})
  await expect(days).toHaveCount(new Date(Number(date.slice(0,4)),Number(date.slice(5,7)),0).getDate())
  await page.getByRole('button',{name:'日付例外',exact:true}).click()
- await page.getByRole('combobox',{name:'日付例外',exact:true}).selectOption('yes')
+ await page.getByRole('radio',{name:'稼働日',exact:true}).check()
  await page.getByRole('checkbox',{name:'ラインの現設定を使用',exact:true}).uncheck()
  await page.getByLabel('稼働時間（時間）',{exact:true}).fill('4.125')
  await page.getByLabel('理由',{exact:true}).fill('モバイル入力試験')

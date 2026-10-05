@@ -17,6 +17,7 @@ it.each([false,true])('TC-381/386 list refresh preserves the original weekly dra
   expect(monday).not.toBeChecked()
   if(unknown){fireEvent.click(screen.getByRole('button',{name:w.save}));await screen.findByText(w.unknown)}
   const calls=vi.mocked(getWeekly).mock.calls.length
+  screen.getByText(w.weeklyHistory).closest('details')?.setAttribute('open','')
   fireEvent.click(screen.getByRole('button',{name:w.restart}))
   await waitFor(()=>expect(vi.mocked(getWeekly).mock.calls.length).toBe(calls+1))
   expect(screen.getByRole('checkbox',{name:w.weekdays.Mon})).not.toBeChecked()
