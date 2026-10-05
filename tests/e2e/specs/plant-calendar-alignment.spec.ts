@@ -66,6 +66,7 @@ test('TC-414: product paging, independent queries and complete long labels',asyn
  const made=await page.request.post('/api/product-master',{data:{sku:`PG-${Date.now()}`,name:'長い製品名称'.repeat(12),unit:'kg'}})
  expect(made.ok()).toBe(true)
  const product=await made.json()
+ try {
  const eligible=await (await page.request.get(`/api/production-lines/eligible?productId=${product.id}`)).json()
  const lineResponse=await page.request.post('/api/production-lines',{data:{code:`PG-L-${Date.now()}`,name:'候補確認ライン',workingHoursPerDay:'8',products:[{productId:product.id,minutesPerUnit:'0.125',expectedUnit:'kg',expectedUnitRevision:eligible.product.unitRevision,confirmUnit:true}]}})
  expect(lineResponse.ok()).toBe(true)
@@ -95,4 +96,13 @@ test('TC-414: product paging, independent queries and complete long labels',asyn
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
  await disclosure.getByRole('button',{name:'条件をクリア',exact:true}).click()
  await expect(disclosure.getByRole('button',{name:'前へ',exact:true})).toBeDisabled()
+ } finally {
+  // Keep this synthetic long-name fixture from affecting subsequent screen journeys.
+  const currentResponse=await page.request.get(`/api/product-master/${product.id}`)
+  expect(currentResponse.ok()).toBe(true)
+  const current=await currentResponse.json()
+  const cleaned=await page.request.put(`/api/product-master/${product.id}`,{data:{sku:current.sku,name:'候補検証済み製品',unit:current.unit,drawingNumber:current.drawingNumber,version:current.version}})
+  expect(cleaned.ok()).toBe(true)
+  expect((await cleaned.json()).name).toBe('候補検証済み製品')
+ }
 })

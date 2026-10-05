@@ -14,5 +14,6 @@ baseline, recorded separately, and excluded from this fix.
 
 PR #39: https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/39
 Implementation commit47d6dac pushed on feature/WI-012-calendar-mockup-alignment.
-Required CI pending; next: observe results and record tested head.
+First full CI had61 E2E passes/1 failure from TC414 fixture leakage.
+Owned-fixture cleanup verified locally; pushing correction and awaiting new full CI.
 No merge, live deployment or video authorized. Local review runtime at13012 retained.

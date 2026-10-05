@@ -313,3 +313,18 @@ backend/API/schema/shared-header or production-order application edits.
 Commit47d6dac created and feature branch pushed. PR #39 targets master:
 https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/39
 Required CI pending. No merge or deployment. No unrelated changes included.
+
+
+## CI fixture-isolation correction — 2026-10-05
+
+Run37284879613 on a8852bc: backend239 unit/195 integration and frontend258 tests
+PASS; full E2E61 passed/1 failed. Failure: existing mobile order-list card click could
+not complete after TC414 left its long-name product active. This is a WI-012 test
+isolation defect exposing the previously reproduced baseline layout gap; not an
+application regression. TC414 now uses finally to shorten only its own newly created
+synthetic product through the existing versioned API, even when an assertion fails.
+Long-label/paging assertions are unchanged; cleanup response/name explicitly checked.
+No existing data or application code changed. Three alignment tests and typecheck
+PASS after correction (11.2s), no screenshot capture. Full CI must pass on new head.
+Existing global CI screenshot-on-failure behavior produced a failure attachment in
+GitHub; no such file was downloaded or committed. WI-012 capture remains disabled.

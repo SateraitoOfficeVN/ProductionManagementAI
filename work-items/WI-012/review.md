@@ -65,3 +65,6 @@ unchanged; approved new PDF hashes match. Current WI design PNG exception explic
 accepted; no test images/JSON persisted. Production-order pre-existing defect disclosed.
 User completed local inspection. No outstanding scoped review blocker identified.
 PR/CI handoff still in progress; merge/release-readiness not applicable or authorized.
+
+
+CI review found owned-fixture leakage in TC414; corrected with versioned API finally cleanup of that single synthetic product. Local3 alignment tests/typecheck pass; no weakened assertions or application fix. Security/design gates unchanged; full-CI delivery remains pending.
