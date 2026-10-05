@@ -9,13 +9,13 @@ test('TC-402/403/405: dated closure, retained removal and centered confirmation'
  await expect(page.getByRole('button',{name:'日付例外',exact:true})).toBeVisible()
  await expectNoAxeViolations(page)
  await page.getByRole('button',{name:'日付例外',exact:true}).click()
- await page.getByRole('combobox',{name:'日付例外',exact:true}).selectOption('no')
+ await page.getByRole('radio',{name:'非稼働日',exact:true}).check()
  await page.getByLabel('理由',{exact:true}).fill(reason)
  await expectNoAxeViolations(page)
  await page.getByRole('button',{name:'保存',exact:true}).click()
  await expect(page.getByText('保存しました。',{exact:true})).toBeVisible()
  await page.getByRole('button',{name:'日付例外',exact:true}).click()
- await expect(page.getByRole('combobox',{name:'日付例外',exact:true})).toHaveValue('no')
+ await expect(page.getByRole('radio',{name:'非稼働日',exact:true})).toBeChecked()
  await page.getByRole('button',{name:'例外を削除',exact:true}).click()
  const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible()
  await expect(dialog.getByRole('button',{name:'キャンセル',exact:true})).toBeFocused()
@@ -51,7 +51,7 @@ test('TC-402/405: all-closed weekly definition, draft departure and withdrawal',
 test('TC-403/405: committed response loss remains Unknown without replay',async({page})=>{
  const date=futureDate(19),reason=`結果確認-${Date.now()}`
  await page.goto(`/plant-calendar?month=${date.slice(0,7)}&date=${date}&mode=day`)
- await page.getByRole('combobox',{name:'日付例外',exact:true}).selectOption('no')
+ await page.getByRole('radio',{name:'非稼働日',exact:true}).check()
  await page.getByLabel('理由',{exact:true}).fill(reason)
  const before=await (await page.request.get(`/api/plant-calendar/exception-history?date=${date}`)).json()
  let writes=0
@@ -95,7 +95,7 @@ test('TC-404: exact current kg capacity and invalid closed pair remain distinct'
 test('TC-405: acknowledged success survives subsequent refresh failure',async({page})=>{
  const date=futureDate(22)
  await page.goto(`/plant-calendar?month=${date.slice(0,7)}&date=${date}&mode=day`)
- await page.getByRole('combobox',{name:'日付例外',exact:true}).selectOption('no')
+ await page.getByRole('radio',{name:'非稼働日',exact:true}).check()
  await page.getByLabel('理由',{exact:true}).fill(`保存後確認-${Date.now()}`)
  await page.route('**/api/plant-calendar/line-choices?*',route=>route.fulfill({status:503,contentType:'application/problem+json',body:JSON.stringify({code:'CALENDAR_BUSY'})}))
  await page.getByRole('button',{name:'保存',exact:true}).click()

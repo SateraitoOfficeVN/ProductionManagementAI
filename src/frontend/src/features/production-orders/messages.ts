@@ -57,6 +57,13 @@ export const statusLabels: Record<ProductionOrderStatus, string> = {
 /** Every other UI string (WI-005 DEC-007). Grouped by where it appears; functions take the values they interpolate. */
 export const labels = {
   calendar: {
+    choiceCount: (first:number,last:number,total:number)=>`${first}–${last} / ${total} 件`,
+    allClosedHint: 'すべての曜日を非稼働日に設定できます。', recordVersion: '版', target: '対象',
+    weeklyEdit: '週間規則を編集', exceptionEdit: '日付例外を編集', exceptionHistory: '日付例外の履歴',
+    lineSearch: 'ライン候補を検索', productSearch: '製品候補を検索', clearSearch: '条件をクリア',
+    selectedDay: '選択日', plantDate: '工場日付', workingState: '稼働状態', workingWeekdays: '稼働曜日',
+    weeklyHistory: '週間規則・履歴を確認', back: '戻る', selectionUnconfirmed: '選択内容は未確認です。能力を表示して確認してください。',
+    lineDependent: 'ライン依存', hoursUnit: '時間', minutesUnit: '分',
     loading: '読込中です。',
     notActivated: 'カレンダーは未設定です。',
     readError: '読込に失敗しました。再読込してください。',
