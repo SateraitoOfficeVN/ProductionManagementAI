@@ -2,7 +2,7 @@
 
 | Work item | Workflow | Status | Baseline |
 | --- | --- | --- | --- |
-| WI-012 | bug-fix | PR/CI handoff complete; awaiting merge instruction | de130ab505470f5d608f84351ebc6794851a0dcb |
+| WI-012 | bug-fix | Completed and merged; closeout records pending separate PR | de130ab505470f5d608f84351ebc6794851a0dcb |
 
 ## Report and objective
 

@@ -339,3 +339,25 @@ No failed/skipped/flaky final E2E; mobile order-list journey now passes after ow
 fixture cleanup. PR remained OPEN/MERGEABLE, with all3 required check conclusions SUCCESS.
 User authorization did not include merge or live deployment. Final record-only follow-up
 changes no application/test/design content; latest remote checks are available on PR #39.
+
+
+## Revision5 merge and cleanup — 2026-10-05
+
+User explicitly approved revision5 after presentation. Guarded squash merge of PR #39
+required exact reviewed head e3a1909aace4087aa963c3c0ba5054b9cc7ba753 and all3 CI
+checks SUCCESS. Confirmed merge31b65f9fb9da6ad3385257ca523c7f7633c09ffc; main
+fast-forwarded cleanly. Final head CI run37286646826 PASS (239/195/258/62).
+Three local routine records were copied and verified in the separate closeout worktree
+before cleanup. Initial worktree removal refused the remaining records; no forced
+removal performed. Restored only those transferred task-owned files using the correct
+worktree path, verified clean, then removed worktree. Verified feature/master tree
+equality after squash before local feature deletion; remote feature branch deleted.
+Dependency junction was unlinked with non-recursive Directory.Delete; main dependencies
+preserved. Closed only Chrome/node processes tied to the owned review profile/helper.
+Verified Compose ownership labels, then down --volumes for pmai-wi012-review only:
+three services, network and db-data/dp-keys volumes removed. Exact temporary directory
+C:/Users/ADMIN/AppData/Local/Temp/pmai-wi012-runtime removed after path validation.
+Existing deploy frontend/backend/db on3000/8081/5433 remain running; unrelated worktrees
+and prior videos preserved. No live deployment or new test screenshots/JSON.
+Required root tracked-state/closeout records delivered through a separate docs PR,
+whose merge requires separate approval. Source/design/tests unchanged by closeout.

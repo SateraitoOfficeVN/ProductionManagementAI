@@ -263,3 +263,49 @@ commit47d6dac, feature push and PR #39. Step5 CI observation in progress.
 Step5 complete: scoped fixture-isolation failure corrected; PR #39 tested application
 head60b4f2a passed run37285875312 (239/195/258/62). Final record-only follow-up
 preserves all tested code/design; no merge/live deployment. Await user merge instruction.
+
+
+## Revision 5 — Merge and scoped cleanup
+
+### Objective and ordered steps
+
+1. Verify PR #39 remains reviewed, mergeable and all required checks pass on current
+   head e3a1909 (or an explicitly reviewed equivalent record-only head).
+2. Squash-merge PR #39 into master; confirm the actual merge commit and synchronize
+   the main checkout without overwriting unrelated changes.
+3. Update required closeout records and root README/ai/project/CLAUDE tracked state
+   through a focused documentation PR if needed; report that PR separately.
+4. Remove only the verified merged WI-012 feature branch/worktree and task-owned
+   pmai-wi012-review runtime/volumes/temporary review resources after preserving the
+   required Markdown records. Preserve existing demo services, prior videos and other
+   worktrees. Close only the task-owned review browser if necessary for cleanup.
+5. Report actual merge commit, remaining PR/check state and cleanup result.
+
+### Permitted actions upon approval
+
+GitHub squash merge of PR #39, main fetch/synchronization, scoped closeout records and
+focused documentation commit/push/PR, removal of the verified merged WI-012 branch and
+worktree, teardown of pmai-wi012-review only, and task-owned temporary review cleanup.
+No existing demo database/volume/process changes, live deployment, videos, new feature
+or production-order application fix. Do not merge any separate closeout PR without
+explicit approval unless the user explicitly includes it in this revision approval.
+
+### Risks and stop conditions
+
+Stop for changed/unreviewed PR head, failed required checks, unrelated main/worktree
+changes, unexpected ownership or cleanup target outside the verified task scope.
+Preserve user changes; do not force cleanup through a dirty worktree. Manual accessibility
+limits and the separate production-order defect remain recorded.
+
+### Review and approval
+
+Approved by explicit user "approved" after revision5 presentation, 2026-10-05. Merge PR #39, scoped cleanup and a separate closeout documentation PR authorized; merging that separate PR remains excluded.
+
+
+### Revision5 execution — 2026-10-05
+
+Steps1–2 complete: PR #39 reviewed head/checks confirmed; squash merge31b65f9 and
+clean main synchronization. Step4 complete: implementation feature branch/worktree,
+owned runtime/volumes/browser/temp removed; existing demo and prior evidence preserved.
+Step3 closeout documentation PR preparation in progress; step5 reports its identity
+and explicitly pending separate merge approval.

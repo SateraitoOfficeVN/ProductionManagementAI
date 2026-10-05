@@ -23,14 +23,17 @@ and physical mobile keyboard/IME remain Not run with accepted local handoff limi
 No live activation/deployment. WI-010 closeout merged via PR #37 as c227acc;
 no next feature approved. See work-items/WI-010/status.md. BOM remains a candidate.
 
-WI-011 calendar button height/spacing fix is locally verified and submitted as PR #38
-under approved revision 2: frontend lint/build/253 tests, 17 production
-Playwright cases and native 200%/keyboard checks pass. Four new local evidence
-videos verified outside git; approved designs preserved. Not merged or deployed.
-PR #38 reviewed head d383d41 passed run36988844579: 239 unit/195 integration/
-253 frontend/59 E2E. Record-only follow-up checks tracked in the PR description.
-Next: user PR review; merge/cleanup needs separate user
-instruction. See work-items/WI-011/status.md.
+WI-011 calendar button height/spacing fixes merged via PR #38 as de130ab; no deployment.
+WI-012 Plant calendar mockup alignment merged via PR #39 as 31b65f9 under explicit
+revision5 approval. Final reviewed head e3a1909 passed run37286646826: 239 backend
+unit/195 integration/258 frontend/62 E2E. Main synchronized; merged feature branch/
+worktree and task-owned review runtime/volumes/browser/temp removed. Existing demo,
+other worktrees and prior videos preserved. Approved historical designs unchanged.
+Current WI-012 design PNG companions accepted; future designs use wireframe SVG.
+No test screenshot or unnecessary generated JSON artifacts in work items. Manual
+speech/physical mobile keyboard/IME remain Not run; no live deployment. Next: review
+separate WI-012 documentation closeout PR. Production-order layout gap reproduced on
+baseline is a separate bug candidate; no fix/new feature approved. See WI-012 records.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 
