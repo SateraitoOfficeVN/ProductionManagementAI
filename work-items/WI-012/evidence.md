@@ -361,3 +361,10 @@ Existing deploy frontend/backend/db on3000/8081/5433 remain running; unrelated w
 and prior videos preserved. No live deployment or new test screenshots/JSON.
 Required root tracked-state/closeout records delivered through a separate docs PR,
 whose merge requires separate approval. Source/design/tests unchanged by closeout.
+
+
+Documentation-only closeout committed as308b605 and pushed; PR #40 opened:
+https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/40
+Only existing routine records and three required current-state files changed.
+No CI expected under paths-ignore; no merge authorization inferred for PR #40.
+Main remains clean at31b65f9; closeout worktree is retained until separate review/merge.

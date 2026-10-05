@@ -309,3 +309,11 @@ clean main synchronization. Step4 complete: implementation feature branch/worktr
 owned runtime/volumes/browser/temp removed; existing demo and prior evidence preserved.
 Step3 closeout documentation PR preparation in progress; step5 reports its identity
 and explicitly pending separate merge approval.
+
+
+### Revision5 handoff — 2026-10-05
+
+Step3 complete: documentation-only closeout PR #40 created under explicit approval;
+existing paths-ignore excludes CI. Step5 complete: merged application31b65f9, clean
+main and scoped cleanup confirmed. Closeout PR #40 remains open for separate merge
+approval; its branch/worktree retained. No live deployment or next feature started.

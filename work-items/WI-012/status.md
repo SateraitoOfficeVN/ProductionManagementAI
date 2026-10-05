@@ -18,5 +18,5 @@ Future designs use wireframe SVG. No test images or generated JSON retained in t
 TC414 owned-fixture leak corrected; final full CI passes. Production-order intrinsic-size
 layout gap reproduced on baseline remains a separate bug candidate, not fixed here.
 
-Separate documentation closeout PR is being prepared on chore/WI-012-closeout;
+Separate documentation closeout [PR #40](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/40) is open on chore/WI-012-closeout;
 its merge is not authorized by revision5. No next implementation work item approved.
