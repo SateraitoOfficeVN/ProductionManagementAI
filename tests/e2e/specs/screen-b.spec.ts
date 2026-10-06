@@ -162,3 +162,21 @@ test('a signed-out visitor is sent to the login screen (TC-114)', async ({ page,
 
   await expect(page).toHaveURL(/\/login$/)
 })
+
+test('a very long product name never widens the page; the filter stays in its column (BUG-008)', async ({ page }) => {
+  const name = 'ブレーキキャリパー ロングネーム '.repeat(14).trim()
+  await page.route('**/api/products', async (route) => {
+    const products = await (await route.fetch()).json()
+    await route.fulfill({ json: [...products, { id: '0197e4a0-0000-7000-8000-00000000b008', sku: 'LONG-BUG-008', name, unit: '個', isActive: true }] })
+  })
+  for (const width of [390, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await openList(page)
+    const select = page.getByLabel('製品', { exact: true })
+    await expect(select.locator('option', { hasText: `LONG-BUG-008 — ${name}` })).toHaveCount(1)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+    const form = (await page.getByRole('form', { name: '製造指示の絞り込み' }).boundingBox())!
+    const box = (await select.boundingBox())!
+    expect(box.x + box.width).toBeLessThanOrEqual(form.x + form.width)
+  }
+})

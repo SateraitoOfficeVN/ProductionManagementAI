@@ -71,9 +71,9 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
     <form
       onSubmit={handleSubmit}
       aria-label={labels.list.filtersForm}
-      className="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:p-5"
+      className="grid min-w-0 gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:p-5"
     >
-      <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <fieldset className="grid gap-1.5">
           <legend className="text-sm font-medium text-gray-700">{labels.list.status}</legend>
           <div className="flex flex-wrap gap-x-5 gap-y-2 pt-1">
@@ -92,7 +92,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
           </div>
         </fieldset>
 
-        <div className="grid content-start gap-1.5">
+        <div className="grid min-w-0 content-start gap-1.5">
           <label htmlFor="productId" className="text-sm font-medium text-gray-700">
             {labels.list.product}
           </label>
@@ -101,7 +101,7 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
             value={draft.productId ?? ''}
             disabled={productsFailed}
             onChange={(event) => setDraft({ ...draft, productId: event.target.value || null })}
-            className={`${fieldClass} disabled:bg-gray-100 disabled:text-gray-500`}
+            className={`${fieldClass} w-full min-w-0 disabled:bg-gray-100 disabled:text-gray-500`}
           >
             <option value="">{labels.list.allProducts}</option>
             {products.map((product) => (

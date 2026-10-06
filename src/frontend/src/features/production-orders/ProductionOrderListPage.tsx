@@ -125,7 +125,7 @@ export function ProductionOrderListPage() {
   return (
     <div className="min-h-screen bg-white">
       <AppHeader />
-      <main className="mx-auto grid max-w-5xl gap-4 px-4 pt-6 pb-10 sm:px-6">
+      <main className="mx-auto grid max-w-5xl min-w-0 gap-4 px-4 pt-6 pb-10 sm:px-6">
         <nav aria-label={labels.nav.breadcrumb} className="text-sm text-gray-500">
           {/* Always underlined, not only on hover: a link inside a line of text must not rely on colour (WCAG 1.4.1). */}
           <GuardedLink to="/" className="text-gray-700 underline underline-offset-4">
