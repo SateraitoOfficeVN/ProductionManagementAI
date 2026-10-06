@@ -72,3 +72,16 @@ Backend, Frontend and E2E passed — 239 backend unit, 203 integration, 267 fron
 
 In base-select mode the closed control shows Chromium's ▼ picker icon instead of the native chevron of other selects.
 Height and border match.
+
+## Revision 2 CI
+
+Final head `dd10347`, run [37433461443](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37433461443):
+Backend, Frontend and E2E passed — 239 backend unit, 203 integration, 269 frontend, 68 E2E (TC-120 and TC-121
+included; the Plant calendar specs pass in CI with its calendar fixture).
+
+## Merge and cleanup (2026-10-06)
+
+PR #43 was MERGEABLE with all three checks green and squash-merged as `3e29618`. The remote and local
+feature branch were deleted, `git fetch --prune` removed the stale tracking ref, and `master` equals
+`origin/master`. The prunable `evidence/product-master-recording` worktree entry was not touched. The local
+Compose frontend runs the merged code; the demo DB keeps its long-name products.

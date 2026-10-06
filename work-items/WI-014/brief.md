@@ -2,7 +2,7 @@
 
 | Work item | Workflow | Status | Baseline |
 | --- | --- | --- | --- |
-| WI-014 | bug-fix | Plan revision 1 awaiting review | 46bf430 |
+| WI-014 | bug-fix | Merged via PR #43 as 3e29618 | 46bf430 |
 
 ## Report and objective
 

@@ -132,9 +132,24 @@ control heights match the production-order screens. Final code head `29b6c93` pa
 239 backend unit/203 integration/267 frontend/66 E2E. Feature branch deleted; main synchronized; no
 deployment. Locally the 11 Plant calendar E2E specs need an activated calendar (CI fixture only).
 
-Next: the user will request a separate bug-fix WI for the order-list product filter `<select>` that widens
-the SP page when a product name is long (found by WI-013 CI run 37409988722; see WI-013 evidence). Manual
-screen-reader speech/physical mobile keyboard/IME remain Not run.
+WI-013 closeout merged via PR #42 as `46bf430`.
+
+### WI-014 merged
+
+Order list (SCR-002) product filter no longer widens the page when a product name is long (BUG-008, found by
+WI-013 CI), merged via [PR #43](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/43) as `3e29618`
+on 2026-10-06. Filter grid tracks have a zero minimum; where `appearance: base-select` is supported
+(Chrome/Edge) the open list is as wide as the control, long `SKU — name` labels end in an ellipsis and the full
+label is the `title` (DEC-003; the closed value uses a hidden `<button><selectedcontent>`, typed in
+`src/frontend/src/selectedcontent.d.ts`, DEC-004). Firefox/Safari keep the native popup. Still a native
+`<select>` per 002_DD (unedited). Final head `dd10347` passed
+[run 37433461443](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37433461443):
+239 backend unit/203 integration/269 frontend/68 E2E. Feature branch deleted; main synchronized; no deployment.
+WI-014 also has a `test-plan.md` (TC-120, TC-121).
+
+Next: no work item approved. Candidate: a harness-improvement RFC making `test-plan.md` mandatory whenever a
+work item adds tests (user request during WI-014; `ai/workflows/bug-fix.md` unchanged). Manual screen-reader
+speech/physical mobile keyboard/IME remain Not run.
 
 ## Candidate demo
 

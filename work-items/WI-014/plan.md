@@ -3,7 +3,8 @@
 | Revision | Date | Phase | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-06 | Fix order-list overflow (BUG-008), test, PR | Approved, steps done (PR #43, CI 37427110603 passed) | User: "approved, go ahead" (2026-10-06) |
-| 2 | 2026-10-06 | Contain the open product dropdown, truncate long names, full name on hover | Approved | User: "approved, go ahead" (2026-10-06) |
+| 2 | 2026-10-06 | Contain the open product dropdown, truncate long names, full name on hover | Approved, steps done (CI 37433461443 passed) | User: "approved, go ahead" (2026-10-06) |
+| 3 | 2026-10-06 | Merge, branch cleanup and documentation closeout | Complete merge/cleanup; closeout PR open | User "merge PR #43 and clean up branch" and "yes, create closeout PR for WI-014", 2026-10-06 |
 
 ## Revision 1
 
@@ -103,3 +104,15 @@ screens, approved design documents, a custom dropdown component.
 ### Review and approval
 
 Review status: revision 2 approved by the user on 2026-10-06 ("approved, go ahead"), base-select approach.
+
+## Revision 3 — Merge, cleanup and closeout
+
+| # | Step | Result |
+| --- | --- | --- |
+| 1 | Confirm final head `dd10347` CI and mergeability | Run 37433461443 passed all three jobs; PR MERGEABLE |
+| 2 | Squash-merge PR #43 and delete the feature branch | Merged as `3e29618`; remote and local branch deleted; stale ref pruned; `master` synchronized |
+| 3 | Documentation-only closeout PR on `chore/WI-014-closeout`: README, `ai/project.md`, CLAUDE.md, WI-014 records; WI-013 status lines about its closeout PR and follow-up corrected; PR #43 description updated to cover revision 2 | This PR |
+
+Permitted: the merge/cleanup the user requested and this closeout PR. Not permitted: merging the closeout PR,
+deployment, demo-database changes, removing the prunable `evidence/product-master-recording` worktree entry.
+The closeout PR's merge needs the user's approval.

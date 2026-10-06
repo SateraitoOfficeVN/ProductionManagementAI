@@ -118,7 +118,8 @@ Single-agent execution during plan step 3 (author TC-120) and step 4 (run). The 
 | TC-121 after revision 2, local | pass | [evidence.md](evidence.md) | 2026-10-06 |
 | U-TC-121 and frontend lint/build/unit (rev. 2) | pass (269 unit) | [evidence.md](evidence.md) | 2026-10-06 |
 | Full local E2E (rev. 2) | 57 pass, 11 fail (plant-calendar environment only) | [evidence.md](evidence.md) | 2026-10-06 |
-| CI run 37427110603 (TC-120 and full suite) | pass: 239 backend unit, 203 integration, 267 frontend, 67 E2E | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37427110603 | 2026-10-06 |
+| CI run 37433461443, final head (TC-120, TC-121 and full suite) | pass: 239 backend unit, 203 integration, 269 frontend, 68 E2E | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37433461443 | 2026-10-06 |
+| CI run 37427110603, revision 1 head (TC-120 and full suite) | pass: 239 backend unit, 203 integration, 267 frontend, 67 E2E | https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37427110603 | 2026-10-06 |
 
 ## Known gaps
 
@@ -132,4 +133,4 @@ Single-agent execution during plan step 3 (author TC-120) and step 4 (run). The 
 
 ## Approvals
 
-Covered by plan revision 1 and 2 approvals; results are final once PR #43 is reviewed.
+Covered by plan revision 1 and 2 approvals; results final: PR #43 merged as `3e29618` on 2026-10-06.
