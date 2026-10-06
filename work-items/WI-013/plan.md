@@ -5,6 +5,7 @@
 | 1 | 2026-10-06 | Frontend alignment of SCR-004 with approved mockup and behaviour | Superseded; partial code rolled back at user request, nothing committed | User "yes, keep 48px, fix behaviour gaps too, go ahead", 2026-10-06 |
 | 2 | 2026-10-06 | Alignment + order-screen control heights + rows per page (+ DEC-010–012 follow-ups) | Complete; user review done ("i review done. continue process", 2026-10-06) | User "approved, decisions record only, go ahead" after revision 2 was presented, 2026-10-06 |
 | 3 | 2026-10-06 | Commit, push and PR handoff | Complete — PR #41, CI run 37412179017 passed | User "approved, go ahead" after revision 3 was presented, 2026-10-06 |
+| 4 | 2026-10-06 | Merge, branch cleanup and documentation closeout | Complete merge/cleanup; closeout PR open | User "merge PR #41 and clean up branch" and "yes, create closeout PR for WI-013", 2026-10-06 |
 
 ## Revision 2
 
@@ -70,3 +71,14 @@ demo-database changes, approved-design edits. CI failures are diagnosed and repo
 ### Review and approval
 
 Review status: approved. Approval source: user "approved, go ahead", 2026-10-06.
+
+## Revision 4 — Merge, cleanup and closeout
+
+| # | Step | Result |
+| --- | --- | --- |
+| 1 | Confirm final head `77f5ba2` CI and mergeability | Run 37412799848 passed all three jobs; PR CLEAN/MERGEABLE |
+| 2 | Squash-merge PR #41 and delete the feature branch | Merged as `b32656f`; remote and local branch deleted; stale ref pruned; `master` synchronized |
+| 3 | Documentation-only closeout PR on `chore/WI-013-closeout`: README, `ai/project.md`, CLAUDE.md, WI-013 records; WI-012 status line about PR #40 corrected | This PR |
+
+Permitted: the merge/cleanup the user requested and this closeout PR. Not permitted: merging the closeout PR,
+deployment, demo-database changes. The closeout PR's merge needs the user's approval.

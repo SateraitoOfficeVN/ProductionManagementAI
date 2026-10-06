@@ -117,9 +117,24 @@ future work uses wireframe SVG. No test images/generated JSON stored in WI-012.
 Main synchronized; implementation feature branch/worktree and task-owned review runtime,
 volumes/browser/temp credentials removed. Existing demo stack and prior videos preserved.
 Manual screen-reader speech/physical mobile keyboard/IME Not run; no live deployment.
-Next: separate documentation closeout PR review. Production-order intrinsic-size layout
-bug reproduced on the unchanged baseline is a separate candidate; no fix/feature approved.
-See work-items/WI-012/status.md, evidence.md and review.md.
+WI-012 closeout merged via PR #40 as `33555f3`. See work-items/WI-012/status.md,
+evidence.md and review.md.
+
+### WI-013 merged
+
+Product master (SCR-004) aligned with the approved 004_DD mockup and BD/SPD behaviour, merged via
+[PR #41](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/41) as `b32656f` on 2026-10-06.
+Edit route is `/products/:id/edit` (old `/products/:id` redirects); a save returns to the list with a
+notice; 「表示件数」 10/20/50/100 is backed by an optional allow-listed `pageSize` on
+`GET /api/product-master` (default 20, other values 400; DEC-007, approved 004_DD-API left unedited);
+control heights match the production-order screens. Final code head `29b6c93` passed
+[run 37412179017](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37412179017):
+239 backend unit/203 integration/267 frontend/66 E2E. Feature branch deleted; main synchronized; no
+deployment. Locally the 11 Plant calendar E2E specs need an activated calendar (CI fixture only).
+
+Next: the user will request a separate bug-fix WI for the order-list product filter `<select>` that widens
+the SP page when a product name is long (found by WI-013 CI run 37409988722; see WI-013 evidence). Manual
+screen-reader speech/physical mobile keyboard/IME remain Not run.
 
 ## Candidate demo
 
