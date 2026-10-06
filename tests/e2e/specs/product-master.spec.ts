@@ -168,12 +168,19 @@ test('old product links redirect to the designed edit route', async ({ page }) =
 })
 
 // WI-013 DEC-012: a long product name must not wrap the PC headers, status badge or row actions.
+// DEC-013: the long product is served from a mocked list response, so no long-name product is left in the shared
+// database for other screens' specs to trip over.
+async function serveLongProduct(page: import('@playwright/test').Page, sku: string) {
+  await page.route('**/api/product-master?*', (route) => route.fulfill({ json: {
+    items: [{ id: '0197e4a0-0000-7000-8000-00000000f00d', sku, name: 'B155 レーザーマーキング #4 '.repeat(8).trim(),
+      unit: '個', drawingNumber: null, isActive: true, updatedAt: '2026-10-06T00:00:00Z', version: 1, unitLocked: false }],
+    total: 1, page: 1, pageSize: 20, sort: 'sku', dir: 'asc',
+  } }))
+}
+
 test('long product names leave headers, status and actions on one line', async ({ page }) => {
-  const sku = `LONG-${Date.now()}`
-  const response = await page.request.post('/api/product-master', { data: {
-    sku, name: 'B155 レーザーマーキング #4 '.repeat(8).trim(), unit: '個', drawingNumber: null,
-  } })
-  expect(response.status()).toBe(201)
+  const sku = 'LONG-1791256905766'
+  await serveLongProduct(page, sku)
   await page.goto(`/products?q=${sku}`)
   const table = page.getByRole('table', { name: '製品一覧' })
   const row = table.getByRole('row').filter({ hasText: sku })
@@ -188,4 +195,16 @@ test('long product names leave headers, status and actions on one line', async (
   const retire = (await row.getByRole('button', { name: `${sku}を使用停止` }).boundingBox())!
   expect(retire.y).toBeCloseTo(edit.y, 0)
   expect(retire.x).toBeGreaterThan(edit.x + edit.width)
+})
+
+test('a long SKU and name wrap inside the phone card, even at 200% zoom', async ({ page }) => {
+  const sku = 'LONG-1791256905766'
+  await serveLongProduct(page, sku)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(`/products?q=${sku}`)
+  await expect(page.getByRole('listitem').filter({ hasText: sku })).toBeVisible()
+  for (const zoom of ['1', '2']) {
+    await page.evaluate((value) => { document.documentElement.style.zoom = value }, zoom)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  }
 })

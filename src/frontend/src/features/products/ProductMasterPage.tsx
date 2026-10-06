@@ -201,8 +201,9 @@ export function ProductMasterPage() {
           <th scope="col" className={headerCell}>{words.sku}</th><th scope="col" className={headerCell}>{words.name}</th><th scope="col" className={headerCell}>{words.unit}</th><th scope="col" className={headerCell}>{words.drawing}</th><th scope="col" className={headerCell}>{words.state}</th><th scope="col" className={headerCell}>{words.actions}</th></tr></thead><tbody>
           {result.items.map((item) => <tr key={item.id}><th scope="row" className={`${cell} font-normal`}>{item.sku}</th><td className={cell}>{item.name}</td><td className={cell}>{item.unit}</td><td className={cell}>{item.drawingNumber ?? '—'}</td><td className={`${cell} whitespace-nowrap`}><StatusPill active={item.isActive} /></td><td className={`${cell} whitespace-nowrap`}>{actions(item, false)}</td></tr>)}
         </tbody></table></div>
-        <ul className="grid gap-3 sm:hidden">{result.items.map((item) => <li key={item.id} className="grid gap-3 rounded-[10px] border border-[#d7e0e8] p-4">
-          <strong>{item.sku}　{item.name}</strong>
+        <ul className="grid gap-3 sm:hidden">{result.items.map((item) => <li key={item.id} className="grid min-w-0 gap-3 rounded-[10px] border border-[#d7e0e8] p-4">
+          {/* A long SKU or name wraps anywhere so it never widens the phone layout (WI-013 DEC-013). */}
+          <strong className="[overflow-wrap:anywhere]">{item.sku}　{item.name}</strong>
           <p className="grid justify-items-start gap-1"><span>{words.unit}：{item.unit}</span><span>{words.drawing}：{item.drawingNumber ?? '—'}</span><StatusPill active={item.isActive} /></p>
           {actions(item, true)}</li>)}</ul>
         <div className="flex justify-end text-[#536475]">

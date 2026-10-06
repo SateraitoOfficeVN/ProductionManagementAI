@@ -75,3 +75,29 @@ PC table headers, status badge and row actions no longer wrap; the long product 
 width. New E2E case creates a product with an eight-times-repeated name and checks single-line headers, a
 single-line badge and side-by-side 編集/使用停止. Product unit 13/13, lint pass; frontend rebuilt; product E2E
 14/14 pass. Screenshot at 1100 px inspected. The SKU cell can still break at a hyphen (not in this request).
+
+## PR #41 CI run 37409988722 (2026-10-06)
+
+Head `8ebd483`. Backend and Frontend jobs passed. E2E: 63 passed, 2 failed; all Plant calendar specs passed
+with CI's fixture.
+
+1. `mobile.spec.ts` "SP layout shows the order list as cards" — page wider than the screen. Reproduced
+   locally: on `/production-orders` at 390 px the product filter `<select id="productId">` is 1713 px wide
+   because its longest option (211 characters) comes from the long-name product created by the new WI-013
+   E2E case. Any product with a long name (up to 200 characters is valid) breaks the SP order list; latent
+   order-screen bug (related to the WI-012 "production-order intrinsic-size layout" candidate), exposed by
+   WI-013 test data.
+2. `product-ui.spec.ts` "WI-008 mobile TC-324 … 200% zoom" — retire dialog 4.5 px off centre (limit 2).
+   Not reproducible on Windows; most likely the unbreakable `LONG-<timestamp>` SKU, which sorts onto page 1,
+   overflows the SP card at 200% zoom with CI's Linux fonts and widens the mobile layout viewport.
+
+No fix applied: revision 3 requires user approval for CI fixes.
+
+## DEC-013 fix (2026-10-06)
+
+SP card title now wraps a long SKU/name anywhere (`[overflow-wrap:anywhere]`, `min-w-0`). The DEC-012 long-name
+E2E case now serves the product from a mocked `/api/product-master` list response, so it writes nothing; a new
+E2E case checks that a long SKU/name card does not widen a 390 px page at 100% or 200% zoom. Product unit
+13/13, lint pass; frontend rebuilt; product E2E 15/15 pass locally. The order-list SP overflow (failure 1) is
+left for the separate WI the user will request; the local demo database still holds long-name products from
+earlier runs, so that order-list spec keeps failing locally until then.
