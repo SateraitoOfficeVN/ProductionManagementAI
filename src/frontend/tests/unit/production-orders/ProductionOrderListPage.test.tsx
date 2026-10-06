@@ -225,6 +225,21 @@ describe('ProductionOrderListPage — view state in the URL (REQ-027, TC-115)', 
 })
 
 describe('ProductionOrderListPage — filtering, sorting and paging', () => {
+  it('gives the product filter and each option the full "SKU — name" as a hover title (BUG-008, DEC-003)', async () => {
+    const user = userEvent.setup()
+    listReply({ status: 200, body: page() })
+    renderList()
+    await screen.findByRole('table')
+    const select = await screen.findByRole('combobox', { name: '製品' })
+    await screen.findByRole('option', { name: 'P-1004 — ドライブシャフト' })
+
+    expect(select).toHaveAttribute('title', 'すべての製品')
+    expect(screen.getByRole('option', { name: 'P-1004 — ドライブシャフト' })).toHaveAttribute('title', 'P-1004 — ドライブシャフト')
+
+    await user.selectOptions(select, 'p4')
+    expect(select).toHaveAttribute('title', 'P-1004 — ドライブシャフト')
+  })
+
   it('returns to page 1 when a filter, the sort or the page size changes (REQ-024, TC-112)', async () => {
     const user = userEvent.setup()
     listReply({ status: 200, body: page({ total: 80, page: 3, pageSize: 20 }) })
