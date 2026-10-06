@@ -8,7 +8,7 @@ import { ProductionOrderListPage } from './features/production-orders/Production
 import { ProductionOrderPage } from './features/production-orders/ProductionOrderPage'
 import { ProductionLineListPage } from './features/production-lines/ProductionLineListPage'
 import { ProductionLineFormPage } from './features/production-lines/ProductionLineFormPage'
-import { ProductFormPage, ProductMasterPage } from './features/products/ProductMasterPage'
+import { LegacyProductRedirect, ProductFormPage, ProductMasterPage } from './features/products/ProductMasterPage'
 
 function App() {
   // The navigation guard lets an edited Screen A form intercept in-app links (WI-004 DEC-022).
@@ -50,7 +50,8 @@ function App() {
         />
         <Route path="/products" element={<ProtectedRoute><ProductMasterPage /></ProtectedRoute>} />
         <Route path="/products/new" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
-        <Route path="/products/:id" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
+        <Route path="/products/:id/edit" element={<ProtectedRoute><ProductFormPage /></ProtectedRoute>} />
+        <Route path="/products/:id" element={<LegacyProductRedirect />} />
         <Route path="/plant-calendar" element={<ProtectedRoute><PlantCalendarPage /></ProtectedRoute>} />
         <Route path="/production-lines" element={<ProtectedRoute><ProductionLineListPage /></ProtectedRoute>} />
         <Route path="/production-lines/new" element={<ProtectedRoute><ProductionLineFormPage /></ProtectedRoute>} />
