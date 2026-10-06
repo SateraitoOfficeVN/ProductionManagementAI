@@ -180,3 +180,38 @@ test('a very long product name never widens the page; the filter stays in its co
     expect(box.x + box.width).toBeLessThanOrEqual(form.x + form.width)
   }
 })
+
+test('the open product list stays inside its control, truncates long names and keeps them in a tooltip (BUG-008, TC-121)', async ({ page }) => {
+  const name = 'ブレーキキャリパー ロングネーム '.repeat(14).trim()
+  // A real product renamed only in the response, so choosing it still runs a real filtered query.
+  const products = await (await page.request.get('/api/products')).json()
+  const renamed: { id: string; sku: string } = products.find((product: { sku: string }) => product.sku === 'P-1001')
+  await page.route('**/api/products', (route) =>
+    route.fulfill({ json: products.map((product: { id: string }) => (product.id === renamed.id ? { ...product, name } : product)) }))
+  for (const width of [390, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await openList(page)
+    const select = page.getByLabel('製品', { exact: true })
+    const label = `${renamed.sku} — ${name}`
+    await select.click()
+    const option = page.getByRole('option', { name: label })
+    await expect(option).toBeVisible()
+    const control = (await select.boundingBox())!
+    for (const visible of await page.getByRole('option').all()) {
+      const box = await visible.boundingBox()
+      if (!box) continue
+      expect(box.x).toBeGreaterThanOrEqual(control.x - 1)
+      expect(box.x + box.width).toBeLessThanOrEqual(control.x + control.width + 1)
+    }
+    expect(await option.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true)
+    await expect(option).toHaveAttribute('title', label)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+
+    await option.click()
+    await expect(select).toHaveValue(renamed.id)
+    await expect(select).toHaveAttribute('title', label)
+    await page.getByRole('button', { name: '検索' }).click()
+    await expect(page).toHaveURL(new RegExp(`productId=${renamed.id}`))
+    await expect(page.getByRole('status').first()).toHaveText(summary)
+  }
+})

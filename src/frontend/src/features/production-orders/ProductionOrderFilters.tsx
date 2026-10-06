@@ -12,6 +12,8 @@ const statuses: ProductionOrderStatus[] = ['Draft', 'InProgress', 'Completed', '
 const fieldClass =
   'rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 focus-visible:outline-none'
 
+const productLabel = (product: Product) => `${product.sku} — ${product.name}`
+
 interface Props {
   filters: ListFilters
   products: Product[]
@@ -60,6 +62,10 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
     onApply(draft)
   }
 
+  // DEC-003: long labels are cut with an ellipsis, so the title carries the full "SKU — name" for hover.
+  const selected = products.find((product) => product.id === draft.productId)
+  const selectedProductLabel = selected ? productLabel(selected) : labels.list.allProducts
+
   const describedBy = (field: keyof FilterErrors) => (errors[field] ? `${field}-error` : undefined)
   const errorSlot = (field: keyof FilterErrors) => (
     <p id={`${field}-error`} className="min-h-[1.25rem] text-xs text-red-600">
@@ -99,14 +105,19 @@ export function ProductionOrderFilters({ filters, products, productsFailed, busy
           <select
             id="productId"
             value={draft.productId ?? ''}
+            title={selectedProductLabel}
             disabled={productsFailed}
             onChange={(event) => setDraft({ ...draft, productId: event.target.value || null })}
-            className={`${fieldClass} w-full min-w-0 disabled:bg-gray-100 disabled:text-gray-500`}
+            className={`${fieldClass} contained-select w-full min-w-0 disabled:bg-gray-100 disabled:text-gray-500`}
           >
+            {/* Shown only by browsers with the customizable select; lets the chosen label end in an ellipsis. */}
+            <button type="button" tabIndex={-1} aria-hidden="true" className="contained-select-value">
+              <selectedcontent />
+            </button>
             <option value="">{labels.list.allProducts}</option>
             {products.map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.sku} — {product.name}
+              <option key={product.id} value={product.id} title={productLabel(product)}>
+                {productLabel(product)}
               </option>
             ))}
           </select>
