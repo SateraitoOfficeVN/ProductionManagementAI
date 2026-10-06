@@ -5,13 +5,16 @@ using System.Text;
 namespace ProductionManagementAI.Application.Products;
 
 /// <summary>Defines the submitted Product master search and paging values.</summary>
-public sealed record ProductMasterListRequest(string? Q, string? State, string? Page);
+public sealed record ProductMasterListRequest(string? Q, string? State, string? Page, string? PageSize = null);
 
 /// <summary>Defines a validated Product master list query.</summary>
-public sealed record ProductMasterListQuery(string? Search, string State, int Page)
+public sealed record ProductMasterListQuery(string? Search, string State, int Page, int PageSize = ProductMasterListQuery.DefaultPageSize)
 {
-    /// <summary>Gets the fixed catalog page size.</summary>
-    public const int PageSize = 20;
+    /// <summary>Gets the catalog page size used when none is requested.</summary>
+    public const int DefaultPageSize = 20;
+
+    /// <summary>Gets the page sizes a client may request, the same choices as the order list (WI-013 DEC-007).</summary>
+    public static readonly IReadOnlyList<int> PageSizes = [10, 20, 50, 100];
 
     /// <summary>Validates list filters without widening an invalid query.</summary>
     public static Result<ProductMasterListQuery> TryCreate(ProductMasterListRequest request)
@@ -23,10 +26,13 @@ public sealed record ProductMasterListQuery(string? Search, string State, int Pa
         if (state is not ("all" or "active" or "retired")) errors["state"] = ["VALIDATION"];
         if (!int.TryParse(request.Page ?? "1", out var page) || page < 1)
             errors["page"] = ["VALIDATION"];
+        var pageSize = DefaultPageSize;
+        if (request.PageSize is not null && (!int.TryParse(request.PageSize, out pageSize) || !PageSizes.Contains(pageSize)))
+            errors["pageSize"] = ["VALIDATION"];
         return errors.Count > 0
             ? new Result<ProductMasterListQuery>.Invalid(errors)
             : new Result<ProductMasterListQuery>.Ok(new ProductMasterListQuery(
-                string.IsNullOrEmpty(search) ? null : search, state, page));
+                string.IsNullOrEmpty(search) ? null : search, state, page, pageSize));
     }
 }
 

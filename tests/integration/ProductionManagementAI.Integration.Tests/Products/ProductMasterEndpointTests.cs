@@ -357,6 +357,31 @@ public sealed class ProductMasterEndpointTests(IntegrationTestFixture fixture) :
             span => Assert.DoesNotContain(span.Tags, tag => tag.Value == product["sku"]!.GetValue<string>()));
     }
 
+    [Theory]
+    [InlineData(10)]
+    [InlineData(20)]
+    [InlineData(50)]
+    [InlineData(100)]
+    public async Task CatalogHonoursAllowListedPageSize(int size)
+    {
+        // WI-013 DEC-007: the list offers the same 10/20/50/100 choices as the order list.
+        using var client = await fixture.CreateClientAsAsync("Admin");
+        var page = await (await client.GetAsync($"{Path}?page=1&pageSize={size}")).Body();
+        Assert.Equal(size, page["pageSize"]!.GetValue<int>());
+        Assert.Equal(Math.Min(size, page["total"]!.GetValue<int>()), page["items"]!.AsArray().Count);
+    }
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("15")]
+    [InlineData("101")]
+    [InlineData("abc")]
+    public async Task CatalogRejectsUnlistedPageSize(string size)
+    {
+        using var client = await fixture.CreateClientAsAsync("Admin");
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync($"{Path}?pageSize={size}")).StatusCode);
+    }
+
     [Fact]
     public async Task InvalidIdentifiersQueryAndContentTypeReturnSafeErrors()
     {

@@ -26,18 +26,18 @@ internal sealed class ProductMasterRepository(AppDbContext db) : IProductMasterR
         }
 
         var total = await products.CountAsync(cancellationToken);
-        if (query.Page > int.MaxValue / ProductMasterListQuery.PageSize)
+        if (query.Page > int.MaxValue / query.PageSize)
             return new PagedResult<ProductMasterItem>([], total, query.Page,
-                ProductMasterListQuery.PageSize, "sku", "asc");
+                query.PageSize, "sku", "asc");
         var items = await products.OrderBy(p => p.Sku).ThenBy(p => p.Id)
-            .Skip((query.Page - 1) * ProductMasterListQuery.PageSize)
-            .Take(ProductMasterListQuery.PageSize)
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
             .Select(p => new ProductMasterItem(p.Id, p.Sku, p.Name, p.Unit,
                 p.DrawingNumber, p.IsActive, p.UpdatedAtUtc, p.RowVersion,
                 db.ProductionOrders.Any(o => o.ProductId == p.Id)))
             .ToListAsync(cancellationToken);
         return new PagedResult<ProductMasterItem>(items, total, query.Page,
-            ProductMasterListQuery.PageSize, "sku", "asc");
+            query.PageSize, "sku", "asc");
     }
 
     public Task<ProductMasterItem?> GetAsync(Guid id, CancellationToken cancellationToken) =>

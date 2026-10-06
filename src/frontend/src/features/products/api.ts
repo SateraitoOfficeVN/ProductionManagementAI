@@ -31,8 +31,8 @@ export interface ProductPage {
   dir: 'asc'
 }
 
-export const listMaster = (q: string, state: string, page: number, signal?: AbortSignal) =>
-  getJson<ProductPage>(`/api/product-master?${new URLSearchParams({ q, state, page: String(page) })}`, signal)
+export const listMaster = (q: string, state: string, page: number, pageSize: number, signal?: AbortSignal) =>
+  getJson<ProductPage>(`/api/product-master?${new URLSearchParams({ q, state, page: String(page), pageSize: String(pageSize) })}`, signal)
 
 export const getMaster = (id: string, signal?: AbortSignal) => getJson<ProductMasterItem>(`/api/product-master/${encodeURIComponent(id)}`, signal)
 
