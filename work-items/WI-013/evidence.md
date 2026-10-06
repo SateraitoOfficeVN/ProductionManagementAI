@@ -107,3 +107,10 @@ earlier runs, so that order-list spec keeps failing locally until then.
 Head `29b6c93`: Backend (239 unit, 203 integration), Frontend (lint, build, unit) and E2E (66 passed, including
 all Plant calendar specs with CI's fixture) all passed.
 https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37412179017
+
+## Merge and cleanup (2026-10-06)
+
+Final head `77f5ba2` (records-only commit) passed CI run 37412799848 (Backend, Frontend, E2E). PR #41 was
+CLEAN/MERGEABLE and squash-merged as `b32656f`; `gh pr merge --delete-branch` removed the remote and local
+feature branch, `git fetch --prune` removed the stale tracking ref, and `master` equals `origin/master`.
+The `evidence/product-master-recording` worktree was not touched. The local Compose stack runs the merged code.

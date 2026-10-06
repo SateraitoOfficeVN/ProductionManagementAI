@@ -31,9 +31,19 @@ worktree and task-owned review runtime/volumes/browser/temp removed. Existing de
 other worktrees and prior videos preserved. Approved historical designs unchanged.
 Current WI-012 design PNG companions accepted; future designs use wireframe SVG.
 No test screenshot or unnecessary generated JSON artifacts in work items. Manual
-speech/physical mobile keyboard/IME remain Not run; no live deployment. Next: review
-separate WI-012 documentation closeout PR. Production-order layout gap reproduced on
-baseline is a separate bug candidate; no fix/new feature approved. See WI-012 records.
+speech/physical mobile keyboard/IME remain Not run; no live deployment. WI-012 closeout
+merged via PR #40 as 33555f3. See WI-012 records.
+
+WI-013 Product master mockup alignment merged via PR #41 as b32656f (squash) under
+approved revisions 2-3 and explicit merge/cleanup request. Final head 77f5ba2 passed
+CI run 37412799848; code head 29b6c93 passed run 37412179017 (239 backend unit/203
+integration/267 frontend/66 E2E). /products follows the 004_DD mockup; edit route is
+/products/:id/edit (old /products/:id redirects); saves return to the list; rows per
+page 10/20/50/100 via optional allow-listed pageSize on GET /api/product-master
+(DEC-007; approved 004_DD-API unedited); control heights match order screens. Feature
+branch deleted locally/remotely; main synchronized; no deployment. Next: the user will
+request a new bug-fix WI for the order-list product filter that widens the SP page with
+long product names (found by WI-013 CI). See work-items/WI-013.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 

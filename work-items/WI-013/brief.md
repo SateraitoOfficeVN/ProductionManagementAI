@@ -2,7 +2,7 @@
 
 | Work item | Workflow | Status | Baseline |
 | --- | --- | --- | --- |
-| WI-013 | bug-fix | In progress | 33555f3 |
+| WI-013 | bug-fix | Merged via PR #41 as b32656f | 33555f3 |
 
 ## Report and objective
 
