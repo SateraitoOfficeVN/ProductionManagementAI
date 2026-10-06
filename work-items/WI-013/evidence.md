@@ -101,3 +101,9 @@ E2E case checks that a long SKU/name card does not widen a 390 px page at 100% o
 13/13, lint pass; frontend rebuilt; product E2E 15/15 pass locally. The order-list SP overflow (failure 1) is
 left for the separate WI the user will request; the local demo database still holds long-name products from
 earlier runs, so that order-list spec keeps failing locally until then.
+
+## PR #41 CI run 37412179017 (2026-10-06) — passed
+
+Head `29b6c93`: Backend (239 unit, 203 integration), Frontend (lint, build, unit) and E2E (66 passed, including
+all Plant calendar specs with CI's fixture) all passed.
+https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37412179017

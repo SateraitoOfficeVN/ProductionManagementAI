@@ -4,7 +4,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-06 | Frontend alignment of SCR-004 with approved mockup and behaviour | Superseded; partial code rolled back at user request, nothing committed | User "yes, keep 48px, fix behaviour gaps too, go ahead", 2026-10-06 |
 | 2 | 2026-10-06 | Alignment + order-screen control heights + rows per page (+ DEC-010–012 follow-ups) | Complete; user review done ("i review done. continue process", 2026-10-06) | User "approved, decisions record only, go ahead" after revision 2 was presented, 2026-10-06 |
-| 3 | 2026-10-06 | Commit, push and PR handoff | In progress | User "approved, go ahead" after revision 3 was presented, 2026-10-06 |
+| 3 | 2026-10-06 | Commit, push and PR handoff | Complete — PR #41, CI run 37412179017 passed | User "approved, go ahead" after revision 3 was presented, 2026-10-06 |
 
 ## Revision 2
 
