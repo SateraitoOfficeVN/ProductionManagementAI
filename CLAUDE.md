@@ -41,9 +41,17 @@ integration/267 frontend/66 E2E). /products follows the 004_DD mockup; edit rout
 /products/:id/edit (old /products/:id redirects); saves return to the list; rows per
 page 10/20/50/100 via optional allow-listed pageSize on GET /api/product-master
 (DEC-007; approved 004_DD-API unedited); control heights match order screens. Feature
-branch deleted locally/remotely; main synchronized; no deployment. Next: the user will
-request a new bug-fix WI for the order-list product filter that widens the SP page with
-long product names (found by WI-013 CI). See work-items/WI-013.
+branch deleted locally/remotely; main synchronized; no deployment. WI-013 closeout merged
+via PR #42 as 46bf430. See work-items/WI-013.
+
+WI-014 order-list product filter overflow (BUG-008) merged via PR #43 as 3e29618 (squash)
+under approved revisions 1-2. Final head dd10347 passed CI run 37433461443 (239 backend
+unit/203 integration/269 frontend/68 E2E). Filter grid tracks have a zero minimum; in
+Chrome/Edge the open list (appearance: base-select) matches the control width, long names
+end in an ellipsis with the full name as title; Firefox/Safari keep the native popup.
+Still a native select per 002_DD (unedited). Branch deleted; main synchronized; no
+deployment. Next: none approved; candidate RFC to require test-plan.md whenever a WI adds
+tests. See work-items/WI-014.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 
