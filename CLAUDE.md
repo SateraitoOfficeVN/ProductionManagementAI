@@ -50,8 +50,18 @@ unit/203 integration/269 frontend/68 E2E). Filter grid tracks have a zero minimu
 Chrome/Edge the open list (appearance: base-select) matches the control width, long names
 end in an ellipsis with the full name as title; Firefox/Safari keep the native popup.
 Still a native select per 002_DD (unedited). Branch deleted; main synchronized; no
-deployment. Next: none approved; candidate RFC to require test-plan.md whenever a WI adds
-tests. See work-items/WI-014.
+deployment. WI-014 closeout merged via PR #44 as 2f502b1. See work-items/WI-014.
+
+WI-015 production lines redesign (BUG-009) merged via PR #45 as 2470c8e (squash) under
+approved revisions 1-3. Additive 005_DD-SPD-REDESIGN v3 (WI-009 005 docs unedited). The
+list has rows per page 10/20/50/100; register/edit has a 20-per-page product table and a
+製品を追加 dialog (adding confirms the unit). Lists scroll in bounded boxes with sticky
+headers. A saved 使用停止 pair cannot be re-added, and the UI says so. Optional allow-listed
+page sizes on line list/detail/product-choices APIs, default 50. Final head 7c22966 passed
+CI run 37562084126 (251 backend unit/215 integration/282 frontend/73 E2E). Branch deleted;
+main synchronized; no deployment. Next: none approved; candidate RFCs: test-plan.md
+whenever a WI adds tests; design PDFs only after the design .md is approved. See
+work-items/WI-015.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 

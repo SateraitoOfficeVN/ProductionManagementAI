@@ -147,9 +147,32 @@ label is the `title` (DEC-003; the closed value uses a hidden `<button><selected
 239 backend unit/203 integration/269 frontend/68 E2E. Feature branch deleted; main synchronized; no deployment.
 WI-014 also has a `test-plan.md` (TC-120, TC-121).
 
-Next: no work item approved. Candidate: a harness-improvement RFC making `test-plan.md` mandatory whenever a
-work item adds tests (user request during WI-014; `ai/workflows/bug-fix.md` unchanged). Manual screen-reader
-speech/physical mobile keyboard/IME remain Not run.
+WI-014 closeout merged via PR #44 as `2f502b1`.
+
+### WI-015 merged
+
+Production lines (SCR-005) redesigned and implemented (BUG-009, REQ-084), merged via
+[PR #45](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/45) as `2470c8e` on 2026-10-07. The new
+additive design `005_DD-SPD-REDESIGN` version 3 (wireframes, mockups, English/Japanese PDFs) sits beside the
+unedited WI-009 005 documents. Highlights:
+- List: 「表示件数」 10/20/50/100 in the URL (default 20); badges; pager only when needed.
+- Register/edit: 基本情報 card; product table 20 per page; new 製品を追加 dialog whose add confirms the shown unit
+  (DEC-003).
+- Every list scrolls inside a bounded box with a sticky header (DEC-009).
+- Controls use the order-screen heights (DEC-002).
+- A saved 使用停止 pair stays one-way; the screen says it cannot be registered again (DEC-012).
+- API: optional allow-listed `pageSize` on `GET /api/production-lines` and `/product-choices`, and
+  `pairsPageSize` on `GET /api/production-lines/{id}` (10/20/50/100, default 50, otherwise 400). `/eligible` and
+  the order screens are unchanged.
+
+Final head `7c22966` passed [run 37562084126](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37562084126), and `master` passed run 37563252878: 251 backend unit/215
+integration/282 frontend/73 E2E. Feature branch deleted; main synchronized; no deployment. Test plan TC-420–435
+includes long-text cases (50/200 characters, no spaces, 1280/390/320 px).
+
+Next: no work item approved. Candidates: a harness-improvement RFC making `test-plan.md` mandatory whenever a work
+item adds tests (user request during WI-014), and rendering design PDFs only after the design Markdown is approved
+(user request during WI-015, recorded as WI-015 DEC-007; `ai/rules/documentation.md` and RFC 0012 unchanged).
+Manual screen-reader speech/physical mobile keyboard/IME remain Not run.
 
 ## Candidate demo
 

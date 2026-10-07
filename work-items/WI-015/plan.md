@@ -4,7 +4,8 @@
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-06 | Requirement reading and additive SCR-005 redesign (documents only) | Complete — design version 3 approved (DEC-010), PDFs rendered | User answered Q1–Q3 and said "continue" after revision 1 was shown (2026-10-06) |
 | 2 | 2026-10-06 | Implement the approved redesign and tests (no commit) | Complete — steps 1–9 done; retired-pair note added on review (DEC-012) | User: "revision 2 only implementation and test, not commit yet. Note Create test cases with long text to check if the UI breaks." (2026-10-06) |
-| 3 | 2026-10-07 | Commit, push and open a PR to `master`; record CI | Complete — PR #45 open, CI run 37561507760 passed | User: "approved, go ahead" (2026-10-07) |
+| 3 | 2026-10-07 | Commit, push and open a PR to `master`; record CI | Complete — PR #45, final head `7c22966` CI run 37562084126 passed |
+| 4 | 2026-10-07 | Merge, branch cleanup and documentation closeout | Complete merge/cleanup; closeout PR open | User: "merge PR #45 and clean up branch" and "yes, create closeout PR for WI-015" (2026-10-07) | User: "approved, go ahead" (2026-10-07) |
 
 ## Revision 1 — Redesign (design documents only)
 
@@ -187,3 +188,14 @@ Not permitted without further approval:
 
 Review status: approved 2026-10-07 ("approved, go ahead", DEC-013). Steps 1–5 complete; one test-only CI fix
 (`c427dfe`, see evidence). Merge, cleanup and closeout need the user's approval.
+
+## Revision 4 — Merge, cleanup and closeout
+
+| # | Step | Result |
+| --- | --- | --- |
+| 1 | Confirm final head `7c22966` CI and mergeability | Run 37562084126 passed all three jobs; PR MERGEABLE, CLEAN |
+| 2 | Squash-merge PR #45 (guarded by the head commit) and delete the feature branch | Merged as `2470c8e`; remote and local branch deleted; refs pruned; `master` synchronized; `master` CI run 37563252878 passed |
+| 3 | Documentation-only closeout PR on `chore/WI-015-closeout`: README, `ai/project.md`, CLAUDE.md, WI-015 records; WI-014 status line about its closeout PR corrected | This PR |
+
+Permitted: the merge/cleanup the user requested and this closeout PR. Not permitted: merging the closeout PR,
+deployment, demo-database changes. The closeout PR's merge needs the user's approval.

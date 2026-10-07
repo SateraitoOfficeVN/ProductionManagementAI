@@ -1,41 +1,28 @@
 # WI-015 — Status
 
-2026-10-06:
-- **Audit:** SCR-005 was audited against the approved 005 mockup and design (BUG-009, see [brief](brief.md)).
-- **Plan:** plan revision 1 was approved ("continue" after Q1–Q3; DEC-002–005).
-- **Design package (steps 1–3):** complete on the local branch `docs/WI-015-production-line-redesign`, uncommitted:
-  - `005_DD-SPD-REDESIGN_生産ライン・工程.md`;
-  - PC, SP and dialog SVG wireframes;
-  - an English/Japanese 24-state HTML gallery.
-- **Checks:** the approved 005 files are unchanged (hash check). The design-consistency checklist passes. See [evidence](evidence.md).
+2026-10-07: done. BUG-009 (SCR-005 production lines did not match its mockup and design) fixed with a new additive
+design, [005_DD-SPD-REDESIGN](../../docs/en/020_detailed-design/005/005_DD-SPD-REDESIGN_生産ライン・工程.md)
+version 3 (approved, DEC-010), and its implementation under plan revisions 1–3. The WI-009 005 documents are unedited.
 
-Review round 1 applied (DEC-006: rows per page with an optional `pageSize` on API-PL-01; DEC-007: PDFs only after
-design approval, so the early PDFs were deleted). Review round 2 applied (DEC-008: 20 per page in the product table and
-the add dialog, with optional page sizes on API-PL-02/06; DEC-009: every list scrolls inside a fixed-height box). The
-design is now version 3.
+- **List:** 「表示件数」 10/20/50/100 in the URL (default 20), badges, red 使用停止 on active lines, separate
+  empty/no-match notices, pager only when needed.
+- **Register/edit:** 基本情報 card; product table 20 per page; new 製品を追加 dialog whose add confirms the shown
+  unit (DEC-003); 「現在の単位で確認」 only on stale saved pairs; staged retire with undo.
+- **Every list** scrolls inside a bounded box with a sticky header (DEC-009); controls use the order-screen
+  heights (DEC-002).
+- **Retired pairs:** still one-way; the retire dialog, the retired row and the add dialog say a saved 使用停止
+  product cannot be registered again (DEC-012).
+- **API:** optional allow-listed `pageSize` (line list, product choices) and `pairsPageSize` (line detail), default
+  50 (DEC-006, DEC-008).
 
-Design version 3 approved ("approved, go ahead", DEC-010); English/Japanese PDFs rendered (step 5). Plan revision 1
-complete.
+PR [#45](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/45) was squash-merged as `2470c8e` at the user's request, after final head `7c22966` passed CI
+[run 37562084126](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37562084126): 251 backend unit, 215 integration, 282 frontend unit, 73 E2E. `master` run 37563252878
+passed. The feature branch is deleted locally and remotely, and `master` is synchronized. No deployment.
+Documentation closeout PR on `chore/WI-015-closeout` awaits the user's review; its merge is not yet authorized.
 
-Plan revision 2 approved with changes ("implementation and test, not commit yet"; long-text cases; DEC-011).
+Known limits: screen-reader speech and physical mobile keyboard/IME were not run (as in WI-010/012). See
+[test-plan](test-plan.md) known gaps and [evidence](evidence.md).
 
-Implementation and tests are complete on the local branch `fix/WI-015-production-line-redesign`, uncommitted. See
-[evidence](evidence.md) and [test-plan](test-plan.md):
-- backend: 251 unit and 215 integration tests pass;
-- frontend: 281 unit tests pass;
-- E2E: 13/13 line specs; the full suite has 62 passed and 11 known local plant-calendar failures.
-
-2026-10-07: on user review, the edit screen now explains that a saved 使用停止 pair cannot be registered again
-(DEC-012, TC-435; rule unchanged). 282 frontend unit tests and 13/13 line E2E pass.
-
-Plan revision 3 approved (DEC-013) and complete: PR [#45](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/45)
-(commits `8f80342`, `7ab6fa4`, test-only fix `c427dfe`); CI run 37561507760 passed all three jobs (251 backend unit,
-215 integration, 282 frontend unit, 73 E2E). See [evidence](evidence.md).
-
-Next: the user reviews PR #45. Merge, branch cleanup and closeout need explicit approval. A user-run Debug API
-process (PID 16852) is still running and was not touched. Nothing is committed or pushed.
-
-Temporary files, to remove when the work item no longer needs them:
-- a scratch virtual environment (`pdfvenv`, with `markdown` and `pymupdf`);
-- the Japanese translation source;
-- generator and render scripts in the session scratchpad.
+Open follow-ups (not started; candidates for harness-improvement RFCs, not yet requested):
+- require `test-plan.md` whenever a work item adds tests (user rule from WI-014);
+- render design PDFs only after the design Markdown is approved (user rule, DEC-007).
