@@ -57,12 +57,12 @@ test('TC-421/422/430: 「表示件数」 in the URL, scroll box with sticky head
   expect(sizes).toContain('100')
   // DEC-009: bounded box, inner scrolling, sticky header, no horizontal page scroll, pager outside the box.
   const box = (await region.boundingBox())!
-  expect(box.height).toBeLessThanOrEqual(Math.min(900 * 0.6, 640) + 2)
+  expect(box.height).toBeLessThanOrEqual(Math.min(page.viewportSize()!.height * 0.6, 640) + 2)
   expect(await region.evaluate(element => element.scrollHeight > element.clientHeight)).toBe(true)
   await region.focus(); await page.keyboard.press('End')
   await expect.poll(() => region.evaluate(element => element.scrollTop)).toBeGreaterThan(0)
-  const header = (await region.locator('thead th').first().boundingBox())!
-  expect(Math.abs(header.y - box.y)).toBeLessThanOrEqual(2)
+  // Focusing the region may scroll the page, so the header is measured against the box's current position.
+  await expect.poll(() => region.evaluate(element => Math.abs(element.querySelector('thead th')!.getBoundingClientRect().top - element.getBoundingClientRect().top))).toBeLessThanOrEqual(2)
   expect(await region.getByRole('navigation').count()).toBe(0)
   expect(await noPageScroll(page)).toBe(true)
   await page.getByRole('button', { name: '次へ', exact: true }).click()
