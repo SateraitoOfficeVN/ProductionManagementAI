@@ -2,7 +2,7 @@
 
 | Work item | Workflow | Status | Baseline |
 | --- | --- | --- | --- |
-| WI-015 | bug-fix (design + implementation alignment, as WI-012) | Plan revision 1 awaiting review | 2f502b1 |
+| WI-015 | bug-fix (design + implementation alignment, as WI-012) | Merged via PR #45 as 2470c8e | 2f502b1 |
 
 ## Report and objective
 

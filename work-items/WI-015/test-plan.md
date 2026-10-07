@@ -127,7 +127,7 @@ Single-agent execution in plan revision 2 steps 3–8. The user reviews before a
 | TC-432 | pass | E2E "TC-432" (real 50/200-character lines, 1280/390/320 px) and "TC-430/432" (mocked 50/200-character products, 25 pairs, 25 choices) | 2026-10-06 |
 | TC-433 | pass | axe in unit tests and in every new E2E case, PC and SP | 2026-10-06 |
 | TC-435 | pass | Unit "TC-435" and the retire-dialog assertion in TC-428; E2E TC-360 extended (real retired pair: row text, dialog note, P-1001 not offered, axe) | 2026-10-07 |
-| TC-434 | pass | Full local E2E 62 passed; 11 plant-calendar failures are the known local fixture limit | 2026-10-06 |
+| TC-434 | pass | Full local E2E 62 passed; 11 plant-calendar failures are the known local fixture limit. CI runs 37562084126 (final head) and 37563252878 (`master`): 73 E2E passed, plant calendar included | 2026-10-06 |
 
 ## Known gaps
 

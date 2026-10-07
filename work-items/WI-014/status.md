@@ -7,7 +7,7 @@ the full `SKU — name` is the hover title (DEC-003, DEC-004). PR #43
 (https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/43) squash-merged as `3e29618` at the user's
 request after final head `dd10347` passed CI run 37433461443 (239 backend unit / 203 integration / 269 frontend /
 68 E2E). Feature branch deleted locally and remotely; `master` synchronized. No deployment. Documentation
-closeout PR on `chore/WI-014-closeout` awaits the user's review; its merge is not yet authorized.
+closeout merged via PR #44 as `2f502b1`.
 
 Known limits: Firefox/Safari keep the native (wide) popup until they support `base-select`; hover-tooltip
 rendering was not observed in headless Chromium (only the `title` attributes are asserted); touch devices

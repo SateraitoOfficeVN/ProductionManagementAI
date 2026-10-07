@@ -209,3 +209,13 @@ Screenshots at 1280 and 390 px (edit screen with a saved retired pair, and the a
 The fix measures the header and box in one read after scrolling, polled until stable, and bounds the box height by the
 real viewport. It still fails if the header is not sticky. The spec passed 25/25 locally with `--repeat-each 5`.
 No merge, branch deletion or deployment.
+
+## Merge and closeout (2026-10-07)
+
+| Item | Value |
+| --- | --- |
+| Final PR head | `7c22966` (record commit); [run 37562084126](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37562084126) passed Backend, Frontend and E2E |
+| Merge | PR #45 squash-merged as `2470c8e` with `--match-head-commit` |
+| `master` after merge | Run 37563252878 passed all three jobs |
+| Cleanup | Remote and local `fix/WI-015-production-line-redesign` deleted; refs pruned; `master` synchronized; no other worktrees |
+| Deployment | None. The local Compose stack runs the merged code; the demo database keeps the E2E test lines and products |
