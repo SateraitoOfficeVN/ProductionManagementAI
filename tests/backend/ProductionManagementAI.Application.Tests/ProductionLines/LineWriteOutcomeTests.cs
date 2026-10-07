@@ -60,7 +60,7 @@ public sealed class LineWriteOutcomeTests
     {
         public async Task<LinePage<LineSummary>> ListAsync(LineQuery query, CancellationToken ct) { await Task.Delay(Timeout.InfiniteTimeSpan, ct); throw new InvalidOperationException(); }
         public Task<ILineWriteSession> BeginWriteAsync(CancellationToken ct) => throw new NotSupportedException();
-        public Task<LineDetail?> GetAsync(Guid id, int page, CancellationToken ct) => throw new NotSupportedException();
+        public Task<LineDetail?> GetAsync(Guid id, int page, int pageSize, CancellationToken ct) => throw new NotSupportedException();
         public Task<LinePage<LineProductChoice>?> ProductChoicesAsync(LineQuery query, CancellationToken ct) => throw new NotSupportedException();
         public Task<EligibleLinePage?> EligibleAsync(LineQuery query, CancellationToken ct) => throw new NotSupportedException();
     }
@@ -69,7 +69,7 @@ public sealed class LineWriteOutcomeTests
         internal CancellationToken BeginToken; internal CancellationToken ReadToken;
         public Task<ILineWriteSession> BeginWriteAsync(CancellationToken ct) { BeginToken = ct; return Task.FromResult<ILineWriteSession>(session); }
         public Task<LinePage<LineSummary>> ListAsync(LineQuery query, CancellationToken ct) => throw new NotSupportedException();
-        public Task<LineDetail?> GetAsync(Guid id, int page, CancellationToken ct) { ReadToken = ct; throw new LineTransientException(new InvalidOperationException()); }
+        public Task<LineDetail?> GetAsync(Guid id, int page, int pageSize, CancellationToken ct) { ReadToken = ct; throw new LineTransientException(new InvalidOperationException()); }
         public Task<LinePage<LineProductChoice>?> ProductChoicesAsync(LineQuery query, CancellationToken ct) => throw new NotSupportedException();
         public Task<EligibleLinePage?> EligibleAsync(LineQuery query, CancellationToken ct) => throw new NotSupportedException();
     }

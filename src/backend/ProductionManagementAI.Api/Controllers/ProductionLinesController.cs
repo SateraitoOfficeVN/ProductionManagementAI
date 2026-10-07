@@ -15,30 +15,32 @@ public sealed class ProductionLinesController(ProductionLineService service) : C
     [HttpGet]
     public async Task<ActionResult> List(CancellationToken ct)
     {
-        if (!LineRequestReader.Query(Request, "q", "state", "page")) return Invalid();
+        if (!LineRequestReader.Query(Request, "q", "state", "page", "pageSize")) return Invalid();
         return LineProblems.Render(this, await service.ListAsync(new(Request.Query["q"].FirstOrDefault(),
-            Request.Query["state"].FirstOrDefault(), Request.Query["page"].FirstOrDefault()), ct), Ok);
+            Request.Query["state"].FirstOrDefault(), Request.Query["page"].FirstOrDefault(), Request.Query["pageSize"].FirstOrDefault()), ct), Ok);
     }
     /// <summary>Reads a line and a snapshot page of active or retired associations.</summary>
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(string id, CancellationToken ct)
     {
         if (!LineRequestReader.Id(id, out var lineId)) return Invalid("id");
-        if (!LineRequestReader.Query(Request, "pairsPage")) return Invalid();
-        return LineProblems.Render(this, await service.GetAsync(lineId, Request.Query["pairsPage"].FirstOrDefault(), ct), Ok);
+        if (!LineRequestReader.Query(Request, "pairsPage", "pairsPageSize")) return Invalid();
+        return LineProblems.Render(this, await service.GetAsync(lineId, Request.Query["pairsPage"].FirstOrDefault(), ct,
+            Request.Query["pairsPageSize"].FirstOrDefault()), Ok);
     }
     /// <summary>Reads active products excluding all persisted associations for an editing line.</summary>
     [HttpGet("product-choices")]
     public async Task<ActionResult> ProductChoices(CancellationToken ct)
     {
-        if (!LineRequestReader.Query(Request, "q", "page", "lineId")) return Invalid();
+        if (!LineRequestReader.Query(Request, "q", "page", "lineId", "pageSize")) return Invalid();
         Guid? lineId = null;
         if (Request.Query.ContainsKey("lineId"))
         {
             if (!LineRequestReader.Id(Request.Query["lineId"].FirstOrDefault(), out var parsed)) return Invalid("lineId");
             lineId = parsed;
         }
-        return LineProblems.Render(this, await service.ProductChoicesAsync(Request.Query["q"].FirstOrDefault(), Request.Query["page"].FirstOrDefault(), lineId, ct), Ok);
+        return LineProblems.Render(this, await service.ProductChoicesAsync(Request.Query["q"].FirstOrDefault(), Request.Query["page"].FirstOrDefault(), lineId, ct,
+            Request.Query["pageSize"].FirstOrDefault()), Ok);
     }
     /// <summary>Reads currently eligible lines for one product observation.</summary>
     [HttpGet("eligible")]

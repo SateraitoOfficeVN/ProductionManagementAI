@@ -15,11 +15,11 @@ internal sealed class ProductionLineRepository(AppDbContext db) : IProductionLin
     {
         var rows = FilterLines(query);
         var total = await rows.CountAsync(token);
-        var lines = await rows.OrderBy(l => l.Code).ThenBy(l => l.Id).Skip((query.Page - 1) * 50).Take(50).ToListAsync(token);
-        return new LinePage<LineSummary>(lines.Select(Summary).ToList(), total, query.Page);
+        var lines = await rows.OrderBy(l => l.Code).ThenBy(l => l.Id).Skip((query.Page - 1) * query.PageSize).Take(query.PageSize).ToListAsync(token);
+        return new LinePage<LineSummary>(lines.Select(Summary).ToList(), total, query.Page, query.PageSize);
     }, ct);
 
-    public Task<LineDetail?> GetAsync(Guid id, int pairsPage, CancellationToken ct) => Snapshot<LineDetail?>(async token =>
+    public Task<LineDetail?> GetAsync(Guid id, int pairsPage, int pairsPageSize, CancellationToken ct) => Snapshot<LineDetail?>(async token =>
     {
         var line = await db.ProductionLines.AsNoTracking().SingleOrDefaultAsync(l => l.Id == id, token);
         if (line is null) return null;
@@ -29,13 +29,13 @@ internal sealed class ProductionLineRepository(AppDbContext db) : IProductionLin
                     select new { Pair = pair, Product = product };
         var total = await query.CountAsync(token);
         var rows = await query.OrderBy(r => r.Product.Sku).ThenBy(r => r.Product.Id)
-            .Skip((pairsPage - 1) * 50).Take(50).ToListAsync(token);
+            .Skip((pairsPage - 1) * pairsPageSize).Take(pairsPageSize).ToListAsync(token);
         var pairs = rows.Select(r => new LinePairDetail(ProductChoice(r.Product), LineValueRules.Format(r.Pair.MinutesPerUnit),
             r.Pair.ConfirmedUnit, Revision(r.Pair.ConfirmedUnitRevision), r.Pair.IsActive,
             r.Pair.ConfirmedUnit != r.Product.Unit || r.Pair.ConfirmedUnitRevision != r.Product.UnitRevision, Utc(r.Pair.UpdatedAtUtc))).ToList();
         var summary = Summary(line);
         return new LineDetail(summary.Id, summary.Code, summary.Name, summary.WorkingHoursPerDay,
-            summary.IsActive, summary.UpdatedAt, summary.Version, new(pairs, total, pairsPage));
+            summary.IsActive, summary.UpdatedAt, summary.Version, new(pairs, total, pairsPage, pairsPageSize));
     }, ct);
 
     public Task<LinePage<LineProductChoice>?> ProductChoicesAsync(LineQuery query, CancellationToken ct) => Snapshot<LinePage<LineProductChoice>?>(async token =>
@@ -49,8 +49,8 @@ internal sealed class ProductionLineRepository(AppDbContext db) : IProductionLin
             products = products.Where(p => EF.Functions.ILike(p.Sku, pattern, "\\") || EF.Functions.ILike(p.Name, pattern, "\\"));
         }
         var total = await products.CountAsync(token);
-        var rows = await products.OrderBy(p => p.Sku).ThenBy(p => p.Id).Skip((query.Page - 1) * 50).Take(50).ToListAsync(token);
-        return new LinePage<LineProductChoice>(rows.Select(ProductChoice).ToList(), total, query.Page);
+        var rows = await products.OrderBy(p => p.Sku).ThenBy(p => p.Id).Skip((query.Page - 1) * query.PageSize).Take(query.PageSize).ToListAsync(token);
+        return new LinePage<LineProductChoice>(rows.Select(ProductChoice).ToList(), total, query.Page, query.PageSize);
     }, ct);
 
     public Task<EligibleLinePage?> EligibleAsync(LineQuery query, CancellationToken ct) => Snapshot<EligibleLinePage?>(async token =>

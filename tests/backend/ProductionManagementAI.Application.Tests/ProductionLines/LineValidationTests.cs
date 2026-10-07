@@ -15,6 +15,31 @@ public sealed class LineValidationTests
     [InlineData("")]
     public void RejectsNonAsciiOrOutOfRangePages(string page) => Assert.Equal(400, LineValidation.Query(null, page).Problem?.Status);
 
+    [Theory]
+    [InlineData("10", 10)]
+    [InlineData("20", 20)]
+    [InlineData("50", 50)]
+    [InlineData("100", 100)]
+    [InlineData(null, 50)]
+    public void AcceptsOnlyAllowListedPageSizesAndDefaultsTo50(string? size, int expected) =>
+        Assert.Equal(expected, LineValidation.Query(null, "1", pageSize: size).Value?.PageSize);
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("25")]
+    [InlineData("1000")]
+    [InlineData("abc")]
+    [InlineData("２０")]
+    [InlineData(" 20")]
+    [InlineData("")]
+    public void RejectsOtherPageSizesOnTheNamedField(string size)
+    {
+        Assert.Equal("pageSize", Assert.Single(LineValidation.Query(null, "1", pageSize: size).Problem?.Errors
+            ?? throw new InvalidOperationException()).Key);
+        Assert.Equal("pairsPageSize", Assert.Single(LineValidation.Query(null, "1", pageSize: size, pageSizeField: "pairsPageSize").Problem?.Errors
+            ?? throw new InvalidOperationException()).Key);
+    }
+
     [Fact]
     public void DefaultListIsActiveAndSearchUsesUnicodeCodePoints()
     {

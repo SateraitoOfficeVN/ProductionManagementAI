@@ -26,8 +26,8 @@ public sealed record EligibleLine(Guid Id, string Code, string Name, string Work
 /// <summary>Returns eligible rows and their product observation from one snapshot.</summary>
 public sealed record EligibleLinePage(LineProductChoice Product, IReadOnlyList<EligibleLine> Items,
     int Total, int Page, int PageSize = 50);
-/// <summary>Defines untrusted line list filters.</summary>
-public sealed record LineListRequest(string? Q, string? State, string? Page);
+/// <summary>Defines untrusted line list filters and the optional allow-listed page size (WI-015 DEC-006).</summary>
+public sealed record LineListRequest(string? Q, string? State, string? Page, string? PageSize = null);
 /// <summary>Defines one untrusted association action; retirement has no timing fields.</summary>
 public sealed record LineProductInput(string Action, Guid ProductId, string? MinutesPerUnit = null,
     string? ExpectedUnit = null, string? ExpectedUnitRevision = null, bool? ConfirmUnit = null);
@@ -38,7 +38,7 @@ public sealed record CreateLineRequest(string? Code, string? Name, string? Worki
 public sealed record UpdateLineRequest(string? Name, string? WorkingHoursPerDay, string? Version,
     IReadOnlyList<LineProductInput>? ProductChanges);
 /// <summary>Defines a validated paging and literal-search query.</summary>
-public sealed record LineQuery(string? Search, int Page, string State = "active", Guid? TargetId = null);
+public sealed record LineQuery(string? Search, int Page, string State = "active", Guid? TargetId = null, int PageSize = LineValidation.DefaultPageSize);
 /// <summary>Defines a validated association intent, retaining its submitted field prefix.</summary>
 public sealed record LineProductChange(string Action, Guid ProductId, decimal MinutesPerUnit,
     string ExpectedUnit, long ExpectedUnitRevision, bool ConfirmUnit, string Field);
@@ -62,7 +62,7 @@ public interface IProductionLineRepository
     /// <summary>Reads line count and rows from one read-only snapshot.</summary>
     Task<LinePage<LineSummary>> ListAsync(LineQuery query, CancellationToken cancellationToken);
     /// <summary>Reads line identity and a pair page from one read-only snapshot.</summary>
-    Task<LineDetail?> GetAsync(Guid id, int pairsPage, CancellationToken cancellationToken);
+    Task<LineDetail?> GetAsync(Guid id, int pairsPage, int pairsPageSize, CancellationToken cancellationToken);
     /// <summary>Reads active product choices excluding all persisted associations.</summary>
     Task<LinePage<LineProductChoice>?> ProductChoicesAsync(LineQuery query, CancellationToken cancellationToken);
     /// <summary>Reads currently eligible lines and the product from one snapshot.</summary>

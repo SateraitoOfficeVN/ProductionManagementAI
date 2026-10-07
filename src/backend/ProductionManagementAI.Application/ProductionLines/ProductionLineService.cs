@@ -20,29 +20,30 @@ public sealed class ProductionLineService(IProductionLineRepository repository, 
     public Task<LineResult<LinePage<LineSummary>>> ListAsync(LineListRequest request, CancellationToken cancellationToken) =>
         Execute("list", "List", async ct =>
         {
-            var parsed = LineValidation.Query(request.Q, request.Page, request.State);
+            var parsed = LineValidation.Query(request.Q, request.Page, request.State, pageSize: request.PageSize);
             return parsed.Value is { } query
                 ? LineResult<LinePage<LineSummary>>.Success(await repository.ListAsync(query, ct))
                 : new(default, parsed.Problem);
         }, cancellationToken);
 
     /// <summary>Reads a validated line detail and association page.</summary>
-    public Task<LineResult<LineDetail>> GetAsync(Guid id, string? pairsPage, CancellationToken cancellationToken) =>
+    public Task<LineResult<LineDetail>> GetAsync(Guid id, string? pairsPage, CancellationToken cancellationToken, string? pairsPageSize = null) =>
         Execute("get", "Get", async ct =>
         {
-            var parsed = LineValidation.Query(null, pairsPage);
+            var parsed = LineValidation.Query(null, pairsPage, pageSize: pairsPageSize, pageSizeField: "pairsPageSize");
             if (id == Guid.Empty) return LineResult<LineDetail>.Failure(400, "VALIDATION", "id");
             if (parsed.Value is not { } query)
-                return LineResult<LineDetail>.Failure(400, "VALIDATION", "pairsPage");
-            var value = await repository.GetAsync(id, query.Page, ct);
+                return LineResult<LineDetail>.Failure(400, "VALIDATION",
+                    parsed.Problem?.Errors?.ContainsKey("pairsPageSize") == true ? "pairsPageSize" : "pairsPage");
+            var value = await repository.GetAsync(id, query.Page, query.PageSize, ct);
             return value is null ? LineResult<LineDetail>.Failure(404, "NOT_FOUND") : LineResult<LineDetail>.Success(value);
         }, cancellationToken);
 
     /// <summary>Reads product choices while retaining persisted retired associations.</summary>
-    public Task<LineResult<LinePage<LineProductChoice>>> ProductChoicesAsync(string? q, string? page, Guid? lineId, CancellationToken cancellationToken) =>
+    public Task<LineResult<LinePage<LineProductChoice>>> ProductChoicesAsync(string? q, string? page, Guid? lineId, CancellationToken cancellationToken, string? pageSize = null) =>
         Execute("product_choices", "ProductChoices", async ct =>
         {
-            var parsed = LineValidation.Query(q, page, targetId: lineId);
+            var parsed = LineValidation.Query(q, page, targetId: lineId, pageSize: pageSize);
             if (parsed.Value is not { } query) return new(default, parsed.Problem);
             var value = await repository.ProductChoicesAsync(query, ct);
             return value is null ? LineResult<LinePage<LineProductChoice>>.Failure(404, "NOT_FOUND") : LineResult<LinePage<LineProductChoice>>.Success(value);
@@ -98,7 +99,7 @@ public sealed class ProductionLineService(IProductionLineRepository repository, 
                 await session.SaveAsync(ct);
                 commitStarted = true;
                 await session.CommitAsync(ct);
-                var saved = await repository.GetAsync(id, 1, ct);
+                var saved = await repository.GetAsync(id, 1, LineValidation.DefaultPageSize, ct);
                 return saved is null ? LineResult<LineSummary>.Failure(500, "UNEXPECTED") : LineResult<LineSummary>.Success(
                     new(saved.Id, saved.Code, saved.Name, saved.WorkingHoursPerDay, saved.IsActive, saved.UpdatedAt, saved.Version));
             }
@@ -173,7 +174,7 @@ public sealed class ProductionLineService(IProductionLineRepository repository, 
             await session.SaveAsync(ct);
             commitStarted = true;
             await session.CommitAsync(ct);
-            var saved = await repository.GetAsync(id, 1, ct);
+            var saved = await repository.GetAsync(id, 1, LineValidation.DefaultPageSize, ct);
             return saved is null ? LineResult<LineDetail>.Failure(500, "UNEXPECTED") : LineResult<LineDetail>.Success(saved);
         }
         catch (Exception exception)

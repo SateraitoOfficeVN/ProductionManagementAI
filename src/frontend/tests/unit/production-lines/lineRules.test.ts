@@ -10,11 +10,14 @@ describe('WI-009 exact decimal and bounded URL rules', () => {
     expect(decimalValid('1000000000', '999999999.999')).toBe(false)
   })
   it('defaults to active page one and counts Unicode code points', () => {
-    expect(parseLineUrl(new URLSearchParams())).toEqual({ q: '', state: 'active', page: 1, valid: true })
+    expect(parseLineUrl(new URLSearchParams())).toEqual({ q: '', state: 'active', page: 1, pageSize: 20, valid: true, canonicalSize: false })
+    expect(parseLineUrl(new URLSearchParams('pageSize=50'))).toMatchObject({ pageSize: 50, valid: true, canonicalSize: true })
+    expect(parseLineUrl(new URLSearchParams('pageSize=25'))).toMatchObject({ pageSize: 20, valid: true, canonicalSize: false })
+    expect(parseLineUrl(new URLSearchParams('pageSize=２０'))).toMatchObject({ pageSize: 20, canonicalSize: false })
     expect(parseLineUrl(new URLSearchParams({ q: '😀'.repeat(100) })).valid).toBe(true)
     expect(parseLineUrl(new URLSearchParams({ q: '😀'.repeat(101) })).valid).toBe(false)
   })
-  it.each(['page=0', 'page=10001', 'page=1&page=2', 'state=Active', 'pageSize=10', 'page=1.5', 'page=１'])('rejects malformed filters %s', query => expect(parseLineUrl(new URLSearchParams(query)).valid).toBe(false))
+  it.each(['page=0', 'page=10001', 'page=1&page=2', 'state=Active', 'pageSize=10&pageSize=20', 'page=1.5', 'page=１'])('rejects malformed filters %s', query => expect(parseLineUrl(new URLSearchParams(query)).valid).toBe(false))
 })
 
 it('enforces aggregate count and exact UTF-8 body boundaries before sending', () => {

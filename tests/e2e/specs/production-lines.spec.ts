@@ -6,6 +6,15 @@ async function fillLine(page: Page, code: string) {
   await page.getByLabel('ライン名', { exact: true }).fill('試験生産ライン')
   await page.getByLabel('稼働時間／日', { exact: true }).fill('7.5')
 }
+async function addProduct(page: Page, sku: string) {
+  await page.getByRole('button', { name: '製品を追加', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: '製品を追加' })
+  await dialog.getByLabel('製品を検索', { exact: true }).fill(sku)
+  await dialog.getByRole('button', { name: '検索', exact: true }).click()
+  await dialog.getByRole('radio', { name: new RegExp(`^${sku}\\s`) }).check()
+  await dialog.getByRole('button', { name: '追加', exact: true }).click()
+  await expect(page.getByRole('textbox', { name: new RegExp(`^${sku} の製造時間`) })).toBeFocused()
+}
 async function centered(page: Page) {
   const geometry = await page.getByRole('dialog').evaluate(element => {
     const bounds = element.getBoundingClientRect()
@@ -22,25 +31,22 @@ test.beforeEach(async ({ page }) => { await signIn(page) })
 test('TC-360/361/363: create exact product timing, stage pair retirement and persist only on Save', async ({ page }) => {
   const code = `WEB-${Date.now()}`
   await page.goto('/production-lines')
-  await page.getByRole('link', { name: '生産ラインを登録' }).click()
+  await page.getByRole('link', { name: '新規ライン' }).click()
   await fillLine(page, code)
-  await page.getByLabel('製品を検索', { exact: true }).fill('P-1001')
-  await page.getByRole('button', { name: '検索', exact: true }).click()
-  await expect(page.getByRole('button', { name: '製品を追加', exact: true })).toHaveCount(1)
-  await page.getByRole('button', { name: '製品を追加', exact: true }).click()
-  await page.getByLabel('生産時間 (分／1単位)', { exact: true }).fill('0.125')
-  await page.getByLabel('表示単位で生産時間を確認しました').check()
+  // WI-015: products are added through the dialog, which confirms the shown unit (DEC-003).
+  await addProduct(page, 'P-1001')
+  await page.getByRole('textbox', { name: /^P-1001 の製造時間/ }).fill('0.125')
   await expectNoAxeViolations(page)
   await page.getByRole('button', { name: '保存', exact: true }).click()
-  await expect(page).toHaveURL(/\/production-lines$/)
+  await expect(page).toHaveURL(/\/production-lines(\?pageSize=20)?$/)
   await expect(page.getByText('生産ラインを保存しました。')).toBeVisible()
   await page.getByLabel('コード・名称で検索').fill(code)
   await page.getByRole('button', { name: '検索', exact: true }).click()
   await page.getByRole('link', { name: `${code}を編集`, exact: true }).click()
   await expect(page.getByLabel('ラインコード')).toHaveAttribute('readonly', '')
-  await expect(page.getByLabel('生産時間 (分／1単位)')).toHaveValue('0.125')
+  await expect(page.getByRole('textbox', { name: /^P-1001 の製造時間/ })).toHaveValue('0.125')
   const id = page.url().split('/').at(-2)
-  const retire = page.getByRole('button', { name: '使用停止', exact: true })
+  const retire = page.getByRole('button', { name: 'P-1001を使用停止', exact: true })
   await retire.click()
   await centered(page)
   const modal = page.getByRole('dialog')
@@ -52,12 +58,25 @@ test('TC-360/361/363: create exact product timing, stage pair retirement and per
   await page.keyboard.press('Escape')
   await expect(modal).toBeHidden(); await expect(retire).toBeFocused()
   await retire.click(); await modal.getByRole('button', { name: '使用停止', exact: true }).click()
+  await expect(page.getByText('使用停止予定（保存後に反映）')).toBeVisible()
   const before = await (await page.request.get(`/api/production-lines/${id}`)).json()
   expect(before.pairs.items[0].isActive).toBe(true)
   await page.getByRole('button', { name: '保存', exact: true }).click()
-  await expect(page).toHaveURL(/\/production-lines$/)
+  await expect(page).toHaveURL(/\/production-lines(\?pageSize=20)?$/)
   const after = await (await page.request.get(`/api/production-lines/${id}`)).json()
   expect(after.pairs.items[0].isActive).toBe(false)
+  // WI-015 TC-435: a saved retired pair is read-only and the add dialog says why it is not offered.
+  await page.goto(`/production-lines/${id}/edit`)
+  await expect(page.getByText('再登録できません', { exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'P-1001を使用停止', exact: true })).toHaveCount(0)
+  await page.getByRole('button', { name: '製品を追加', exact: true }).click()
+  const add = page.getByRole('dialog', { name: '製品を追加' })
+  await expect(add).toContainText('使用停止にした製品は再登録できません。')
+  await add.getByLabel('製品を検索', { exact: true }).fill('P-1001')
+  await add.getByRole('button', { name: '検索', exact: true }).click()
+  await expect(add.getByRole('status')).toHaveCount(0)
+  await expect(add.getByRole('radio', { name: /^P-1001\s/ })).toHaveCount(0)
+  await expectNoAxeViolations(page)
 })
 
 test('TC-362: Draft start requires eligible selection, assignment locks and list shows current history', async ({ page }) => {
@@ -95,13 +114,13 @@ test('TC-362: Draft start requires eligible selection, assignment locks and list
 
 test('TC-364: browser Back preserves dirty values; lost committed response blocks replay and supports read verification', async ({ page }) => {
   await page.goto('/production-lines')
-  await page.getByRole('link', { name: '生産ラインを登録' }).click()
+  await page.getByRole('link', { name: '新規ライン' }).click()
   const code = `UNKNOWN-${Date.now()}`
   await fillLine(page, code)
   await page.evaluate(() => history.back())
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
-  await dialog.getByRole('button', { name: 'キャンセル' }).click()
+  await dialog.getByRole('button', { name: '編集を続ける' }).click()
   await expect(page.getByLabel('ラインコード')).toHaveValue(code)
   let writes = 0
   await page.route('**/api/production-lines', async route => {

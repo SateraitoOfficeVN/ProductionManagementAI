@@ -7,7 +7,13 @@ namespace ProductionManagementAI.Application.ProductionLines;
 public static class LineValidation
 {
     /// <summary>Validates literal search, state and ASCII bounded paging.</summary>
-    public static LineResult<LineQuery> Query(string? q, string? page, string? state = null, Guid? targetId = null)
+    /// <summary>Page size used when a request omits one, keeping existing callers unchanged.</summary>
+    public const int DefaultPageSize = 50;
+    /// <summary>Optional page sizes a caller may request (WI-015 DEC-006, DEC-008).</summary>
+    public static readonly IReadOnlyList<int> PageSizes = [10, 20, 50, 100];
+
+    public static LineResult<LineQuery> Query(string? q, string? page, string? state = null, Guid? targetId = null,
+        string? pageSize = null, string pageSizeField = "pageSize")
     {
         var search = q?.Trim();
         if (search is not null && search.EnumerateRunes().Count() > 100)
@@ -19,7 +25,11 @@ public static class LineValidation
         var filter = state ?? "active";
         if (filter is not ("active" or "retired" or "all"))
             return LineResult<LineQuery>.Failure(400, "VALIDATION", "state");
-        return LineResult<LineQuery>.Success(new(string.IsNullOrEmpty(search) ? null : search, number, filter, targetId));
+        var size = DefaultPageSize;
+        if (pageSize is not null && (pageSize.Length is 0 or > 3 || pageSize.Any(c => c is < '0' or > '9') ||
+            !int.TryParse(pageSize, NumberStyles.None, CultureInfo.InvariantCulture, out size) || !PageSizes.Contains(size)))
+            return LineResult<LineQuery>.Failure(400, "VALIDATION", pageSizeField);
+        return LineResult<LineQuery>.Success(new(string.IsNullOrEmpty(search) ? null : search, number, filter, targetId, size));
     }
 
     /// <summary>Validates a creation command and explicit unit confirmations.</summary>
