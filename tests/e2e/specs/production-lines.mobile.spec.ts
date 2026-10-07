@@ -1,5 +1,15 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { expectNoAxeViolations, signIn } from './helpers'
+
+async function addProduct(page: Page, sku: string) {
+  await page.getByRole('button', { name: '製品を追加', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: '製品を追加' })
+  await dialog.getByLabel('製品を検索', { exact: true }).fill(sku)
+  await dialog.getByRole('button', { name: '検索', exact: true }).click()
+  await dialog.getByRole('radio', { name: new RegExp(`^${sku}\\s`) }).check()
+  await dialog.getByRole('button', { name: '追加', exact: true }).click()
+  await expect(page.getByRole('textbox', { name: new RegExp(`^${sku} の製造時間`) })).toBeFocused()
+}
 
 test('TC-361/363: mobile cards and retirement dialog remain centered after scroll at 320/390px', async ({ page }) => {
   await signIn(page)
@@ -51,20 +61,16 @@ test('TC-363: 320px timing editor focuses validation and keeps staged-discard co
   await page.getByLabel('ラインコード', { exact: true }).fill(`MOB-FORM-${Date.now()}`)
   await page.getByLabel('ライン名', { exact: true }).fill('モバイル編集')
   await page.getByLabel('稼働時間／日', { exact: true }).fill('24.001')
-  await page.getByLabel('製品を検索', { exact: true }).fill('P-1001')
-  await page.getByRole('button', { name: '検索', exact: true }).click()
-  await expect(page.getByRole('button', { name: '製品を追加', exact: true })).toHaveCount(1)
-  await page.getByRole('button', { name: '製品を追加', exact: true }).click()
-  await page.getByLabel('生産時間 (分／1単位)', { exact: true }).fill('0.125')
-  await page.getByLabel('表示単位で生産時間を確認しました').check()
+  await addProduct(page, 'P-1001')
+  await page.getByRole('textbox', { name: /^P-1001 の製造時間/ }).fill('0.125')
   await page.getByRole('button', { name: '保存', exact: true }).click()
   await expect(page.getByLabel('稼働時間／日', { exact: true })).toBeFocused()
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false)
   await expectNoAxeViolations(page)
   await page.getByRole('link', { name: 'キャンセル', exact: true }).click()
   const modal = page.getByRole('dialog'); await expect(modal).toBeVisible()
-  await expect(modal.getByRole('button', { name: 'キャンセル' })).toBeFocused()
+  await expect(modal.getByRole('button', { name: '編集を続ける' })).toBeFocused()
   await expect(modal.getByRole('button', { name: '変更を破棄' })).toBeVisible()
   await page.keyboard.press('Escape')
-  await expect(page.getByLabel('生産時間 (分／1単位)')).toHaveValue('0.125')
+  await expect(page.getByRole('textbox', { name: /^P-1001 の製造時間/ })).toHaveValue('0.125')
 })

@@ -125,6 +125,79 @@ public sealed class ProductionLineEndpointTests(IntegrationTestFixture fixture) 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("VALIDATION", (await response.Body())["code"]?.GetValue<string>());
     }
+    [Theory]
+    [InlineData("10")]
+    [InlineData("20")]
+    [InlineData("50")]
+    [InlineData("100")]
+    public async Task ListDetailAndChoicesAcceptAllowListedPageSizes(string size) {
+        using var client = await fixture.CreateClientAsAsync("Operator");
+        var line = await Create(client, Draft());
+        var list = await client.GetAsync($"{Path}?state=all&pageSize={size}");
+        Assert.Equal(HttpStatusCode.OK, list.StatusCode);
+        var page = await list.Body();
+        Assert.Equal(int.Parse(size), page["pageSize"]?.GetValue<int>());
+        Assert.True((page["items"]?.AsArray().Count ?? 0) <= int.Parse(size));
+        var detail = await (await client.GetAsync($"{Path}/{line["id"]}?pairsPageSize={size}")).Body();
+        Assert.Equal(int.Parse(size), detail["pairs"]?["pageSize"]?.GetValue<int>());
+        var choices = await client.GetAsync($"{Path}/product-choices?pageSize={size}");
+        Assert.Equal(HttpStatusCode.OK, choices.StatusCode);
+        var choicePage = await choices.Body();
+        Assert.Equal(int.Parse(size), choicePage["pageSize"]?.GetValue<int>());
+        Assert.True((choicePage["items"]?.AsArray().Count ?? 0) <= int.Parse(size));
+    }
+    [Fact]
+    public async Task OmittedPageSizesKeepTheFiftyRowDefault() {
+        using var client = await fixture.CreateClientAsAsync("Operator");
+        var line = await Create(client, Draft());
+        Assert.Equal(50, (await (await client.GetAsync(Path)).Body())["pageSize"]?.GetValue<int>());
+        Assert.Equal(50, (await (await client.GetAsync($"{Path}/{line["id"]}")).Body())["pairs"]?["pageSize"]?.GetValue<int>());
+        Assert.Equal(50, (await (await client.GetAsync($"{Path}/product-choices")).Body())["pageSize"]?.GetValue<int>());
+    }
+    [Fact]
+    public async Task PairPagesHonourTheRequestedSize() {
+        using var client = await fixture.CreateClientAsAsync("Operator");
+        var products = new JsonArray();
+        for (var i = 0; i < 3; i++) products.Add(Input(await Product(client)));
+        var line = await Create(client, Draft(products: products));
+        var first = await (await client.GetAsync($"{Path}/{line["id"]}?pairsPage=1&pairsPageSize=10")).Body();
+        Assert.Equal(3, first["pairs"]?["total"]?.GetValue<int>());
+        Assert.Equal(3, first["pairs"]?["items"]?.AsArray().Count);
+        var beyond = await (await client.GetAsync($"{Path}/{line["id"]}?pairsPage=2&pairsPageSize=10")).Body();
+        Assert.Empty(beyond["pairs"]?["items"]?.AsArray() ?? throw new InvalidOperationException());
+    }
+    [Theory]
+    [InlineData("", "pageSize=25", "pageSize")]
+    [InlineData("", "pageSize=abc", "pageSize")]
+    [InlineData("/product-choices", "pageSize=0", "pageSize")]
+    [InlineData("/product-choices", "pageSize=1000", "pageSize")]
+    public async Task RejectedPageSizesNameTheirField(string suffix, string query, string field) {
+        using var client = await fixture.CreateClientAsAsync("Operator");
+        var response = await client.GetAsync($"{Path}{suffix}?{query}");
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var body = await response.Body();
+        Assert.Equal("VALIDATION", body["code"]?.GetValue<string>());
+        Assert.NotNull(body["errors"]?[field]);
+    }
+    [Fact]
+    public async Task RejectedPairPageSizeNamesItsField() {
+        using var client = await fixture.CreateClientAsAsync("Operator");
+        var line = await Create(client, Draft());
+        foreach (var size in new[] { "25", "0", "x" }) {
+            var response = await client.GetAsync($"{Path}/{line["id"]}?pairsPageSize={size}");
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotNull((await response.Body())["errors"]?["pairsPageSize"]);
+        }
+        var page = await client.GetAsync($"{Path}/{line["id"]}?pairsPage=0&pairsPageSize=20");
+        Assert.NotNull((await page.Body())["errors"]?["pairsPage"]);
+    }
+    [Fact]
+    public async Task EligibleLinesStillRejectAPageSize() {
+        using var client = await fixture.CreateClientAsAsync("Operator");
+        var product = await Product(client);
+        var response = await client.GetAsync($"{Path}/eligible?productId={product["id"]}&pageSize=20");
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
     [Fact]
     public async Task RoutesQueryLimitsBodyLimitsAndAuthorizationAreFeatureScoped() {
         using var anonymous = fixture.CreateClient();
@@ -132,7 +205,7 @@ public sealed class ProductionLineEndpointTests(IntegrationTestFixture fixture) 
         using var forbidden = await fixture.CreateClientAsAsync(null);
         Assert.Equal(HttpStatusCode.Forbidden, (await forbidden.PostJson(Path, Draft())).StatusCode);
         using var client = await fixture.CreateClientAsAsync("Operator");
-        foreach (var query in new[] { "?page=10001", "?page=1&page=2", "?pageSize=10", "/bad-id", "?state=Active" })
+        foreach (var query in new[] { "?page=10001", "?page=1&page=2", "?pageSize=25", "?pageSize=20&pageSize=50", "/bad-id", "?state=Active" })
             Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync(Path + query)).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync(Path + "/product-choices")).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync(Path + "/eligible?productId=" + Guid.NewGuid())).StatusCode);
