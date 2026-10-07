@@ -28,7 +28,11 @@ Implementation and tests are complete on the local branch `fix/WI-015-production
 2026-10-07: on user review, the edit screen now explains that a saved 使用停止 pair cannot be registered again
 (DEC-012, TC-435; rule unchanged). 282 frontend unit tests and 13/13 line E2E pass.
 
-Next: plan revision 3 (commit, push, PR to `master`, CI) is proposed and awaits approval; see [plan](plan.md). A user-run Debug API
+Plan revision 3 approved (DEC-013) and complete: PR [#45](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/45)
+(commits `8f80342`, `7ab6fa4`, test-only fix `c427dfe`); CI run 37561507760 passed all three jobs (251 backend unit,
+215 integration, 282 frontend unit, 73 E2E). See [evidence](evidence.md).
+
+Next: the user reviews PR #45. Merge, branch cleanup and closeout need explicit approval. A user-run Debug API
 process (PID 16852) is still running and was not touched. Nothing is committed or pushed.
 
 Temporary files, to remove when the work item no longer needs them:

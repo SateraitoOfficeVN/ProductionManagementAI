@@ -179,3 +179,33 @@ it on screen.
 
 Screenshots at 1280 and 390 px (edit screen with a saved retired pair, and the add dialog): the row text sits in 操作
 (PC) and at the end of the card (SP); the dialog note wraps inside the dialog. Still uncommitted (DEC-011).
+
+## Plan revision 3 — Commit, PR and CI (2026-10-07)
+
+### Pre-commit checks
+
+| Check | Result |
+| --- | --- |
+| Staged files match the plan's list | Yes: 8 design files, 27 code/test/record files; no stray files |
+| Secret scan of the diff and records (every `deploy/.env` value, common token patterns) | No hits |
+| Approved 005 files (hash baseline, 20 files) | Unchanged |
+| Japanese UI-text scan (TC-301, `NoInlineText.test.ts`) | Passed in the 282-test run after the last code change |
+
+### Commits and PR
+
+| Item | Value |
+| --- | --- |
+| Branch | `fix/WI-015-production-line-redesign` (from `2f502b1`) |
+| Commits | `8f80342` docs (design package); `7ab6fa4` fix (code, tests, records); `c427dfe` test-only CI fix |
+| PR | [#45](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/45) to `master`, open, mergeable |
+
+### CI
+
+| Run | Head | Result |
+| --- | --- | --- |
+| 37560735551 | `7ab6fa4` | Backend and Frontend passed; E2E 72 passed, 1 failed: TC-421/422/430 compared the sticky header with a box position read before focusing the box, and focusing can scroll the page (header off by 39 px). Test fault, not app behaviour |
+| 37561507760 | `c427dfe` | All three jobs passed: 251 backend unit, 215 integration, 282 frontend unit, 73 E2E (including every plant-calendar spec) |
+
+The fix measures the header and box in one read after scrolling, polled until stable, and bounds the box height by the
+real viewport. It still fails if the header is not sticky. The spec passed 25/25 locally with `--repeat-each 5`.
+No merge, branch deletion or deployment.

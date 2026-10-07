@@ -116,7 +116,7 @@ Single-agent execution in plan revision 2 steps 3–8. The user reviews before a
 | Test ID | Result | Evidence | Date |
 | --- | --- | --- | --- |
 | TC-420 | pass (full backend: 251 unit, 215 integration) | [evidence.md](evidence.md) | 2026-10-06 |
-| TC-421, TC-422, TC-430 | pass | Unit `LinePages.test.tsx`; E2E `production-lines-redesign.spec.ts` "TC-421/422/430" | 2026-10-06 |
+| TC-421, TC-422, TC-430 | pass (CI 37561507760 after test fix `c427dfe`) | Unit `LinePages.test.tsx`; E2E `production-lines-redesign.spec.ts` "TC-421/422/430" | 2026-10-06 |
 | TC-423 | pass | Unit (no lines / no match / read error) | 2026-10-06 |
 | TC-424 | pass | Unit (register and edit forms, axe) | 2026-10-06 |
 | TC-425, TC-426 | pass | Unit; E2E "TC-425/426" (real save; `requiresUnitConfirmation: false` read back) | 2026-10-06 |

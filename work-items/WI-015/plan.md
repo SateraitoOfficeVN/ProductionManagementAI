@@ -4,7 +4,7 @@
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-06 | Requirement reading and additive SCR-005 redesign (documents only) | Complete — design version 3 approved (DEC-010), PDFs rendered | User answered Q1–Q3 and said "continue" after revision 1 was shown (2026-10-06) |
 | 2 | 2026-10-06 | Implement the approved redesign and tests (no commit) | Complete — steps 1–9 done; retired-pair note added on review (DEC-012) | User: "revision 2 only implementation and test, not commit yet. Note Create test cases with long text to check if the UI breaks." (2026-10-06) |
-| 3 | 2026-10-07 | Commit, push and open a PR to `master`; record CI | Approved | User: "approved, go ahead" (2026-10-07) |
+| 3 | 2026-10-07 | Commit, push and open a PR to `master`; record CI | Complete — PR #45 open, CI run 37561507760 passed | User: "approved, go ahead" (2026-10-07) |
 
 ## Revision 1 — Redesign (design documents only)
 
@@ -185,4 +185,5 @@ Not permitted without further approval:
 
 ### Review and approval
 
-Review status: approved 2026-10-07 ("approved, go ahead", DEC-013).
+Review status: approved 2026-10-07 ("approved, go ahead", DEC-013). Steps 1–5 complete; one test-only CI fix
+(`c427dfe`, see evidence). Merge, cleanup and closeout need the user's approval.
