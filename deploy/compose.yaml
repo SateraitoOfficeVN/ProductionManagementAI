@@ -20,6 +20,20 @@ services:
       timeout: 5s
       retries: 10
 
+  # One-shot migration runner as the owner (DEC-016). Only runs when asked for:
+  # `docker compose -f compose.yaml run --rm migrate` (scripts/start-app.ps1 does this).
+  migrate:
+    profiles: ["tools"]
+    build:
+      context: ..
+      dockerfile: deploy/docker/migrate.Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=${POSTGRES_DB:-production_management_ai};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      Plant__TimeZone: ${PLANT_TIMEZONE:-Asia/Tokyo}
+    depends_on:
+      db:
+        condition: service_healthy
+
   backend:
     build:
       context: ..

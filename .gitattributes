@@ -1,2 +1,4 @@
 # Shell scripts run inside Linux containers (e.g. deploy/db/init); keep LF even with core.autocrlf=true.
 *.sh text eol=lf
+# Windows batch files need CRLF to run reliably.
+*.cmd text eol=crlf

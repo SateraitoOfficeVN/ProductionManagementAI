@@ -17,6 +17,8 @@ Setup: copy `.env.example` to `.env` and fill in real local values (never commit
 
 ## Run
 
+Double-click `start-app.cmd` in the repo root (it also activates the local plant calendar if not yet active and opens the browser), or run one command from the repo root, with only Docker installed: `powershell -ExecutionPolicy Bypass -File scripts\start-app.ps1`. It creates `.env` if missing, runs the steps below entirely in Docker (migrations in the one-shot `migrate` container instead of a host `dotnet ef`) and waits until the app answers on `http://localhost:3000`. Add `-ActivateCalendar` to also activate the plant calendar on this local database. The `migrate` service is in the `tools` profile, so `docker compose up` never starts it; run it alone with `docker compose -f compose.yaml run --rm --build migrate`. Manual steps:
+
 1. `docker compose -f compose.yaml up -d --build db`
 2. Apply migrations as the owner, from the repo root (replace the password with your `POSTGRES_PASSWORD`):
    `dotnet ef database update --project src/backend/ProductionManagementAI.Infrastructure --startup-project src/backend/ProductionManagementAI.Api --connection "Host=localhost;Port=5433;Database=production_management_ai;Username=postgres;Password=<POSTGRES_PASSWORD>"`
