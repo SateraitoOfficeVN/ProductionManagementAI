@@ -1,14 +1,14 @@
 # WI-016 — Status
 
-As of 2026-10-07. Work item state: in-review (plan revision 2 complete, local only).
+As of 2026-10-08. Work item state: in-review (PR #48 open, CI passed; not merged).
 
 ## Overall status
 
-**RAG:** Green — CSV export implemented and tested locally; nothing committed. Awaiting the user's review and a plan revision 3 for commit/push/PR.
+**RAG:** Green — PR #48 open against `master`; CI run 37713513237 passed all three jobs on `127c81f`. Merge, cleanup and closeout need the user's approval.
 
 ## Approved plan reference
 
-[plan.md](plan.md) — revision 1 complete (DEC-006); revision 2 complete (approval DEC-019).
+[plan.md](plan.md) — revision 1 complete (DEC-006); revision 2 complete (DEC-019); revision 3 complete (DEC-021).
 
 ## Accomplishments this period
 
@@ -25,17 +25,18 @@ As of 2026-10-07. Work item state: in-review (plan revision 2 complete, local on
 | 2026-10-07 | 002_DD-FN-CSV approved, PDFs (DEC-016); 002_DD-SPD-CSV v1, DEC-017 proposed | [evidence.md](evidence.md) |
 | 2026-10-07 | 002_DD-SPD-CSV approved, DEC-017 accepted (DEC-018); 002_DD-CSV v2; all PDFs rendered; plan revision 1 closed, revision 2 drafted | [plan.md](plan.md) |
 | 2026-10-07 | Revision 2: backend, frontend, test plan TC-440–469; 286 unit / 234 integration / 307 frontend / 3 new E2E passed; 10,000 rows in 227 ms | [evidence.md](evidence.md), [test-plan.md](test-plan.md) |
+| 2026-10-08 | Revision 3: commits `5f0380d` (design) and `127c81f` (code); PR #48; CI run 37713513237 passed: 286 unit / 234 integration / 307 frontend / 76 E2E | [evidence.md](evidence.md) |
 
 ## Planned for next period
 
-Plan revision 3 (commit, push, PR to `master`, CI watch) approved 2026-10-08 (DEC-021); in progress.
+On the user's approval only: plan revision 4 — merge PR #48, delete the branch, closeout documentation (README, `ai/project.md`, CLAUDE.md).
 
 ## Risks and issues
 
 | Issue / blocker | Owner | Since | Impact |
 | --- | --- | --- | --- |
-| TC-469 Not run (no spreadsheet app); 12 plant-calendar E2E specs fail locally (CI fixture only) | ThongTM | 2026-10-07 | Excel display unverified by a real application; CI needed for the calendar specs |
+| TC-469 Not run (no spreadsheet app) | ThongTM | 2026-10-07 | Excel display unverified by a real application; the plant-calendar specs that fail locally passed in CI |
 
 ## Next action
 
-User reviews the implementation and decides on plan revision 3 (commit/PR), owner ThongTM.
+User reviews PR #48 and decides on merge and closeout (plan revision 4), owner ThongTM.

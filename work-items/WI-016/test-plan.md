@@ -147,3 +147,5 @@ calendar that only the CI fixture provides (a known local limitation since WI-01
 - Screen-reader speech and physical mobile keyboard: Not run (see Features not to be tested).
 - TC-469 (open in a spreadsheet application): Not run — no Excel or LibreOffice installed locally.
 - The 12 plant-calendar E2E specs cannot pass locally without the CI calendar fixture; CI is the reference run.
+- CI run 37713513237 (PR #48, head `127c81f`, 2026-10-08): 286 backend unit, 234 integration, 307 frontend unit and all 76 E2E
+  specs passed, including the plant-calendar specs and TC-467/TC-468.

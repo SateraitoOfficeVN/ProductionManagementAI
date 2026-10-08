@@ -161,3 +161,14 @@ Approval: DEC-021.
 | Japanese UI-text scan (`NoInlineText.test.ts`, TC-301) | 65 passed |
 | `master` moved? | No — still `bcff62e` (fetched 2026-10-08) |
 | Line endings of the sample CSV | `mockups/002_DD-API-CSV_sample.csv` has CRLF record ends and one LF inside a quoted note (as 002_DD-API-CSV documents); with `core.autocrlf=true` git would have rewritten them. Added `*.csv -text` to `.gitattributes` so CSV files are stored byte for byte; no tracked CSV existed before. Not a behaviour change |
+
+## Plan revision 3 — commits, PR and CI (2026-10-08)
+
+| Item | Result |
+| --- | --- |
+| Commits | `5f0380d` docs(WI-016): add approved CSV export design for SCR-002 (23 files); `127c81f` feat(WI-016): export production orders as CSV from the order list (31 files) |
+| Push | `feature/WI-016-order-csv-export` → origin; `master` unchanged at `bcff62e`, no rebase needed |
+| PR | #48 https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/48 → `master`; MERGEABLE, CLEAN |
+| CI | CI run 37713513237 on `127c81f` (01:33–01:39 UTC): Backend (build, test) success — 286 unit, 234 integration; Frontend (build, lint, test) success — 307 tests, 23 files; E2E (Compose stack + Playwright) success — 76 passed, including the plant-calendar specs and the new CSV specs |
+| CI fixes | None needed |
+| Not done (outside revision 3) | Merge, branch deletion, closeout documentation, deployment |

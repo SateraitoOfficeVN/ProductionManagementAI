@@ -7,7 +7,7 @@ revision is the current one.
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-07 | Design (BD addendum, then DD addendum with wireframes/mockups); documents only | Complete — 002_BD-CSV v2, 002_DD-CSV v2, -API/-FN/-SPD-CSV v1 approved with EN/JA PDFs | User: "approved, go with all recommendations" (2026-10-07, DEC-006) |
 | 2 | 2026-10-07 | Implementation and tests (local only, no commit) | Complete — results in evidence.md and test-plan.md | User: "approved" (2026-10-07, DEC-019) |
-| 3 | 2026-10-08 | Commit, push and open a PR to `master`; record CI | **current** — approved; in progress | User: "approved, go ahead" (2026-10-08, DEC-021) |
+| 3 | 2026-10-08 | Commit, push and open a PR to `master`; record CI | **current** — complete; PR #48 open, CI passed | User: "approved, go ahead" (2026-10-08, DEC-021) |
 
 ## Revision 1 — Design (documents only)
 
@@ -248,11 +248,11 @@ approved WI-003 002 design files stay unedited.
 
 | # | Step | Verification | Outcome |
 | --- | --- | --- | --- |
-| 1 | Pre-commit checks on `feature/WI-016-order-csv-export`: delete `bash.exe.stackdump`; the file list above matches `git status` exactly; secret scan of the diff and records (no `deploy/.env` value, password or token); approved WI-003 002 files unchanged (`git diff master --stat -- docs/` shows additions only); `git diff --check` for whitespace errors; the Japanese UI-text scan (NoInlineText) passes; `master` has not moved since `bcff62e` (checked 2026-10-08: not moved) | Results in evidence.md | |
-| 2 | Two commits, so design and code can be reviewed separately: (a) `docs(WI-016): add approved CSV export design for SCR-002` (design group); (b) `feat(WI-016): export production orders as CSV from the order list` (backend, frontend, tests, records) | `git log` | |
-| 3 | `git push -u origin feature/WI-016-order-csv-export`; `gh pr create --base master`. Description: summary of REQ-085–089 / UC-022, key decisions (DEC-002–005, 008, 009, 013, 017, 020), the new endpoint `GET /api/production-orders/export` (additive; existing APIs unchanged), test results and the 227 ms measurement, known local limits (TC-469 Not run; plant-calendar E2E needs CI's fixture; screen-reader speech and physical mobile keyboard not run), and "no deployment" | PR URL | |
-| 4 | Watch CI (Backend, Frontend, E2E) read-only. If a job fails: diagnose; fix only test-environment or non-behavioural problems with one more commit on the same branch; otherwise stop and report | CI run ID and result | |
-| 5 | Record the PR, commits and CI run in evidence/status/plan; push that record update as one more commit to the PR (documentation only, CI skips it) | evidence.md, status.md | |
+| 1 | Pre-commit checks on `feature/WI-016-order-csv-export`: delete `bash.exe.stackdump`; the file list above matches `git status` exactly; secret scan of the diff and records (no `deploy/.env` value, password or token); approved WI-003 002 files unchanged (`git diff master --stat -- docs/` shows additions only); `git diff --check` for whitespace errors; the Japanese UI-text scan (NoInlineText) passes; `master` has not moved since `bcff62e` (checked 2026-10-08: not moved) | Results in evidence.md | done — all passed; stack dump deleted; `*.csv -text` added to `.gitattributes` for the sample CSV; one false-positive secret match recorded |
+| 2 | Two commits, so design and code can be reviewed separately: (a) `docs(WI-016): add approved CSV export design for SCR-002` (design group); (b) `feat(WI-016): export production orders as CSV from the order list` (backend, frontend, tests, records) | `git log` | done — `5f0380d` (design, 23 files) and `127c81f` (code, 31 files) |
+| 3 | `git push -u origin feature/WI-016-order-csv-export`; `gh pr create --base master`. Description: summary of REQ-085–089 / UC-022, key decisions (DEC-002–005, 008, 009, 013, 017, 020), the new endpoint `GET /api/production-orders/export` (additive; existing APIs unchanged), test results and the 227 ms measurement, known local limits (TC-469 Not run; plant-calendar E2E needs CI's fixture; screen-reader speech and physical mobile keyboard not run), and "no deployment" | PR URL | done — https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/48 |
+| 4 | Watch CI (Backend, Frontend, E2E) read-only. If a job fails: diagnose; fix only test-environment or non-behavioural problems with one more commit on the same branch; otherwise stop and report | CI run ID and result | done — CI run 37713513237 on `127c81f` passed Backend, Frontend and E2E; no fix needed |
+| 5 | Record the PR, commits and CI run in evidence/status/plan; push that record update as one more commit to the PR (documentation only, CI skips it) | evidence.md, status.md | done — this records commit |
 
 ### Permitted actions
 
@@ -282,3 +282,4 @@ Not permitted without further approval:
 - **Review status:** approved
 - **Approval source:** User: "approved, go ahead" after revision 3 was shown (2026-10-08), DEC-021
 - **Approved revision:** 3 (2026-10-08)
+- **Closure:** 2026-10-08 — steps 1–5 done; PR #48 open, CI passed, no CI fix needed. Merge, branch cleanup and closeout need a plan revision 4.
