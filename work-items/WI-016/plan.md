@@ -7,7 +7,8 @@ revision is the current one.
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-07 | Design (BD addendum, then DD addendum with wireframes/mockups); documents only | Complete — 002_BD-CSV v2, 002_DD-CSV v2, -API/-FN/-SPD-CSV v1 approved with EN/JA PDFs | User: "approved, go with all recommendations" (2026-10-07, DEC-006) |
 | 2 | 2026-10-07 | Implementation and tests (local only, no commit) | Complete — results in evidence.md and test-plan.md | User: "approved" (2026-10-07, DEC-019) |
-| 3 | 2026-10-08 | Commit, push and open a PR to `master`; record CI | **current** — complete; PR #48 open, CI passed | User: "approved, go ahead" (2026-10-08, DEC-021) |
+| 3 | 2026-10-08 | Commit, push and open a PR to `master`; record CI | Complete — PR #48 open, CI passed | User: "approved, go ahead" (2026-10-08, DEC-021) |
+| 4 | 2026-10-08 | Merge PR #48, branch cleanup and documentation closeout PR | **current** — complete; closeout PR open | User: "approved, go ahead" (2026-10-08, DEC-022) |
 
 ## Revision 1 — Design (documents only)
 
@@ -283,3 +284,54 @@ Not permitted without further approval:
 - **Approval source:** User: "approved, go ahead" after revision 3 was shown (2026-10-08), DEC-021
 - **Approved revision:** 3 (2026-10-08)
 - **Closure:** 2026-10-08 — steps 1–5 done; PR #48 open, CI passed, no CI fix needed. Merge, branch cleanup and closeout need a plan revision 4.
+
+---
+
+## Revision 4 — Merge, cleanup and closeout
+
+Revision 4, 2026-10-08. Follows the completed revision 3 (PR #48 open, CI passed).
+
+### Objective and scope
+
+Merge PR #48 into `master`, clean up the feature branch, and record the finished work item in the project's
+current-state documents through a documentation-only closeout PR. No application, test or design change.
+
+### Steps
+
+| # | Step | Verification | Outcome |
+| --- | --- | --- | --- |
+| 1 | Pre-merge check: PR #48 head is still `403befd`, run 37714084761 on it passed, PR is MERGEABLE/CLEAN, no new review comments, `origin/master` is still `bcff62e` | `gh pr view`, `gh run view` | done — all as expected |
+| 2 | Squash-merge PR #48, guarded by the head commit (`gh pr merge 48 --squash --match-head-commit 403befd…`), title `feat(WI-016): export production orders as CSV from the order list (#48)`; delete the remote branch | Merge commit SHA | done — `8649f2d`; remote branch deleted |
+| 3 | Sync local `master` (fast-forward only); delete the local feature branch; prune refs; watch the `master` CI run read-only | `master` CI run ID and result | done — local branch deleted, refs pruned; `master` run 37715472260 on `8649f2d` passed |
+| 4 | Closeout branch `chore/WI-016-closeout` from the new `master`, documentation only: `README.md` (WI-016 bullet, Next); `ai/project.md` ("WI-016 merged" section: endpoint, 13 columns, limit, test counts, PR/commit/CI; WI-015 closeout PR #46 noted; Next); `CLAUDE.md` current-state paragraph; WI-016 records (status `done`, plan closure, evidence merge results, DEC entry); correct the stale WI-015 status line (its closeout PR #46 merged as `a470146`) | `git diff --stat` shows only those files | done |
+| 5 | Commit `docs(WI-016): close out merged order CSV export`, push, open the closeout PR to `master`; check its CI (documentation only) | PR URL | done — see status.md |
+| 6 | Report; the closeout PR's merge waits for the user's approval | — | |
+
+### Permitted actions
+
+- Squash-merge of PR #48 only; deleting `feature/WI-016-order-csv-export` locally and on origin; `git fetch --prune`;
+  fast-forward of local `master`.
+- Creating, committing and pushing `chore/WI-016-closeout`; opening its PR; read-only CI and PR checks.
+
+Not permitted without further approval:
+- merging the closeout PR;
+- deployment, image publication, or any change to the demo database;
+- application, test or design changes; force-push or history rewrite;
+- rebuilding the local Compose stack (not needed: its `backend`/`frontend` images were built from the same code
+  that is merged).
+
+### Risks / stop conditions
+
+| Risk / stop condition | Trigger | Response |
+| --- | --- | --- |
+| PR changed or `master` moved after this plan | Head ≠ `403befd`, new review comments, or `origin/master` ≠ `bcff62e` | Stop and report before merging |
+| `--match-head-commit` rejects the merge | Head moved during the merge | Stop and report |
+| `master` CI fails after the merge | Run result | Stop and report; no revert or fix without approval |
+| Closeout text claims too much | Review of the diff | Only state what the records show: no deployment, TC-469 Not run, manual speech/keyboard Not run |
+
+### Review and approval
+
+- **Review status:** approved
+- **Approval source:** User: "approved, go ahead" after revision 4 was shown (2026-10-08), DEC-022
+- **Approved revision:** 4 (2026-10-08)
+- **Closure:** 2026-10-08 — PR #48 merged as `8649f2d`, branch cleaned up, closeout PR opened. Its merge needs the user's approval.

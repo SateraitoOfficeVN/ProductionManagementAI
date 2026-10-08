@@ -1,14 +1,14 @@
 # WI-016 — Status
 
-As of 2026-10-08. Work item state: in-review (PR #48 open, CI passed; not merged).
+As of 2026-10-08. Work item state: done (merged via PR #48 as `8649f2d`; closeout PR open).
 
 ## Overall status
 
-**RAG:** Green — PR #48 open against `master`; CI run 37713513237 passed all three jobs on `127c81f`. Merge, cleanup and closeout need the user's approval.
+**RAG:** Green — merged via PR #48 as `8649f2d` after final head `403befd` passed run 37714084761; `master` run 37715472260 on `8649f2d` passed. Branch deleted; no deployment.
 
 ## Approved plan reference
 
-[plan.md](plan.md) — revision 1 complete (DEC-006); revision 2 complete (DEC-019); revision 3 complete (DEC-021).
+[plan.md](plan.md) — revision 1 complete (DEC-006); revision 2 complete (DEC-019); revision 3 complete (DEC-021); revision 4 complete (DEC-022).
 
 ## Accomplishments this period
 
@@ -26,10 +26,11 @@ As of 2026-10-08. Work item state: in-review (PR #48 open, CI passed; not merged
 | 2026-10-07 | 002_DD-SPD-CSV approved, DEC-017 accepted (DEC-018); 002_DD-CSV v2; all PDFs rendered; plan revision 1 closed, revision 2 drafted | [plan.md](plan.md) |
 | 2026-10-07 | Revision 2: backend, frontend, test plan TC-440–469; 286 unit / 234 integration / 307 frontend / 3 new E2E passed; 10,000 rows in 227 ms | [evidence.md](evidence.md), [test-plan.md](test-plan.md) |
 | 2026-10-08 | Revision 3: commits `5f0380d` (design) and `127c81f` (code); PR #48; CI run 37713513237 passed: 286 unit / 234 integration / 307 frontend / 76 E2E | [evidence.md](evidence.md) |
+| 2026-10-08 | Revision 4: PR #48 squash-merged as `8649f2d`; branch deleted; `master` run 37715472260 on `8649f2d` passed; closeout PR opened | [evidence.md](evidence.md) |
 
 ## Planned for next period
 
-On the user's approval only: plan revision 4 — merge PR #48, delete the branch, closeout documentation (README, `ai/project.md`, CLAUDE.md).
+Nothing planned. The closeout PR's merge waits for the user's approval.
 
 ## Risks and issues
 
@@ -39,4 +40,4 @@ On the user's approval only: plan revision 4 — merge PR #48, delete the branch
 
 ## Next action
 
-User reviews PR #48 and decides on merge and closeout (plan revision 4), owner ThongTM.
+User reviews and merges the closeout PR, owner ThongTM.

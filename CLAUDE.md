@@ -59,9 +59,18 @@ list has rows per page 10/20/50/100; register/edit has a 20-per-page product tab
 headers. A saved 使用停止 pair cannot be re-added, and the UI says so. Optional allow-listed
 page sizes on line list/detail/product-choices APIs, default 50. Final head 7c22966 passed
 CI run 37562084126 (251 backend unit/215 integration/282 frontend/73 E2E). Branch deleted;
-main synchronized; no deployment. Next: none approved; candidate RFCs: test-plan.md
-whenever a WI adds tests; design PDFs only after the design .md is approved. See
+main synchronized; no deployment. WI-015 closeout merged via PR #46 as a470146. See
 work-items/WI-015.
+
+WI-016 order-list CSV export merged via PR #48 as 8649f2d (squash) under approved revisions
+1-4. 「CSV出力」 on /production-orders downloads all orders matching the applied filters/sort:
+GET /api/production-orders/export, 13 columns, UTF-8 BOM/CRLF/RFC 4180, plant-time timestamps,
+formula-like text prefixed with ', 10,000-row limit (422 MSG-E024), X-Total-Count; one
+REPEATABLE READ snapshot, streamed. Additive 002_BD-CSV/002_DD-CSV set (approved WI-003 002 docs
+unedited). Final head 403befd passed run 37714084761 (286 backend unit/234 integration/307
+frontend/76 E2E). *.csv stored -text. TC-469 (real spreadsheet app) Not run. Branch deleted;
+main synchronized; no deployment. Next: none approved; candidate RFCs: test-plan.md whenever
+a WI adds tests; design PDFs only after the design .md is approved. See work-items/WI-016.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 

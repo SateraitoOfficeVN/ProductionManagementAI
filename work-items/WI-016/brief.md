@@ -4,7 +4,7 @@
 
 | Work item | Author | Status | Target release |
 | --- | --- | --- | --- |
-| WI-016 | Claude (for ThongTM) | in review | unscheduled |
+| WI-016 | Claude (for ThongTM) | done — merged via PR #48 as `8649f2d` | unscheduled |
 
 Workflow: feature-delivery. Baseline: `master` at `a470146`.
 
