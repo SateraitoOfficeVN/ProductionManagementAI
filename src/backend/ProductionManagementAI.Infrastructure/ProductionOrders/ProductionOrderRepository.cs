@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using ProductionManagementAI.Application.ProductionOrders;
@@ -93,6 +94,43 @@ internal sealed class ProductionOrderRepository(AppDbContext db) : IProductionOr
                 db.ProductionLines.Where(l => l.Id == join.Order.LineId)
                     .Select(l => new OrderLineResponse(l.Id, l.Code, l.Name, l.IsActive)).FirstOrDefault()))
             .ToListAsync(cancellationToken);
+
+    // 002_DD-FN-CSV §2: REPEATABLE READ gives the count and the streamed rows one snapshot; READ ONLY because the
+    // export never writes. The count (CountOrdersAsync) runs on the same connection, inside this transaction.
+    public async Task<IProductionOrderTransaction> BeginReadSnapshotAsync(CancellationToken cancellationToken)
+    {
+        var transaction = await db.Database.BeginTransactionAsync(IsolationLevel.RepeatableRead, cancellationToken);
+        await db.Database.ExecuteSqlRawAsync("SET TRANSACTION READ ONLY", cancellationToken);
+        return new Transaction(transaction);
+    }
+
+    // 002_DD-FN-CSV §2: the list query (same filters, join and sort) without Skip/Take, projecting the export row.
+    // AsAsyncEnumerable streams through the data reader, so one row is materialised at a time.
+    public IAsyncEnumerable<ProductionOrderExportRow> StreamExportRowsAsync(ProductionOrderListQuery query) =>
+        db.ProductionOrders
+            .AsNoTracking()
+            .ApplyFilters(query)
+            .Join(
+                db.Products.AsNoTracking(),
+                order => order.ProductId,
+                product => product.Id,
+                (order, product) => new ProductionOrderJoin { Order = order, Product = product })
+            .ApplySort(query.Sort, query.Direction)
+            .Select(join => new ProductionOrderExportRow(
+                join.Order.OrderNumber,
+                join.Product.Sku,
+                join.Product.Name,
+                join.Product.Unit,
+                db.ProductionLines.Where(l => l.Id == join.Order.LineId)
+                    .Select(l => new OrderLineResponse(l.Id, l.Code, l.Name, l.IsActive)).FirstOrDefault(),
+                join.Order.Quantity,
+                join.Order.DueDate,
+                join.Order.Status,
+                join.Order.Notes,
+                join.Order.CreatedAtUtc,
+                join.Order.UpdatedAtUtc,
+                join.Order.CompletedAtUtc))
+            .AsAsyncEnumerable();
 
     public void Add(ProductionOrder order) => db.ProductionOrders.Add(order);
 

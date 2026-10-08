@@ -46,6 +46,13 @@ public static class ProductionOrderTelemetry
     public static readonly Counter<long> HealthChecks = Meter.CreateCounter<long>(
         "pmai.system.health_checks", description: "Health checks by database status.");
 
+    // 002_DD-FN-CSV §1 (WI-016): CSV export.
+    public static readonly Counter<long> Exported = Meter.CreateCounter<long>(
+        "pmai.production_orders.exported", description: "Production order CSV exports by outcome.");
+
+    public static readonly Histogram<int> ExportRows = Meter.CreateHistogram<int>(
+        "pmai.production_orders.export_rows", description: "Rows written by a successful production order CSV export.");
+
     public static class Outcomes
     {
         public const string Success = "success";
@@ -54,5 +61,6 @@ public static class ProductionOrderTelemetry
         public const string Conflict = "conflict";
         public const string NotFound = "not_found";
         public const string Error = "error";
+        public const string Cancelled = "cancelled";
     }
 }

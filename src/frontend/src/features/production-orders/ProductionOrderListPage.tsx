@@ -5,6 +5,7 @@ import { GuardedLink } from '../../components/GuardedLink'
 import { ApiError } from '../../lib/apiClient'
 import { useAuth } from '../auth/useAuth'
 import { listOrders, listProducts } from './api'
+import { ExportCsvButton } from './ExportCsvButton'
 import { ListPagination, ListSummary, PageSizeSelect } from './ListPagination'
 import { MessageBanner } from './MessageBanner'
 import { ProductionOrderFilters } from './ProductionOrderFilters'
@@ -187,9 +188,17 @@ export function ProductionOrderListPage() {
 
         {page && page.total > 0 && (
           <>
-            <div className="flex items-center justify-between gap-4">
-              <ListSummary total={page.total} page={page.page} pageSize={page.pageSize} />
-              <PageSizeSelect pageSize={page.pageSize} onPageSize={changePageSize} />
+            {/* 002_DD-CSV module 2: summary, 「CSV出力」 and 「表示件数」 share one wrapping row; on SP the export takes its
+                own full-width row under the summary (item order is set on the children). Keyed by the view, so a new
+                view re-mounts the export controls (002_DD-SPD-CSV P-17). */}
+            <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+              <div className="order-1 pt-1.5">
+                <ListSummary total={page.total} page={page.page} pageSize={page.pageSize} />
+              </div>
+              <ExportCsvButton key={viewKey} view={view} total={page.total} disabled={loading} />
+              <div className="order-2 sm:order-3">
+                <PageSizeSelect pageSize={page.pageSize} onPageSize={changePageSize} />
+              </div>
             </div>
             <ProductionOrderTable items={page.items} sort={page.sort} dir={page.dir} onSort={changeSort} />
             <ListPagination total={page.total} page={page.page} pageSize={page.pageSize} onPage={changePage} />

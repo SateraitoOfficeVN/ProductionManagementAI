@@ -37,6 +37,24 @@ public sealed record ProductionOrderListRequest(
     string? Page,
     string? PageSize);
 
+/// <summary>
+/// API-PO-05 query (002_DD-API-CSV): the list's filter and sort parameters, bound as strings only. There is no page or
+/// page size — the export always covers every page (WI-016 DEC-002); if sent, they are ignored like any unknown parameter.
+/// </summary>
+public sealed record ProductionOrderExportRequest(
+    string[]? Status,
+    string? ProductId,
+    string? DueFrom,
+    string? DueTo,
+    string? OrderNumber,
+    string? Sort,
+    string? Dir)
+{
+    /// <summary>Paging left unset, so <see cref="ProductionOrderListQuery.TryCreate"/> applies the list's rules unchanged.</summary>
+    public ProductionOrderListRequest ToListRequest() =>
+        new(Status, ProductId, DueFrom, DueTo, OrderNumber, Sort, Dir, Page: null, PageSize: null);
+}
+
 /// <summary>A validated, normalized list query (002_DD module 5). Constructing one is the only way to reach the repository.</summary>
 public sealed record ProductionOrderListQuery(
     IReadOnlyList<ProductionOrderStatus> Statuses,
@@ -304,10 +322,16 @@ public static class ProductionOrderListMapper
         row.Quantity,
         row.DueDate,
         row.Status,
-        row.DueDate < plantToday
-            && row.Status is ProductionOrderStatus.Draft or ProductionOrderStatus.InProgress,
+        IsOverdue(row.DueDate, row.Status, plantToday),
         row.UpdatedAt,
         row.Line);
+
+    /// <summary>
+    /// 002_BD M-08 / FN-013: past due and still open. Shared by the list and the CSV export (002_BD-CSV M-15), so the
+    /// two can never judge "overdue" differently.
+    /// </summary>
+    public static bool IsOverdue(DateOnly dueDate, ProductionOrderStatus status, DateOnly plantToday) =>
+        dueDate < plantToday && status is ProductionOrderStatus.Draft or ProductionOrderStatus.InProgress;
 
     /// <summary>camelCase API spelling of a sort key, echoed in the response so the client renders what it got.</summary>
     public static string ToApiValue(this ProductionOrderSort sort) => sort switch

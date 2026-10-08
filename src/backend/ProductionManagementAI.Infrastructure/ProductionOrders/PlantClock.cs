@@ -25,7 +25,9 @@ public sealed class PlantClock(TimeProvider timeProvider, IOptions<PlantOptions>
 
     public string TimeZoneId { get; } = options.Value.TimeZone;
 
-    public DateOnly DateOf(DateTimeOffset utc) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(utc, _zone).DateTime);
+    public DateOnly DateOf(DateTimeOffset utc) => DateOnly.FromDateTime(ToPlantTime(utc));
+
+    public DateTime ToPlantTime(DateTimeOffset utc) => TimeZoneInfo.ConvertTime(utc, _zone).DateTime;
 
     public DateTimeOffset StartOfDayUtc(DateOnly date)
     {

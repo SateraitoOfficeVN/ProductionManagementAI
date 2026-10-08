@@ -13,7 +13,9 @@ internal sealed class TokyoClock(TimeProvider time) : IPlantClock
 
     public string TimeZoneId => "Asia/Tokyo";
 
-    public DateOnly DateOf(DateTimeOffset utc) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(utc, Zone).DateTime);
+    public DateOnly DateOf(DateTimeOffset utc) => DateOnly.FromDateTime(ToPlantTime(utc));
+
+    public DateTime ToPlantTime(DateTimeOffset utc) => TimeZoneInfo.ConvertTime(utc, Zone).DateTime;
 
     public DateTimeOffset StartOfDayUtc(DateOnly date)
     {
