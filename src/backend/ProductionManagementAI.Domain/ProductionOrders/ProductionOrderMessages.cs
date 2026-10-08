@@ -28,4 +28,7 @@ public static class ProductionOrderMessages
     public const string SortOrPagingUnsupported = "MSG-E019";
     public const string ProductInactive = "MSG-E022";
     public const string QuantityUnitInvalid = "MSG-E023";
+
+    // 002_DD-CSV (CSV export, WI-016).
+    public const string ExportLimitExceeded = "MSG-E024";
 }

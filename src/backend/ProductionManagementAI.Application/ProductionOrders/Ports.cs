@@ -17,6 +17,9 @@ public interface IPlantClock
 
     /// <summary>The UTC instant at which a plant-local date begins.</summary>
     DateTimeOffset StartOfDayUtc(DateOnly date);
+
+    /// <summary>The plant-local wall-clock time of an instant (002_DD-FN-CSV §5, WI-016 DEC-008).</summary>
+    DateTime ToPlantTime(DateTimeOffset utc);
 }
 
 /// <summary>Issues the next per-year order sequence inside the caller's transaction (001_DB, DEC-013).</summary>
@@ -56,6 +59,15 @@ public interface IProductionOrderRepository
     /// <summary>One ordered, projected page of orders (002_DD-FN §3).</summary>
     Task<IReadOnlyList<ProductionOrderListRow>> ListOrdersAsync(
         ProductionOrderListQuery query, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// A read-only REPEATABLE READ transaction, so a count and the rows streamed after it see one snapshot
+    /// (002_DD-FN-CSV §2).
+    /// </summary>
+    Task<IProductionOrderTransaction> BeginReadSnapshotAsync(CancellationToken cancellationToken);
+
+    /// <summary>Every order matching the query's filters, in its sort order, unpaged; streamed, not buffered (002_DD-FN-CSV §2).</summary>
+    IAsyncEnumerable<ProductionOrderExportRow> StreamExportRowsAsync(ProductionOrderListQuery query);
 
     void Add(ProductionOrder order);
 

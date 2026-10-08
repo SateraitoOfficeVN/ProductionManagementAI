@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductionManagementAI.Api.ProductionOrders;
@@ -37,6 +38,27 @@ public class ProductionOrdersController(ProductionOrderService service) : Contro
 
         return ProductionOrderProblems.ToActionResult(
             this, await service.ListAsync(valid.Value, cancellationToken), Ok);
+    }
+
+    /// <summary>
+    /// 002_DD-API-CSV (API-PO-05): every order matching the list's filters, in its sort order, as a CSV file. Same
+    /// validation as <see cref="List"/>; paging is not a parameter. Processing: 002_DD-FN-CSV.
+    /// </summary>
+    [HttpGet("export")]
+    public async Task<IActionResult> Export(
+        [FromQuery] ProductionOrderExportRequest request, CancellationToken cancellationToken)
+    {
+        var query = ProductionOrderListQuery.TryCreate(request.ToListRequest());
+        if (query is not Result<ProductionOrderListQuery>.Ok valid)
+        {
+            return ProductionOrderProblems.ToActionResult(this, query, _ => Ok());
+        }
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var result = await service.ExportAsync(valid.Value, userId, cancellationToken);
+        return result is Result<ProductionOrderExport>.Ok ok
+            ? new CsvExportResult(ok.Value)
+            : ProductionOrderProblems.ToActionResult(this, result, _ => Ok());
     }
 
     [HttpPut("{id:guid}")]

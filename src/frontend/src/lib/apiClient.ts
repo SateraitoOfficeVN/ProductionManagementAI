@@ -94,6 +94,27 @@ async function readProblem(response: Response): Promise<ProblemDetails | null> {
   }
 }
 
+/**
+ * A file download (002_DD-SPD-CSV P-18): the same session and error handling as every JSON call — 401 runs the
+ * unauthorized handler, any other non-2xx throws ApiError with its Problem Details — but a 2xx Response is returned
+ * unread, so the caller can take the body as a Blob and read its headers.
+ */
+export async function getFile(url: string, signal?: AbortSignal): Promise<Response> {
+  const response = await fetch(url, {
+    method: 'GET',
+    credentials: 'same-origin',
+    headers: { Accept: 'text/csv, application/problem+json' },
+    signal,
+  })
+  if (!response.ok) {
+    if (response.status === 401) {
+      unauthorizedHandler?.()
+    }
+    throw new ApiError(response.status, await readProblem(response))
+  }
+  return response
+}
+
 export function getJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   return request<T>('GET', url, undefined, signal)
 }

@@ -35,6 +35,7 @@ export {
   Inbox as EmptyIcon,
   CircleAlert as ErrorIcon,
   ShieldX as ForbiddenIcon,
+  Download as ExportIcon,
 } from 'lucide-react'
 
 /** Props every decorative icon gets: 16 px, currentColor, hidden from assistive technology. */

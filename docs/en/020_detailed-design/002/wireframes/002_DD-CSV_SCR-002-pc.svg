@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" width="960" height="470" font-family="Yu Gothic UI, Meiryo, Hiragino Sans, Noto Sans JP, Segoe UI, sans-serif" role="img" aria-label="SCR-002 CSV export — PC, DD fidelity (ready state with filters)">
+  <title>SCR-002 CSV export — PC, DD fidelity (ready state with filters)</title>
+  <rect x="0.5" y="0.5" width="959" height="469" rx="8" fill="#fff" stroke="#9CA3AF"/>
+  <rect x="1" y="1" width="958" height="52" rx="7" fill="#E5E7EB" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="20" y="31" font-size="14" font-weight="700" fill="#374151" text-anchor="start">ProductionManagementAI</text>
+  <text x="404" y="31" font-size="12" font-weight="700" fill="#374151" text-anchor="middle">製造指示一覧</text>
+  <text x="824" y="31" font-size="12" font-weight="400" fill="#374151" text-anchor="start">Admin · ログアウト</text>
+  <text x="24" y="90" font-size="20" font-weight="700" fill="#374151" text-anchor="start">製造指示一覧</text>
+  <rect x="20" y="108" width="920" height="54" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="36" y="140" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">絞り込み（適用済み：ステータス 進行中・下書き ／ 納期 2026/10/01〜2026/10/31）— 002_DD のとおり</text>
+  <rect x="1.0" y="187" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="12" y="200" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">14</text>
+  <rect x="605.0" y="188" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="616" y="201" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">28</text>
+  <rect x="753.0" y="187" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="764" y="200" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">15</text>
+  <rect x="521.0" y="212" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="532" y="225" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">30</text>
+  <text x="30" y="200" font-size="12" font-weight="600" fill="#374151" text-anchor="start">87件中 1〜20件</text>
+  <text x="780" y="200" font-size="12" font-weight="400" fill="#374151" text-anchor="start">表示件数</text>
+  <rect x="840" y="184" width="100" height="26" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="848" y="202" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">20</text>
+  <rect x="630" y="182" width="112" height="30" rx="4" fill="#fff" stroke="#9CA3AF" stroke-width="1"/>
+  <path d="M658.0 191.0 v8 m-3.5 -3.5 l3.5 3.5 l3.5 -3.5 M652.0 201.0 v2 h12 v-2" fill="none" stroke="#374151" stroke-width="1.4"/>
+  <text x="694.0" y="201.0" font-size="12" font-weight="600" fill="#374151" text-anchor="middle">CSV出力</text>
+  <text x="742" y="228" font-size="11" font-weight="400" fill="#6B7280" text-anchor="end">検索した絞り込み条件の87件を出力します。</text>
+  <rect x="1.0" y="253" width="22" height="18" rx="9" fill="#C2410C"/>
+  <text x="12" y="266" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">29</text>
+  <rect x="30" y="252" width="910" height="22" rx="4" fill="#fff" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="40" y="267" font-size="11" font-weight="400" fill="#9CA3AF" text-anchor="start">role=status（空）— MSG-I009 / MSG-E024 / MSG-E025 / MSG-E020 の表示位置</text>
+  <rect x="30" y="288" width="910" height="32" rx="4" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="44" y="309" font-size="12" font-weight="700" fill="#374151" text-anchor="start">指示番号</text>
+  <text x="160" y="309" font-size="12" font-weight="700" fill="#374151" text-anchor="start">製品</text>
+  <text x="380" y="309" font-size="12" font-weight="700" fill="#374151" text-anchor="start">数量</text>
+  <text x="470" y="309" font-size="12" font-weight="700" fill="#374151" text-anchor="start">納期 ▲</text>
+  <text x="600" y="309" font-size="12" font-weight="700" fill="#374151" text-anchor="start">ステータス</text>
+  <text x="720" y="309" font-size="12" font-weight="700" fill="#374151" text-anchor="start">更新日時</text>
+  <text x="44" y="342" font-size="12" font-weight="600" fill="#1D4ED8" text-anchor="start">PO-2026-00041</text>
+  <text x="160" y="342" font-size="12" font-weight="400" fill="#374151" text-anchor="start">P-1001 — ブレーキキャリパー</text>
+  <text x="380" y="342" font-size="12" font-weight="400" fill="#374151" text-anchor="start">120 個</text>
+  <text x="470" y="342" font-size="12" font-weight="400" fill="#374151" text-anchor="start">2026/10/02</text>
+  <text x="600" y="342" font-size="12" font-weight="400" fill="#374151" text-anchor="start">進行中</text>
+  <text x="720" y="342" font-size="12" font-weight="400" fill="#374151" text-anchor="start">2026/09/28 09:15</text>
+  <line x1="30" y1="354" x2="940" y2="354" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="44" y="376" font-size="12" font-weight="600" fill="#1D4ED8" text-anchor="start">PO-2026-00052</text>
+  <text x="160" y="376" font-size="12" font-weight="400" fill="#374151" text-anchor="start">P-2002 — 防錆塗料</text>
+  <text x="380" y="376" font-size="12" font-weight="400" fill="#374151" text-anchor="start">12.5 kg</text>
+  <text x="470" y="376" font-size="12" font-weight="400" fill="#374151" text-anchor="start">2026/10/03</text>
+  <text x="600" y="376" font-size="12" font-weight="400" fill="#374151" text-anchor="start">下書き</text>
+  <text x="720" y="376" font-size="12" font-weight="400" fill="#374151" text-anchor="start">2026/09/30 14:02</text>
+  <line x1="30" y1="388" x2="940" y2="388" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="44" y="420" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">…</text>
+  <text x="20" y="452" font-size="11" font-weight="400" fill="#6B7280" text-anchor="start" font-style="italic">28: aria-describedby="export-hint" (30). 29 stays mounted, empty, so the first message is announced. Table and paging unchanged.</text>
+</svg>

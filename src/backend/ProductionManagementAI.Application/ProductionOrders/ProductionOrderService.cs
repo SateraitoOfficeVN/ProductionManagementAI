@@ -34,6 +34,81 @@ public sealed partial class ProductionOrderService(
     }
 
     /// <summary>
+    /// Prepares a CSV export for an already-validated query (002_DD-FN-CSV §1). The count and the rows come from one
+    /// read-only snapshot, so <see cref="ProductionOrderExport.Count"/> always equals the rows written; no row is read
+    /// before the row limit passes. On <c>Ok</c> the caller owns the export (snapshot and activity) and must dispose it.
+    /// </summary>
+    public async Task<Result<ProductionOrderExport>> ExportAsync(
+        ProductionOrderListQuery query, string? userId, CancellationToken cancellationToken)
+    {
+        var activity = Source.StartActivity("ProductionOrder.Export");
+        SetFilterTags(activity, query);
+        IProductionOrderTransaction? snapshot = null;
+        try
+        {
+            if (query.ProductId is { } productId && !await repository.ProductExistsAsync(productId, cancellationToken))
+            {
+                EndExport(activity, Outcomes.ValidationFailed, userId);
+                return new Result<ProductionOrderExport>.Invalid(
+                    new Dictionary<string, string[]>(StringComparer.Ordinal) { ["productId"] = [Msg.ProductNotFound] });
+            }
+
+            snapshot = await repository.BeginReadSnapshotAsync(cancellationToken);
+            var count = await repository.CountOrdersAsync(query, cancellationToken);
+            activity?.SetTag("result.total", count);
+            if (count > ProductionOrderExport.MaxRows)
+            {
+                await snapshot.DisposeAsync();
+                EndExport(activity, Outcomes.RuleViolation, userId);
+                return new Result<ProductionOrderExport>.RuleViolation(Msg.ExportLimitExceeded);
+            }
+
+            // Read once, so the file name, the overdue column and every timestamp agree (002_DD-FN-CSV §1 step 6).
+            var utcNow = timeProvider.GetUtcNow();
+            var export = new ProductionOrderExport(
+                count,
+                plantClock.ToPlantTime(utcNow),
+                plantClock.DateOf(utcNow),
+                plantClock.ToPlantTime,
+                repository.StreamExportRowsAsync(query),
+                snapshot,
+                activity,
+                logger,
+                userId);
+            return new Result<ProductionOrderExport>.Ok(export);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            if (snapshot is not null)
+            {
+                await snapshot.DisposeAsync();
+            }
+
+            LogUnexpectedFailure(logger, ex, "export");
+            EndExport(activity, Outcomes.Error, userId);
+            throw;
+        }
+        catch (OperationCanceledException)
+        {
+            if (snapshot is not null)
+            {
+                await snapshot.DisposeAsync();
+            }
+
+            EndExport(activity, Outcomes.Cancelled, userId);
+            throw;
+        }
+    }
+
+    /// <summary>Ends an export that never reached streaming: counter, activity and log 2005, then the activity.</summary>
+    private void EndExport(Activity? activity, string outcome, string? userId)
+    {
+        Complete(activity, Exported, outcome);
+        ProductionOrderExportLog.Exported(logger, userId, outcome, 0, 0);
+        activity?.Dispose();
+    }
+
+    /// <summary>
     /// One counted page of production orders for an already-validated query (002_DD-FN §1). The count runs first, so a
     /// page past the last one costs one query instead of two and the total is always available for the summary.
     /// </summary>
@@ -360,14 +435,25 @@ public sealed partial class ProductionOrderService(
             return;
         }
 
+        SetFilterTags(activity, query);
+        activity.SetTag("page", query.Page);
+        activity.SetTag("page_size", query.PageSize);
+    }
+
+    /// <summary>The list's filter and sort tags without paging, shared by the export (002_DD-FN-CSV §1 step 1).</summary>
+    private static void SetFilterTags(Activity? activity, ProductionOrderListQuery query)
+    {
+        if (activity is null)
+        {
+            return;
+        }
+
         activity.SetTag("filter.status_count", query.Statuses.Count);
         activity.SetTag("filter.has_product", query.ProductId is not null);
         activity.SetTag("filter.has_due_range", query.DueFrom is not null || query.DueTo is not null);
         activity.SetTag("filter.has_order_number", query.OrderNumberPattern is not null);
         activity.SetTag("sort", query.Sort.ToApiValue());
         activity.SetTag("dir", query.Direction.ToApiValue());
-        activity.SetTag("page", query.Page);
-        activity.SetTag("page_size", query.PageSize);
     }
 
     private static void Complete(Activity? activity, System.Diagnostics.Metrics.Counter<long> counter, string outcome)

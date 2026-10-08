@@ -203,6 +203,64 @@ public class ProductionOrderServiceTests
         Assert.Null(reloaded.Line);
     }
 
+    // ---- 002_DD-FN-CSV §1: the export use case (TC-449, TC-450).
+
+    [Fact]
+    public async Task Export_OverRowLimit_IsRefusedWithoutReadingRows()
+    {
+        _repository.CountOverride = ProductionOrderExport.MaxRows + 1;
+
+        var result = await _service.ExportAsync(ListQuery(), "user-1", CancellationToken.None);
+
+        Assert.Equal(ProductionOrderMessages.ExportLimitExceeded,
+            Assert.IsType<Result<ProductionOrderExport>.RuleViolation>(result).Code);
+        Assert.False(_repository.ExportRowsEnumerated);
+        Assert.Equal(1, _repository.SnapshotsOpened);
+        Assert.Equal(1, _repository.SnapshotsDisposed);
+    }
+
+    [Fact]
+    public async Task Export_AtRowLimit_ReturnsOpenExportOwningTheSnapshot()
+    {
+        _repository.CountOverride = ProductionOrderExport.MaxRows;
+
+        var result = await _service.ExportAsync(ListQuery(), null, CancellationToken.None);
+
+        var export = Assert.IsType<Result<ProductionOrderExport>.Ok>(result).Value;
+        Assert.Equal(ProductionOrderExport.MaxRows, export.Count);
+        Assert.Equal(Today, export.PlantToday);
+        Assert.Equal(0, _repository.SnapshotsDisposed);
+        await export.DisposeAsync();
+        Assert.Equal(1, _repository.SnapshotsDisposed);
+    }
+
+    [Fact]
+    public async Task Export_UnknownProduct_IsInvalidBeforeOpeningASnapshot()
+    {
+        var result = await _service.ExportAsync(ListQuery(productId: Guid.NewGuid()), null, CancellationToken.None);
+
+        var invalid = Assert.IsType<Result<ProductionOrderExport>.Invalid>(result);
+        Assert.Equal([ProductionOrderMessages.ProductNotFound], invalid.Errors["productId"]);
+        Assert.Equal(0, _repository.SnapshotsOpened);
+    }
+
+    [Fact]
+    public async Task Export_StreamsTheRepositoryRowsWithTheReadTime()
+    {
+        _repository.ExportRows.Add(new ProductionOrderExportRow("PO-2026-00001", "P-1001", "ブレーキキャリパー", "個", null,
+            5, Today, ProductionOrderStatus.Draft, null, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch, null));
+        _repository.CountOverride = 1;
+
+        await using var export = Assert.IsType<Result<ProductionOrderExport>.Ok>(
+            await _service.ExportAsync(ListQuery(), null, CancellationToken.None)).Value;
+        using var body = new MemoryStream();
+        var rows = await ProductionOrderCsvWriter.WriteAsync(export, body, CancellationToken.None);
+
+        Assert.Equal(1, rows);
+        Assert.True(_repository.ExportRowsEnumerated);
+        Assert.Equal(new DateTime(2026, 9, 18, 1, 0, 0), export.PlantNow);
+    }
+
     private sealed class FixedPlantClock(DateOnly today) : IPlantClock
     {
         public DateOnly Today => today;
@@ -214,6 +272,8 @@ public class ProductionOrderServiceTests
         public DateOnly DateOf(DateTimeOffset utc) => DateOnly.FromDateTime(utc.UtcDateTime);
 
         public DateTimeOffset StartOfDayUtc(DateOnly date) => new(date.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+
+        public DateTime ToPlantTime(DateTimeOffset utc) => utc.UtcDateTime;
     }
 
     // ---- 002_DD-FN §1: the list use case. The query itself runs against a real database in the integration
@@ -361,7 +421,46 @@ public class ProductionOrderServiceTests
         public int ListCallCount { get; private set; }
 
         public Task<int> CountOrdersAsync(ProductionOrderListQuery query, CancellationToken cancellationToken) =>
-            Task.FromResult(ListRows.Count);
+            Task.FromResult(CountOverride ?? ListRows.Count);
+
+        // 002_DD-FN-CSV §1–§2: export fakes. The real snapshot and row stream run against PostgreSQL in the
+        // integration tests; here they record whether the service opened, disposed and read them.
+        public int? CountOverride { get; set; }
+
+        public List<ProductionOrderExportRow> ExportRows { get; } = [];
+
+        public int SnapshotsOpened { get; private set; }
+
+        public int SnapshotsDisposed { get; private set; }
+
+        public bool ExportRowsEnumerated { get; private set; }
+
+        public Task<IProductionOrderTransaction> BeginReadSnapshotAsync(CancellationToken cancellationToken)
+        {
+            SnapshotsOpened++;
+            return Task.FromResult<IProductionOrderTransaction>(new Snapshot(this));
+        }
+
+        public async IAsyncEnumerable<ProductionOrderExportRow> StreamExportRowsAsync(ProductionOrderListQuery query)
+        {
+            ExportRowsEnumerated = true;
+            foreach (var row in ExportRows)
+            {
+                await Task.Yield();
+                yield return row;
+            }
+        }
+
+        private sealed class Snapshot(FakeRepository owner) : IProductionOrderTransaction
+        {
+            public Task CommitAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+            public ValueTask DisposeAsync()
+            {
+                owner.SnapshotsDisposed++;
+                return ValueTask.CompletedTask;
+            }
+        }
 
         public Task<IReadOnlyList<ProductionOrderListRow>> ListOrdersAsync(
             ProductionOrderListQuery query, CancellationToken cancellationToken)

@@ -1,4 +1,6 @@
-import type { ProductionOrderStatus } from './types'
+import { formatNumber } from '../../lib/format'
+import { hasFilters } from './listViewState'
+import type { ListViewState, ProductionOrderStatus } from './types'
 
 // The single UI text catalog (001_DD, extended by 002_DD and 003_DD; Japanese since WI-005 DEC-001/DEC-007).
 // The API returns message IDs only; every word the user sees lives here, so no component carries inline text.
@@ -39,6 +41,10 @@ const messages: Record<string, string> = {
   'MSG-I006': '7日以内に納期の製造指示はありません。',
   'MSG-I007': '未完了の製造指示はありません。',
   'MSG-I008': '直近30日に完了した製造指示はありません。',
+  // 002_DD-CSV (CSV export, WI-016). MSG-E020 is reused for a 403 on the export.
+  'MSG-I009': 'CSVファイルを出力しました（{count}件）。',
+  'MSG-E024': '出力件数が上限（10,000件）を超えています。条件を絞り込んでから、もう一度お試しください。',
+  'MSG-E025': 'CSV出力に失敗しました。もう一度お試しください。',
 }
 
 export function message(id: string, values: Record<string, string> = {}): string {
@@ -296,6 +302,11 @@ export const labels = {
     summary: (first: number, last: number, total: number) => `${total}件中 ${first}〜${last}件`,
     summaryNone: '0件',
     rows: '表示件数',
+    exportCsv: 'CSV出力',
+    exporting: '出力中…',
+    exportHintFiltered: (total: string) => `検索した絞り込み条件の${total}件を出力します。`,
+    exportHintAll: (total: string) => `すべての製造指示${total}件を出力します。`,
+    exportFileName: (stamp: string) => `製造指示一覧_${stamp}.csv`,
     pagination: 'ページ送り',
     previous: '‹ 前へ',
     next: '次へ ›',
@@ -391,3 +402,12 @@ export const labels = {
     discard: '破棄', keepEditing: '編集を続ける',
   },
 } as const
+
+/**
+ * 002_DD-CSV module 5 / 002_BD-CSV M-18: what 「CSV出力」 will export, from the applied view (not unsubmitted panel
+ * edits) and the total the list is showing.
+ */
+export function exportHint(view: ListViewState, total: number): string {
+  const count = formatNumber(total)
+  return hasFilters(view) ? labels.list.exportHintFiltered(count) : labels.list.exportHintAll(count)
+}
