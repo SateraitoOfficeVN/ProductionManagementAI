@@ -172,3 +172,17 @@ Approval: DEC-021.
 | CI | CI run 37713513237 on `127c81f` (01:33–01:39 UTC): Backend (build, test) success — 286 unit, 234 integration; Frontend (build, lint, test) success — 307 tests, 23 files; E2E (Compose stack + Playwright) success — 76 passed, including the plant-calendar specs and the new CSV specs |
 | CI fixes | None needed |
 | Not done (outside revision 3) | Merge, branch deletion, closeout documentation, deployment |
+
+## Plan revision 4 — merge, cleanup and closeout (2026-10-08)
+
+Approval: DEC-022.
+
+| Item | Result |
+| --- | --- |
+| Pre-merge check | PR #48 head `403befd`, run 37714084761 passed, MERGEABLE/CLEAN, no reviews or comments; `origin/master` `bcff62e` |
+| Merge | Squash-merged with `--match-head-commit 403befd`, as `8649f2d` `feat(WI-016): export production orders as CSV from the order list (#48)` |
+| Cleanup | Remote and local `feature/WI-016-order-csv-export` deleted; refs pruned; local `master` at `8649f2d`. Another `bash.exe.stackdump` (Git Bash crash dump) deleted from the repository root |
+| `master` CI | `master` run 37715472260 on `8649f2d` passed |
+| Closeout | Branch `chore/WI-016-closeout`: README, `ai/project.md`, CLAUDE.md, WI-016 records; stale WI-015 status line corrected (PR #46 merged as `a470146`) |
+| Local Compose stack | Not rebuilt: its `backend`/`frontend` images were built from the merged code (revision 2); `db` and demo data untouched |
+| Not done | Merging the closeout PR (needs approval); deployment |

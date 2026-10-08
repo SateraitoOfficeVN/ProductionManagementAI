@@ -169,6 +169,29 @@ Final head `7c22966` passed [run 37562084126](https://github.com/SateraitoOffice
 integration/282 frontend/73 E2E. Feature branch deleted; main synchronized; no deployment. Test plan TC-420–435
 includes long-text cases (50/200 characters, no spaces, 1280/390/320 px).
 
+WI-015 closeout merged via PR #46 as `a470146`.
+
+### WI-016 merged
+
+Production order CSV export (REQ-085–089, UC-022): 「CSV出力」 on 製造指示一覧 (SCR-002), merged via
+[PR #48](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/48) as `8649f2d` on 2026-10-08. Additive design documents (002_BD-CSV v2,
+002_DD-CSV v2, 002_DD-API-CSV/-FN-CSV/-SPD-CSV v1, with SVG wireframes, EN/JA mockups, a sample CSV and EN/JA PDFs)
+sit beside the unedited WI-003 002 documents. Highlights:
+- API-PO-05 `GET /api/production-orders/export`: same `ProductionOrderEditor` policy, parameters, validation,
+  filters and sort as the list; `page`/`pageSize` ignored; `X-Total-Count`, `Cache-Control: no-store`; over 10,000
+  rows 422 `rule-violation` with `code` `MSG-E024` (DEC-005, DEC-013).
+- 13 columns (DEC-003); UTF-8 with BOM, CRLF, RFC 4180 quoting, line breaks in notes kept; timestamps in plant time
+  (`IPlantClock.ToPlantTime`, DEC-008); text starting with `= + - @`, tab or CR gets a leading `'` (CWE-1236).
+- Count and rows come from one REPEATABLE READ READ ONLY snapshot; rows are streamed; a mid-stream failure aborts the
+  connection. Telemetry: `pmai.production_orders.exported`, `pmai.production_orders.export_rows`, log event 2005.
+- Screen: hint 「検索した絞り込み条件の{total}件を出力します。」/「すべての製造指示{total}件を出力します。」 (DEC-009);
+  success MSG-I009; errors MSG-E020/E024/E025; the busy button keeps focus via `aria-disabled`/`aria-busy` (DEC-017).
+- `.gitattributes` stores `*.csv` byte for byte (`-text`).
+
+Final head `403befd` passed [run 37714084761](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37714084761); `master` run 37715472260 on `8649f2d` passed: 286 backend unit/234 integration/307 frontend/76 E2E. 10,000 rows
+exported in 227 ms (Testcontainers, target 5 s). Test plan TC-440–469; TC-469 (open in Excel/LibreOffice) Not run,
+no spreadsheet application locally. Feature branch deleted; main synchronized; no deployment.
+
 Next: no work item approved. Candidates: a harness-improvement RFC making `test-plan.md` mandatory whenever a work
 item adds tests (user request during WI-014), and rendering design PDFs only after the design Markdown is approved
 (user request during WI-015, recorded as WI-015 DEC-007; `ai/rules/documentation.md` and RFC 0012 unchanged).

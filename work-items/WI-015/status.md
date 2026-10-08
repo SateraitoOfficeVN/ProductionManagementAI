@@ -18,7 +18,7 @@ version 3 (approved, DEC-010), and its implementation under plan revisions 1–3
 PR [#45](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/45) was squash-merged as `2470c8e` at the user's request, after final head `7c22966` passed CI
 [run 37562084126](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/37562084126): 251 backend unit, 215 integration, 282 frontend unit, 73 E2E. `master` run 37563252878
 passed. The feature branch is deleted locally and remotely, and `master` is synchronized. No deployment.
-Documentation closeout PR on `chore/WI-015-closeout` awaits the user's review; its merge is not yet authorized.
+Documentation closeout PR #46 merged as `a470146` (corrected during the WI-016 closeout).
 
 Known limits: screen-reader speech and physical mobile keyboard/IME were not run (as in WI-010/012). See
 [test-plan](test-plan.md) known gaps and [evidence](evidence.md).
