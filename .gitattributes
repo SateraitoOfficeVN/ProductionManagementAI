@@ -2,3 +2,5 @@
 *.sh text eol=lf
 # Windows batch files need CRLF to run reliably.
 *.cmd text eol=crlf
+# CSV samples document exact bytes (BOM, CRLF record ends, LF inside quoted fields); store them unchanged.
+*.csv -text
