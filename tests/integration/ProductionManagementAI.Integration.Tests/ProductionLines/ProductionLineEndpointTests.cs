@@ -28,7 +28,7 @@ public sealed class ProductionLineEndpointTests(IntegrationTestFixture fixture) 
     }
     private static async Task<JsonObject> Product(HttpClient client) {
         var response = await client.PostJson("/api/product-master", new JsonObject {
-            ["sku"] = $"LP-{Guid.NewGuid():N}", ["name"] = "製品", ["unit"] = "kg", ["drawingNumber"] = null });
+            ["sku"] = $"LP-{Guid.NewGuid():N}", ["name"] = "製品", ["type"] = "PART", ["unit"] = "kg", ["drawingNumber"] = null });
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var product = await response.Body();
         var choices = await (await client.GetAsync($"{Path}/product-choices?q={product["sku"]}")).Body();

@@ -45,6 +45,8 @@ const messages: Record<string, string> = {
   'MSG-I009': 'CSVファイルを出力しました（{count}件）。',
   'MSG-E024': '出力件数が上限（10,000件）を超えています。条件を絞り込んでから、もう一度お試しください。',
   'MSG-E025': 'CSV出力に失敗しました。もう一度お試しください。',
+  // 004_DD-TYPE (product type, WI-017).
+  'MSG-E026': '種別を選択してください。',
 }
 
 export function message(id: string, values: Record<string, string> = {}): string {
@@ -379,6 +381,8 @@ export const labels = {
     new: '製品登録', edit: '製品編集', search: '製品コード・製品名で検索', lookup: '製品一覧で確認',
     state: '状態', all: 'すべて', active: '使用中', retired: '使用停止', apply: '検索',
     sku: '製品コード', name: '製品名', unit: '単位', drawing: '図面番号', actions: '操作',
+    type: '種別', typePlaceholder: '選択してください', typeRequired: messages['MSG-E026'],
+    types: { FINISHED: '完成品', SEMI_FINISHED: '半製品', PART: '部品', RAW_MATERIAL: '原材料' },
     required: '*', optional: '任意', readOnly: '（変更不可）',
     retiredHint: 'この製品は新しい製造指示で選択できません。',
     editAction: '編集', retire: '使用停止', retireQuestion: '製品を使用停止にしますか？',

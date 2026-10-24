@@ -1,14 +1,17 @@
 using ProductionManagementAI.Application.ProductionOrders;
 using System.Text.Json.Serialization;
 using System.Text;
+using ProductionManagementAI.Domain.ProductionOrders;
 
 namespace ProductionManagementAI.Application.Products;
 
 /// <summary>Defines the submitted Product master search and paging values.</summary>
-public sealed record ProductMasterListRequest(string? Q, string? State, string? Page, string? PageSize = null);
+public sealed record ProductMasterListRequest(
+    string? Q, string? State, string? Page, string? PageSize = null, string? Type = null);
 
 /// <summary>Defines a validated Product master list query.</summary>
-public sealed record ProductMasterListQuery(string? Search, string State, int Page, int PageSize = ProductMasterListQuery.DefaultPageSize)
+public sealed record ProductMasterListQuery(
+    string? Search, string State, int Page, int PageSize = ProductMasterListQuery.DefaultPageSize, ProductType? Type = null)
 {
     /// <summary>Gets the catalog page size used when none is requested.</summary>
     public const int DefaultPageSize = 20;
@@ -29,26 +32,33 @@ public sealed record ProductMasterListQuery(string? Search, string State, int Pa
         var pageSize = DefaultPageSize;
         if (request.PageSize is not null && (!int.TryParse(request.PageSize, out pageSize) || !PageSizes.Contains(pageSize)))
             errors["pageSize"] = ["VALIDATION"];
+        ProductType? type = null;
+        if (!string.IsNullOrEmpty(request.Type))
+        {
+            if (ProductTypeCodes.TryParse(request.Type, out var parsed)) type = parsed;
+            else errors["type"] = ["VALIDATION"];
+        }
         return errors.Count > 0
             ? new Result<ProductMasterListQuery>.Invalid(errors)
             : new Result<ProductMasterListQuery>.Ok(new ProductMasterListQuery(
-                string.IsNullOrEmpty(search) ? null : search, state, page, pageSize));
+                string.IsNullOrEmpty(search) ? null : search, state, page, pageSize, type));
     }
 }
 
 /// <summary>Returns one product and its current concurrency and unit-lock state.</summary>
 public sealed record ProductMasterItem(
-    Guid Id, string Sku, string Name, string Unit, string? DrawingNumber, bool IsActive,
+    Guid Id, string Sku, string Name, string Type, string Unit, string? DrawingNumber, bool IsActive,
     DateTimeOffset UpdatedAt, uint Version, bool UnitLocked);
 
 /// <summary>Defines required fields for creating a product.</summary>
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
-public sealed record CreateProductRequest(string? Sku, string? Name, string? Unit, string? DrawingNumber);
+public sealed record CreateProductRequest(
+    string? Sku, string? Name, string? Unit, string? DrawingNumber, string? Type = null);
 
 /// <summary>Defines a full-replacement edit and its expected version.</summary>
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
 public sealed record UpdateProductRequest(
-    string? Sku, string? Name, string? Unit, string? DrawingNumber, uint? Version);
+    string? Sku, string? Name, string? Unit, string? DrawingNumber, uint? Version, string? Type = null);
 
 /// <summary>Defines a versioned retirement command.</summary>
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]

@@ -15,6 +15,7 @@ internal sealed class ProductMasterRepository(AppDbContext db) : IProductMasterR
         var products = db.Products.AsNoTracking().AsQueryable();
         if (query.State == "active") products = products.Where(p => p.IsActive);
         if (query.State == "retired") products = products.Where(p => !p.IsActive);
+        if (query.Type is { } type) products = products.Where(p => p.Type == type);
         if (query.Search is not null)
         {
             var escaped = query.Search.Replace("\\", "\\\\", StringComparison.Ordinal)
@@ -32,7 +33,7 @@ internal sealed class ProductMasterRepository(AppDbContext db) : IProductMasterR
         var items = await products.OrderBy(p => p.Sku).ThenBy(p => p.Id)
             .Skip((query.Page - 1) * query.PageSize)
             .Take(query.PageSize)
-            .Select(p => new ProductMasterItem(p.Id, p.Sku, p.Name, p.Unit,
+            .Select(p => new ProductMasterItem(p.Id, p.Sku, p.Name, ProductTypeCodes.ToCode(p.Type), p.Unit,
                 p.DrawingNumber, p.IsActive, p.UpdatedAtUtc, p.RowVersion,
                 db.ProductionOrders.Any(o => o.ProductId == p.Id)))
             .ToListAsync(cancellationToken);
@@ -42,7 +43,7 @@ internal sealed class ProductMasterRepository(AppDbContext db) : IProductMasterR
 
     public Task<ProductMasterItem?> GetAsync(Guid id, CancellationToken cancellationToken) =>
         db.Products.AsNoTracking().Where(p => p.Id == id)
-            .Select(p => new ProductMasterItem(p.Id, p.Sku, p.Name, p.Unit,
+            .Select(p => new ProductMasterItem(p.Id, p.Sku, p.Name, ProductTypeCodes.ToCode(p.Type), p.Unit,
                 p.DrawingNumber, p.IsActive, p.UpdatedAtUtc, p.RowVersion,
                 db.ProductionOrders.Any(o => o.ProductId == p.Id)))
             .FirstOrDefaultAsync(cancellationToken);

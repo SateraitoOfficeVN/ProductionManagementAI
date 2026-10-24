@@ -92,7 +92,7 @@ public sealed class LineSnapshotTelemetryTests(LineSnapshotFixture fixture) : IC
     public async Task EligibleProductAndRowsRetainTheSameSnapshotAcrossUnitChange()
     {
         using var client = await fixture.CreateClientAsAsync("Operator");
-        var product = await client.PostJson("/api/product-master", new System.Text.Json.Nodes.JsonObject { ["sku"] = $"SNAP-{Guid.NewGuid():N}", ["name"] = "snapshot", ["unit"] = "kg" });
+        var product = await client.PostJson("/api/product-master", new System.Text.Json.Nodes.JsonObject { ["sku"] = $"SNAP-{Guid.NewGuid():N}", ["name"] = "snapshot", ["unit"] = "kg", ["type"] = "PART" });
         product.EnsureSuccessStatusCode(); var item = await product.Body(); var id = item["id"]!.GetValue<string>();
         var lineId = await client.CreateEligibleLine(id);
         fixture.Observer.Fragment = "FROM products";
@@ -127,7 +127,7 @@ public sealed class LineSnapshotTelemetryTests(LineSnapshotFixture fixture) : IC
     {
         using var client = await fixture.CreateClientAsAsync("Operator"); var code = $"CHOICE-{Guid.NewGuid():N}";
         fixture.Observer.Fragment = "count(*)";
-        fixture.Observer.AfterRead = () => fixture.ExecuteAsOwnerAsync($"INSERT INTO products (id,sku,name,unit,is_active) VALUES ('{Guid.NewGuid()}','{code}','snapshot','kg',true)");
+        fixture.Observer.AfterRead = () => fixture.ExecuteAsOwnerAsync($"INSERT INTO products (id,sku,name,product_type,unit,is_active) VALUES ('{Guid.NewGuid()}','{code}','snapshot','PART','kg',true)");
         var first = await (await client.GetAsync("/api/production-lines/product-choices?q=" + code)).Body();
         Assert.Equal(0, first["total"]!.GetValue<int>()); Assert.Empty(first["items"]!.AsArray()); Assert.Null(fixture.Observer.AfterRead);
         var next = await (await client.GetAsync("/api/production-lines/product-choices?q=" + code)).Body();

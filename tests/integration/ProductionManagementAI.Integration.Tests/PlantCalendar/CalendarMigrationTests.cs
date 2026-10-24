@@ -16,12 +16,14 @@ public sealed class CalendarMigrationTests
         var options = new DbContextOptionsBuilder<AppDbContext>().UseNpgsql(connection).UseSnakeCaseNamingConvention().Options;
         await using var db = new AppDbContext(options);
         const string baseline = "20261001042938_IndexProductionLineAssignments";
+        // Stop at this WI-010 migration: later ones (WI-017 AddProductType) legitimately change products rows.
+        const string target = "20261002030411_ExpandPlantCalendar";
         await db.Database.MigrateAsync(baseline);
         await db.Database.ExecuteSqlRawAsync("INSERT INTO production_lines (id,code,name,working_hours_per_day,is_active,created_at_utc,updated_at_utc) VALUES ('11111111-1111-1111-1111-111111111111','CAL-MIG','migration fixture',7.125,true,now(),now()); INSERT INTO production_line_products (line_id,product_id,minutes_per_unit,confirmed_unit,confirmed_unit_revision,is_active,created_at_utc,updated_at_utc) SELECT '11111111-1111-1111-1111-111111111111',id,0.125,unit,unit_revision,true,now(),now() FROM products ORDER BY id LIMIT 1;");
         var checksums = new Dictionary<string,string>();
         foreach (var table in new[] { "products", "production_orders", "production_lines", "production_line_products" })
             checksums[table] = await Scalar<string>(connection, $"SELECT md5(string_agg(to_jsonb(row)::text,',' ORDER BY to_jsonb(row)::text)) FROM public.{table} row");
-        await db.Database.MigrateAsync();
+        await db.Database.MigrateAsync(target);
         foreach (var (table,checksum) in checksums)
             Assert.Equal(checksum,await Scalar<string>(connection,$"SELECT md5(string_agg(to_jsonb(row)::text,',' ORDER BY to_jsonb(row)::text)) FROM public.{table} row"));
         Assert.Equal(0L,await Scalar<long>(connection,"SELECT count(*) FROM plant_calendar_state"));
@@ -29,7 +31,7 @@ public sealed class CalendarMigrationTests
         Assert.True(await Scalar<bool>(connection,"SELECT indisunique AND indisvalid AND indnullsnotdistinct FROM pg_index WHERE indexrelid='ux_calendar_exception_current'::regclass"));
         await db.Database.MigrateAsync(baseline);
         Assert.True(await Scalar<bool>(connection,"SELECT to_regclass('public.plant_calendar_state') IS NULL"));
-        await db.Database.MigrateAsync();
+        await db.Database.MigrateAsync(target);
         await db.Database.ExecuteSqlRawAsync("BEGIN; INSERT INTO plant_calendar_state (id,activated_on,time_zone_id,revision) VALUES (1,'2031-06-10','Asia/Tokyo',1); INSERT INTO plant_calendar_weekly_revisions (calendar_id,effective_from,working_weekdays,is_withdrawn,is_current,commit_revision) VALUES (1,'2031-06-10',31,false,true,1); COMMIT;");
         await db.Database.ExecuteSqlRawAsync("INSERT INTO plant_calendar_exception_revisions (calendar_id,calendar_date,is_working,working_hours,is_removed,is_current,commit_revision) VALUES (1,'2031-06-11',true,0.125,false,true,2)");
         var duplicate = await Assert.ThrowsAsync<PostgresException>(()=>db.Database.ExecuteSqlRawAsync("INSERT INTO plant_calendar_exception_revisions (calendar_id,calendar_date,is_working,is_removed,is_current,commit_revision) VALUES (1,'2031-06-11',false,false,true,3)"));

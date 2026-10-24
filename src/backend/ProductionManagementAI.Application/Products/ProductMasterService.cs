@@ -52,7 +52,7 @@ public sealed class ProductMasterService(IProductMasterRepository repository, Ti
         var sku = request.Sku?.Trim();
         var name = request.Name?.Trim();
         var drawing = NormalizeDrawing(request.DrawingNumber);
-        var errors = Validate(sku, name, request.Unit, drawing);
+        var errors = Validate(sku, name, request.Unit, drawing, request.Type, out var type);
         if (errors.Count > 0)
         {
             Record("create", "validation");
@@ -65,6 +65,7 @@ public sealed class ProductMasterService(IProductMasterRepository repository, Ti
             Id = Guid.CreateVersion7(now),
             Sku = sku!,
             Name = name!,
+            Type = type,
             Unit = request.Unit!,
             DrawingNumber = drawing,
             IsActive = true,
@@ -94,7 +95,7 @@ public sealed class ProductMasterService(IProductMasterRepository repository, Ti
         using var activity = Source.StartActivity("Product.Update");
         var name = request.Name?.Trim();
         var drawing = NormalizeDrawing(request.DrawingNumber);
-        var errors = Validate(request.Sku, name, request.Unit, drawing);
+        var errors = Validate(request.Sku, name, request.Unit, drawing, request.Type, out var type);
         if (request.Version is null) errors["version"] = ["VALIDATION"];
         if (errors.Count > 0)
         {
@@ -130,6 +131,7 @@ public sealed class ProductMasterService(IProductMasterRepository repository, Ti
         }
 
         product.Name = name!;
+        product.Type = type;
         product.Unit = request.Unit!;
         product.DrawingNumber = drawing;
         product.UpdatedAtUtc = timeProvider.GetUtcNow();
@@ -191,11 +193,12 @@ public sealed class ProductMasterService(IProductMasterRepository repository, Ti
     }
 
     private static Dictionary<string, string[]> Validate(
-        string? sku, string? name, string? unit, string? drawing)
+        string? sku, string? name, string? unit, string? drawing, string? typeCode, out ProductType type)
     {
         var errors = new Dictionary<string, string[]>(StringComparer.Ordinal);
         if (string.IsNullOrWhiteSpace(sku) || RuneCount(sku) > 50) errors["sku"] = ["VALIDATION"];
         if (string.IsNullOrWhiteSpace(name) || RuneCount(name) > 200) errors["name"] = ["VALIDATION"];
+        if (!ProductTypeCodes.TryParse(typeCode, out type)) errors["type"] = ["VALIDATION"];
         if (unit is null || !Units.Contains(unit)) errors["unit"] = ["VALIDATION"];
         if (drawing is not null && RuneCount(drawing) > 100) errors["drawingNumber"] = ["VALIDATION"];
         return errors;

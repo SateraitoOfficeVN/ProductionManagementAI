@@ -74,7 +74,7 @@ test('TC-403/405: committed response loss remains Unknown without replay',async(
 
 test('TC-404: exact current kg capacity and invalid closed pair remain distinct',async({page})=>{
  const suffix=Date.now(),date=futureDate(21)
- const created=await page.request.post('/api/product-master',{data:{sku:`CAL-KG-${suffix}`,name:'能力試験製品',unit:'kg'}});expect(created.ok()).toBe(true)
+ const created=await page.request.post('/api/product-master',{data:{sku:`CAL-KG-${suffix}`,name:'能力試験製品',type:'PART',unit:'kg'}});expect(created.ok()).toBe(true)
  const product=await created.json()
  const eligibility=await (await page.request.get(`/api/production-lines/eligible?productId=${product.id}`)).json()
  const lineResponse=await page.request.post('/api/production-lines',{data:{code:`CAL-LINE-${suffix}`,name:'能力試験ライン',workingHoursPerDay:'8',products:[{productId:product.id,minutesPerUnit:'0.125',expectedUnit:'kg',expectedUnitRevision:eligibility.product.unitRevision,confirmUnit:true}]}});expect(lineResponse.ok()).toBe(true)

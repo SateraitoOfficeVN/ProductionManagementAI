@@ -17,7 +17,7 @@ public sealed class ProductMasterEndpointTests(IntegrationTestFixture fixture) :
 
     private static JsonObject Draft(string sku, string unit = "kg") => new()
     {
-        ["sku"] = sku, ["name"] = "テスト製品", ["unit"] = unit, ["drawingNumber"] = " D-001 ",
+        ["sku"] = sku, ["name"] = "テスト製品", ["type"] = "PART", ["unit"] = unit, ["drawingNumber"] = " D-001 ",
     };
 
     private static async Task<JsonObject> Created(HttpClient client, string? unit = null)

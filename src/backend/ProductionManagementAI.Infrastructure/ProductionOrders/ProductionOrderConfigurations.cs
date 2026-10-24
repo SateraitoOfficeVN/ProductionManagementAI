@@ -18,6 +18,8 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Id).HasDefaultValueSql("gen_random_uuid()");
         builder.Property(p => p.Sku).HasMaxLength(50);
         builder.Property(p => p.Name).HasMaxLength(200);
+        builder.Property(p => p.Type).HasColumnName("product_type").HasMaxLength(20)
+            .HasConversion(type => ProductTypeCodes.ToCode(type), code => ParseType(code));
         builder.Property(p => p.Unit).HasMaxLength(20).IsRequired();
         var revision = builder.Property(p => p.UnitRevision).HasDefaultValue(0L).ValueGeneratedOnAddOrUpdate();
         revision.Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
@@ -34,8 +36,13 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             table.HasCheckConstraint("ck_products_name_not_blank", "length(btrim(name)) > 0");
             table.HasCheckConstraint("ck_products_unit_revision", "unit_revision >= 0");
             table.HasCheckConstraint("ck_products_unit", "unit IN ('個', '本', '枚', '台', 'セット', 'kg', 'm')");
+            table.HasCheckConstraint("ck_products_product_type",
+                "product_type IN ('FINISHED', 'SEMI_FINISHED', 'PART', 'RAW_MATERIAL')");
         });
     }
+
+    private static ProductType ParseType(string code) =>
+        ProductTypeCodes.TryParse(code, out var type) ? type : throw new InvalidOperationException("Unknown product type.");
 }
 
 internal sealed class ProductionOrderConfiguration : IEntityTypeConfiguration<ProductionOrder>

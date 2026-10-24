@@ -86,7 +86,7 @@ public sealed class LineConcurrencyTests(IntegrationTestFixture fixture) : IClas
     public async Task TimingEditReadsFreshUnitRevisionAfterWaitingForConcurrentUnitUpdate()
     {
         using var client = await fixture.CreateClientAsAsync("Operator");
-        var response = await client.PostJson("/api/product-master", new JsonObject { ["sku"] = $"UNIT-RACE-{Guid.NewGuid():N}", ["name"] = "fixture", ["unit"] = "kg" }); response.EnsureSuccessStatusCode();
+        var response = await client.PostJson("/api/product-master", new JsonObject { ["sku"] = $"UNIT-RACE-{Guid.NewGuid():N}", ["name"] = "fixture", ["unit"] = "kg", ["type"] = "PART" }); response.EnsureSuccessStatusCode();
         var product = await response.Body(); var productId = product["id"]!.GetValue<string>(); var lineId = await client.CreateEligibleLine(productId);
         var line = await (await client.GetAsync($"/api/production-lines/{lineId}")).Body(); var observation = line["pairs"]!["items"]![0]!["product"]!;
         await using var owner = new NpgsqlConnection(fixture.OwnerConnectionString); await owner.OpenAsync(); await using var transaction = await owner.BeginTransactionAsync();

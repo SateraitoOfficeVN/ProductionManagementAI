@@ -518,6 +518,12 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("sku");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("product_type");
+
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -546,6 +552,8 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                     b.ToTable("products", null, t =>
                         {
                             t.HasCheckConstraint("ck_products_name_not_blank", "length(btrim(name)) > 0");
+
+                            t.HasCheckConstraint("ck_products_product_type", "product_type IN ('FINISHED', 'SEMI_FINISHED', 'PART', 'RAW_MATERIAL')");
 
                             t.HasCheckConstraint("ck_products_sku_trimmed", "sku = btrim(sku) AND length(sku) > 0");
 
