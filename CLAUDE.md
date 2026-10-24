@@ -72,6 +72,13 @@ frontend/76 E2E). *.csv stored -text. TC-469 (real spreadsheet app) Not run. Bra
 main synchronized; no deployment. Next: none approved; candidate RFCs: test-plan.md whenever
 a WI adds tests; design PDFs only after the design .md is approved. See work-items/WI-016.
 
+RFCs 0014 and 0015 adopted via PR #50 as 005227f (docs only). RFC 0014: design documents created
+or revised from now on are named `<ID>_<slug>_<YYYYMMDD>.md` (last content-update date, Asia/Tokyo);
+a revision renames the .md and both PDFs in place and fixes live links; approved earlier documents
+keep undated names until next revised; text refers to documents by ID. RFC 0015: a work item that is
+done, merged or closed out is never reopened; follow-up work starts the next WI number and links the
+closed one. RFC 0013 remains under review.
+
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 
 ## Working in this repo
