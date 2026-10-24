@@ -192,6 +192,25 @@ Final head `403befd` passed [run 37714084761](https://github.com/SateraitoOffice
 exported in 227 ms (Testcontainers, target 5 s). Test plan TC-440–469; TC-469 (open in Excel/LibreOffice) Not run,
 no spreadsheet application locally. Feature branch deleted; main synchronized; no deployment.
 
+### WI-017 merged
+
+Product type (REQ-090–093): required 「種別」 on 製品マスタ (SCR-004), merged via
+[PR #52](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/52) as `ba7b930` on 2026-10-25. Additive design
+documents 004_BD-TYPE, 004_DB-TYPE, 004_DD-TYPE (EN/JA mockups), 004_DD-API-TYPE, 004_DD-SPD-TYPE, all
+`_製品種別_20261025` (RFC 0014) with EN/JA PDFs; approved WI-006 004 documents unedited. Highlights:
+- `products.product_type varchar(20) NOT NULL` + `ck_products_product_type` (`FINISHED`, `SEMI_FINISHED`, `PART`,
+  `RAW_MATERIAL`); migration `AddProductType` backfills demo SKUs 13/5/12/0, other rows `FINISHED`, drops the default,
+  grants `pmai_app` `UPDATE (product_type)`. Create/update require `type`: deploy migration and API together.
+- `/api/product-master`: `type` on items/detail/writes, optional allow-listed `type` list filter (400 otherwise);
+  `GET /api/products`, order APIs, dashboard and CSV unchanged (DEC-003).
+- Screen: filter after 「状態」 (URL `type`; unknown or repeated dropped), column after 製品名, SP 「種別：…」, required
+  select with MSG-E026; editable on retired and unit-locked products.
+
+PR head `fec2f93` passed [run 40124507111](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/40124507111)
+(backend, frontend, E2E). Local: 302 backend unit/247 integration/314 frontend; product E2E 32/32. Test plan TC-470–491.
+Locally no .NET SDK (backend ran in the SDK container) and Playwright browser download failed (E2E used installed
+Chrome). Feature branch deleted; main synchronized; no deployment. First `master` run 40125879405 on `ba7b930`: backend/frontend pass, E2E 78/80 (2 intermittent failures, same code passed on the PR); fix tracked in WI-018.
+
 Next: no work item approved. Candidates: a harness-improvement RFC making `test-plan.md` mandatory whenever a work
 item adds tests (user request during WI-014), and rendering design PDFs only after the design Markdown is approved
 (user request during WI-015, recorded as WI-015 DEC-007; `ai/rules/documentation.md` and RFC 0012 unchanged).

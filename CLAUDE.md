@@ -79,6 +79,13 @@ keep undated names until next revised; text refers to documents by ID. RFC 0015:
 done, merged or closed out is never reopened; follow-up work starts the next WI number and links the
 closed one. RFC 0013 remains under review.
 
+WI-017 product type merged via PR #52 as ba7b930 (squash) under approved revisions 1-4. Required 「種別」 (FINISHED/
+SEMI_FINISHED/PART/RAW_MATERIAL) on /products: list column, SP card line, URL `type` filter, required form select
+(MSG-E026). Migration AddProductType (NOT NULL + CHECK, demo backfill 13/5/12/0, pmai_app column grant); create/update
+require `type`, so deploy migration and API together. Additive 004_*-TYPE_製品種別_20261025 designs with EN/JA PDFs.
+PR head fec2f93 passed run 40124507111. Branch deleted; main synchronized; no deployment. First master run
+40125879405 had 2 intermittent E2E failures (78/80); WI-018 fixes them. See work-items/WI-017.
+
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 
 ## Working in this repo

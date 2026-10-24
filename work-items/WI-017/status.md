@@ -1,30 +1,24 @@
 # WI-017 — Product type — Status Report
 
-As of 2026-10-25. Work item state: in-review.
+As of 2026-10-25. Work item state: done (merged).
 
 ## Overall status
 
-**RAG:** Green — design approved (DEC-007–DEC-011); implementation and tests complete locally (revision 2, DEC-012); nothing committed.
+**RAG:** Amber — merged via PR #52 as `ba7b930`; first `master` CI run 40125879405 had 2 intermittent E2E failures
+(78/80; the PR run passed). Follow-up work item [WI-018](../WI-018/brief.md) fixes them.
 
 ## Approved plan reference
 
-[plan.md](plan.md) — revision 2, approval source DEC-012.
+[plan.md](plan.md) — revisions 1–4 complete (DEC-006, DEC-012, DEC-014, DEC-016); closeout PR per DEC-017.
 
-## Accomplishments this period
+## Accomplishments
 
-| Date | Milestone / deliverable | Evidence link |
+| Date | Milestone | Evidence |
 | --- | --- | --- |
-| 2026-10-25 | 004_BD/DB/DD/DD-API/DD-SPD-TYPE v1 approved with EN/JA PDFs | docs/en/**/004_*-TYPE_製品種別_20261025.md |
-| 2026-10-25 | Backend, migration, frontend, tests; local migration applied | [evidence.md](evidence.md) |
-| 2026-10-25 | Test plan TC-470–TC-491 | [test-plan.md](test-plan.md) |
-
-## Risks and issues
-
-| Issue | Owner | Since | Impact |
-| --- | --- | --- | --- |
-| Plant-calendar E2E fails locally (no activated calendar), pre-existing | — | WI-013 | Covered by CI fixture |
-| Mockup error box lists the type message; app shows generic summary | User | 2026-10-25 | Cosmetic; decide keep or change |
+| 2026-10-25 | Design set 004_*-TYPE approved with EN/JA PDFs | DEC-007–DEC-011 |
+| 2026-10-25 | Implementation and tests; local migration | [evidence.md](evidence.md) |
+| 2026-10-25 | PR #52, CI run 40124507111 passed; squash-merged as `ba7b930`; branch deleted | [evidence.md](evidence.md) |
 
 ## Next action
 
-Revision 3 (DEC-014): commit, push, PR, CI watch.
+None in WI-017 (closed; RFC 0015). Follow-up in WI-018. Deploy the migration and API together when deploying.
