@@ -63,7 +63,7 @@ test('TC-413: all bounded choices reachable and selected labels survive page cha
 
 test('TC-414: product paging, independent queries and complete long labels',async({page})=>{
  await signIn(page);await page.setViewportSize({width:390,height:900})
- const made=await page.request.post('/api/product-master',{data:{sku:`PG-${Date.now()}`,name:'長い製品名称'.repeat(12),unit:'kg'}})
+ const made=await page.request.post('/api/product-master',{data:{sku:`PG-${Date.now()}`,name:'長い製品名称'.repeat(12),type:'PART',unit:'kg'}})
  expect(made.ok()).toBe(true)
  const product=await made.json()
  try {
@@ -101,7 +101,7 @@ test('TC-414: product paging, independent queries and complete long labels',asyn
   const currentResponse=await page.request.get(`/api/product-master/${product.id}`)
   expect(currentResponse.ok()).toBe(true)
   const current=await currentResponse.json()
-  const cleaned=await page.request.put(`/api/product-master/${product.id}`,{data:{sku:current.sku,name:'候補検証済み製品',unit:current.unit,drawingNumber:current.drawingNumber,version:current.version}})
+  const cleaned=await page.request.put(`/api/product-master/${product.id}`,{data:{sku:current.sku,name:'候補検証済み製品',type:current.type,unit:current.unit,drawingNumber:current.drawingNumber,version:current.version}})
   expect(cleaned.ok()).toBe(true)
   expect((await cleaned.json()).name).toBe('候補検証済み製品')
  }

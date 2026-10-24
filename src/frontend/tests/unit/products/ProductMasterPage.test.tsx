@@ -7,13 +7,14 @@ import { AuthContext, type AuthContextValue } from '../../../src/features/auth/a
 import { ProductFormPage, ProductMasterPage } from '../../../src/features/products/ProductMasterPage'
 
 const product = {
-  id: '0197e4a0-0000-7000-8000-000000001001', sku: 'P-1001', name: 'ブレーキキャリパー',
+  id: '0197e4a0-0000-7000-8000-000000001001', sku: 'P-1001', name: 'ブレーキキャリパー', type: 'PART',
   unit: '個', drawingNumber: null, isActive: true, updatedAt: '2026-09-30T00:00:00Z',
   version: 7, unitLocked: false,
 }
 
 function setup(path: string | { pathname: string; state: unknown } = '/products', roles = ['Operator'], unitLocked = false, isActive = true) {
   const requests: { method: string; url: string; body?: unknown }[] = []
+  let savedType = product.type
   vi.stubGlobal('fetch', vi.fn(async (url: string, init: RequestInit = {}) => {
     const method = init.method ?? 'GET'
     const body = init.body ? JSON.parse(init.body as string) as unknown : undefined
@@ -22,15 +23,16 @@ function setup(path: string | { pathname: string; state: unknown } = '/products'
     let response: unknown = {}
     if (url.startsWith('/api/product-master?')) {
       const query = new URLSearchParams(url.split('?')[1])
-      const hidden = query.get('q') === 'none'
+      const hidden = query.get('q') === 'none' || (query.has('type') && query.get('type') !== savedType)
       response = { items: hidden ? [] : [product], total: hidden ? 0 : 1, page: 1, pageSize: Number(query.get('pageSize')), sort: 'sku', dir: 'asc' }
     }
     else if (url === `/api/product-master/${product.id}` && method === 'GET') response = { ...product, unitLocked, isActive }
     else if (url === '/api/product-master' && method === 'POST') {
       status = 201
       response = { ...product, ...(body as object), version: 8 }
-    } else if (url === `/api/product-master/${product.id}` && method === 'PUT') response = {
-      ...product, ...(body as object), version: 8,
+    } else if (url === `/api/product-master/${product.id}` && method === 'PUT') {
+      savedType = (body as { type: string }).type
+      response = { ...product, ...(body as object), version: 8 }
     }
     else if (url.endsWith('/retire')) response = { ...product, isActive: false, version: 8 }
     else status = 404
@@ -67,11 +69,12 @@ it('saves a new product with the selected unit and no client-supplied state', as
   const { requests } = setup('/products/new')
   await user.type(screen.getByLabelText(/製品コード/), ' NEW-1 ')
   await user.type(screen.getByLabelText(/製品名/), '試作品')
+  await user.selectOptions(screen.getByLabelText(/種別/), '半製品')
   await user.selectOptions(screen.getByLabelText(/単位/), 'kg')
   await user.click(screen.getByRole('button', { name: '保存' }))
   await waitFor(() => expect(requests.some((r) => r.method === 'POST')).toBe(true))
   expect(requests.find((r) => r.method === 'POST')?.body).toEqual({
-    sku: ' NEW-1 ', name: '試作品', unit: 'kg', drawingNumber: '',
+    sku: ' NEW-1 ', name: '試作品', type: 'SEMI_FINISHED', unit: 'kg', drawingNumber: '',
   })
 })
 
@@ -137,6 +140,7 @@ it('returns to the list after create and says when the filters hide the new prod
   expect(screen.getByRole('heading', { level: 1, name: '製品登録' })).toBeInTheDocument()
   await user.type(screen.getByLabelText(/製品コード/), 'NEW-2')
   await user.type(screen.getByLabelText(/製品名/), '試作品')
+  await user.selectOptions(screen.getByLabelText(/種別/), '部品')
   await user.selectOptions(screen.getByLabelText(/単位/), '個')
   await user.click(screen.getByRole('button', { name: '保存' }))
   expect(await screen.findByText(/^製品を登録しました。現在の検索条件では表示されません。/)).toBeInTheDocument()
@@ -176,4 +180,89 @@ it('marks required fields with a red asterisk hidden from screen readers', () =>
   expect(screen.queryByText('必須')).not.toBeInTheDocument()
   // The accessible name excludes the aria-hidden asterisk.
   expect(screen.getByRole('textbox', { name: '製品コード' })).toBeRequired()
+})
+
+// WI-017 product type (004_DD-TYPE, 004_DD-SPD-TYPE).
+it('shows the type column and card line and has no axe violations with the type filter', async () => {
+  const { container } = setup()
+  const table = await screen.findByRole('table', { name: '製品一覧' })
+  const headers = within(table).getAllByRole('columnheader').map((h) => h.textContent)
+  expect(headers.slice(0, 3)).toEqual(['製品コード', '製品名', '種別'])
+  expect(within(table).getByRole('cell', { name: '部品' })).toBeInTheDocument()
+  expect(screen.getByText('種別：部品')).toBeInTheDocument()
+  const filter = screen.getByLabelText('種別')
+  expect([...filter.querySelectorAll('option')].map((o) => o.textContent)).toEqual(['すべて', '完成品', '半製品', '部品', '原材料'])
+  expect(await axe(container)).toHaveNoViolations()
+})
+
+it('applies the type filter only on search and keeps it across page size', async () => {
+  const user = userEvent.setup()
+  const { requests } = setup()
+  await screen.findByRole('table', { name: '製品一覧' })
+  const count = requests.length
+  await user.selectOptions(screen.getByLabelText('種別'), '原材料')
+  expect(requests).toHaveLength(count)
+  await user.click(screen.getByRole('button', { name: '検索' }))
+  await waitFor(() => expect(requests.at(-1)?.url).toContain('type=RAW_MATERIAL'))
+  expect(await screen.findByText('条件に一致する製品はありません。')).toBeInTheDocument()
+})
+
+it('keeps the type through rows per page and the edit return URL, and clears it', async () => {
+  const user = userEvent.setup()
+  const { requests } = setup('/products?q=&state=all&type=PART&page=1&pageSize=20')
+  await screen.findByRole('table', { name: '製品一覧' })
+  expect(screen.getByLabelText('種別')).toHaveValue('PART')
+  await user.selectOptions(screen.getByLabelText('表示件数'), '10')
+  await waitFor(() => expect(requests.at(-1)?.url).toContain('type=PART&page=1&pageSize=10'))
+  await user.click(screen.getByRole('button', { name: 'クリア' }))
+  await waitFor(() => expect(requests.at(-1)?.url).not.toContain('type='))
+  expect(screen.getByLabelText('種別')).toHaveValue('')
+})
+
+it('drops an unknown or repeated type from the URL without requesting it', async () => {
+  for (const path of ['/products?type=part', '/products?type=PART&type=FINISHED']) {
+    const { requests, unmount } = setup(path)
+    await screen.findByRole('table', { name: '製品一覧' })
+    expect(requests.every((r) => !r.url.includes('type='))).toBe(true)
+    unmount()
+  }
+})
+
+it('requires a type on create with MSG-E026, focus and the error summary', async () => {
+  const user = userEvent.setup()
+  const { requests } = setup('/products/new')
+  const select = screen.getByLabelText(/種別/)
+  expect(select).toBeRequired()
+  expect(select).toHaveValue('')
+  expect(select.querySelector('option')).toHaveTextContent('選択してください')
+  await user.type(screen.getByLabelText(/製品コード/), 'NEW-3')
+  await user.type(screen.getByLabelText(/製品名/), '試作品')
+  await user.selectOptions(screen.getByLabelText(/単位/), '個')
+  await user.click(screen.getByRole('button', { name: '保存' }))
+  expect(select).toHaveFocus()
+  expect(select).toHaveAttribute('aria-invalid', 'true')
+  expect(select).toHaveAccessibleDescription('種別を選択してください。')
+  expect(screen.getByRole('status')).toHaveTextContent('入力内容を確認してください。')
+  expect(requests.some((r) => r.method === 'POST')).toBe(false)
+})
+
+it('edits the type of a unit-locked product and returns to a list it no longer matches', async () => {
+  const user = userEvent.setup()
+  const { requests } = setup({ pathname: `/products/${product.id}/edit`, state: { returnTo: '/products?q=&state=all&type=PART&page=1&pageSize=20' } }, ['Operator'], true)
+  const select = await screen.findByLabelText(/種別/)
+  expect(select).toHaveValue('PART')
+  expect(select).toBeEnabled()
+  await user.selectOptions(select, '半製品')
+  await user.click(screen.getByRole('button', { name: '保存' }))
+  await waitFor(() => expect(requests.some((r) => r.method === 'PUT')).toBe(true))
+  expect(requests.find((r) => r.method === 'PUT')?.body).toMatchObject({ type: 'SEMI_FINISHED' })
+  expect(await screen.findByText(/^製品を保存しました。現在の検索条件では表示されません。/)).toBeInTheDocument()
+})
+
+it('asks before leaving after only the type changed', async () => {
+  const user = userEvent.setup()
+  setup(`/products/${product.id}/edit`)
+  await user.selectOptions(await screen.findByLabelText(/種別/), '完成品')
+  await user.click(screen.getByRole('button', { name: 'キャンセル' }))
+  expect(screen.getByRole('dialog', { name: '変更を破棄しますか？', hidden: true })).toBeInTheDocument()
 })

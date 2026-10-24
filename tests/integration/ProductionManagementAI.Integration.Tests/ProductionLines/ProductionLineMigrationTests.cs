@@ -126,7 +126,7 @@ public sealed class ProductionLineMigrationTests
         await using var db = Context(postgres.GetConnectionString()); await db.Database.MigrateAsync();
         await using var connection = new NpgsqlConnection(postgres.GetConnectionString()); await connection.OpenAsync();
         var lineId = Guid.NewGuid(); var productId = Guid.NewGuid();
-        await new NpgsqlCommand($"INSERT INTO production_lines(id,code,name,working_hours_per_day) VALUES ('{lineId}','NUMERIC','fixture',8); INSERT INTO products(id,sku,name,unit,is_active) VALUES ('{productId}','NUMERIC','fixture','kg',true)", connection).ExecuteNonQueryAsync();
+        await new NpgsqlCommand($"INSERT INTO production_lines(id,code,name,working_hours_per_day) VALUES ('{lineId}','NUMERIC','fixture',8); INSERT INTO products(id,sku,name,product_type,unit,is_active) VALUES ('{productId}','NUMERIC','fixture','PART','kg',true)", connection).ExecuteNonQueryAsync();
         foreach (var minutes in new[] { "0", "-1", "0.0001", "1.2340", "1000000000", "NaN", "Infinity", "-Infinity" })
         {
             await using var command = new NpgsqlCommand($"INSERT INTO production_line_products(line_id,product_id,minutes_per_unit,confirmed_unit,confirmed_unit_revision) VALUES ('{lineId}','{productId}',CAST(@minutes AS numeric),'kg',0)", connection);

@@ -9,7 +9,7 @@ import { PageSizeSelect } from '../production-orders/ListPagination'
 import { labels } from '../production-orders/messages'
 import { pageSizes, type PageSize } from '../production-orders/types'
 import {
-  createMaster, getMaster, listMaster, productUnits, retireMaster, updateMaster,
+  createMaster, getMaster, isProductType, listMaster, productTypes, productUnits, retireMaster, updateMaster,
   type ProductDraft, type ProductMasterItem, type ProductPage,
 } from './api'
 
@@ -64,6 +64,11 @@ function savedProduct(state: unknown): SavedState | null {
     ? { id: value.id, created: 'created' in value && value.created === true } : null
 }
 
+/** The label of a type code; an unexpected code is shown as-is rather than blank (004_DD-SPD-TYPE SPD-01 step 3). */
+function typeLabel(code: string): string {
+  return isProductType(code) ? words.types[code] : code
+}
+
 function useEditorRole() {
   const { user } = useAuth()
   return user?.roles.some((role) => role === 'Admin' || role === 'Operator') ?? false
@@ -76,16 +81,21 @@ export function ProductMasterPage() {
   const [params, setParams] = useSearchParams()
   const q = (params.get('q') ?? '').trim().slice(0, 100)
   const state = ['all', 'active', 'retired'].includes(params.get('state') ?? '') ? params.get('state')! : 'all'
+  // A repeated `type` is dropped rather than resolved to one of its values (004_DD-SPD-TYPE SPD-01 step 1).
+  const rawType = params.getAll('type').length === 1 ? params.get('type') : null
+  const type = isProductType(rawType) ? rawType : ''
   const parsedPage = Number(params.get('page') ?? '1')
   const page = Number.isSafeInteger(parsedPage) && parsedPage >= 1 ? parsedPage : 1
   const parsedSize = Number(params.get('pageSize') ?? '20')
   const pageSize: PageSize = (pageSizes as readonly number[]).includes(parsedSize) ? parsedSize as PageSize : 20
-  const canonical = { q, state, page: String(page), pageSize: String(pageSize) }
+  // `type` is present only when a type is applied (004_DD-TYPE URL state).
+  const canonical: Record<string, string> = { q, state, ...(type && { type }), page: String(page), pageSize: String(pageSize) }
   const listUrl = `/products?${new URLSearchParams(canonical)}`
-  const searchKey = `${q}\u0000${state}`
-  const [searchDraft, setSearchDraft] = useState<{ key: string; search: string; filter: string } | null>(null)
+  const searchKey = `${q}\u0000${state}\u0000${type}`
+  const [searchDraft, setSearchDraft] = useState<{ key: string; search: string; filter: string; type: string } | null>(null)
   const search = searchDraft?.key === searchKey ? searchDraft.search : q
   const filter = searchDraft?.key === searchKey ? searchDraft.filter : state
+  const typeFilter = searchDraft?.key === searchKey ? searchDraft.type : type
   const [result, setResult] = useState<ProductPage | null>(null)
   const [error, setError] = useState('')
   const [forbidden, setForbidden] = useState(false)
@@ -101,19 +111,21 @@ export function ProductMasterPage() {
 
   useEffect(() => { document.title = labels.app.title(words.heading) }, [])
   useEffect(() => {
-    if (['q', 'state', 'page', 'pageSize'].some((key) => params.getAll(key).length > 1) ||
-        q !== (params.get('q') ?? '') || state !== (params.get('state') ?? 'all') ||
+    if (['q', 'state', 'type', 'page', 'pageSize'].some((key) => params.getAll(key).length > 1) ||
+        q !== (params.get('q') ?? '') || state !== (params.get('state') ?? 'all') || type !== (params.get('type') ?? '') ||
         String(page) !== (params.get('page') ?? '1') || String(pageSize) !== (params.get('pageSize') ?? '20')) {
-      setParams({ q, state, page: String(page), pageSize: String(pageSize) }, { replace: true })
+      setParams({ q, state, ...(type && { type }), page: String(page), pageSize: String(pageSize) }, { replace: true })
     }
-  }, [params, q, state, page, pageSize, setParams])
+  }, [params, q, state, type, page, pageSize, setParams])
+  // An invalid or repeated `type` is canonicalised before any request (004_DD-SPD-TYPE SPD-01 step 1).
+  const typeCanonical = params.getAll('type').length <= 1 && type === (params.get('type') ?? '')
   useEffect(() => {
-    if (!allowed || forbidden) return
+    if (!allowed || forbidden || !typeCanonical) return
     const controller = new AbortController()
-    listMaster(q, state, page, pageSize, controller.signal).then((value) => {
+    listMaster(q, state, type, page, pageSize, controller.signal).then((value) => {
       // A page past the end (e.g. after a retirement) moves to the last valid page once (SPD-01 step 4).
       if (value.items.length === 0 && value.total > 0 && page > 1) {
-        setParams({ q, state, pageSize: String(pageSize), page: String(Math.ceil(value.total / value.pageSize)) }, { replace: true })
+        setParams({ q, state, ...(type && { type }), pageSize: String(pageSize), page: String(Math.ceil(value.total / value.pageSize)) }, { replace: true })
         return
       }
       setResult(value)
@@ -126,7 +138,7 @@ export function ProductMasterPage() {
       else setError(words.failed)
     })
     return () => controller.abort()
-  }, [allowed, forbidden, q, state, page, pageSize, refresh, setParams])
+  }, [allowed, forbidden, typeCanonical, q, state, type, page, pageSize, refresh, setParams])
   useEffect(() => {
     if (retire) { dialog.current?.showModal(); retireCancel.current?.focus() }
     else dialog.current?.close()
@@ -138,7 +150,7 @@ export function ProductMasterPage() {
     text: (saved.created ? words.created : words.saved) +
       (result.items.some((item) => item.id === saved.id) ? '' : words.hiddenAfterSave),
   } : null
-  const filtered = q !== '' || state !== 'all'
+  const filtered = q !== '' || state !== 'all' || type !== ''
   const pages = result ? Math.max(1, Math.ceil(result.total / result.pageSize)) : 1
 
   function go(next: Record<string, string>) {
@@ -149,7 +161,7 @@ export function ProductMasterPage() {
 
   function apply(event: FormEvent) {
     event.preventDefault()
-    go({ q: search.trim().slice(0, 100), state: filter, page: '1', pageSize: String(pageSize) })
+    go({ q: search.trim().slice(0, 100), state: filter, ...(typeFilter && { type: typeFilter }), page: '1', pageSize: String(pageSize) })
     requestAnimationFrame(() => resultHeading.current?.focus())
   }
 
@@ -183,10 +195,12 @@ export function ProductMasterPage() {
       <div><h1 className="text-2xl font-bold">{words.heading}</h1>{allowed && !forbidden && <p className="hidden text-[#67788b] sm:block">{words.description}</p>}</div>
       {allowed && !forbidden && <Link className={primaryButton} to="/products/new" state={{ returnTo: listUrl }}>{words.add}</Link>}</div>
     {!allowed || forbidden ? <Forbidden /> : <>
-      <form action="/products" method="get" onSubmit={apply} className="grid gap-3.5 rounded-[10px] border border-[#d8e2ec] bg-[#f5f8fb] p-[18px] sm:grid-cols-[1fr_11rem_auto] sm:items-end">
-        <div><label htmlFor="product-search" className={labelClass}>{words.search}</label><input id="product-search" name="q" maxLength={100} value={search} onChange={(e) => setSearchDraft({ key: searchKey, search: e.target.value, filter })} className={inputClass} /></div>
-        <div><label htmlFor="product-state" className={labelClass}>{words.state}</label><select id="product-state" name="state" value={filter} onChange={(e) => setSearchDraft({ key: searchKey, search, filter: e.target.value })} className={inputClass}>
+      <form action="/products" method="get" onSubmit={apply} className="grid gap-3.5 rounded-[10px] border border-[#d8e2ec] bg-[#f5f8fb] p-[18px] sm:grid-cols-[1fr_11rem_11rem_auto] sm:items-end">
+        <div><label htmlFor="product-search" className={labelClass}>{words.search}</label><input id="product-search" name="q" maxLength={100} value={search} onChange={(e) => setSearchDraft({ key: searchKey, search: e.target.value, filter, type: typeFilter })} className={inputClass} /></div>
+        <div><label htmlFor="product-state" className={labelClass}>{words.state}</label><select id="product-state" name="state" value={filter} onChange={(e) => setSearchDraft({ key: searchKey, search, filter: e.target.value, type: typeFilter })} className={inputClass}>
           <option value="all">{words.all}</option><option value="active">{words.active}</option><option value="retired">{words.retired}</option></select></div>
+        <div><label htmlFor="product-type-filter" className={labelClass}>{words.type}</label><select id="product-type-filter" name="type" value={typeFilter} onChange={(e) => setSearchDraft({ key: searchKey, search, filter, type: e.target.value })} className={inputClass}>
+          <option value="">{words.all}</option>{productTypes.map((code) => <option key={code} value={code}>{words.types[code]}</option>)}</select></div>
         <div className="flex flex-col gap-2.5 sm:flex-row"><button type="submit" className={primaryButton}>{words.apply}</button>
         <button type="button" className={secondaryButton} onClick={() => { setSearchDraft(null); go({ pageSize: String(pageSize) }); resultHeading.current?.focus() }}>{labels.list.clear}</button></div>
       </form>
@@ -196,15 +210,15 @@ export function ProductMasterPage() {
       {result && (result.items.length === 0 ? <p>{filtered ? words.noResults : words.empty}</p> : <>
         {/* Count top-left and rows per page top-right, as on the order list (WI-013 DEC-010). */}
         <div className="flex flex-wrap items-center justify-between gap-3 text-[#536475]"><span>{words.count(result.total)}</span>
-          <PageSizeSelect pageSize={result.pageSize} onPageSize={(size) => go({ q, state, page: '1', pageSize: String(size) })} /></div>
+          <PageSizeSelect pageSize={result.pageSize} onPageSize={(size) => go({ ...canonical, page: '1', pageSize: String(size) })} /></div>
         <div className="hidden overflow-x-auto sm:block"><table className="w-full border-collapse text-left text-sm"><caption className="sr-only">{words.table}</caption><thead><tr>
-          <th scope="col" className={headerCell}>{words.sku}</th><th scope="col" className={headerCell}>{words.name}</th><th scope="col" className={headerCell}>{words.unit}</th><th scope="col" className={headerCell}>{words.drawing}</th><th scope="col" className={headerCell}>{words.state}</th><th scope="col" className={headerCell}>{words.actions}</th></tr></thead><tbody>
-          {result.items.map((item) => <tr key={item.id}><th scope="row" className={`${cell} font-normal`}>{item.sku}</th><td className={cell}>{item.name}</td><td className={cell}>{item.unit}</td><td className={cell}>{item.drawingNumber ?? '—'}</td><td className={`${cell} whitespace-nowrap`}><StatusPill active={item.isActive} /></td><td className={`${cell} whitespace-nowrap`}>{actions(item, false)}</td></tr>)}
+          <th scope="col" className={headerCell}>{words.sku}</th><th scope="col" className={headerCell}>{words.name}</th><th scope="col" className={headerCell}>{words.type}</th><th scope="col" className={headerCell}>{words.unit}</th><th scope="col" className={headerCell}>{words.drawing}</th><th scope="col" className={headerCell}>{words.state}</th><th scope="col" className={headerCell}>{words.actions}</th></tr></thead><tbody>
+          {result.items.map((item) => <tr key={item.id}><th scope="row" className={`${cell} font-normal`}>{item.sku}</th><td className={cell}>{item.name}</td><td className={`${cell} whitespace-nowrap`}>{typeLabel(item.type)}</td><td className={cell}>{item.unit}</td><td className={cell}>{item.drawingNumber ?? '—'}</td><td className={`${cell} whitespace-nowrap`}><StatusPill active={item.isActive} /></td><td className={`${cell} whitespace-nowrap`}>{actions(item, false)}</td></tr>)}
         </tbody></table></div>
         <ul className="grid gap-3 sm:hidden">{result.items.map((item) => <li key={item.id} className="grid min-w-0 gap-3 rounded-[10px] border border-[#d7e0e8] p-4">
           {/* A long SKU or name wraps anywhere so it never widens the phone layout (WI-013 DEC-013). */}
           <strong className="[overflow-wrap:anywhere]">{item.sku}　{item.name}</strong>
-          <p className="grid justify-items-start gap-1"><span>{words.unit}：{item.unit}</span><span>{words.drawing}：{item.drawingNumber ?? '—'}</span><StatusPill active={item.isActive} /></p>
+          <p className="grid justify-items-start gap-1"><span>{words.type}：{typeLabel(item.type)}</span><span>{words.unit}：{item.unit}</span><span>{words.drawing}：{item.drawingNumber ?? '—'}</span><StatusPill active={item.isActive} /></p>
           {actions(item, true)}</li>)}</ul>
         <div className="flex justify-end text-[#536475]">
           <nav aria-label={labels.list.pagination} className="flex items-center gap-3"><button type="button" className={pagerButton} disabled={page <= 1} onClick={() => go({ ...canonical, page: String(page - 1) })}>{words.previous}</button><span className="tabular-nums">{words.pageOf(page, pages)}</span><button type="button" className={pagerButton} disabled={page >= pages} onClick={() => go({ ...canonical, page: String(page + 1) })}>{words.next}</button></nav></div>
@@ -233,8 +247,8 @@ function ProductEditor() {
   const allowed = useEditorRole()
   const navigate = useNavigate()
   const [loaded, setLoaded] = useState<ProductMasterItem | null>(null)
-  const [draft, setDraft] = useState<ProductDraft>({ sku: '', name: '', unit: '', drawingNumber: '' })
-  const [initial, setInitial] = useState<ProductDraft>({ sku: '', name: '', unit: '', drawingNumber: '' })
+  const [draft, setDraft] = useState<ProductDraft>({ sku: '', name: '', type: '', unit: '', drawingNumber: '' })
+  const [initial, setInitial] = useState<ProductDraft>({ sku: '', name: '', type: '', unit: '', drawingNumber: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [notice, setNotice] = useState<Notice | null>(null)
   const [forbidden, setForbidden] = useState(false)
@@ -243,6 +257,7 @@ function ProductEditor() {
   const firstError = useRef<HTMLInputElement>(null)
   const nameInput = useRef<HTMLInputElement>(null)
   const drawingInput = useRef<HTMLInputElement>(null)
+  const typeInput = useRef<HTMLSelectElement>(null)
   const unitInput = useRef<HTMLSelectElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -278,7 +293,7 @@ function ProductEditor() {
     getMaster(id, controller.signal).then((item) => {
       if (controller.signal.aborted) return
       setLoaded(item)
-      const values = { sku: item.sku, name: item.name, unit: item.unit, drawingNumber: item.drawingNumber ?? '' }
+      const values = { sku: item.sku, name: item.name, type: item.type, unit: item.unit, drawingNumber: item.drawingNumber ?? '' }
       setDraft(values)
       setInitial(values)
       setLoadError('')
@@ -301,6 +316,7 @@ function ProductEditor() {
   function focusFirst(fields: Record<string, unknown>) {
     if (fields.sku) firstError.current?.focus()
     else if (fields.name) nameInput.current?.focus()
+    else if (fields.type) typeInput.current?.focus()
     else if (fields.unit) unitInput.current?.focus()
     else if (fields.drawingNumber) drawingInput.current?.focus()
     else headingRef.current?.focus()
@@ -311,6 +327,7 @@ function ProductEditor() {
     const next: Record<string, string> = {}
     if (!draft.sku.trim() || [...draft.sku.trim()].length > 50) next.sku = words.invalid
     if (!draft.name.trim() || [...draft.name.trim()].length > 200) next.name = words.invalid
+    if (!isProductType(draft.type)) next.type = words.typeRequired
     if (!productUnits.includes(draft.unit as typeof productUnits[number])) next.unit = words.invalid
     if ([...draft.drawingNumber.trim()].length > 100) next.drawingNumber = words.invalid
     if (Object.keys(next).length) {
@@ -333,7 +350,7 @@ function ProductEditor() {
       else if (reason instanceof ApiError && reason.problem?.code === 'PRODUCT_SKU_CONFLICT') { setErrors({ sku: words.skuConflict }); setNotice({ text: words.invalid, tone: 'error' }); firstError.current?.focus() }
       else if (reason instanceof ApiError && reason.status === 400) {
         const fields = reason.problem?.errors ?? {}
-        setErrors(Object.fromEntries(Object.keys(fields).map((key) => [key, words.invalid])))
+        setErrors(Object.fromEntries(Object.keys(fields).map((key) => [key, key === 'type' ? words.typeRequired : words.invalid])))
         setNotice({ text: words.invalid, tone: 'error' })
         focusFirst(fields)
       } else { setNotice({ text: words.failed, tone: 'error' }); setNeedsRead(true) }
@@ -366,6 +383,7 @@ function ProductEditor() {
             : <input ref={firstError} id="sku" name="sku" required maxLength={50} value={draft.sku} onChange={(e) => setField('sku', e.target.value)} className={inputClass} aria-invalid={!!errors.sku} aria-describedby={describedBy(!!errors.sku && 'sku-error')} />}
           {errors.sku && <p id="sku-error" className={fieldErrorClass}>{errors.sku}</p>}</div>
         <div><label htmlFor="name" className={labelClass}>{words.name}{required}</label><input ref={nameInput} id="name" name="name" required maxLength={200} value={draft.name} onChange={(e) => setField('name', e.target.value)} className={inputClass} aria-invalid={!!errors.name} aria-describedby={describedBy(!!errors.name && 'name-error')} />{errors.name && <p id="name-error" className={fieldErrorClass}>{errors.name}</p>}</div>
+        <div><label htmlFor="type" className={labelClass}>{words.type}{required}</label><select ref={typeInput} id="type" name="type" required value={draft.type} onChange={(e) => setField('type', e.target.value)} className={inputClass} aria-invalid={!!errors.type} aria-describedby={describedBy(!!errors.type && 'type-error')}><option value="">{words.typePlaceholder}</option>{productTypes.map((code) => <option key={code} value={code}>{words.types[code]}</option>)}</select>{errors.type && <p id="type-error" className={fieldErrorClass}>{errors.type}</p>}</div>
         <div><label htmlFor="unit" className={labelClass}>{words.unit}{required}</label>
           {loaded?.unitLocked ? <div className={readOnlyClass}><input id="unit" name="unit" readOnly value={draft.unit} className={readOnlyInput} aria-invalid={!!errors.unit} aria-describedby={describedBy('unit-fixed', 'unit-help', !!errors.unit && 'unit-error')} /><span id="unit-fixed">{words.readOnly}</span></div>
             : <select ref={unitInput} id="unit" name="unit" required value={draft.unit} onChange={(e) => setField('unit', e.target.value)} className={inputClass} aria-invalid={!!errors.unit} aria-describedby={describedBy(!!errors.unit && 'unit-error')}><option value="">—</option>{productUnits.map((unit) => <option key={unit}>{unit}</option>)}</select>}

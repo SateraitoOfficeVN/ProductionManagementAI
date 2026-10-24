@@ -6,6 +6,8 @@ public sealed class Product
     public Guid Id { get; init; }
     public required string Sku { get; init; }
     public required string Name { get; set; }
+    /// <summary>Gets or sets the product type (004_BD-TYPE).</summary>
+    public ProductType Type { get; set; }
     /// <summary>Gets or sets the approved unit used by all orders that reference this product.</summary>
     public string Unit { get; set; } = string.Empty;
     /// <summary>Gets the database-generated generation that invalidates changed-back units.</summary>

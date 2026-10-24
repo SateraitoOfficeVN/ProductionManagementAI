@@ -14,6 +14,7 @@ test('create, search, reference, edit and retire a product with accessible contr
   await expect(page.getByRole('heading', { level: 1, name: '製品登録' })).toBeFocused()
   await page.getByLabel(/製品コード/).fill(` ${sku} `)
   await page.getByLabel(/製品名/).fill('試作部品')
+  await page.getByLabel(/種別/).selectOption('PART')
   await page.getByLabel(/単位/).selectOption('kg')
   await page.getByLabel(/図面番号/).fill(' D-100 ')
   await page.getByRole('button', { name: '保存' }).click()
@@ -67,7 +68,7 @@ test('create, search, reference, edit and retire a product with accessible contr
 
 test('stale save retains draft and reload asks before discarding it', async ({ page }) => {
   const response = await page.request.post('/api/product-master', { data: {
-    sku: `STALE-${Date.now()}`, name: '初期製品', unit: 'm', drawingNumber: null,
+    sku: `STALE-${Date.now()}`, name: '初期製品', type: 'PART', unit: 'm', drawingNumber: null,
   } })
   expect(response.status()).toBe(201)
   const original = await response.json()
@@ -75,7 +76,7 @@ test('stale save retains draft and reload asks before discarding it', async ({ p
   await expect(page.getByLabel(/製品名/)).toHaveValue('初期製品')
   await page.getByLabel(/製品名/).fill('編集中')
   const competing = await page.request.put(`/api/product-master/${original.id}`, { data: {
-    sku: original.sku, name: '他の更新', unit: 'm', drawingNumber: null, version: original.version,
+    sku: original.sku, name: '他の更新', type: 'PART', unit: 'm', drawingNumber: null, version: original.version,
   } })
   expect(competing.status()).toBe(200)
   await page.getByRole('button', { name: '保存' }).click()
@@ -106,6 +107,7 @@ test('uncertain create never replays the write and offers catalog lookup', async
   await page.goto('/products/new')
   await page.getByLabel(/製品コード/).fill(sku)
   await page.getByLabel(/製品名/).fill('結果確認部品')
+  await page.getByLabel(/種別/).selectOption('PART')
   await page.getByLabel(/単位/).selectOption('m')
   await page.getByRole('button', { name: '保存' }).click()
   await expect(page.getByRole('status')).toContainText('処理結果を確認できません。')
@@ -173,7 +175,7 @@ test('old product links redirect to the designed edit route', async ({ page }) =
 async function serveLongProduct(page: import('@playwright/test').Page, sku: string) {
   await page.route('**/api/product-master?*', (route) => route.fulfill({ json: {
     items: [{ id: '0197e4a0-0000-7000-8000-00000000f00d', sku, name: 'B155 レーザーマーキング #4 '.repeat(8).trim(),
-      unit: '個', drawingNumber: null, isActive: true, updatedAt: '2026-10-06T00:00:00Z', version: 1, unitLocked: false }],
+      type: 'FINISHED', unit: '個', drawingNumber: null, isActive: true, updatedAt: '2026-10-06T00:00:00Z', version: 1, unitLocked: false }],
     total: 1, page: 1, pageSize: 20, sort: 'sku', dir: 'asc',
   } }))
 }

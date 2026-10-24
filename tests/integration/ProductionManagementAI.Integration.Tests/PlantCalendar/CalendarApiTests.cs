@@ -151,7 +151,7 @@ public sealed class CalendarApiTests(CalendarFixture fixture) : IClassFixture<Ca
         Assert.All(unconfigured["days"]!.AsArray(), day => Assert.Equal("Unavailable", day!["state"]!.GetValue<string>()));
         Assert.Equal(0L, await fixture.ScalarAsOwnerAsync<long>("SELECT count(*) FROM plant_calendar_state"));
         await fixture.ExecuteAsOwnerAsync("BEGIN; INSERT INTO plant_calendar_state (id,activated_on,time_zone_id,revision) VALUES (1,'2031-06-10','Asia/Tokyo',1); INSERT INTO plant_calendar_weekly_revisions (calendar_id,effective_from,working_weekdays,is_withdrawn,is_current,commit_revision) VALUES (1,'2031-06-10',31,false,true,1); COMMIT;");
-        var productResponse = await client.PostJson("/api/product-master", new JsonObject { ["sku"] = "CAL-" + Guid.NewGuid().ToString("N"), ["name"] = "calendar fixture", ["unit"] = "kg" });
+        var productResponse = await client.PostJson("/api/product-master", new JsonObject { ["sku"] = "CAL-" + Guid.NewGuid().ToString("N"), ["name"] = "calendar fixture", ["unit"] = "kg", ["type"] = "PART" });
         productResponse.EnsureSuccessStatusCode();
         var product = await productResponse.Body();
         var productId = product["id"]!.GetValue<string>();
