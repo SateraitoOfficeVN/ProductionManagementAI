@@ -32,10 +32,12 @@ Four files in the number folder `docs/en/020_detailed-design/###/`, always all f
 
 | Document | File name | Document ID |
 | --- | --- | --- |
-| Main DD | `###_DD_{画面名}.md` | `###_DD` |
-| API specification | `###_DD-API_{画面名}.md` | `###_DD-API` |
-| Function design | `###_DD-FN_{画面名}.md` | `###_DD-FN` |
-| Screen processing design | `###_DD-SPD_{画面名}.md` | `###_DD-SPD` |
+| Main DD | `###_DD_{画面名}_{YYYYMMDD}.md` | `###_DD` |
+| API specification | `###_DD-API_{画面名}_{YYYYMMDD}.md` | `###_DD-API` |
+| Function design | `###_DD-FN_{画面名}_{YYYYMMDD}.md` | `###_DD-FN` |
+| Screen processing design | `###_DD-SPD_{画面名}_{YYYYMMDD}.md` | `###_DD-SPD` |
+
+`{YYYYMMDD}` is each file's own last content-update date (RFC 0014); a revision renames that file in place. Approved documents written before RFC 0014 keep their undated names until next revised.
 
 `{画面名}` is the screen's Japanese name, the same as on its BD, and all four files use it (RFC 0011).
 
