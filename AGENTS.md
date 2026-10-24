@@ -3,7 +3,7 @@
 Read [ai/project.md](ai/project.md), [ai/policies.md](ai/policies.md) and [ai/rules/common.md](ai/rules/common.md).
 Select the workflow from [ai/workflows/README.md](ai/workflows/README.md), then read only the relevant skills from [ai/skills/README.md](ai/skills/README.md). Pass the applicable gate in [ai/checklists/README.md](ai/checklists/README.md) — design-consistency, security-review, delivery, release-readiness — before calling that stage done.
 
-For an existing work item, read its brief, approved plan, status, decisions and evidence before editing. Inspect the repository state and preserve unrelated user changes.
+For an existing work item, read its brief, approved plan, status, decisions and evidence before editing. If its status shows it has ended (done, merged or closed out), do not reopen it: create a new work item with the next free number that links to it (RFC 0015). Inspect the repository state and preserve unrelated user changes.
 
 Create a reviewable plan before implementation. Show every new plan revision to the user and wait for explicit approval of that revision before starting its steps; approval of a prior design or phase is not approval of the next revision. Existing explicit authorization remains valid; do not add redundant approvals for work already authorized. Continue within the approved scope and ask only at the defined stop conditions.
 

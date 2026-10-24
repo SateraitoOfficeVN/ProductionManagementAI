@@ -7,6 +7,10 @@ Every plan revision — the first one and each one that follows a completed phas
 For an approved plan, continue through its steps without repeated approvals. Record approval source and plan revision; do not invent approval.
 Plan approval covers only its scope and permitted actions. Merge, publishing, deployment and destructive data actions need authorization in the request or plan.
 
+## Closed work items
+
+Never restart or reopen a work item that has ended (done, merged or closed out); start a new work item with the next free `WI-###` number for any follow-up, even on the same feature, link the closed one from its brief, and leave the closed work item's records and approved designs unedited (RFC 0015).
+
 ## Design Markdown review
 
 When a work item produces multiple design Markdown files (ADR, BD, DB, the main DD or a DD companion), create or revise them in the plan's order. Complete each design `.md` file and its required companion artifacts, present that design file for user review, and wait for an explicit instruction to continue before writing the next design `.md` file. Resolve feedback on the current design file first. This review stop applies within an approved plan; it does not replace plan-revision approval or authorize work outside the plan.
