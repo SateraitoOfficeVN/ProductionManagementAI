@@ -10,7 +10,7 @@ namespace ProductionManagementAI.Domain.ProductionOrders;
 public sealed class ProductionOrder
 {
     public const int MaxQuantity = 999_999_999; // DEC-024
-    public const int MaxNotesLength = 500; // REQ-016, counted in Unicode code points
+    public const int MaxNotesLength = 1000; // REQ-090 (was 500, REQ-016), counted in Unicode code points
 
     private ProductionOrder()
     {
@@ -129,7 +129,7 @@ public sealed class ProductionOrder
         _ => null,
     };
 
-    /// <returns>A message ID, or <c>null</c> when valid (V-05). Counts code points, matching PostgreSQL varchar(500).</returns>
+    /// <returns>A message ID, or <c>null</c> when valid (V-05). Counts code points, matching PostgreSQL varchar(1000).</returns>
     public static string? ValidateNotes(string? notes)
     {
         var normalized = NormalizeNotes(notes);

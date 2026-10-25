@@ -58,12 +58,12 @@ public class ProductionOrderTests
         Assert.Equal(expected, ProductionOrder.ValidateQuantity(quantity));
 
     [Fact]
-    public void ValidateNotes_Accepts500CodePoints_IncludingEmojiCountedOnce()
+    public void ValidateNotes_Accepts1000CodePoints_IncludingEmojiCountedOnce()
     {
-        var notes = new string('a', 499) + "😀"; // 500 code points, 501 UTF-16 units
+        var notes = new string('a', 999) + "😀"; // 1000 code points, 1001 UTF-16 units (REQ-090)
 
         Assert.Null(ProductionOrder.ValidateNotes(notes));
-        Assert.Equal("MSG-E006", ProductionOrder.ValidateNotes(new string('a', 501)));
+        Assert.Equal("MSG-E006", ProductionOrder.ValidateNotes(new string('a', 1001)));
     }
 
     [Theory]

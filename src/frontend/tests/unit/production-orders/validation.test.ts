@@ -50,12 +50,12 @@ describe('production order validation (001_BD V-01–V-05)', () => {
   })
 
   it('counts notes in code points, so an emoji counts once', () => {
-    const note = 'a'.repeat(499) + '😀'
-    expect(note.length).toBe(501)
-    expect(codePointLength(note)).toBe(500)
+    const note = 'a'.repeat(999) + '😀'
+    expect(note.length).toBe(1001)
+    expect(codePointLength(note)).toBe(1000)
     expect(validateNotes(note)).toBeNull()
-    expect(validateNotes('a'.repeat(501))).toBe('MSG-E006')
-    expect(validateNotes(`  ${'a'.repeat(500)}  `)).toBeNull() // trimmed like the server
+    expect(validateNotes('a'.repeat(1001))).toBe('MSG-E006')
+    expect(validateNotes(`  ${'a'.repeat(1000)}  `)).toBeNull() // trimmed like the server
   })
 
   it('formats the browser-local date', () => {

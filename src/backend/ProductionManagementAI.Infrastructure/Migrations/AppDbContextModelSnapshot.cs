@@ -582,8 +582,8 @@ namespace ProductionManagementAI.Infrastructure.Migrations
                         .HasColumnName("line_id");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("notes");
 
                     b.Property<string>("OrderNumber")

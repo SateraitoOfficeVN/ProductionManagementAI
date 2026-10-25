@@ -279,18 +279,18 @@ describe('ProductionOrderPage — edit mode', () => {
     expect(screen.queryByRole('button', { name: '保存' })).not.toBeInTheDocument()
   })
 
-  it('flags notes over 500 code points', async () => {
+  it('flags notes over 1000 code points', async () => {
     const user = userEvent.setup()
-    routes['GET /api/production-orders/o1'] = { status: 200, body: order({ notes: 'a'.repeat(500) }) }
+    routes['GET /api/production-orders/o1'] = { status: 200, body: order({ notes: 'a'.repeat(1000) }) }
     renderPage('/production-orders/o1')
 
     const notes = await screen.findByLabelText('備考')
-    expect(screen.getByText('500/500')).toBeInTheDocument()
+    expect(screen.getByText('1000/1000')).toHaveAttribute('aria-live', 'polite') // announced from 900 (DEC-003)
     await user.type(notes, 'b')
     await user.tab()
 
-    expect(screen.getByText('501/500')).toBeInTheDocument()
-    expect(screen.getByText('備考は500文字以内で入力してください。')).toBeInTheDocument()
+    expect(screen.getByText('1001/1000')).toBeInTheDocument()
+    expect(screen.getByText('備考は1000文字以内で入力してください。')).toBeInTheDocument()
   })
 })
 

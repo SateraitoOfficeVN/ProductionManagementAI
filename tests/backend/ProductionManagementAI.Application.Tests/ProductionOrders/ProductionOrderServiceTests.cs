@@ -62,7 +62,7 @@ public class ProductionOrderServiceTests
     [Fact]
     public async Task Create_InvalidFields_AreReportedBeforeProductLookup()
     {
-        var request = new CreateProductionOrderRequest(Guid.NewGuid(), 1_000_000_000, Today.AddDays(-1), new string('x', 501));
+        var request = new CreateProductionOrderRequest(Guid.NewGuid(), 1_000_000_000, Today.AddDays(-1), new string('x', 1001));
 
         var invalid = Assert.IsType<Result<ProductionOrderResponse>.FieldProblem>(await _service.CreateAsync(request, CancellationToken.None));
 

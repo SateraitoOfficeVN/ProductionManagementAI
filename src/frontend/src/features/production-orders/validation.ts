@@ -2,9 +2,9 @@
 // Each returns a 001_DD message ID, or null when valid.
 
 export const MAX_QUANTITY = 999_999_999
-export const MAX_NOTES = 500
+export const MAX_NOTES = 1000
 
-/** Unicode code points, matching the server and PostgreSQL varchar(500) (an emoji counts once). */
+/** Unicode code points, matching the server and PostgreSQL varchar(1000) (an emoji counts once). */
 export function codePointLength(value: string): number {
   return [...value].length
 }

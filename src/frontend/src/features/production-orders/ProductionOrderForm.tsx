@@ -411,7 +411,7 @@ export function ProductionOrderForm({
             />
             <p
               id="notes-count"
-              aria-live={notesLength >= 450 ? 'polite' : 'off'}
+              aria-live={notesLength >= MAX_NOTES * 0.9 ? 'polite' : 'off'}
               className={`text-right text-xs tabular-nums ${notesLength > MAX_NOTES ? 'text-red-600' : 'text-gray-500'}`}
             >
               {notesLength}/{MAX_NOTES}

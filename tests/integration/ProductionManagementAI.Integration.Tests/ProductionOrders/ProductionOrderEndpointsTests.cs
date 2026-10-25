@@ -150,12 +150,12 @@ public class ProductionOrderEndpointsTests(IntegrationTestFixture fixture) : ICl
     }
 
     [Fact]
-    public async Task Notes_500CodePointsIncludingEmoji_Accepted_501Rejected_EmptyStoredAsNull()
+    public async Task Notes_1000CodePointsIncludingEmoji_Accepted_1001Rejected_EmptyStoredAsNull()
     {
         using var client = await fixture.CreateClientAsAsync("Admin");
 
-        var ok = await client.PostJson(Orders, ValidCreate(notes: new string('a', 499) + "😀"));
-        var tooLong = await client.PostJson(Orders, ValidCreate(notes: new string('a', 501)));
+        var ok = await client.PostJson(Orders, ValidCreate(notes: new string('a', 999) + "😀")); // REQ-090: fits varchar(1000)
+        var tooLong = await client.PostJson(Orders, ValidCreate(notes: new string('a', 1001)));
         var empty = await client.CreateOrder(ValidCreate(notes: "   "));
 
         Assert.Equal(HttpStatusCode.Created, ok.StatusCode);
