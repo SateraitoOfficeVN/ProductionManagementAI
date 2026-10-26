@@ -52,10 +52,15 @@ test('filter by type keeps it through paging and return after save', async ({ pa
   await expect(page).toHaveURL(/page=2/)
 
   await page.getByRole('link', { name: `${parts[10].sku}を編集` }).click()
+  // WI-018 BUG-010: until the edit page renders, /種別/ also matches the list's type filter (value PART), so wait for it.
+  await expect(page.getByRole('heading', { level: 1, name: '製品編集' })).toBeVisible()
   const typeSelect = page.getByLabel(/種別/)
   await expect(typeSelect).toHaveValue('PART')
   await typeSelect.selectOption({ label: '半製品' })
+  await expect(typeSelect).toHaveValue('SEMI_FINISHED')
+  const saved = page.waitForResponse((r) => r.request().method() === 'PUT' && r.url().includes('/api/product-master/'))
   await page.getByRole('button', { name: '保存' }).click()
+  expect((await (await saved).json()).type).toBe('SEMI_FINISHED')
   await expect(page).toHaveURL(/type=PART/)
   await expect(page.getByRole('status')).toContainText('製品を保存しました。現在の検索条件では表示されません。')
   await expect(page.getByLabel('種別', { exact: true })).toHaveValue('PART')

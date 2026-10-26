@@ -35,11 +35,13 @@ export function AddProductDialog({ open, lineId, excluded, onAdd, onClose, onFor
     if (open && !dialog.current?.open) {
       invoker.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
       added.current = false
-      setDraft(''); setQuery(''); setPage(1); setChosen(null); setError('')
       dialog.current?.showModal()
       search.current?.focus()
     } else if (!open && dialog.current?.open) {
       dialog.current.close()
+      // Reset on close, not on open: resetting on open first reloaded the previous search, and that reset could
+      // overwrite a search made right after reopening (WI-018 BUG-011).
+      setDraft(''); setQuery(''); setPage(1); setChosen(null); setError('')
       if (!added.current && invoker.current?.isConnected) invoker.current.focus()
     }
   }, [open])
