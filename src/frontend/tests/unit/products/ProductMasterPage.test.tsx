@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, expect, it, vi } from 'vitest'
@@ -265,4 +265,14 @@ it('asks before leaving after only the type changed', async () => {
   await user.selectOptions(await screen.findByLabelText(/種別/), '完成品')
   await user.click(screen.getByRole('button', { name: 'キャンセル' }))
   expect(screen.getByRole('dialog', { name: '変更を破棄しますか？', hidden: true })).toBeInTheDocument()
+})
+
+// WI-018 BUG-010: a type change dispatched in the same task as 保存 (no render in between) is still submitted.
+it('submits a type chosen immediately before saving', async () => {
+  const { requests } = setup(`/products/${product.id}/edit`)
+  const select = await screen.findByLabelText(/種別/)
+  fireEvent.change(select, { target: { value: 'SEMI_FINISHED' } })
+  fireEvent.click(screen.getByRole('button', { name: '保存' }))
+  await waitFor(() => expect(requests.some((r) => r.method === 'PUT')).toBe(true))
+  expect(requests.find((r) => r.method === 'PUT')?.body).toMatchObject({ type: 'SEMI_FINISHED' })
 })

@@ -132,6 +132,8 @@ test('TC-425/426: the add dialog pages 20 at a time, confirms the shown unit and
   await expect(page.getByText('追加予定', { exact: true })).toBeVisible()
   await expect(page.getByRole('checkbox')).toHaveCount(0)
   await opener.click()
+  // WI-018 BUG-011: a reopened dialog starts with an empty search instead of reloading the previous one.
+  await expect(dialog.getByLabel('製品を検索')).toHaveValue('')
   await dialog.getByLabel('製品を検索').fill('P-1001')
   await dialog.getByRole('button', { name: '検索', exact: true }).click()
   await expect(dialog.getByText('選択できる製品はありません。')).toBeVisible()
