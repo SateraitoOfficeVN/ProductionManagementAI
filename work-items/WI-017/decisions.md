@@ -18,3 +18,6 @@
 | DEC-012 | 2026-10-25 | Plan revision 2 approval | User ("approved, continue with implementation") | decided | Implementation/tests local only |
 | DEC-013 | 2026-10-25 | Revision 2 result review | User ("approved, continue with commit and PR plan") | decided | Implementation accepted incl. generic error summary (mockup difference kept); revision 3 to be drafted |
 | DEC-014 | 2026-10-25 | Plan revision 3 approval | User ("approved, continue with commit and PR") | decided | Commit, push, PR, read-only CI watch |
+| DEC-015 | 2026-10-25 | Draft merge/cleanup plan | User ("continue with merge and cleanup plan") | decided | Revision 4 drafted for approval; not executed |
+| DEC-016 | 2026-10-25 | Plan revision 4 approval | User ("approved, continue with merge and cleanup") | decided | Merge PR #52, cleanup, closeout PR |
+| DEC-017 | 2026-10-25 | Open closeout PR before WI-018 | User ("approved, open the closeout PR now too") | decided | Records state master E2E red, follow-up WI-018 |

@@ -4,7 +4,8 @@
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-25 | Design (BD, DB, DD addenda); documents only | Complete — BD, DB, DD, DD-API, DD-SPD v1 approved (DEC-007–DEC-011) with EN/JA PDFs | User "approved, go a head", 2026-10-25 (DEC-006) |
 | 2 | 2026-10-25 | Implementation and tests (local only, no commit) | Complete — results in evidence.md; accepted (DEC-013) |
-| 3 | 2026-10-25 | Commit, push, PR and CI | in progress | User "approved, continue with commit and PR", 2026-10-25 (DEC-014) | User "approved, continue with implementation", 2026-10-25 (DEC-012) |
+| 3 | 2026-10-25 | Commit, push, PR and CI | Complete — PR #52, CI run 40124507111 passed |
+| 4 | 2026-10-25 | Merge PR #52, branch cleanup, closeout PR | Complete — merged ba7b930; closeout PR opened (DEC-017); master E2E follow-up WI-018 | User "approved, continue with merge and cleanup", 2026-10-25 (DEC-016) | User "approved, continue with commit and PR", 2026-10-25 (DEC-014) | User "approved, continue with implementation", 2026-10-25 (DEC-012) |
 
 ## Revision 1 — Design (documents only)
 
@@ -91,3 +92,27 @@ stack and applying the new migration to the **local** demo database as owner; ru
 
 `git add`/`commit` of the listed files, push of this branch, `gh pr create`, read-only `gh` checks. Not permitted: merge,
 branch deletion, deployment, approved-design edits, demo-DB changes. A CI failure is diagnosed and reported; fixes need approval.
+
+## Revision 4 — Merge, cleanup and closeout
+
+### Steps
+
+| # | Step | Verification |
+| --- | --- | --- |
+| 1 | Pre-merge check: PR #52 head still `fec2f93`, run 40124507111 passed, MERGEABLE/CLEAN, no new review comments, `origin/master` still `664130a` | `gh pr view`, `gh run view` |
+| 2 | Squash-merge guarded by head (`gh pr merge 52 --squash --match-head-commit fec2f93…`), title `feat(WI-017): add required product type to the product master (#52)`; delete remote branch | Merge SHA |
+| 3 | Fast-forward local `master`; delete local feature branch; `git fetch --prune`; watch the `master` CI run read-only | Run ID/result |
+| 4 | Branch `chore/WI-017-closeout` from new `master`, docs only: carry the uncommitted WI-017 record updates (CI evidence, plan, status, DEC-015), plus merge results, status `done`; `CLAUDE.md` current-state paragraph; `ai/project.md` "WI-017 merged" section; `README.md` WI bullet if the list exists | `git diff --stat` only those files |
+| 5 | Commit `docs(WI-017): close out merged product type`, push, open closeout PR; check its CI (docs-only skips) | PR URL |
+| 6 | Report; merging the closeout PR waits for approval | — |
+
+### Permitted actions
+
+Squash-merge of PR #52 only; deleting `feature/WI-017-product-type` locally and on origin; prune; fast-forward `master`;
+create/commit/push `chore/WI-017-closeout` and open its PR; read-only checks. Not permitted: merging the closeout PR,
+deployment, demo-DB changes, application/test/design changes, force-push.
+
+### Risks
+
+- The local demo DB already has the migration; `master` now matches it.
+- Deployment elsewhere must run the migration and the API together (not part of this revision).

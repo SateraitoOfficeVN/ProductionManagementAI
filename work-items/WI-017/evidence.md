@@ -29,3 +29,20 @@ Screen-reader speech and physical mobile keyboard/IME (as earlier WIs). CI not r
 ## Local data note
 
 E2E journeys add test products to the local demo DB, as in earlier WIs.
+
+## CI (plan revision 3)
+
+PR [#52](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/52), head `fec2f93`: run
+[40124507111](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/40124507111) succeeded —
+Backend (build, test) 1m45s, Frontend (build, lint, test) 46s, E2E (Compose stack + Playwright) 4m26s, all pass. CI's
+E2E includes the plant-calendar specs that need the activated-calendar fixture.
+
+## Merge (plan revision 4)
+
+PR #52 squash-merged as `ba7b930` (guarded by head `fec2f93`); remote and local feature branch deleted; refs pruned;
+`master` fast-forwarded. First `master` run
+[40125879405](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/40125879405) on `ba7b930`:
+backend and frontend pass; **E2E failed, 78 passed / 2 failed** — `product-type.spec.ts` "filter by type keeps it
+through paging and return after save" (hidden-after-save notice not shown within 5 s) and
+`production-lines-redesign.spec.ts` TC-425/426 (expected 「選択できる製品はありません。」 not found). The same commit's
+tests passed on the PR run, so both are intermittent; diagnosis and fix need approval (plan revision 4 limits).
