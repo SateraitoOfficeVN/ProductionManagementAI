@@ -85,6 +85,11 @@ SEMI_FINISHED/PART/RAW_MATERIAL) on /products: list column, SP card line, URL `t
 require `type`, so deploy migration and API together. Additive 004_*-TYPE_製品種別_20261025 designs with EN/JA PDFs.
 PR head fec2f93 passed run 40124507111. Branch deleted; main synchronized; no deployment. First master run
 40125879405 had 2 intermittent E2E failures (78/80); WI-018 fixes them. See work-items/WI-017.
+WI-017 closeout merged via PR #53 as 5bc24f5.
+
+WI-018 (follow-up) merged via PR #54 as 4a97798: AddProductDialog resets its search on close (reopen race could
+overwrite a new search); product-type E2E waits for the edit page before using 種別. master run 40256099518 passed
+(backend, frontend, E2E). Branches deleted; no deployment. See work-items/WI-018.
 
 WI-006 Product master is done and merged via PR #31 (`b806b1c`): `/products` supports Admin/Operator maintenance, immutable SKU, referenced-unit locking and retirement preserving history; orders support exact kg/m decimals and the dashboard uses counts across units with per-unit subtotals. CI passed all three jobs (148 backend unit, 111 integration, 139 frontend and 26 Playwright tests). Only isolated migration rehearsal was performed; no mutable demo/live cutover or deployment is claimed. WI-010 is merged with accepted manual verification limits; Bill of materials remains a later candidate.
 

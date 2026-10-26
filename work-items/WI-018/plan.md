@@ -3,7 +3,7 @@
 | Revision | Date | Phase / purpose | State | Approval source |
 | --- | --- | --- | --- | --- |
 | 1 | 2026-10-25 | Diagnose and fix both specs; local verification; commit, push, PR, CI | Stopped at step 3 — causes are in application code (evidence.md) | User "approved, open the closeout PR now too", 2026-10-25 (DEC-002) |
-| 2 | 2026-10-25 | Fix the application races, harden the specs, verify, PR | in progress | User "approved, continue with revision 2", 2026-10-25 (DEC-003) |
+| 2 | 2026-10-25 | Fix the application races, harden the specs, verify, PR | Complete — PR #54 merged as 4a97798; master run 40256099518 passed; closeout DEC-005 | User "approved, continue with revision 2", 2026-10-25 (DEC-003) |
 
 ## Revision 1
 

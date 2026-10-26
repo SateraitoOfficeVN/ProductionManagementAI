@@ -4,7 +4,7 @@
 
 | Work item | Author | Status | Target release |
 | --- | --- | --- | --- |
-| WI-018 | Claude Code (user request 2026-10-25) | draft | unscheduled |
+| WI-018 | Claude Code (user request 2026-10-25) | done — merged via PR #54 as `4a97798` | unscheduled |
 
 ## Overview
 

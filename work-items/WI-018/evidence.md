@@ -46,3 +46,10 @@ forbids application changes (step 3 stop condition), so work stopped for plan re
 - Frontend: oxlint clean, build passed, 317 unit tests passed. Local frontend container rebuilt; both specs 20/20
   (`--repeat-each=20`, installed Chrome).
 - **Not run:** the full local Playwright suite (stopped by the user, DEC-004); CI on the PR runs the full suite.
+
+## Merge (DEC-004)
+
+PR #54 CI passed (backend, frontend, full E2E); squash-merged as `4a97798`. WI-017 closeout PR #53 merged as `5bc24f5`.
+Branches `fix/WI-018-flaky-e2e` and `chore/WI-017-closeout` deleted locally and on origin. `master` run
+[40256099518](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/40256099518) on `4a97798`:
+backend, frontend and E2E success.
