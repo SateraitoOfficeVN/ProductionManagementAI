@@ -211,6 +211,18 @@ PR head `fec2f93` passed [run 40124507111](https://github.com/SateraitoOfficeVN/
 Locally no .NET SDK (backend ran in the SDK container) and Playwright browser download failed (E2E used installed
 Chrome). Feature branch deleted; main synchronized; no deployment. First `master` run 40125879405 on `ba7b930`: backend/frontend pass, E2E 78/80 (2 intermittent failures, same code passed on the PR); fix tracked in WI-018.
 
+### WI-018 merged
+
+Follow-up to WI-017 (RFC 0015): the first `master` run after WI-017 (40125879405) had 2 intermittent E2E failures.
+Merged via [PR #54](https://github.com/SateraitoOfficeVN/ProductionManagementAI/pull/54) as `4a97798` on 2026-10-26.
+- BUG-011 (application): `AddProductDialog` reset its search in the open effect, so a reopen first reloaded the previous
+  query and the late reset could replace a search made right after reopening; it now resets on close (TC-492/493).
+- BUG-010 (spec): `product-type.spec.ts` used `getByLabel(/種別/)` before the edit page rendered and hit the list's
+  filter; it now waits for 「製品編集」 and asserts the PUT response type (TC-489, TC-494).
+Diagnosis from the CI trace artifacts; not reproducible locally even with CPU ×6. 317 frontend unit tests; both specs
+20/20 locally; PR CI and `master` run [40256099518](https://github.com/SateraitoOfficeVN/ProductionManagementAI/actions/runs/40256099518) passed (backend, frontend, E2E). Full local suite not run (user stopped it).
+WI-017 closeout merged via PR #53 as `5bc24f5`. Branches deleted; main synchronized; no deployment.
+
 Next: no work item approved. Candidates: a harness-improvement RFC making `test-plan.md` mandatory whenever a work
 item adds tests (user request during WI-014), and rendering design PDFs only after the design Markdown is approved
 (user request during WI-015, recorded as WI-015 DEC-007; `ai/rules/documentation.md` and RFC 0012 unchanged).
